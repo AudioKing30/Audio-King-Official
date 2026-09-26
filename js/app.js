@@ -96,7 +96,7 @@ if (typeof window !== 'undefined') {
 }
 
 if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', () => {
+  function startAudioKingApp() {
     // 1. Initialize core state modules
     initCart();
     initCheckout();
@@ -338,7 +338,13 @@ if (typeof document !== 'undefined') {
     }, { passive: true });
 
     console.log(`AudioKing initialized successfully with ${AUDIOKING_PRODUCTS.length} validated products.`);
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startAudioKingApp);
+  } else {
+    startAudioKingApp();
+  }
 }
 
 /**

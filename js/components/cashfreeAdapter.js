@@ -10,7 +10,6 @@
  */
 
 import { getApiBaseUrl } from '../services/apiConfig.js';
-import { BasePaymentAdapter } from './paymentAdapter.js';
 
 let cashfreeSdkLoaded = false;
 let cashfreeSdkLoading = false;
@@ -54,9 +53,9 @@ function loadCashfreeSdk() {
   });
 }
 
-export class CashfreePaymentAdapter extends BasePaymentAdapter {
+export class CashfreePaymentAdapter {
   constructor() {
-    super('CashfreePaymentAdapter');
+    this.name = 'CashfreePaymentAdapter';
   }
 
   getBaseUrl() {

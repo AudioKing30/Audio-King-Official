@@ -24781,9 +24781,9 @@ Country of Origin: China`,
       document.head.appendChild(script);
     });
   }
-  var CashfreePaymentAdapter = class extends BasePaymentAdapter {
+  var CashfreePaymentAdapter = class {
     constructor() {
-      super("CashfreePaymentAdapter");
+      this.name = "CashfreePaymentAdapter";
     }
     getBaseUrl() {
       return getApiBaseUrl();
@@ -24907,19 +24907,6 @@ Country of Origin: China`,
   };
 
   // js/components/paymentAdapter.js
-  var BasePaymentAdapter = class {
-    constructor(name) {
-      this.name = name;
-    }
-    /**
-     * Process payment for an order
-     * @param {Object} orderData - { items, customer, paymentMethod, total }
-     * @returns {Promise<{ success: boolean, transactionId: string, message: string }>}
-     */
-    async processPayment(orderData) {
-      throw new Error("processPayment() must be implemented by concrete adapter subclass.");
-    }
-  };
   var activePaymentAdapter = new CashfreePaymentAdapter();
 
   // js/components/orderSuccess.js
@@ -30223,7 +30210,7 @@ Message: ${message}`);
     window.showAdmin = showAdmin;
   }
   if (typeof document !== "undefined") {
-    document.addEventListener("DOMContentLoaded", () => {
+    let startAudioKingApp = function() {
       initCart();
       initCheckout();
       initOrderSuccess();
@@ -30431,7 +30418,12 @@ Message: ${message}`);
         }, 150);
       }, { passive: true });
       console.log(`AudioKing initialized successfully with ${AUDIOKING_PRODUCTS.length} validated products.`);
-    });
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", startAudioKingApp);
+    } else {
+      startAudioKingApp();
+    }
   }
   function parseHashRoute(hashStr) {
     const raw = (hashStr || "").trim().replace(/^#\/?/, "");
