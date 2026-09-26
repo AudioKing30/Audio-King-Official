@@ -633,6 +633,10 @@ router.get('/google/callback', async (req, res) => {
         `).run(crypto.randomUUID(), user.id, String(googleId), now);
       } catch (e) {}
 
+      // If email matches admin email, ensure role is 'admin'
+      const isAdminEmail = cleanEmail === 'admin@audioking.in' || cleanEmail === 'audioking30@gmail.com';
+      const effectiveRole = isAdminEmail ? 'admin' : (user.role || 'customer');
+
       // Preserve customer-saved full_name and custom avatar as source of truth
       const hasCustomAvatar = Boolean(user.custom_profile_image && user.custom_profile_image.trim());
       const effectiveAvatar = hasCustomAvatar ? user.custom_profile_image : profileImage;
@@ -641,22 +645,26 @@ router.get('/google/callback', async (req, res) => {
       db.prepare(`
         UPDATE users SET
           email_verified = 1,
+          role = ?,
           full_name = ?,
           provider_profile_image = ?,
           profile_image = ?,
           last_login_at = ?,
           updated_at = ?
         WHERE id = ?
-      `).run(preservedFullName, profileImage, effectiveAvatar, now, now, user.id);
+      `).run(effectiveRole, preservedFullName, profileImage, effectiveAvatar, now, now, user.id);
       user = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
     } else {
       // Brand new user registration via Google OAuth
       const userId = crypto.randomUUID();
       const displayName = fullName.split(' ')[0] + Math.floor(Math.random() * 90 + 10);
+      const isAdminEmail = cleanEmail === 'admin@audioking.in' || cleanEmail === 'audioking30@gmail.com';
+      const userRole = isAdminEmail ? 'admin' : 'customer';
+
       db.prepare(`
-        INSERT INTO users (id, full_name, display_name, title, email, phone_number, profile_image, provider_profile_image, custom_profile_image, auth_provider, email_verified, created_at, updated_at, last_login_at)
-        VALUES (?, ?, ?, ?, ?, '', ?, ?, NULL, 'google', 1, ?, ?, ?)
-      `).run(userId, fullName, displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, profileImage, profileImage, now, now, now);
+        INSERT INTO users (id, full_name, display_name, title, email, role, phone_number, profile_image, provider_profile_image, custom_profile_image, auth_provider, email_verified, created_at, updated_at, last_login_at)
+        VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, NULL, 'google', 1, ?, ?, ?)
+      `).run(userId, fullName, displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, userRole, profileImage, profileImage, now, now, now);
       
       db.prepare(`
         INSERT INTO auth_identities (id, user_id, provider, provider_user_id, created_at)
@@ -669,6 +677,7 @@ router.get('/google/callback', async (req, res) => {
     // 4. Create real authenticated session & cookie
     const sessionToken = createSessionForUser(res, user.id, req);
     const sanitized = sanitizeUser(user);
+    const finalRedirectUrl = `${targetRedirectUrl}&token=${encodeURIComponent(sessionToken)}`;
 
     // 5. Return seamless popup bridge or full redirect
     return res.send(`
@@ -724,8 +733,10 @@ router.get('/google/callback', async (req, res) => {
               token: ${JSON.stringify(sessionToken)}
             };
             try {
-              localStorage.setItem('audioKingSessionToken', ${JSON.stringify(sessionToken)});
-              localStorage.setItem('audioKingUser', JSON.stringify(${JSON.stringify(sanitized)}));
+              localStorage.setItem('audioKingSessionToken', authData.token);
+              localStorage.setItem('audioking_token', authData.token);
+              localStorage.setItem('audioKingToken', authData.token);
+              localStorage.setItem('audioKingUser', JSON.stringify(authData.user));
             } catch (e) {}
 
             try {
@@ -733,10 +744,10 @@ router.get('/google/callback', async (req, res) => {
                 window.opener.postMessage(authData, '*');
                 setTimeout(() => window.close(), 400);
               } else {
-                window.location.href = ${JSON.stringify(targetRedirectUrl)};
+                window.location.href = ${JSON.stringify(finalRedirectUrl)};
               }
             } catch (e) {
-              window.location.href = ${JSON.stringify(targetRedirectUrl)};
+              window.location.href = ${JSON.stringify(finalRedirectUrl)};
             }
           </script>
         </body>

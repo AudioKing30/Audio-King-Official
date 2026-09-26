@@ -151,22 +151,36 @@ class AuthService {
    * Network errors use cached session and retry once.
    */
   async init() {
+    // 0. Extract token from URL if redirected from Google OAuth or external auth bridge
+    if (typeof window !== 'undefined' && window.location.search) {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectToken = urlParams.get('token');
+        if (redirectToken) {
+          setStorage('audioKingSessionToken', redirectToken);
+          setStorage('audioking_token', redirectToken);
+          setStorage('audioKingToken', redirectToken);
+        }
+        if (window.location.search.includes('auth=google_success')) {
+          const cleanSearch = window.location.search
+            .replace(/[?&]auth=google_success/g, '')
+            .replace(/[?&]token=[^&]+/g, '')
+            .replace(/^&/, '?');
+          const cleanUrl = window.location.pathname + (cleanSearch && cleanSearch !== '?' ? cleanSearch : '') + window.location.hash;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+      } catch (e) {}
+    }
+
     // If already authenticated via login during page initialization, preserve it
     if (this.status === 'authenticated' && this.currentUser) {
       return this.currentUser;
     }
 
-    // Strip auth query params from URL if redirected back from Google OAuth
-    if (typeof window !== 'undefined' && window.location.search) {
-      if (window.location.search.includes('auth=google_success')) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-    }
-
     // 1. First attempt: verify session with the backend
     let res = await this.safeFetch('/api/auth/me', { method: 'GET' });
 
-    // 2. If network error on first try, wait 1.5s and retry once
+    // 2. If network error on first try, wait 1.5s and retry once (handles Render cold-start)
     if (res.networkError) {
       await new Promise(resolve => setTimeout(resolve, 1500));
       res = await this.safeFetch('/api/auth/me', { method: 'GET' });
@@ -182,8 +196,8 @@ class AuthService {
       this.currentUser = res.data.user;
       this.status = 'authenticated';
       setStorage(this.localUserKey, this.currentUser);
-    } else if (res.networkError || res.isStaticFallback || res.status === 404) {
-      // Server unreachable or running on static GitHub Pages — use cached user as fallback
+    } else if (res.networkError || res.isStaticFallback || res.status === 404 || res.status === 502 || res.status === 503 || res.status === 504) {
+      // Server unreachable, sleeping, or running on static GitHub Pages — use cached user as fallback
       const local = getStorage(this.localUserKey, null);
       if (local && local.email && local.id) {
         this.currentUser = local;
@@ -197,10 +211,19 @@ class AuthService {
         this.status = 'unauthenticated';
       }
     } else {
-      // Server responded with 401 or other explicit auth error — genuine unauthenticated state
-      this.currentUser = null;
-      this.status = 'unauthenticated';
-      removeStorage(this.localUserKey);
+      // Server explicitly rejected with 401 and confirmed error
+      const local = getStorage(this.localUserKey, null);
+      const hasToken = getStorage('audioKingSessionToken', null) || getStorage('audioking_token', null);
+      if (!hasToken && local) {
+        // Preserved local mirror if no token was even transmitted
+        this.currentUser = local;
+        this.status = 'authenticated';
+      } else {
+        this.currentUser = null;
+        this.status = 'unauthenticated';
+        removeStorage(this.localUserKey);
+        removeStorage('audioKingSessionToken');
+      }
     }
 
     this.notify();
@@ -403,6 +426,8 @@ class AuthService {
             this.status = 'authenticated';
             const fakeToken = 'demo_token_' + Date.now();
             setStorage('audioKingSessionToken', fakeToken);
+            setStorage('audioking_token', fakeToken);
+            setStorage('audioKingToken', fakeToken);
             setStorage(this.localUserKey, this.currentUser);
             this.notify();
             return { success: true, user: this.currentUser, token: fakeToken };
@@ -437,40 +462,6 @@ class AuthService {
    * When on GitHub Pages / Static Hosting: Authenticates instantly with Google verified profile without 404 errors.
    */
   async initiateGoogleAuth() {
-    const isGitHubPages = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
-    
-    // Check if backend API is reachable
-    let hasBackend = !isGitHubPages;
-    if (hasBackend) {
-      try {
-        const check = await this.safeFetch('/api/auth/google/url', { method: 'GET' });
-        if (!check.ok) hasBackend = false;
-      } catch (e) {
-        hasBackend = false;
-      }
-    }
-
-    if (!hasBackend) {
-      // In static / GitHub Pages mode, avoid redirecting to /api/auth/google/redirect which generates a 404!
-      const googleUser = {
-        id: 'usr_google_audioking30',
-        fullName: 'AudioKing Store Owner',
-        displayName: 'AudioKing30',
-        email: 'audioking30@gmail.com',
-        username: 'AudioKing30',
-        role: 'admin',
-        authProvider: 'google',
-        picture: '',
-        emailVerified: true
-      };
-      this.currentUser = googleUser;
-      this.status = 'authenticated';
-      setStorage('audioKingSessionToken', 'google_token_' + Date.now());
-      setStorage(this.localUserKey, this.currentUser);
-      this.notify();
-      return { success: true, user: googleUser };
-    }
-
     const baseUrl = this.getBaseUrl();
     const returnTo = (typeof window !== 'undefined' && window.location.href) ? window.location.href : '/';
     const redirectUrl = `${baseUrl}/api/auth/google/redirect?return_to=${encodeURIComponent(returnTo)}`;
@@ -518,6 +509,8 @@ class AuthService {
         if (event.data && event.data.type === 'AUDIOKING_GOOGLE_SUCCESS') {
           if (event.data.token) {
             setStorage('audioKingSessionToken', event.data.token);
+            setStorage('audioking_token', event.data.token);
+            setStorage('audioKingToken', event.data.token);
           }
           this.currentUser = event.data.user;
           this.status = 'authenticated';

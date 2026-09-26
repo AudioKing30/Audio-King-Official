@@ -15,40 +15,50 @@ async function seedAdminAndCatalog() {
   console.log('[SEED] Running Admin & Catalog Seeder...');
   const now = new Date().toISOString();
 
-  // 1. Seed Initial Admin Account (Only if no admin account exists yet)
-  const existingAdmins = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get().count;
+  // 1. Seed Initial Admin Accounts (admin@audioking.in & audioking30@gmail.com)
+  const defaultAdminAccounts = [
+    {
+      id: 'usr_admin_initial',
+      name: process.env.ADMIN_NAME || 'AudioKing Administrator',
+      displayName: 'Admin',
+      title: 'Store Owner & Audio Specialist',
+      email: (process.env.ADMIN_EMAIL || 'admin@audioking.in').toLowerCase().trim(),
+      password: process.env.ADMIN_PASSWORD || 'Lovemytele@321'
+    },
+    {
+      id: 'usr_admin_audioking30',
+      name: 'AudioKing Store Owner',
+      displayName: 'AudioKing30',
+      title: 'Founder & Pro Audio Specialist',
+      email: 'audioking30@gmail.com',
+      password: process.env.ADMIN_PASSWORD || 'Lovemytele@321'
+    }
+  ];
 
-  if (existingAdmins === 0) {
-    const adminEmail = (process.env.ADMIN_EMAIL || 'admin@audioking.in').toLowerCase().trim();
-    const adminPassword = process.env.ADMIN_PASSWORD || 'Lovemytele@321';
-    const adminName = process.env.ADMIN_NAME || 'AudioKing Administrator';
-
-    const salt = bcrypt.genSaltSync(12);
-    const passwordHash = bcrypt.hashSync(adminPassword, salt);
-
-    db.prepare(`
-      INSERT INTO users (
-        id, full_name, display_name, title, email, role,
-        auth_provider, email_verified, phone_verified, password_hash,
-        created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      'usr_admin_initial',
-      adminName,
-      'Admin',
-      'Store Owner & Audio Specialist',
-      adminEmail,
-      'admin',
-      'email',
-      1,
-      1,
-      passwordHash,
-      now,
-      now
-    );
-    console.log(`[SEED] Initial admin account created: ${adminEmail}`);
-  } else {
-    console.log(`[SEED] Admin accounts already present (${existingAdmins} found). Preserving existing admin passwords.`);
+  for (const acc of defaultAdminAccounts) {
+    const existing = db.prepare('SELECT id, email, role, password_hash FROM users WHERE email = ?').get(acc.email);
+    if (!existing) {
+      const salt = bcrypt.genSaltSync(12);
+      const passwordHash = bcrypt.hashSync(acc.password, salt);
+      db.prepare(`
+        INSERT INTO users (
+          id, full_name, display_name, title, email, role,
+          auth_provider, email_verified, phone_verified, password_hash,
+          created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, 'admin', 'email', 1, 1, ?, ?, ?)
+      `).run(acc.id, acc.name, acc.displayName, acc.title, acc.email, passwordHash, now, now);
+      console.log(`[SEED] Admin account seeded: ${acc.email}`);
+    } else {
+      // Ensure existing admin email has admin role
+      db.prepare("UPDATE users SET role = 'admin', email_verified = 1 WHERE email = ?").run(acc.email);
+      // If no password hash, set default
+      if (!existing.password_hash) {
+        const salt = bcrypt.genSaltSync(12);
+        const passwordHash = bcrypt.hashSync(acc.password, salt);
+        db.prepare('UPDATE users SET password_hash = ? WHERE email = ?').run(passwordHash, acc.email);
+      }
+      console.log(`[SEED] Admin account verified & ensured role=admin: ${acc.email}`);
+    }
   }
 
   // 2. Seed Categories & Brands

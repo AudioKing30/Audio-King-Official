@@ -95,17 +95,6 @@ ul, ol {
 }
 
 /* ==================== SMOOTH APPEAR ON SCROLL & LOAD ANIMATION ==================== */
-/* 
- * Strategy: Elements start VISIBLE. Once JS confirms ready (adds .js-ready),
- * un-revealed elements hide and await IntersectionObserver.
- * Safety net: CSS animation auto-reveals after 2.5s even if JS observer fails.
- */
-
-@keyframes ak-force-reveal {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Only hide elements when JS is confirmed ready AND they haven't been revealed */
 html.js-ready .ak-reveal:not(.is-revealed),
 html.js-ready .ak-scroll-reveal:not(.is-revealed),
 html.js-ready .ak-reveal-card:not(.is-revealed),
@@ -118,11 +107,22 @@ html.js-ready .ak-benefit-card:not(.is-revealed) {
   transform: translateY(24px);
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
-  /* Safety net: if JS observer never fires, CSS auto-reveals after 2.5s */
-  animation: ak-force-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 2.5s forwards;
 }
 
-/* When properly revealed by IntersectionObserver, snap to visible and cancel fallback */
+/* Fallback if JS is disabled */
+html:not(.js-ready) .ak-reveal,
+html:not(.js-ready) .ak-scroll-reveal,
+html:not(.js-ready) .ak-reveal-card,
+html:not(.js-ready) .ak-product-card,
+html:not(.js-ready) .ak-category-card,
+html:not(.js-ready) .ak-testimonial-card,
+html:not(.js-ready) .ak-trust-item,
+html:not(.js-ready) .ak-benefit-card {
+  opacity: 1;
+  transform: none;
+}
+
+/* When properly revealed by IntersectionObserver on scroll, glide into view */
 .ak-reveal.is-revealed,
 .ak-scroll-reveal.is-revealed,
 .ak-reveal-card.is-revealed,
@@ -133,7 +133,6 @@ html.js-ready .ak-benefit-card:not(.is-revealed) {
 .ak-benefit-card.is-revealed {
   opacity: 1 !important;
   transform: translateY(0) !important;
-  animation: none !important;
 }
 
 .ak-stagger-1 { transition-delay: 0.05s; }

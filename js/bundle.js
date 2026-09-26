@@ -25180,13 +25180,25 @@ Country of Origin: China`,
      * Network errors use cached session and retry once.
      */
     async init() {
+      if (typeof window !== "undefined" && window.location.search) {
+        try {
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirectToken = urlParams.get("token");
+          if (redirectToken) {
+            setStorage("audioKingSessionToken", redirectToken);
+            setStorage("audioking_token", redirectToken);
+            setStorage("audioKingToken", redirectToken);
+          }
+          if (window.location.search.includes("auth=google_success")) {
+            const cleanSearch = window.location.search.replace(/[?&]auth=google_success/g, "").replace(/[?&]token=[^&]+/g, "").replace(/^&/, "?");
+            const cleanUrl = window.location.pathname + (cleanSearch && cleanSearch !== "?" ? cleanSearch : "") + window.location.hash;
+            window.history.replaceState({}, document.title, cleanUrl);
+          }
+        } catch (e) {
+        }
+      }
       if (this.status === "authenticated" && this.currentUser) {
         return this.currentUser;
-      }
-      if (typeof window !== "undefined" && window.location.search) {
-        if (window.location.search.includes("auth=google_success")) {
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }
       }
       let res = await this.safeFetch("/api/auth/me", { method: "GET" });
       if (res.networkError) {
@@ -25200,7 +25212,7 @@ Country of Origin: China`,
         this.currentUser = res.data.user;
         this.status = "authenticated";
         setStorage(this.localUserKey, this.currentUser);
-      } else if (res.networkError || res.isStaticFallback || res.status === 404) {
+      } else if (res.networkError || res.isStaticFallback || res.status === 404 || res.status === 502 || res.status === 503 || res.status === 504) {
         const local = getStorage(this.localUserKey, null);
         if (local && local.email && local.id) {
           this.currentUser = local;
@@ -25213,9 +25225,17 @@ Country of Origin: China`,
           this.status = "unauthenticated";
         }
       } else {
-        this.currentUser = null;
-        this.status = "unauthenticated";
-        removeStorage(this.localUserKey);
+        const local = getStorage(this.localUserKey, null);
+        const hasToken = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null);
+        if (!hasToken && local) {
+          this.currentUser = local;
+          this.status = "authenticated";
+        } else {
+          this.currentUser = null;
+          this.status = "unauthenticated";
+          removeStorage(this.localUserKey);
+          removeStorage("audioKingSessionToken");
+        }
       }
       this.notify();
       return this.currentUser;
@@ -25387,6 +25407,8 @@ Country of Origin: China`,
               this.status = "authenticated";
               const fakeToken = "demo_token_" + Date.now();
               setStorage("audioKingSessionToken", fakeToken);
+              setStorage("audioking_token", fakeToken);
+              setStorage("audioKingToken", fakeToken);
               setStorage(this.localUserKey, this.currentUser);
               this.notify();
               return { success: true, user: this.currentUser, token: fakeToken };
@@ -25418,36 +25440,6 @@ Country of Origin: China`,
      * When on GitHub Pages / Static Hosting: Authenticates instantly with Google verified profile without 404 errors.
      */
     async initiateGoogleAuth() {
-      const isGitHubPages = typeof window !== "undefined" && window.location.hostname.includes("github.io");
-      let hasBackend = !isGitHubPages;
-      if (hasBackend) {
-        try {
-          const check = await this.safeFetch("/api/auth/google/url", { method: "GET" });
-          if (!check.ok)
-            hasBackend = false;
-        } catch (e) {
-          hasBackend = false;
-        }
-      }
-      if (!hasBackend) {
-        const googleUser = {
-          id: "usr_google_audioking30",
-          fullName: "AudioKing Store Owner",
-          displayName: "AudioKing30",
-          email: "audioking30@gmail.com",
-          username: "AudioKing30",
-          role: "admin",
-          authProvider: "google",
-          picture: "",
-          emailVerified: true
-        };
-        this.currentUser = googleUser;
-        this.status = "authenticated";
-        setStorage("audioKingSessionToken", "google_token_" + Date.now());
-        setStorage(this.localUserKey, this.currentUser);
-        this.notify();
-        return { success: true, user: googleUser };
-      }
       const baseUrl = this.getBaseUrl();
       const returnTo = typeof window !== "undefined" && window.location.href ? window.location.href : "/";
       const redirectUrl = `${baseUrl}/api/auth/google/redirect?return_to=${encodeURIComponent(returnTo)}`;
@@ -25484,6 +25476,8 @@ Country of Origin: China`,
           if (event.data && event.data.type === "AUDIOKING_GOOGLE_SUCCESS") {
             if (event.data.token) {
               setStorage("audioKingSessionToken", event.data.token);
+              setStorage("audioking_token", event.data.token);
+              setStorage("audioKingToken", event.data.token);
             }
             this.currentUser = event.data.user;
             this.status = "authenticated";
@@ -26169,10 +26163,22 @@ Country of Origin: China`,
           closeAuthModal();
           const user = getCurrentUser();
           if (user && user.role === "admin") {
-            showToast("Welcome Administrator! Redirecting to Admin Dashboard...", getIcon("check-circle", "", 20));
+            showToast("Welcome Administrator! Opening Admin Portal...", getIcon("check-circle", "", 20));
             if (typeof window !== "undefined") {
-              window.location.hash = "#admin";
+              if (typeof window.showAdmin === "function") {
+                window.showAdmin(true);
+              } else {
+                window.location.hash = "#admin";
+              }
             }
+            return;
+          }
+          if (typeof window !== "undefined" && window.location.hash.startsWith("#admin")) {
+            showToast(`Welcome back, ${user?.firstName || "Musician"}! Note: Administrator credentials required for Admin Portal.`, "info");
+            if (typeof window.showHome === "function")
+              window.showHome();
+            else
+              window.location.hash = "#home";
             return;
           }
           showToast(`Welcome back, ${user?.firstName || "Musician"}!`, getIcon("check-circle", "", 20));
@@ -26181,10 +26187,22 @@ Country of Origin: China`,
             closeAuthModal();
             const user = getCurrentUser();
             if (user && user.role === "admin") {
-              showToast("Welcome Administrator! Redirecting to Admin Dashboard...", getIcon("check-circle", "", 20));
+              showToast("Welcome Administrator! Opening Admin Portal...", getIcon("check-circle", "", 20));
               if (typeof window !== "undefined") {
-                window.location.hash = "#admin";
+                if (typeof window.showAdmin === "function") {
+                  window.showAdmin(true);
+                } else {
+                  window.location.hash = "#admin";
+                }
               }
+              return;
+            }
+            if (typeof window !== "undefined" && window.location.hash.startsWith("#admin")) {
+              showToast(`Welcome back, ${user?.firstName || "Musician"}! Note: Administrator credentials required for Admin Portal.`, "info");
+              if (typeof window.showHome === "function")
+                window.showHome();
+              else
+                window.location.hash = "#home";
               return;
             }
             showToast(`Welcome back, ${user?.firstName || "Musician"}!`, getIcon("check-circle", "", 20));
@@ -30518,14 +30536,26 @@ Message: ${message}`);
       _doShowAdmin(updateHash, targetView);
       return;
     }
+    if (user && user.role !== "admin") {
+      showToast("Administrator privileges required. You are signed in as a customer.", "warning");
+      showHome(false);
+      setRouteHash("#home", true);
+      return;
+    }
     if (status === "loading") {
       const unsub = authService.subscribe((resolvedUser, resolvedStatus) => {
         if (resolvedStatus !== "loading") {
           unsub();
           if (resolvedUser && resolvedUser.role === "admin") {
             _doShowAdmin(updateHash, targetView);
+          } else if (resolvedUser) {
+            showToast("Administrator privileges required. You are signed in as a customer.", "warning");
+            showHome(false);
+            setRouteHash("#home", true);
           } else {
             showToast("Admin login required. Please sign in as administrator.", "warning");
+            showHome(false);
+            setRouteHash("#home", true);
             openAuthModal("signin");
           }
         }
@@ -30533,6 +30563,8 @@ Message: ${message}`);
       return;
     }
     showToast("Admin login required. Please sign in as administrator.", "warning");
+    showHome(false);
+    setRouteHash("#home", true);
     openAuthModal("signin");
   }
   function _doShowAdmin(updateHash = true, targetView = null) {
@@ -31989,19 +32021,9 @@ Message: ${message}`);
     if (document.readyState !== "complete") {
       window.addEventListener("load", () => {
         triggerScrollReveal();
-        setTimeout(forceRevealAll, 4e3);
       });
-    } else {
-      setTimeout(forceRevealAll, 4e3);
     }
     setTimeout(triggerScrollReveal, 300);
-    setTimeout(triggerScrollReveal, 1e3);
-  }
-  function forceRevealAll() {
-    const stuck = document.querySelectorAll(
-      ".ak-reveal:not(.is-revealed), .ak-scroll-reveal:not(.is-revealed), .ak-reveal-card:not(.is-revealed), .ak-product-card:not(.is-revealed), .ak-category-card:not(.is-revealed), .ak-testimonial-card:not(.is-revealed), .ak-trust-item:not(.is-revealed), .ak-benefit-card:not(.is-revealed)"
-    );
-    stuck.forEach((el) => el.classList.add("is-revealed"));
   }
   function getProductClicks() {
     try {

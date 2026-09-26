@@ -467,6 +467,14 @@ export function showAdmin(updateHash = true, targetView = null) {
     return;
   }
 
+  // If authenticated as customer, do not loop on admin hash
+  if (user && user.role !== 'admin') {
+    showToast('Administrator privileges required. You are signed in as a customer.', 'warning');
+    showHome(false);
+    setRouteHash('#home', true);
+    return;
+  }
+
   // If still loading session from backend, wait for resolution before gating out
   if (status === 'loading') {
     const unsub = authService.subscribe((resolvedUser, resolvedStatus) => {
@@ -474,8 +482,14 @@ export function showAdmin(updateHash = true, targetView = null) {
         unsub();
         if (resolvedUser && resolvedUser.role === 'admin') {
           _doShowAdmin(updateHash, targetView);
+        } else if (resolvedUser) {
+          showToast('Administrator privileges required. You are signed in as a customer.', 'warning');
+          showHome(false);
+          setRouteHash('#home', true);
         } else {
           showToast('Admin login required. Please sign in as administrator.', 'warning');
+          showHome(false);
+          setRouteHash('#home', true);
           openAuthModal('signin');
         }
       }
@@ -483,8 +497,10 @@ export function showAdmin(updateHash = true, targetView = null) {
     return;
   }
 
-  // Genuinely unauthenticated or not an admin
+  // Genuinely unauthenticated: route to home and prompt login
   showToast('Admin login required. Please sign in as administrator.', 'warning');
+  showHome(false);
+  setRouteHash('#home', true);
   openAuthModal('signin');
 }
 
@@ -2145,28 +2161,10 @@ function initScrollReveal() {
   if (document.readyState !== 'complete') {
     window.addEventListener('load', () => {
       triggerScrollReveal();
-      // Safety net: force-reveal anything still hidden after 4s
-      setTimeout(forceRevealAll, 4000);
     });
-  } else {
-    setTimeout(forceRevealAll, 4000);
   }
-  // Extra trigger after short delay for dynamically rendered content
+  // Extra triggers for dynamically rendered grids
   setTimeout(triggerScrollReveal, 300);
-  setTimeout(triggerScrollReveal, 1000);
-}
-
-/**
- * Emergency fallback: force-reveal any elements still stuck at opacity:0
- */
-function forceRevealAll() {
-  const stuck = document.querySelectorAll(
-    '.ak-reveal:not(.is-revealed), .ak-scroll-reveal:not(.is-revealed), ' +
-    '.ak-reveal-card:not(.is-revealed), .ak-product-card:not(.is-revealed), ' +
-    '.ak-category-card:not(.is-revealed), .ak-testimonial-card:not(.is-revealed), ' +
-    '.ak-trust-item:not(.is-revealed), .ak-benefit-card:not(.is-revealed)'
-  );
-  stuck.forEach(el => el.classList.add('is-revealed'));
 }
 
 /**

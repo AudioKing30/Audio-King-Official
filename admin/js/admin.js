@@ -182,6 +182,11 @@ async function loadDashboardStats() {
         if (window.authService && window.authService.getStatus() === 'loading') {
           return;
         }
+        const cachedUser = JSON.parse(localStorage.getItem('audioKingUser') || 'null');
+        if (cachedUser && cachedUser.role === 'admin') {
+          console.warn('[ADMIN] API returned', res.status, '- backend may still be warming up. Keeping admin session active.');
+          return;
+        }
         if (typeof window.showHome === 'function') window.showHome();
         else window.location.hash = '#home';
         if (typeof window.openAuthModal === 'function') window.openAuthModal('signin');
@@ -331,8 +336,14 @@ async function loadProducts() {
 
   try {
     const res = await adminFetch(`/api/admin/products?${params.toString()}`);
-    const data = await res.json();
-    state.products = data.products || [];
+    const data = res.ok ? await res.json().catch(() => ({})) : {};
+    if (res.ok && Array.isArray(data.products)) {
+      state.products = data.products;
+    } else if (typeof window !== 'undefined' && Array.isArray(window.AUDIOKING_PRODUCTS) && window.AUDIOKING_PRODUCTS.length > 0) {
+      state.products = window.AUDIOKING_PRODUCTS;
+    } else {
+      state.products = data.products || [];
+    }
 
     document.getElementById('productsCountLabel').textContent = `Showing ${state.products.length} products`;
 

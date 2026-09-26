@@ -498,10 +498,21 @@ export function initAuth() {
         closeAuthModal();
         const user = getCurrentUser();
         if (user && user.role === 'admin') {
-          showToast('Welcome Administrator! Redirecting to Admin Dashboard...', getIcon('check-circle', '', 20));
+          showToast('Welcome Administrator! Opening Admin Portal...', getIcon('check-circle', '', 20));
           if (typeof window !== 'undefined') {
-            window.location.hash = '#admin';
+            if (typeof window.showAdmin === 'function') {
+              window.showAdmin(true);
+            } else {
+              window.location.hash = '#admin';
+            }
           }
+          return;
+        }
+        // Customer login
+        if (typeof window !== 'undefined' && window.location.hash.startsWith('#admin')) {
+          showToast(`Welcome back, ${user?.firstName || 'Musician'}! Note: Administrator credentials required for Admin Portal.`, 'info');
+          if (typeof window.showHome === 'function') window.showHome();
+          else window.location.hash = '#home';
           return;
         }
         showToast(`Welcome back, ${user?.firstName || 'Musician'}!`, getIcon('check-circle', '', 20));
@@ -511,10 +522,20 @@ export function initAuth() {
           closeAuthModal();
           const user = getCurrentUser();
           if (user && user.role === 'admin') {
-            showToast('Welcome Administrator! Redirecting to Admin Dashboard...', getIcon('check-circle', '', 20));
+            showToast('Welcome Administrator! Opening Admin Portal...', getIcon('check-circle', '', 20));
             if (typeof window !== 'undefined') {
-              window.location.hash = '#admin';
+              if (typeof window.showAdmin === 'function') {
+                window.showAdmin(true);
+              } else {
+                window.location.hash = '#admin';
+              }
             }
+            return;
+          }
+          if (typeof window !== 'undefined' && window.location.hash.startsWith('#admin')) {
+            showToast(`Welcome back, ${user?.firstName || 'Musician'}! Note: Administrator credentials required for Admin Portal.`, 'info');
+            if (typeof window.showHome === 'function') window.showHome();
+            else window.location.hash = '#home';
             return;
           }
           showToast(`Welcome back, ${user?.firstName || 'Musician'}!`, getIcon('check-circle', '', 20));
