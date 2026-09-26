@@ -14090,15 +14090,6 @@ Key Features:
         closeLogoutConfirmModal();
     });
     document.getElementById("akFooterAuthTrigger")?.addEventListener("click", () => openAuthModal("signin"));
-    document.getElementById("akAdminFillBtn")?.addEventListener("click", () => {
-      const emailInput = document.getElementById("akSignInEmail");
-      const passInput = document.getElementById("akSignInPass");
-      if (emailInput)
-        emailInput.value = "admin@audioking.in";
-      if (passInput)
-        passInput.value = "Lovemytele@321";
-      showToast("Admin credentials filled!", "info");
-    });
     const checkHashAuth = () => {
       if (typeof window !== "undefined" && window.location.hash) {
         if (window.location.hash.includes("auth=signin")) {
@@ -19599,8 +19590,21 @@ Message: ${message}`);
     window.addEventListener("scroll", handleScrollForReveal, { passive: true });
     window.addEventListener("resize", handleScrollForReveal, { passive: true });
     if (document.readyState !== "complete") {
-      window.addEventListener("load", triggerScrollReveal);
+      window.addEventListener("load", () => {
+        triggerScrollReveal();
+        setTimeout(forceRevealAll, 4e3);
+      });
+    } else {
+      setTimeout(forceRevealAll, 4e3);
     }
+    setTimeout(triggerScrollReveal, 300);
+    setTimeout(triggerScrollReveal, 1e3);
+  }
+  function forceRevealAll() {
+    const stuck = document.querySelectorAll(
+      ".ak-reveal:not(.is-revealed), .ak-scroll-reveal:not(.is-revealed), .ak-reveal-card:not(.is-revealed), .ak-product-card:not(.is-revealed), .ak-category-card:not(.is-revealed), .ak-testimonial-card:not(.is-revealed), .ak-trust-item:not(.is-revealed), .ak-benefit-card:not(.is-revealed)"
+    );
+    stuck.forEach((el) => el.classList.add("is-revealed"));
   }
   function getProductClicks() {
     try {
@@ -19903,5 +19907,7 @@ Message: ${message}`);
   if (typeof window !== "undefined") {
     window.showProduct = showProduct;
     window.showCatalog = showCatalog;
+    window.__AUDIOKING_PRODUCTS = AUDIOKING_PRODUCTS;
+    window.__FEATURED_PRODUCTS = FEATURED_PRODUCTS;
   }
 })();

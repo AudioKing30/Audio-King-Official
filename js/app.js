@@ -2136,8 +2136,30 @@ function initScrollReveal() {
   window.addEventListener('scroll', handleScrollForReveal, { passive: true });
   window.addEventListener('resize', handleScrollForReveal, { passive: true });
   if (document.readyState !== 'complete') {
-    window.addEventListener('load', triggerScrollReveal);
+    window.addEventListener('load', () => {
+      triggerScrollReveal();
+      // Safety net: force-reveal anything still hidden after 4s
+      setTimeout(forceRevealAll, 4000);
+    });
+  } else {
+    setTimeout(forceRevealAll, 4000);
   }
+  // Extra trigger after short delay for dynamically rendered content
+  setTimeout(triggerScrollReveal, 300);
+  setTimeout(triggerScrollReveal, 1000);
+}
+
+/**
+ * Emergency fallback: force-reveal any elements still stuck at opacity:0
+ */
+function forceRevealAll() {
+  const stuck = document.querySelectorAll(
+    '.ak-reveal:not(.is-revealed), .ak-scroll-reveal:not(.is-revealed), ' +
+    '.ak-reveal-card:not(.is-revealed), .ak-product-card:not(.is-revealed), ' +
+    '.ak-category-card:not(.is-revealed), .ak-testimonial-card:not(.is-revealed), ' +
+    '.ak-trust-item:not(.is-revealed), .ak-benefit-card:not(.is-revealed)'
+  );
+  stuck.forEach(el => el.classList.add('is-revealed'));
 }
 
 /**
@@ -2501,8 +2523,10 @@ function initNewsletter() {
   }
 }
 
-// Expose navigation handlers for global accessibility
+// Expose navigation handlers and data for global accessibility
 if (typeof window !== 'undefined') {
   window.showProduct = showProduct;
   window.showCatalog = showCatalog;
+  window.__AUDIOKING_PRODUCTS = AUDIOKING_PRODUCTS;
+  window.__FEATURED_PRODUCTS = FEATURED_PRODUCTS;
 }

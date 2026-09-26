@@ -873,14 +873,8 @@ export function initAuth() {
 
   document.getElementById('akFooterAuthTrigger')?.addEventListener('click', () => openAuthModal('signin'));
 
-  // Admin Credentials 1-Click Autofill in Auth Modal
-  document.getElementById('akAdminFillBtn')?.addEventListener('click', () => {
-    const emailInput = document.getElementById('akSignInEmail');
-    const passInput = document.getElementById('akSignInPass');
-    if (emailInput) emailInput.value = 'admin@audioking.in';
-    if (passInput) passInput.value = 'Lovemytele@321';
-    showToast('Admin credentials filled!', 'info');
-  });
+
+
 
   // Deep-link hash listener for direct login / signup modals (e.g. #auth=signin)
   const checkHashAuth = () => {
