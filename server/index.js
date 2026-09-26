@@ -18,6 +18,7 @@ const ordersRoutes = require('./routes/orders');
 const cartRoutes = require('./routes/cart');
 const wishlistRoutes = require('./routes/wishlist');
 const razorpayRoutes = require('./routes/razorpay');
+const cashfreeRoutes = require('./routes/cashfree');
 const publicProductsRoutes = require('./routes/publicProducts');
 const publicCouponsRoutes = require('./routes/publicCoupons');
 const adminAuthRoutes = require('./routes/adminAuth');
@@ -111,6 +112,7 @@ app.use('/api/user/orders', ordersRoutes);
 app.use('/api/user/cart', cartRoutes);
 app.use('/api/user/wishlist', wishlistRoutes);
 app.use('/api/payment/razorpay', razorpayRoutes);
+app.use('/api/payment/cashfree', cashfreeRoutes);
 
 // Admin APIs (Protected by requireAdminApi inside adminApi.js)
 app.use('/api/admin/auth', adminAuthRoutes);

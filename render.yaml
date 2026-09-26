@@ -37,3 +37,11 @@ services:
         sync: false
       - key: GOOGLE_REDIRECT_URI
         value: https://audioking-api.onrender.com/api/auth/google/callback
+      - key: CASHFREE_APP_ID
+        sync: false
+      - key: CASHFREE_SECRET_KEY
+        sync: false
+      - key: CASHFREE_MODE
+        value: sandbox
+      - key: CASHFREE_API_VERSION
+        value: 2023-08-01

@@ -55,33 +55,10 @@ export class DemoPaymentAdapter extends BasePaymentAdapter {
   }
 }
 
-/**
- * CashfreePaymentAdapter
- * Future adapter hook for Cashfree Payments integration once backend API is ready.
- */
-export class CashfreePaymentAdapter extends BasePaymentAdapter {
-  constructor(apiEndpoint = '/api/cashfree') {
-    super('CashfreePaymentAdapter');
-    this.apiEndpoint = apiEndpoint;
-  }
-
-  async processPayment(orderData) {
-    /**
-     * Future Implementation Blueprint:
-     * 1. POST orderData to client backend: fetch(`${this.apiEndpoint}/create-session`)
-     * 2. Receive Cashfree payment_session_id
-     * 3. Invoke Cashfree JS SDK checkout:
-     *    const cashfree = Cashfree({ mode: "sandbox" | "production" });
-     *    await cashfree.checkout({ paymentSessionId, redirectTarget: "_modal" });
-     * 4. Verify payment signature on backend
-     */
-    console.warn('[CashfreeAdapter] Backend API integration pending. Using fallback demo handler.');
-    return new DemoPaymentAdapter().processPayment(orderData);
-  }
-}
-
+import { CashfreePaymentAdapter } from './cashfreeAdapter.js';
 import { RazorpayPaymentAdapter } from './razorpayAdapter.js';
-export { RazorpayPaymentAdapter };
 
-// Active gateway adapter: Razorpay (auto-detects keys or runs sandbox simulation)
-export const activePaymentAdapter = new RazorpayPaymentAdapter();
+export { CashfreePaymentAdapter, RazorpayPaymentAdapter };
+
+// Active gateway adapter: Cashfree Payments (v3 SDK with Sandbox / Production support)
+export const activePaymentAdapter = new CashfreePaymentAdapter();

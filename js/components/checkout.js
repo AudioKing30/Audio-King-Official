@@ -132,10 +132,10 @@ function renderCheckoutStep() {
     const subtotal = getCartSubtotal();
 
     bodyEl.innerHTML = `
-      <!-- Cashfree-ready integration badge -->
+      <!-- Cashfree integration badge -->
       <div class="ak-payment-badge-strip">
         ${getIcon('shield-check', '', 20)}
-        <span>Cashfree-ready Payment UI with integration hooks. (Demo Mode · No real charge)</span>
+        <span>Secured by Cashfree Payments · 256-Bit Bank-Grade Encryption</span>
       </div>
 
       <div class="ak-payment-options">
