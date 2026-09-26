@@ -24,6 +24,7 @@ import { activePaymentAdapter } from './components/paymentAdapter.js';
 import { initAccountSettings, renderAccountSettings, promptUnsavedChanges, isAccountFormDirty } from './components/accountSettings.js';
 import { ordersService } from './services/ordersService.js';
 import { authService } from './services/authService.js';
+import { apiUrl } from './services/apiConfig.js';
 
 let activeProduct = null;
 let activeVariant = null;
@@ -38,7 +39,7 @@ function trackPageView(hash, productId = null) {
     const cleanPath = rawPath.split('?')[0];
     if (cleanPath.startsWith('#admin')) return;
 
-    fetch('/api/analytics/pageview', {
+    fetch(apiUrl('/api/analytics/pageview'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -53,7 +54,7 @@ function trackPageView(hash, productId = null) {
 // Function to dynamically synchronize live products from SQLite /api/products
 async function loadLiveCatalog() {
   try {
-    const res = await fetch('/api/products');
+    const res = await fetch(apiUrl('/api/products'));
     if (!res.ok) return;
     const data = await res.json();
     if (data && Array.isArray(data.products) && data.products.length > 0) {
@@ -653,7 +654,7 @@ export async function showProduct(productOrId, updateHash = true) {
   if (productId) {
     recordProductClick(productId);
     try {
-      const res = await fetch(`/api/products/${encodeURIComponent(productId)}`);
+      const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
       if (res.ok) {
         const data = await res.json();
         if (data.product) {
@@ -2183,7 +2184,7 @@ export function recordProductClick(productId) {
     // Optional non-blocking beacon to backend
     try {
       if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-        navigator.sendBeacon('/api/analytics/click', JSON.stringify({ productId }));
+        navigator.sendBeacon(apiUrl('/api/analytics/click'), JSON.stringify({ productId }));
       }
     } catch (e) {}
 
@@ -2498,7 +2499,7 @@ function initNewsletter() {
       }
 
       try {
-        const res = await fetch('/api/newsletter/subscribe', {
+        const res = await fetch(apiUrl('/api/newsletter/subscribe'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email })

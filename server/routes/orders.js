@@ -149,21 +149,40 @@ router.post('/', requireAuth, (req, res) => {
   const orderId = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  // Calculate items subtotal
+  // Calculate items subtotal with server-side catalog price verification
   let itemsSubtotal = 0;
   const processedItems = items.map(item => {
     const qty = Math.max(1, parseInt(item.quantity || item.qty, 10) || 1);
-    const price = Math.max(0, parseFloat(item.unitPrice || item.price) || 0);
-    const subtotal = qty * price;
+    const prodId = item.productId || item.id || null;
+
+    let verifiedPrice = Math.max(0, parseFloat(item.unitPrice || item.price) || 0);
+    let verifiedName = item.name || 'Pro Audio Equipment';
+    let verifiedImage = item.image || item.img || 'assets/images/logo.jpg';
+
+    // Verify against database product catalog to prevent price tampering
+    if (prodId) {
+      try {
+        const catalogProduct = db.prepare('SELECT id, name, price, image FROM products WHERE id = ?').get(prodId);
+        if (catalogProduct) {
+          verifiedPrice = Number(catalogProduct.price);
+          verifiedName = catalogProduct.name;
+          verifiedImage = catalogProduct.image || verifiedImage;
+        }
+      } catch (e) {
+        console.warn(`[ORDER VERIFY] Could not cross-reference product ${prodId}:`, e.message);
+      }
+    }
+
+    const subtotal = qty * verifiedPrice;
     itemsSubtotal += subtotal;
 
     return {
       id: crypto.randomUUID(),
-      productId: item.id || item.productId || null,
-      name: item.name || 'Pro Audio Equipment',
-      image: item.image || item.img || 'assets/images/logo.jpg',
+      productId: prodId,
+      name: verifiedName,
+      image: verifiedImage,
       quantity: qty,
-      unitPrice: price,
+      unitPrice: verifiedPrice,
       subtotal
     };
   });

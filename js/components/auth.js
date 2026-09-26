@@ -7,6 +7,7 @@
 import { showToast } from './toast.js';
 import { getIcon } from '../../assets/icons/icons.js';
 import { authService } from '../services/authService.js';
+import { apiUrl } from '../services/apiConfig.js';
 
 let pendingSignupEmail = '';
 let pendingResetEmail = '';
@@ -417,7 +418,7 @@ export function initAuth() {
       if (window.google && window.google.accounts && window.google.accounts.id) {
         let clientId = '6900904235-b1cckc398cfk9v254f2icu08lgch5q8u.apps.googleusercontent.com';
         try {
-          const configRes = await fetch('/api/auth/google/config');
+          const configRes = await fetch(apiUrl('/api/auth/google/config'));
           if (configRes.ok) {
             const configData = await configRes.json();
             if (configData.clientId) clientId = configData.clientId;

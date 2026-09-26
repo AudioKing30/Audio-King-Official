@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "AudioKing - Premium Pro Audio & Musical Instruments E-Commerce Platform",
   "main": "server/index.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",

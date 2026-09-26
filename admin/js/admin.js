@@ -39,14 +39,38 @@ function formatDate(isoStr) {
   }
 }
 
-// Central Authenticated Admin Fetch (uses cookie + token header)
+function getAdminApiBase() {
+  if (typeof window !== 'undefined') {
+    if (typeof window.getAudioKingApiBase === 'function') {
+      return window.getAudioKingApiBase();
+    }
+    if (window.AUDIOKING_API_URL) return String(window.AUDIOKING_API_URL).trim().replace(/\/+$/, '');
+    try {
+      const saved = localStorage.getItem('audioking_api_url');
+      if (saved) return String(saved).trim().replace(/\/+$/, '');
+    } catch (e) {}
+    if (window.location.hostname.includes('github.io')) {
+      return 'https://audioking-api.onrender.com';
+    }
+    if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '3000')) {
+      return 'http://localhost:3000';
+    }
+  }
+  return '';
+}
+
+// Central Authenticated Admin Fetch (uses cookie + token header + live API base URL)
 async function adminFetch(url, options = {}) {
-  const token = localStorage.getItem('audioking_token') || localStorage.getItem('audioKingToken');
+  const base = getAdminApiBase();
+  const fullUrl = (/^https?:\/\//i.test(url) || !base) ? url : `${base}${url.startsWith('/') ? url : '/' + url}`;
+  const token = localStorage.getItem('audioKingSessionToken') || 
+                localStorage.getItem('audioking_token') || 
+                localStorage.getItem('audioKingToken');
   const headers = { ...(options.headers || {}) };
   if (token && !headers['Authorization']) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  return fetch(url, { ...options, headers });
+  return fetch(fullUrl, { ...options, credentials: 'include', headers });
 }
 
 // -------------------------------------------------------------

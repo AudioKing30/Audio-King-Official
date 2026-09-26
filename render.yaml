@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: audioking-api
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 22.14.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_PATH
+        value: ./server/data/audioking.db
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ALLOWED_ORIGIN
+        value: https://audioking30.github.io
+      - key: ADMIN_NAME
+        value: AudioKing Administrator
+      - key: ADMIN_EMAIL
+        value: admin@audioking.in
+      - key: ADMIN_PASSWORD
+        value: Lovemytele@321
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+      - key: EMAIL_FROM
+        value: AudioKing <audioking30@gmail.com>
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        value: https://audioking-api.onrender.com/api/auth/google/callback

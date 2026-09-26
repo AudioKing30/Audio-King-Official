@@ -38,17 +38,27 @@ app.use((req, res, next) => {
   next();
 });
 
-// Explicit CORS: reflect origin for any localhost/127.0.0.1 or local file request
-const allowedOriginsPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+// Explicit CORS: reflect origin for localhost, GitHub Pages, or configured ALLOWED_ORIGIN
+const localhostPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
+const githubPagesPattern = /^https:\/\/[a-zA-Z0-9-]+\.github\.io$/;
+
+const customOrigins = (process.env.ALLOWED_ORIGIN || process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow same-origin (no Origin header), local file protocol ('null'), or any localhost/127.0.0.1 origin
-    if (!origin || origin === 'null' || allowedOriginsPattern.test(origin)) {
+    // Allow server-to-server or local file requests
+    if (!origin || origin === 'null') {
       return callback(null, true);
     }
-    // Allow additional production origins from env
-    const extraOrigin = process.env.ALLOWED_ORIGIN || '';
-    if (extraOrigin && origin === extraOrigin) {
+    // Allow localhost or GitHub Pages domains
+    if (localhostPattern.test(origin) || githubPagesPattern.test(origin)) {
+      return callback(null, true);
+    }
+    // Allow configured custom origins
+    if (customOrigins.includes(origin) || origin === 'https://audioking30.github.io') {
       return callback(null, true);
     }
     callback(null, false);

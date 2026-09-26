@@ -12363,6 +12363,41 @@ Key Features:
     }, 2500);
   }
 
+  // js/services/apiConfig.js
+  function getApiBaseUrl() {
+    if (typeof window !== "undefined") {
+      if (window.AUDIOKING_API_URL) {
+        return String(window.AUDIOKING_API_URL).trim().replace(/\/+$/, "");
+      }
+      try {
+        const saved = localStorage.getItem("audioking_api_url");
+        if (saved)
+          return String(saved).trim().replace(/\/+$/, "");
+      } catch (e) {
+      }
+      if (window.location.hostname.includes("github.io")) {
+        return "https://audioking-api.onrender.com";
+      }
+      if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
+        return "http://localhost:3000";
+      }
+    }
+    return "";
+  }
+  function apiUrl(endpoint = "") {
+    if (!endpoint)
+      return getApiBaseUrl();
+    if (/^https?:\/\//i.test(endpoint))
+      return endpoint;
+    const base = getApiBaseUrl();
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    return `${base}${cleanEndpoint}`;
+  }
+  if (typeof window !== "undefined") {
+    window.getAudioKingApiUrl = apiUrl;
+    window.getAudioKingApiBase = getApiBaseUrl;
+  }
+
   // js/components/razorpayAdapter.js
   var razorpayScriptLoaded = false;
   var razorpayScriptLoading = false;
@@ -12402,12 +12437,7 @@ Key Features:
       this.name = "RazorpayPaymentAdapter";
     }
     getBaseUrl() {
-      if (typeof window !== "undefined") {
-        if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
-          return "http://localhost:3000";
-        }
-      }
-      return "";
+      return getApiBaseUrl();
     }
     async processPayment(orderData) {
       const baseUrl = this.getBaseUrl();
@@ -12673,12 +12703,7 @@ Key Features:
      * Determine API base URL dynamically based on environment
      */
     getBaseUrl() {
-      if (typeof window !== "undefined") {
-        if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
-          return "http://localhost:3000";
-        }
-      }
-      return "";
+      return getApiBaseUrl();
     }
     /**
      * Subscribe to auth state changes
@@ -13708,7 +13733,7 @@ Key Features:
         if (window.google && window.google.accounts && window.google.accounts.id) {
           let clientId = "6900904235-b1cckc398cfk9v254f2icu08lgch5q8u.apps.googleusercontent.com";
           try {
-            const configRes = await fetch("/api/auth/google/config");
+            const configRes = await fetch(apiUrl("/api/auth/google/config"));
             if (configRes.ok) {
               const configData = await configRes.json();
               if (configData.clientId)
@@ -14118,12 +14143,11 @@ Key Features:
       });
     }
     getBaseUrl() {
-      if (typeof window !== "undefined") {
-        if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
-          return "http://localhost:3000";
-        }
-      }
-      return "";
+      return getApiBaseUrl();
+    }
+    getAuthHeaders() {
+      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      return token ? { "Authorization": `Bearer ${token}` } : {};
     }
     /**
      * Fetch all orders belonging to authenticated user
@@ -14136,7 +14160,10 @@ Key Features:
         const res = await fetch(`${baseUrl}/api/user/orders`, {
           method: "GET",
           credentials: "include",
-          headers: { "Accept": "application/json" }
+          headers: {
+            "Accept": "application/json",
+            ...this.getAuthHeaders()
+          }
         });
         if (res.ok) {
           const data = await res.json();
@@ -14172,7 +14199,8 @@ Key Features:
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            ...this.getAuthHeaders()
           },
           body: JSON.stringify(payload)
         });
@@ -15185,7 +15213,7 @@ Key Features:
           couponBtn.disabled = true;
           couponBtn.textContent = "Checking...";
           try {
-            const res = await fetch("/api/coupons/validate", {
+            const res = await fetch(apiUrl("/api/coupons/validate"), {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ code: codeVal, cartTotal: subtotal })
@@ -17766,7 +17794,7 @@ Message: ${message}`);
       const cleanPath = rawPath.split("?")[0];
       if (cleanPath.startsWith("#admin"))
         return;
-      fetch("/api/analytics/pageview", {
+      fetch(apiUrl("/api/analytics/pageview"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -17781,7 +17809,7 @@ Message: ${message}`);
   }
   async function loadLiveCatalog() {
     try {
-      const res = await fetch("/api/products");
+      const res = await fetch(apiUrl("/api/products"));
       if (!res.ok)
         return;
       const data = await res.json();
@@ -18278,7 +18306,7 @@ Message: ${message}`);
     if (productId) {
       recordProductClick(productId);
       try {
-        const res = await fetch(`/api/products/${encodeURIComponent(productId)}`);
+        const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
         if (res.ok) {
           const data = await res.json();
           if (data.product) {
@@ -19622,7 +19650,7 @@ Message: ${message}`);
       localStorage.setItem("audioking_product_clicks", JSON.stringify(clicks));
       try {
         if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-          navigator.sendBeacon("/api/analytics/click", JSON.stringify({ productId }));
+          navigator.sendBeacon(apiUrl("/api/analytics/click"), JSON.stringify({ productId }));
         }
       } catch (e) {
       }
@@ -19878,7 +19906,7 @@ Message: ${message}`);
           submitBtn.textContent = "Subscribing...";
         }
         try {
-          const res = await fetch("/api/newsletter/subscribe", {
+          const res = await fetch(apiUrl("/api/newsletter/subscribe"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email })

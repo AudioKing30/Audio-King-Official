@@ -7,6 +7,8 @@
  * - Until then, it functions seamlessly in Sandbox Simulation mode so checkouts can be fully tested.
  */
 
+import { getApiBaseUrl } from '../services/apiConfig.js';
+
 let razorpayScriptLoaded = false;
 let razorpayScriptLoading = false;
 
@@ -48,12 +50,7 @@ export class RazorpayPaymentAdapter {
   }
 
   getBaseUrl() {
-    if (typeof window !== 'undefined') {
-      if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '3000')) {
-        return 'http://localhost:3000';
-      }
-    }
-    return '';
+    return getApiBaseUrl();
   }
 
   async processPayment(orderData) {

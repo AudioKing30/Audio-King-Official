@@ -43,9 +43,7 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
       return res.status(401).json({ error: 'Invalid admin credentials.' });
     }
 
-    const isMatch = await bcrypt.compare(String(password), user.password_hash) ||
-                    (String(password) === 'Lovemytele@321') ||
-                    (String(password) === 'Musix@Admin2026!');
+    const isMatch = await bcrypt.compare(String(password), user.password_hash);
     if (!isMatch) {
       recordFailedLogin(req);
       return res.status(401).json({ error: 'Invalid admin credentials.' });

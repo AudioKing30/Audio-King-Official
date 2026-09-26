@@ -6,6 +6,7 @@
 
 import { authService } from './authService.js';
 import { getStorage, setStorage } from '../utils/storage.js';
+import { getApiBaseUrl } from './apiConfig.js';
 
 class OrdersService {
   constructor() {
@@ -18,12 +19,14 @@ class OrdersService {
   }
 
   getBaseUrl() {
-    if (typeof window !== 'undefined') {
-      if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '3000')) {
-        return 'http://localhost:3000';
-      }
-    }
-    return '';
+    return getApiBaseUrl();
+  }
+
+  getAuthHeaders() {
+    const token = getStorage('audioKingSessionToken', null) || 
+                  getStorage('audioking_token', null) || 
+                  getStorage('audioKingToken', null);
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
   }
 
   /**
@@ -38,7 +41,10 @@ class OrdersService {
       const res = await fetch(`${baseUrl}/api/user/orders`, {
         method: 'GET',
         credentials: 'include',
-        headers: { 'Accept': 'application/json' }
+        headers: {
+          'Accept': 'application/json',
+          ...this.getAuthHeaders()
+        }
       });
 
       if (res.ok) {
@@ -81,7 +87,8 @@ class OrdersService {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          ...this.getAuthHeaders()
         },
         body: JSON.stringify(payload)
       });

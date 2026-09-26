@@ -7,6 +7,7 @@
 
 import { AUDIOKING_CONFIG } from '../config.js';
 import { getStorage, setStorage, removeStorage } from '../utils/storage.js';
+import { getApiBaseUrl, apiUrl } from './apiConfig.js';
 
 class AuthService {
   constructor() {
@@ -28,13 +29,7 @@ class AuthService {
    * Determine API base URL dynamically based on environment
    */
   getBaseUrl() {
-    if (typeof window !== 'undefined') {
-      // If served via file://, or on a live server other than port 3000, target port 3000
-      if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '3000')) {
-        return 'http://localhost:3000';
-      }
-    }
-    return '';
+    return getApiBaseUrl();
   }
 
   /**

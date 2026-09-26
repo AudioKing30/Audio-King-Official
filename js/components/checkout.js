@@ -13,6 +13,7 @@ import { showOrderConfirmation, triggerOrderAnimation } from './orderSuccess.js'
 import { getDefaultAddress, getUserAddresses, saveUserAddresses } from './accountSettings.js';
 import { ordersService } from '../services/ordersService.js';
 import { authService } from '../services/authService.js';
+import { apiUrl } from '../services/apiConfig.js';
 
 let currentStep = 1;
 let checkoutItems = [];
@@ -283,7 +284,7 @@ function renderCheckoutStep() {
         couponBtn.textContent = 'Checking...';
 
         try {
-          const res = await fetch('/api/coupons/validate', {
+          const res = await fetch(apiUrl('/api/coupons/validate'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: codeVal, cartTotal: subtotal })
