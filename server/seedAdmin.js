@@ -8,6 +8,7 @@
 
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const fs = require('fs');
 const { db } = require('./db');
 
 async function seedAdminAndCatalog() {
@@ -80,15 +81,27 @@ async function seedAdminAndCatalog() {
     console.warn('[SEED] Could not load brands.js for seeding:', err.message);
   }
 
-  // 3. Seed Products into SQLite if empty
-  const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
-  if (prodCount === 0) {
-    console.log('[SEED] Products table is empty. Seeding catalog from js/data/products.js...');
+  // 3. Seed Products into SQLite if empty or incomplete
+  let products = [];
+  try {
+    const jsonPath = path.join(__dirname, 'data', 'products_master.json');
+    if (fs.existsSync(jsonPath)) {
+      products = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    }
+  } catch (e) {}
+
+  if (!products.length) {
     try {
       const prodModule = await import('../js/data/products.js');
-      const products = prodModule.AUDIOKING_PRODUCTS || [];
+      products = prodModule.AUDIOKING_PRODUCTS || [];
+    } catch (e) {}
+  }
 
-      const insertProd = db.prepare(`
+  const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
+  if (prodCount < products.length) {
+    console.log(`[SEED] Products count in DB (${prodCount}) is less than master catalog (${products.length}). Upserting all products...`);
+    try {
+      const upsertProd = db.prepare(`
         INSERT INTO products (
           id, name, short_name, brand, category, subcategory,
           price, original_price, stock, in_stock, rating, review_count,
@@ -104,6 +117,30 @@ async function seedAdminAndCatalog() {
           ?, ?, ?,
           ?, ?
         )
+        ON CONFLICT(id) DO UPDATE SET
+          name = excluded.name,
+          short_name = excluded.short_name,
+          brand = excluded.brand,
+          category = excluded.category,
+          subcategory = excluded.subcategory,
+          price = excluded.price,
+          original_price = excluded.original_price,
+          stock = excluded.stock,
+          in_stock = excluded.in_stock,
+          rating = excluded.rating,
+          review_count = excluded.review_count,
+          badge = excluded.badge,
+          sku = excluded.sku,
+          description = excluded.description,
+          image = excluded.image,
+          images_json = excluded.images_json,
+          video_type = excluded.video_type,
+          video_url = excluded.video_url,
+          youtube_video_id = excluded.youtube_video_id,
+          specs_json = excluded.specs_json,
+          deep_specs_json = excluded.deep_specs_json,
+          is_featured = excluded.is_featured,
+          updated_at = excluded.updated_at
       `);
 
       for (const p of products) {
@@ -112,7 +149,7 @@ async function seedAdminAndCatalog() {
         const videoType = p.youtubeVideoId ? 'youtube' : (p.videoFile ? 'upload' : null);
         const videoUrl = p.youtubeVideoId ? `https://www.youtube.com/watch?v=${p.youtubeVideoId}` : (p.videoFile || null);
 
-        insertProd.run(
+        upsertProd.run(
           p.id,
           p.name,
           p.shortName || p.name,
@@ -141,7 +178,8 @@ async function seedAdminAndCatalog() {
         );
       }
 
-      console.log(`[SEED] Successfully seeded ${products.length} products into SQLite database!`);
+      const newCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
+      console.log(`[SEED] Successfully initialized ${newCount} products in SQLite database!`);
     } catch (err) {
       console.error('[SEED ERROR] Failed to seed products:', err);
     }

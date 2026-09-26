@@ -1,9 +1,4 @@
-/**
- * AudioKing Master Product Catalog
- * Auto-generated from database: 286 Products
- */
-
-export const AUDIOKING_PRODUCTS = [
+[
   {
     "id": "lauten-audio-drum-mic-bundle",
     "name": "Lauten Audio - Kick Mic, Snare Mic, 2x Tom Mic, and 3x Rim Mount",
@@ -22783,6 +22778,4 @@ export const AUDIOKING_PRODUCTS = [
     "specs": [],
     "deepSpecs": []
   }
-];
-
-export const FEATURED_PRODUCTS = AUDIOKING_PRODUCTS.filter(p => p.isFeatured);
+]
