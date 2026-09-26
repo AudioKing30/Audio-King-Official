@@ -12,6 +12,7 @@ const { db } = require('./db');
 
 async function seedAdminAndCatalog() {
   console.log('[SEED] Running Admin & Catalog Seeder...');
+  const now = new Date().toISOString();
 
   // 1. Seed Initial Admin Account (Only if no admin account exists yet)
   const existingAdmins = db.prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'").get().count;
