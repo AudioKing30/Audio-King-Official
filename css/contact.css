@@ -1,0 +1,228 @@
+/* ==========================================================================
+   AUDIOKING CONTACT PAGE STYLING
+   Faithfully matches reference image (media_1789481289944.jpg)
+   Clean modern card container with circular badge contact items & message form
+   ========================================================================== */
+
+.ak-contact-page-view, .ak-contact-page {
+  background-color: #F8FAFC;
+  padding: 40px 0 80px;
+  min-height: 80vh;
+}
+
+.ak-contact-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.ak-contact-hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.ak-contact-main-title, .ak-contact-hero-title {
+  font-size: 40px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.ak-contact-main-subtitle, .ak-contact-sub {
+  font-size: 15px;
+  color: #64748B;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.ak-contact-card-box, .ak-contact-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 24px;
+  box-shadow: 0 20px 45px -15px rgba(15, 23, 42, 0.08);
+  padding: 48px 56px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.ak-contact-info-col, .ak-contact-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ak-contact-info-title, .ak-contact-left h2 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 6px;
+}
+
+.ak-contact-info-desc, .ak-contact-left p {
+  font-size: 14px;
+  color: #64748B;
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.ak-contact-methods, .ak-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.ak-contact-method-item, .ak-contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.ak-contact-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #FFF7ED;
+  color: #EA580C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.15);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.ak-contact-method-item:hover .ak-contact-icon-badge {
+  transform: scale(1.08);
+  background: #EA580C;
+  color: #FFFFFF;
+}
+
+.ak-contact-method-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.ak-contact-label, .ak-contact-info-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ak-contact-val, .ak-contact-info-val {
+  font-size: 14px;
+  color: #475569;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.ak-contact-val a, a.ak-contact-val {
+  color: #475569;
+  text-decoration: none;
+}
+
+.ak-contact-val a:hover, a.ak-contact-val:hover {
+  color: #EA580C;
+}
+
+.ak-contact-hours {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  font-size: 12.5px;
+  color: #475569;
+}
+
+/* RIGHT COLUMN FORM */
+.ak-contact-form-col, .ak-contact-right {
+  background: #F8FAFC;
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+}
+
+.ak-contact-form, .ak-contact-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ak-form-row, .ak-form-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ak-form-field, .ak-contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ak-form-field.full {
+  grid-column: 1 / -1;
+}
+
+.ak-form-field label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.ak-form-field input, .ak-form-field textarea,
+.ak-contact-input, .ak-contact-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  background: #FFFFFF;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.ak-form-field input:focus, .ak-form-field textarea:focus {
+  border-color: #EA580C;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.12);
+}
+
+.ak-contact-submit-btn {
+  padding: 13px 28px;
+  background: #EA580C;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 8px;
+  transition: background 0.2s, transform 0.18s;
+}
+
+.ak-contact-submit-btn:hover {
+  background: #C2410C;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 860px) {
+  .ak-contact-card-box, .ak-contact-card {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 32px 24px;
+  }
+  .ak-form-row, .ak-form-2col {
+    grid-template-columns: 1fr;
+  }
+}

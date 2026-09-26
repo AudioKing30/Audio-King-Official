@@ -1,0 +1,317 @@
+/* ==========================================================================
+   AUDIOKING TESTIMONIALS — INFINITE CARD CAROUSEL
+   Continuous forward motion, 15% enlarged cards, matching photo height,
+   arrow controls & dots.
+   ========================================================================== */
+
+.ak-testimonials-section {
+  padding: 68px 0 60px;
+  background-color: #F8FAFC;
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+  overflow: hidden;
+}
+
+.ak-tcard-shell {
+  max-width: 1360px; /* Increased by 15% from 1180px */
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.ak-tcard-heading {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.ak-tcard-sub {
+  font-size: 15px;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 36px;
+}
+
+/* CAROUSEL SHELL (With Left and Right navigation arrows) */
+.ak-tcard-carousel-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* NAVIGATION ARROWS */
+.ak-tcard-nav-arrow {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #0F172A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(11, 37, 69, 0.08);
+  transition: all 0.22s ease;
+  z-index: 10;
+}
+
+.ak-tcard-nav-arrow:hover {
+  background: #0B2545;
+  color: #FFFFFF;
+  border-color: #0B2545;
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(11, 37, 69, 0.18);
+}
+
+.ak-tcard-nav-arrow:active {
+  transform: scale(0.96);
+}
+
+/* VIEWPORT — clips overflowing cards */
+.ak-tcard-viewport {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  flex: 1;
+}
+
+/* TRACK — holds cards in a row */
+.ak-tcard-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.52s cubic-bezier(0.25, 0.85, 0.4, 1);
+  will-change: transform;
+}
+
+/* Each Card — exactly 3 visible at a time on desktop with generous width */
+.ak-tcard {
+  flex: 0 0 calc((100% - 40px) / 3);
+  min-width: calc((100% - 40px) / 3);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 22px 20px;
+  display: flex;
+  align-items: stretch; /* Stretches columns to equal height */
+  gap: 18px;
+  box-shadow: 0 3px 14px rgba(11, 37, 69, 0.06);
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.ak-tcard:hover {
+  box-shadow: 0 10px 28px rgba(11, 37, 69, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Left — Photo + Name Column */
+.ak-tcard-photo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  width: 115px;
+}
+
+/* Photo area matching the height of review paragraph on the side */
+.ak-tcard-photo-wrap {
+  width: 115px;
+  flex: 1; /* Stretches to match review height */
+  min-height: 130px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #E8EDF5;
+  position: relative;
+}
+
+.ak-tcard-photo-wrap img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Arijit Singh specific framing: move image downwards to reveal full hair & head */
+.ak-tcard-photo-wrap img.ak-photo-arijit {
+  object-position: center top;
+}
+
+.ak-tcard-photo-wrap svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ak-tcard-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Right — Review Column */
+.ak-tcard-review-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ak-tcard-stars {
+  color: #F59E0B;
+  font-size: 16px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.ak-tcard-quote {
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: #1E293B;
+  margin: 0;
+  font-style: italic;
+  quotes: none;
+}
+
+/* Dots indicator */
+.ak-tcard-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 30px;
+  margin-bottom: 24px;
+}
+
+.ak-tcard-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  background: #CBD5E1;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+
+.ak-tcard-dot.active {
+  background: #0B2545;
+  transform: scale(1.3);
+}
+
+/* Instagram tag line */
+.ak-tcard-insta {
+  font-size: 14px;
+  color: #64748B;
+  border-top: 1px solid #E2E8F0;
+  padding-top: 22px;
+}
+
+.ak-tcard-insta .ak-insta-tag {
+  font-weight: 700;
+  color: #0B2545;
+}
+
+/* ============================
+   RESPONSIVE: Tablet (641px to 1080px) — 2 cards
+   ============================ */
+@media (max-width: 1080px) and (min-width: 641px) {
+  .ak-tcard {
+    flex: 0 0 calc((100% - 20px) / 2);
+    min-width: calc((100% - 20px) / 2);
+    padding: 22px 20px;
+  }
+  .ak-tcard-photo-wrap {
+    width: 115px;
+    min-height: 130px;
+  }
+  .ak-tcard-photo-col {
+    width: 115px;
+  }
+}
+
+/* ============================
+   RESPONSIVE: Mobile — 1 compact card at a time (-10% height)
+   ============================ */
+@media (max-width: 640px) {
+  .ak-testimonials-section {
+    padding: 32px 0 24px;
+  }
+  .ak-tcard-shell {
+    padding: 0 10px;
+  }
+  .ak-tcard-carousel-shell {
+    gap: 6px;
+  }
+  .ak-tcard-nav-arrow {
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 8px rgba(11, 37, 69, 0.08);
+  }
+  .ak-tcard-nav-arrow svg {
+    width: 15px;
+    height: 15px;
+  }
+  .ak-tcard {
+    flex: 0 0 100%;
+    min-width: 100%;
+    padding: 11px 13px; /* -10% card height reduction */
+    gap: 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(11, 37, 69, 0.05);
+  }
+  .ak-tcard-heading {
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+  .ak-tcard-sub {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .ak-tcard-photo-col {
+    width: 80px;
+    gap: 4px;
+  }
+  .ak-tcard-photo-wrap {
+    width: 80px;
+    min-height: 85px;
+    border-radius: 8px;
+  }
+  .ak-tcard-name {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  .ak-tcard-stars {
+    font-size: 12px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .ak-tcard-quote {
+    font-size: 11.5px;
+    line-height: 1.38;
+  }
+  .ak-tcard-dots {
+    margin-top: 16px;
+    margin-bottom: 14px;
+  }
+  .ak-tcard-insta {
+    font-size: 12px;
+    padding-top: 14px;
+  }
+}

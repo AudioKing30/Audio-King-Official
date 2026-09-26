@@ -1,0 +1,223 @@
+/* AudioKing Multi-Step Checkout Modal */
+.ak-checkout-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(6, 18, 31, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.ak-checkout-modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ak-checkout-box {
+  width: 100%;
+  max-width: 680px;
+  max-height: 92vh;
+  background-color: #FFFFFF;
+  border-radius: var(--ak-radius-lg);
+  box-shadow: var(--ak-shadow-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.96);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ak-checkout-modal.open .ak-checkout-box {
+  transform: scale(1);
+}
+
+.ak-checkout-head {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--ak-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--ak-bg);
+}
+
+.ak-checkout-step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ak-step-pill {
+  padding: 3px 10px;
+  border-radius: var(--ak-radius-pill);
+  font-size: 11px;
+  background-color: #E2E8F0;
+  color: var(--ak-text-muted);
+}
+
+.ak-step-pill.active {
+  background-color: var(--ak-orange);
+  color: #FFFFFF;
+}
+
+.ak-checkout-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* FORM FIELDS */
+.ak-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.ak-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ak-form-group.full {
+  grid-column: 1 / -1;
+}
+
+.ak-form-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ak-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ak-form-input {
+  height: 42px;
+  padding: 0 14px;
+  font-size: 13px;
+  border: 1px solid var(--ak-border-strong);
+  border-radius: var(--ak-radius-sm);
+  background-color: #FFFFFF;
+  color: var(--ak-text-primary);
+  transition: border-color var(--ak-transition-fast), box-shadow var(--ak-transition-fast);
+}
+
+.ak-form-input:focus {
+  border-color: var(--ak-orange);
+  box-shadow: 0 0 0 3px var(--ak-orange-light);
+}
+
+.ak-form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ak-text-secondary);
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+/* CASHFREE-READY PAYMENT SELECTION UI */
+.ak-payment-badge-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  border-radius: var(--ak-radius-sm);
+  color: #166534;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.ak-payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ak-payment-option {
+  border: 1px solid var(--ak-border);
+  border-radius: var(--ak-radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--ak-transition-fast);
+}
+
+.ak-payment-option:hover {
+  border-color: var(--ak-orange);
+  background-color: #FAFBFC;
+}
+
+.ak-payment-option.selected {
+  border-color: var(--ak-orange);
+  background-color: var(--ak-orange-light);
+}
+
+.ak-payment-radio {
+  accent-color: var(--ak-orange);
+  width: 18px;
+  height: 18px;
+}
+
+.ak-payment-info {
+  flex: 1;
+}
+
+.ak-payment-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ak-text-primary);
+}
+
+.ak-payment-desc {
+  font-size: 11.5px;
+  color: var(--ak-text-muted);
+}
+
+/* FOOTER ACTIONS */
+.ak-checkout-foot {
+  padding: 16px 24px;
+  border-top: 1px solid var(--ak-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FAFBFC;
+}
+
+.ak-back-btn {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ak-text-muted);
+}
+
+.ak-back-btn:hover {
+  color: var(--ak-navy);
+}
+
+.ak-proceed-btn {
+  background-color: var(--ak-orange);
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 800;
+  padding: 10px 24px;
+  border-radius: var(--ak-radius-sm);
+  transition: background-color var(--ak-transition-fast);
+}
+
+.ak-proceed-btn:hover {
+  background-color: var(--ak-orange-hover);
+}

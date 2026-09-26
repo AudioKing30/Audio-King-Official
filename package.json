@@ -1,0 +1,31 @@
+{
+  "name": "audioking-ecommerce",
+  "version": "1.0.0",
+  "description": "AudioKing - Premium Pro Audio & Musical Instruments E-Commerce Platform",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "build": "npx esbuild js/app.js --bundle --outfile=js/bundle.js --format=iife",
+    "test:auth": "node test_backend_auth.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "multer": "^2.4.0",
+    "nodemailer": "^10.0.10"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0"
+  },
+  "keywords": [
+    "pro-audio",
+    "ecommerce",
+    "audioking"
+  ],
+  "author": "AudioKing Engineering",
+  "license": "ISC"
+}

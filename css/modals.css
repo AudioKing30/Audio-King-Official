@@ -1,0 +1,591 @@
+/* AudioKing Modals, Auth & Toast System */
+
+/* 1. GENERIC MODAL OVERLAY */
+.ak-modal-overlay,
+.ak-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(6, 18, 31, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.ak-modal-overlay.open,
+.ak-modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ak-modal-container {
+  width: 100%;
+  max-width: 620px;
+  max-height: 85vh;
+  background-color: #FFFFFF;
+  border-radius: var(--ak-radius-lg);
+  box-shadow: var(--ak-shadow-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.96);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ak-modal-overlay.open .ak-modal-container,
+.ak-modal.open .ak-modal-container {
+  transform: scale(1);
+}
+
+.ak-modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--ak-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--ak-bg);
+}
+
+.ak-modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ak-navy);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ak-modal-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: var(--ak-radius-pill);
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.ak-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #E2E8F0;
+  color: var(--ak-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--ak-transition-fast);
+}
+
+.ak-modal-close:hover {
+  background-color: var(--ak-orange-light);
+  color: var(--ak-orange);
+}
+
+.ak-modal-content {
+  padding: 24px;
+  overflow-y: auto;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--ak-text-secondary);
+}
+
+.ak-modal-content h4 {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--ak-navy);
+  margin: 18px 0 6px;
+}
+
+.ak-modal-content h4:first-child {
+  margin-top: 0;
+}
+
+/* 2. AUTH MODAL (SIGN IN / SIGN UP / OTP) */
+.ak-auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--ak-border);
+  margin-bottom: 20px;
+}
+
+.ak-auth-tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ak-text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--ak-transition-fast);
+}
+
+.ak-auth-tab.active {
+  color: var(--ak-orange);
+  border-bottom-color: var(--ak-orange);
+}
+
+.ak-otp-box {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.ak-otp-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.ak-otp-digit {
+  width: 44px;
+  height: 50px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+  border: 1px solid var(--ak-border-strong);
+  border-radius: var(--ak-radius-sm);
+  background-color: #FFFFFF;
+}
+
+.ak-otp-digit:focus {
+  border-color: var(--ak-orange);
+  box-shadow: 0 0 0 3px var(--ak-orange-light);
+}
+
+.ak-otp-demo-hint {
+  font-size: 12px;
+  color: #15803D;
+  background-color: #DCFCE7;
+  padding: 6px 12px;
+  border-radius: var(--ak-radius-sm);
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+/* 3. TOAST NOTIFICATION */
+.ak-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.ak-toast {
+  pointer-events: auto;
+  min-width: 260px;
+  padding: 12px 18px;
+  background-color: var(--ak-navy);
+  color: #FFFFFF;
+  border-left: 4px solid var(--ak-orange);
+  border-radius: var(--ak-radius-sm);
+  box-shadow: var(--ak-shadow-hover);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+}
+
+.ak-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+
+/* ==================== REUSABLE LEGAL MODAL SPECIFICATION ==================== */
+.ak-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 280ms ease-out, visibility 280ms;
+}
+
+.ak-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ak-modal-overlay.closing {
+  opacity: 0;
+  visibility: visible;
+  transition: opacity 220ms ease-in, visibility 220ms;
+}
+
+.ak-modal-container {
+  background: #FFFFFF;
+  width: 800px;
+  max-width: 92vw;
+  max-height: 85vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(15px) scale(0.98);
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms ease-out;
+}
+
+.ak-modal-overlay.open .ak-modal-container {
+  transform: translateY(0) scale(1);
+}
+
+.ak-modal-overlay.closing .ak-modal-container {
+  transform: translateY(10px) scale(0.98);
+  transition: transform 220ms ease-in, opacity 220ms ease-in;
+}
+
+/* Sticky Legal Header */
+.ak-legal-modal-header {
+  position: sticky;
+  top: 0;
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--ak-border);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.ak-legal-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ak-legal-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1E1E1E;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.ak-legal-modal-sub {
+  font-size: 13px;
+  color: #777777;
+  font-weight: 500;
+}
+
+/* 44x44 Touch Close Button */
+.ak-legal-close-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: #1E1E1E;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 200ms ease, color 200ms ease;
+  margin-right: -8px;
+}
+
+.ak-legal-close-btn:hover {
+  background-color: var(--ak-orange);
+  color: #FFFFFF;
+}
+
+/* Scrollable Legal Body */
+.ak-legal-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #444444;
+}
+
+.ak-legal-meta-strip {
+  font-size: 12.5px;
+  color: #777777;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ak-border-light);
+}
+
+.ak-legal-section {
+  margin-bottom: 22px;
+}
+
+.ak-legal-section h3 {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #1E1E1E;
+  margin-bottom: 8px;
+}
+
+.ak-legal-section p {
+  margin-bottom: 10px;
+}
+
+.ak-legal-section ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.ak-legal-section li {
+  margin-bottom: 6px;
+}
+
+@media (max-width: 768px) {
+  .ak-modal-container {
+    width: 95vw;
+    max-height: 90vh;
+    border-radius: 8px;
+  }
+  .ak-legal-modal-title {
+    font-size: 20px;
+  }
+  .ak-legal-modal-header {
+    padding: 14px 18px;
+  }
+  .ak-legal-modal-body {
+    padding: 16px 18px;
+    font-size: 14px;
+  }
+}
+
+/* =========================================================================
+   AUTHENTICATION & SECURITY EXTENSIONS
+   ========================================================================= */
+.ak-auth-error-banner {
+  background-color: #FEF2F2;
+  border: 1px solid #FEE2E2;
+  border-left: 4px solid #DC2626;
+  color: #B91C1C;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.ak-auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 18px 0;
+  color: var(--ak-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.ak-auth-divider::before,
+.ak-auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--ak-border-light);
+}
+
+.ak-auth-divider span {
+  padding: 0 12px;
+}
+
+.ak-google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #FFFFFF;
+  color: #374151;
+  border: 1px solid #D1D5DB;
+  border-radius: var(--ak-radius-sm);
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.ak-google-btn:hover {
+  background-color: #F9FAFB;
+  border-color: #9CA3AF;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.ak-google-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ak-auth-link {
+  font-size: 12.5px;
+  color: var(--ak-orange);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.ak-auth-link:hover {
+  text-decoration: underline;
+  color: #C2410C;
+}
+
+.ak-auth-sub-header {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.ak-auth-sub-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ak-navy);
+  margin-bottom: 4px;
+}
+
+.ak-auth-sub-desc {
+  font-size: 13px;
+  color: var(--ak-text-muted);
+  line-height: 1.4;
+}
+
+.ak-otp-resend-row {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--ak-text-muted);
+  text-align: center;
+}
+
+.ak-otp-resend-btn {
+  background: none;
+  border: none;
+  color: var(--ak-orange);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.ak-otp-resend-btn:disabled {
+  color: var(--ak-text-muted);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* In-App Change Password Section */
+.ak-change-pass-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ak-orange);
+  background-color: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ak-change-pass-toggle-btn:hover {
+  background-color: #FFEDD5;
+  color: #C2410C;
+}
+
+.ak-change-pass-panel {
+  background-color: #F9FAFB;
+  border: 1px solid var(--ak-border-light);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.ak-pass-msg {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: none;
+}
+
+.ak-pass-msg.error {
+  display: block;
+  background-color: #FEF2F2;
+  color: #B91C1C;
+  border: 1px solid #FEE2E2;
+}
+
+.ak-pass-msg.success {
+  display: block;
+  background-color: #F0FDF4;
+  color: #15803D;
+  border: 1px solid #DCFCE7;
+}
+
+/* CONFIRMATION MODAL & BUTTONS */
+.ak-confirm-modal-box {
+  max-width: 440px !important;
+  border-radius: var(--ak-radius-lg);
+  background: #FFFFFF;
+}
+
+.ak-btn-secondary {
+  padding: 10px 18px;
+  background-color: #F1F5F9;
+  color: var(--ak-text-primary);
+  border: 1px solid var(--ak-border);
+  border-radius: var(--ak-radius);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all var(--ak-transition-fast);
+}
+
+.ak-btn-secondary:hover {
+  background-color: #E2E8F0;
+}
+
+.ak-btn-danger {
+  padding: 10px 18px;
+  background-color: #EF4444;
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--ak-radius);
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background-color var(--ak-transition-fast);
+}
+
+.ak-btn-danger:hover {
+  background-color: #DC2626;
+}
+

@@ -1,0 +1,148 @@
+/* Modern CSS Reset & Typography Foundations */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  color: var(--ak-text-primary);
+  background-color: var(--ak-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--ak-transition-fast);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+  transition: var(--ak-transition-fast);
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* Centered Container Structure */
+.ak-wrap,
+.ak-container {
+  width: 100%;
+  max-width: var(--ak-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Accessible focus states */
+:focus-visible {
+  outline: 2px solid var(--ak-orange);
+  outline-offset: 2px;
+}
+
+/* Respect user reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+/* Core Section Headings & Subtitles */
+.ak-section-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  line-height: 1.25;
+}
+
+.ak-section-sub {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1F2937;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+
+/* ==================== SMOOTH APPEAR ON SCROLL & LOAD ANIMATION (EASE-IN) ==================== */
+.ak-reveal,
+.ak-scroll-reveal {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease-in, transform 0.5s ease-in;
+}
+
+.js-loaded .ak-reveal:not(.is-revealed),
+.js-loaded .ak-scroll-reveal:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+.ak-reveal.is-revealed,
+.ak-scroll-reveal.is-revealed {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.ak-stagger-1 { transition-delay: 0.05s; }
+.ak-stagger-2 { transition-delay: 0.12s; }
+.ak-stagger-3 { transition-delay: 0.18s; }
+.ak-stagger-4 { transition-delay: 0.24s; }
+
+/* Universal Circular Button Centering & Zero Offset */
+button.ak-hero-arrow,
+button.ak-testimonial-arrow,
+button.pp-related-nav-btn,
+button.ak-modal-close,
+button.ak-legal-close-btn,
+.ak-floating-whatsapp,
+.pp-accordion-pill {
+  padding: 0 !important;
+  margin: 0;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+
+button.ak-hero-arrow svg,
+button.ak-testimonial-arrow svg,
+button.pp-related-nav-btn svg,
+button.ak-modal-close svg,
+button.ak-legal-close-btn svg {
+  display: block;
+  margin: auto;
+  flex-shrink: 0;
+}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="chromeShell" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#94A3B8"/>
+      <stop offset="25%" stop-color="#F1F5F9"/>
+      <stop offset="50%" stop-color="#CBD5E1"/>
+      <stop offset="75%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#64748B"/>
+    </linearGradient>
+    <filter id="drumShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <g filter="url(#drumShadow)">
+    <!-- Lower Rim -->
+    <ellipse cx="80" cy="116" rx="52" ry="11" fill="#475569"/>
+    <ellipse cx="80" cy="114" rx="52" ry="11" fill="#94A3B8"/>
+    <!-- Drum Shell -->
+    <rect x="28" y="62" width="104" height="52" fill="url(#chromeShell)"/>
+    <!-- Shell Center Ridge Line -->
+    <line x1="28" y1="88" x2="132" y2="88" stroke="#E2E8F0" stroke-width="2.5"/>
+    <line x1="28" y1="89.5" x2="132" y2="89.5" stroke="#64748B" stroke-width="1"/>
+    <!-- Tension Rods / Lugs -->
+    <g stroke="#334155" stroke-width="1.2">
+      <!-- Lug 1 -->
+      <rect x="42" y="68" width="5" height="40" rx="1.5" fill="#E2E8F0"/>
+      <!-- Lug 2 -->
+      <rect x="62" y="70" width="5" height="40" rx="1.5" fill="#E2E8F0"/>
+      <!-- Lug 3 -->
+      <rect x="93" y="70" width="5" height="40" rx="1.5" fill="#E2E8F0"/>
+      <!-- Lug 4 -->
+      <rect x="113" y="68" width="5" height="40" rx="1.5" fill="#E2E8F0"/>
+      <!-- Strainer -->
+      <rect x="76" y="72" width="8" height="34" rx="2" fill="#CBD5E1"/>
+      <circle cx="80" cy="80" r="2.5" fill="#475569"/>
+    </g>
+    <!-- Top Batter Head -->
+    <ellipse cx="80" cy="62" rx="52" ry="14" fill="#F8FAFC" stroke="#94A3B8" stroke-width="3"/>
+    <ellipse cx="80" cy="62" rx="49" ry="12" fill="#FFFFFF" opacity="0.9"/>
+    <!-- Drum Sticks Crossed -->
+    <line x1="45" y1="42" x2="115" y2="80" stroke="#D97706" stroke-width="2.8" stroke-linecap="round"/>
+    <line x1="115" y1="42" x2="45" y2="80" stroke="#B45309" stroke-width="2.8" stroke-linecap="round"/>
+  </g>
+</svg>

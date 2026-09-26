@@ -1,0 +1,467 @@
+/* ==================== AUDIOKING FULL-SCREEN ORDER ANIMATION OVERLAY ==================== */
+.ak-order-anim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s ease;
+}
+
+.ak-order-anim-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.02);
+}
+
+.ak-anim-inner {
+  text-align: center;
+}
+
+/* Standalone Emerald Checkmark Animation (Pure CSS + SVG) */
+.success-checkmark {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+}
+
+.checkmark {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 3;
+  stroke: #10B981;
+  stroke-miterlimit: 10;
+  box-shadow: inset 0px 0px 0px #10B981;
+  animation: checkmark-fill 0.4s ease-in-out 0.4s forwards, checkmark-scale 0.3s ease-in-out 0.9s both;
+}
+
+.checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 3;
+  stroke-miterlimit: 10;
+  stroke: #10B981;
+  animation: checkmark-stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke: #FFFFFF;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: checkmark-stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes checkmark-stroke {
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes checkmark-scale {
+  0%, 100% { transform: none; }
+  50% { transform: scale3d(1.1, 1.1, 1); }
+}
+
+@keyframes checkmark-fill {
+  100% { box-shadow: inset 0px 0px 0px 36px #10B981; }
+}
+
+.ak-anim-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ak-navy);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.ak-anim-sub {
+  font-size: 14px;
+  color: var(--ak-text-muted);
+}
+
+/* ==================== BILL / ORDER CONFIRMATION VIEW (Matching Reference) ==================== */
+.ak-order-view {
+  display: none;
+  min-height: 80vh;
+  padding: 48px 0 90px;
+  background-color: #FAFAFA;
+}
+
+.ak-order-view.active {
+  display: block;
+}
+
+.ak-order-shell {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Header with Soft Emerald Icon */
+.ak-bill-head {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.ak-bill-check-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #E6F7ED;
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.ak-bill-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.ak-bill-subtitle {
+  font-size: 13.5px;
+  color: #64748B;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Main Bill / Receipt Card */
+.ak-order-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+/* Top bar with Order ID & Status Badge */
+.ak-order-card-top {
+  padding: 16px 24px;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ak-order-id-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8C9BAE;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ak-order-id-val {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: 0.02em;
+}
+
+.ak-order-confirmed-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background-color: #E6F7ED;
+  color: #059669;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Card Body Layout (62% Left / 38% Right) */
+.ak-order-card-body {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  padding: 28px;
+}
+
+/* Left Column: Purchased Items */
+.ak-order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ak-order-item-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.ak-order-item-thumb {
+  width: 100px;
+  height: 100px;
+  border-radius: 6px;
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.ak-order-item-thumb img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.ak-order-thumb-placeholder {
+  font-size: 24px;
+  font-weight: 800;
+  color: #94A3B8;
+  letter-spacing: 0.04em;
+}
+
+.ak-order-item-info {
+  flex: 1;
+}
+
+.ak-order-item-brand {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748B;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ak-order-item-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.ak-order-item-meta {
+  font-size: 12px;
+  color: #64748B;
+  margin-bottom: 6px;
+}
+
+.ak-order-item-price {
+  font-family: var(--ak-font-price);
+  font-size: 14px;
+  font-weight: var(--ak-price-weight, 500);
+  color: #0F172A;
+}
+
+/* Subsections: Order Details & Shipping Details */
+.ak-order-section-block {
+  margin-top: 24px;
+  border-top: 1px solid #E2E8F0;
+  padding-top: 18px;
+}
+
+.ak-order-section-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 12px;
+}
+
+.ak-order-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+.ak-order-field .ak-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8C9BAE;
+  margin-bottom: 2px;
+}
+
+.ak-order-field .ak-value {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1E293B;
+  line-height: 1.4;
+}
+
+/* Disclaimer Notice Box */
+.ak-order-disclaimer-box {
+  margin-top: 22px;
+  padding: 12px 16px;
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 6px;
+  color: #92400E;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Right Column: Order Summary Card */
+.ak-order-summary-card {
+  background-color: #FAFAFA;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 20px;
+  height: fit-content;
+}
+
+.ak-order-summary-card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 16px;
+}
+
+.ak-sum-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ak-sum-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.35;
+}
+
+.ak-sum-line span {
+  flex: 1;
+}
+
+.ak-sum-line strong {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+.ak-sum-divider {
+  height: 1px;
+  background-color: #E2E8F0;
+  margin: 12px 0;
+}
+
+.ak-sum-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: #64748B;
+  margin-bottom: 8px;
+}
+
+.ak-sum-row strong {
+  color: #0F172A;
+}
+
+.ak-sum-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 17px;
+  font-weight: 900;
+  color: #0F172A;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #CBD5E1;
+}
+
+/* Bottom Action Buttons */
+.ak-order-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.ak-order-btn-continue {
+  height: 42px;
+  padding: 0 24px;
+  border: 1.5px solid #0B315F;
+  background-color: #FFFFFF;
+  color: #0B315F;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ak-order-btn-continue:hover {
+  background-color: #F1F5F9;
+}
+
+.ak-order-btn-print {
+  height: 42px;
+  padding: 0 24px;
+  border: none;
+  background-color: #0B315F;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ak-order-btn-print:hover {
+  background-color: #123F77;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .ak-order-card-body {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 24px;
+  }
+}
+
+/* ==================== PRINT STYLES ==================== */
+@media print {
+  body {
+    background: #FFFFFF !important;
+  }
+
+  .ak-header,
+  .ak-footer,
+  .ak-order-actions,
+  #akMainContent,
+  #catalogPage,
+  #productPage,
+  .ak-toast-container {
+    display: none !important;
+  }
+
+  .ak-order-view {
+    display: block !important;
+    padding: 0 !important;
+    background: #FFFFFF !important;
+  }
+
+  .ak-order-card {
+    box-shadow: none !important;
+    border: 1px solid #CBD5E1 !important;
+  }
+}

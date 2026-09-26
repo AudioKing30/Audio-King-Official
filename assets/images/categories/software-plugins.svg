@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="boxGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#18181B"/>
+      <stop offset="50%" stop-color="#27272A"/>
+      <stop offset="100%" stop-color="#09090B"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="3" dy="6" stdDeviation="5" flood-color="#000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <g filter="url(#softShadow)" transform="translate(0, -2)">
+    <!-- 3D Software Box (Front Face) -->
+    <rect x="42" y="32" width="76" height="96" rx="4" fill="url(#boxGrad)" stroke="#3F3F46" stroke-width="1.5"/>
+    <!-- Top Header Banner -->
+    <rect x="42" y="32" width="76" height="22" rx="4" fill="#09090B"/>
+    <text x="50" y="44" fill="#F43F5E" font-family="sans-serif" font-size="7" font-weight="900" letter-spacing="1">AUDIO</text>
+    <text x="50" y="50" fill="#E4E4E7" font-family="sans-serif" font-size="4.5" font-weight="700">STUDIO SUITE</text>
+    <!-- Center Waveform Graphic -->
+    <rect x="48" y="60" width="64" height="40" rx="3" fill="#09090B" stroke="#27272A" stroke-width="1"/>
+    <!-- Waveform Bars -->
+    <line x1="53" y1="80" x2="53" y2="80" stroke="#F43F5E" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="58" y1="74" x2="58" y2="86" stroke="#FB7185" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="63" y1="70" x2="63" y2="90" stroke="#E11D48" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="68" y1="65" x2="68" y2="95" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="73" y1="67" x2="73" y2="93" stroke="#0284C7" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="78" y1="72" x2="78" y2="88" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="83" y1="64" x2="83" y2="96" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="88" y1="68" x2="88" y2="92" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="93" y1="75" x2="93" y2="85" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="98" y1="78" x2="98" y2="82" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="103" y1="80" x2="103" y2="80" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Bottom Badge -->
+    <rect x="42" y="112" width="76" height="16" fill="#22C55E"/>
+    <text x="80" y="122.5" fill="#FFFFFF" font-family="sans-serif" font-size="5" font-weight="800" text-anchor="middle" letter-spacing="1">PRO VST / AU / AAX</text>
+  </g>
+</svg>

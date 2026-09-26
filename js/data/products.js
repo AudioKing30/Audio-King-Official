@@ -1,0 +1,11994 @@
+/**
+ * AudioKing Master Product Catalog
+ */
+export const AUDIOKING_PRODUCTS = [
+    {
+      id: "focal-clear-mg-pro",
+      name: "Focal Clear Mg Professional Headphones",
+      shortName: "Focal Clear Mg Pro",
+      brand: "Focal",
+      category: "Headphones",
+      subcategory: "Open-Back Headphones",
+      price: 129000,
+      originalPrice: 145000,
+      rating: 4.9,
+      reviewCount: 18,
+      image: "assets/images/products/focal-clear-mg-pro.png",
+      images: [
+        "assets/images/products/focal-clear-mg-pro.png"
+      ],
+      isFeatured: true,
+      badge: "Top Pick",
+      inStock: true,
+      stock: 6,
+      sku: "AK-FOCAL-CLEAR-MG",
+      description: "Focal Clear Mg Professional are reference open-back circum-aural headphones designed for demanding music creators, recording artists, and mastering engineers. Featuring proprietary 40mm magnesium 'M'-profile inverted dome drivers, they provide exceptional dynamics, remarkable precision across the entire audio spectrum, and an immersive soundstage.",
+      specs: [
+        "Proprietary 40mm Magnesium 'M'-profile inverted dome drivers",
+        "Open-back circumaural design for expansive, natural soundstage",
+        "Pristine tonal balance with exceptional micro-detail and articulation",
+        "Memory foam earpads wrapped in perforated microfibre fabric for marathon comfort",
+        "Includes premium rigid carrying case and detachable oxygen-free copper cables"
+      ],
+      deepSpecs: [
+        ["Transducer", "40mm Magnesium 'M'-shaped dome"],
+        ["Impedance", "55 Ohms"],
+        ["Sensitivity", "104dB SPL / 1mW @ 1kHz"],
+        ["THD", "0.25% @ 1kHz / 100dB SPL"],
+        ["Frequency Response", "5Hz – 28kHz"],
+        ["Weight", "450g"]
+      ]
+    },
+    {
+      id: "lauten-audio-drum-mic-bundle",
+      name: "Lauten Audio - Kick Mic, Snare Mic, 2x Tom Mic, and 3x Rim Mount",
+      shortName: "Lauten Audio Drum Microphone Bundle",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Drum Microphones",
+      price: 203480,
+      originalPrice: 226e3,
+      rating: 5,
+      reviewCount: 1,
+      image: "assets/images/products/lauten-bundle-kit.jpg",
+      images: [
+        "assets/images/products/lauten-bundle-kit.jpg",
+        "assets/images/products/lauten-bundle-thumb.jpg",
+        "assets/images/products/lauten-rim-mount-close.jpg",
+        "assets/images/products/lauten-mic-studio.jpg"
+      ],
+      youtubeUrl: "https://youtu.be/rFjNFWBdXk8?si=wcO3xXjBamDGjhVg",
+      youtubeVideoId: "rFjNFWBdXk8",
+      isFeatured: true,
+      badge: "Official Bundle",
+      inStock: true,
+      stock: 5,
+      sku: "AK-LA-DRUM-BNDL",
+      description: `Lauten Audio Drum Microphone Bundle
+Unleash the true sound of your drum kit with the complete Lauten Audio Drum Microphone System \u2014 a purpose-built collection designed to capture every nuance, punch, and power of your performance.
+
+Kick Mic LS-608 x 1
+Kick Mic is a reimagination of bass drum capture. It provides instant attack, clarity, and defined low-end power from a single position inside your drum. The unique design reduces bleed, manages air turbulence, and prevents low-frequency buildup, ensuring every hit delivers mix-ready, chest-pounding sound on stage or in the studio.
+
+Snare Mic LS-408 x 1
+Snare drums are the lifeblood of music. The materials, tuning, and way they are played tell us exactly how and what we should feel about a composition. Snare drums should be honored, but instead, they are often poorly recorded, heavily manipulated, or replaced entirely for various reasons. 
+
+Snare Mic is the only purpose-built FET condenser microphone made explicitly for snare drums. It ensures that each snare drum's distinct characteristics, impact, tone, and dynamics are captured with sample-quality sound at the microphone. Snare Mic\u2019s frequency response, SPL handling, and ultra-high dynamic range are made to ensure chest-pounding fundamental frequencies, tangible timbre, and explosively musical top-end impact with every note. Add on Snare Mic\u2019s ability to reject up to 28dB of off-axis sounds, and you get professional, mix-ready results straight out of the box.
+
+Tom Mic LS-508 x 2
+Tom Mic is the world\u2019s first large diaphragm condenser microphone custom-crafted for use on toms. Equipped with Lauten Audio\u2019s newly designed Supercardioid capsule and award-winning dual-bias circuitry, Tom Mic captures pure, high-definition rack and floor tom sonics with maximum impact and tone while minimizing cymbal bleed. In addition to its tom-tailored frequency response, Tom Mic also features onboard analog sound-shaping, which allows you to musically rebalance the attack and body of any tom on any drum kit at the flip of a switch.
+
+Rim Mount RM108 x 3
+Innovative, Shock-absorbent Drum Mic Clip
+Imagine if you could combine all the pros of a top-quality mic stand and a rim-mountable drum microphone system. Now, picture removing all the cons of both. Wouldn\u2019t that be something special? Well, that special something is here: the Lauten Audio Rim Mount drum mic clip. Say goodbye to positional limitations, gradual mount sagginess, buzzes, rattles, or general studio corner clutter. Just set the Rim Mount drum mic clip in position on your drums, and then focus on the music. Featuring a shock-absorbent design and a fully articulating arm system, the Rim Mount drum mic clip from Lauten Audio lets you optimally place near any mic on nearly any drum.`,
+      specs: [
+        "Complete 7-piece Lauten Audio Drum Microphone System",
+        "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
+        "1x Snare Mic LS-408 (Purpose-built FET condenser with up to 28dB off-axis rejection)",
+        "2x Tom Mic LS-508 (Large diaphragm condenser with dual-bias circuitry & sound shaping)",
+        "3x Rim Mount RM108 (Shock-absorbent articulating clips eliminating stand clutter)",
+        "Sample-quality transient response straight out of the box",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Bundle Contents", "1x LS-608 Kick, 1x LS-408 Snare, 2x LS-508 Toms, 3x RM108 Mounts"],
+        ["Transducer Architecture", "Purpose-Built Precision FET Condenser Elements"],
+        ["Polar Patterns", "Cardioid & Supercardioid Off-Axis Rejection (up to 28dB isolation)"],
+        ["Onboard Sound Shaping", "Analog attack and body shaping switches on Tom & Snare mics"],
+        ["Mounting System", "Articulating shock-absorbent rim clamp with vibration decoupling"],
+        ["Output Connectors", "Standard 3-Pin Balanced XLR Male"],
+        ["Operating Voltage", "48V Phantom Power (\xB14V)"],
+        ["Country of Engineering", "United States / Lauten Audio Precision Audio Labs"]
+      ]
+    },
+    {
+      id: "lauten-audio-complete-drum-studio-bundle",
+      name: "Lauten Audio - Kick Mic, Snare Mic, 3x Tom Mic, and 4x Rim Mount LA-120 & the LA-120 Pads",
+      shortName: "Lauten Audio Complete Drum & Studio Microphone Bundle",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Drum & Studio Microphone Systems",
+      price: 366740,
+      originalPrice: 407480,
+      rating: 5,
+      reviewCount: 2,
+      image: "assets/images/products/lauten-complete-studio-bundle.jpg",
+      images: [
+        "assets/images/products/lauten-complete-studio-bundle.jpg",
+        "assets/images/products/lauten-b2-1200.jpg",
+        "assets/images/products/lauten-drum-3toms-mounts.jpg",
+        "assets/images/products/lauten-complete-drum-setup.jpg",
+        "assets/images/products/lauten-rim-mount-close.jpg"
+      ],
+      isFeatured: true,
+      badge: "Complete Studio Package",
+      inStock: true,
+      stock: 3,
+      sku: "AK-LA-DRUM-STUDIO-MAX",
+      description: `Lauten Audio Complete Drum & Studio Microphone Bundle
+
+Experience the full spectrum of sound with the Lauten Audio Complete Drum & Studio Microphone Bundle \u2014 a purpose-built collection that delivers precision, musicality, and character for every instrument. From the power of your drum kit to the clarity of your vocals, this bundle is engineered to give you studio-quality sound in real-world spaces.
+
+Kick Mic LS-608 x 1
+Kick Mic is a reimagination of bass drum capture. It provides instant attack, clarity, and defined low-end power from a single position inside your drum. The unique design reduces bleed, manages air turbulence, and prevents low-frequency buildup, ensuring every hit delivers mix-ready, chest-pounding sound on stage or in the studio.
+
+Snare Mic LS-408
+Snare drums are the lifeblood of music. The materials, tuning, and way they are played tell us exactly how and what we should feel about a composition. Snare drums should be honored, but instead, they are often poorly recorded, heavily manipulated, or replaced entirely for various reasons. 
+
+Snare Mic is the only purpose-built FET condenser microphone made explicitly for snare drums. It ensures that each snare drum's distinct characteristics, impact, tone, and dynamics are captured with sample-quality sound at the microphone. Snare Mic\u2019s frequency response, SPL handling, and ultra-high dynamic range are made to ensure chest-pounding fundamental frequencies, tangible timbre, and explosively musical top-end impact with every note. Add on Snare Mic\u2019s ability to reject up to 28dB of off-axis sounds, and you get professional, mix-ready results straight out of the box.
+
+Tom Mic LS-508 x 3
+Tom Mic is the world\u2019s first large diaphragm condenser microphone custom-crafted for use on toms. Equipped with Lauten Audio\u2019s newly designed Supercardioid capsule and award-winning dual-bias circuitry, Tom Mic captures pure, high-definition rack and floor tom sonics with maximum impact and tone while minimizing cymbal bleed. In addition to its tom-tailored frequency response, Tom Mic also features onboard analog sound-shaping, which allows you to musically rebalance the attack and body of any tom on any drum kit at the flip of a switch.
+
+Rim Mount RM108 x 4
+Innovative, Shock-absorbent Drum Mic Clip
+Imagine if you could combine all the pros of a top-quality mic stand and a rim-mountable drum microphone system. Now picture removing all the cons of both. Wouldn\u2019t that be something special? Well, that special something is here: the Lauten Audio Rim Mount drum mic clip. Say goodbye to positional limitations, gradual mount sagginess, buzzes, rattles, or general studio corner clutter. Just set the Rim Mount drum mic clip in position on your drums, and then focus on the music. Featuring a shock-absorbent design and a fully articulating arm system, the Rim Mount drum mic clip from Lauten Audio lets you optimally place near any mic on nearly any drum.
+
+LA-220 FET Condenser Microphone x2
+The LA-220 delivers studio-grade vocal and instrument recordings with the flexibility of two sonic flavors in one mic. Choose between modern clarity or classic warmth at the flip of a switch \u2014 perfect for vocals, drums, acoustic, and electric guitars.
+Built around a custom Lauten capsule and hand-soldered circuitry, the LA-220 brings the harmonic color and natural compression of vintage signal chains straight into your audio interface. With premium components, low-noise JFET, and a vintage-inspired output transformer, it delivers a crisp, mix-ready sound that feels alive in any environment.
+
+Includes:
+LA-220 Microphone x2
+Spider Shock Mounts x2
+Microphone Bags x2
+
+Lauten Audio In-Line -10dB Pads for LA-120 (pair) x 1
+Utilize Your LA-210s with Loud Sound Sources Such as Snare Drums and Guitar Amps
+Engineers often choose Lauten Audio LA-120 Small-diaphragm Condenser mics for their precision and sound clarity, suitable for recording various instruments like woodwinds, auxiliary percussion, acoustic guitars, and symphonic stringed instruments. The LA-120 -10dB attenuation pads provide clear sound on potent sound sources, attenuating the signal before the microphone circuit, and preventing circuit overloads and distortion. To enhance depth and character, a pad can be placed between the LA-120\u2019s detachable capsule and its body. The LA-120 -10dB pads can be shortened with AI for optimal performance.`,
+      specs: [
+        "Complete Lauten Audio Drum & Studio Microphone System",
+        "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
+        "1x Snare Mic LS-408 (Purpose-built FET condenser with up to 28dB off-axis rejection)",
+        "3x Tom Mic LS-508 (Large diaphragm condenser with dual-bias circuitry & sound shaping)",
+        "4x Rim Mount RM108 (Shock-absorbent articulating clips eliminating stand clutter)",
+        "2x LA-220 Large Diaphragm FET Condenser Microphones with Spider Shock Mounts",
+        "1x Pair Lauten Audio In-Line -10dB Attenuation Pads for high-SPL capture",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Bundle Package", "Kick LS-608 + Snare LS-408 + 3x Tom LS-508 + 4x RM108 + 2x LA-220 + In-Line -10dB Pads"],
+        ["Transducer Architecture", "Large Diaphragm Precision FET Condenser Elements"],
+        ["Vocal & Overhead Mics", "2x LA-220 Dual-Tone (Modern Clarity / Vintage Warmth)"],
+        ["Polar Patterns", "Supercardioid / Cardioid with up to 28dB Off-Axis Isolation"],
+        ["Attenuation & Pads", "In-Line -10dB Passive Attenuation Pads for Pre-Circuit Protection"],
+        ["Mounting System", "4x Fully Articulating Vibration-Decoupled Rim Clamps + 2x Spider Shock Mounts"],
+        ["Output Connectors", "Standard 3-Pin Balanced XLR Male (Gold-plated contacts)"],
+        ["Operating Voltage", "Standard 48V Phantom Power (\xB14V)"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "lauten-audio-5pc-drum-mic-bundle",
+      name: "Lauten Audio - Kick Mic, Snare Mic, 3x Tom Mic, and 4x Rim Mount",
+      shortName: "Lauten Audio 5-Piece Drum Microphone Bundle",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Drum Microphones",
+      price: 310900,
+      originalPrice: 345400,
+      rating: 5,
+      reviewCount: 2,
+      image: "assets/images/products/lauten-1200.jpg",
+      images: [
+        "assets/images/products/lauten-1200.jpg",
+        "assets/images/products/lauten-vintageking-bundle.jpg",
+        "assets/images/products/lauten-drum-3toms-mounts.jpg",
+        "assets/images/products/lauten-rim-mount-close.jpg"
+      ],
+      isFeatured: true,
+      badge: "5-Mic Bundle",
+      inStock: true,
+      stock: 4,
+      sku: "AK-LA-DRUM-5PC-BNDL",
+      description: `Lauten Audio Drum Microphone Bundle
+
+Unleash the true sound of your drum kit with the complete Lauten Audio Drum Microphone System \u2014 a purpose-built collection designed to capture every nuance, punch, and power of your performance.
+
+Kick Mic LS-608 x 1
+
+Kick Mic is a reimagination of bass drum capture. It provides instant attack, clarity, and defined low-end power from a single position inside your drum. The unique design reduces bleed, manages air turbulence, and prevents low-frequency buildup, ensuring every hit delivers mix-ready, chest-pounding sound on stage or in the studio.
+
+Snare Mic LS-408
+
+Snare drums are the lifeblood of music. The materials, tuning, and way they are played tell us exactly how and what we should feel about a composition. Snare drums should be honored, but instead, they are often poorly recorded, heavily manipulated, or replaced entirely for various reasons. 
+
+Snare Mic is the only purpose-built FET condenser microphone made explicitly for snare drums. It ensures that each snare drum's distinct characteristics, impact, tone, and dynamics are captured with sample-quality sound at the microphone. Snare Mic\u2019s frequency response, SPL handling, and ultra-high dynamic range are made to ensure chest-pounding fundamental frequencies, tangible timbre, and explosively musical top-end impact with every note. Add on Snare Mic\u2019s ability to reject up to 28dB of off-axis sounds, and you get professional, mix-ready results straight out of the box.
+
+Tom Mic LS-508 x 3
+
+Tom Mic is the world\u2019s first large diaphragm condenser microphone custom-crafted for use on toms. Equipped with Lauten Audio\u2019s newly designed Supercardioid capsule and award-winning dual-bias circuitry, Tom Mic captures pure, high-definition rack and floor tom sonics with maximum impact and tone while minimizing cymbal bleed. In addition to its tom-tailored frequency response, Tom Mic also features onboard analog sound-shaping, which allows you to musically rebalance the attack and body of any tom on any drum kit at the flip of a switch.
+
+Rim Mount RM108 x 4
+
+Innovative, Shock-absorbent Drum Mic Clip
+
+Imagine if you could combine all the pros of a top-quality mic stand and a rim-mountable drum microphone system. Now, picture removing all the cons of both. Wouldn\u2019t that be something special? Well, that special something is here: the Lauten Audio Rim Mount drum mic clip. Say goodbye to positional limitations, gradual mount sagginess, buzzes, rattles, or general studio corner clutter. Just set the Rim Mount drum mic clip in position on your drums, and then focus on the music. Featuring a shock-absorbent design and a fully articulating arm system, the Rim Mount drum mic clip from Lauten Audio lets you optimally place near any mic on nearly any drum.`,
+      specs: [
+        "Complete 9-piece Lauten Audio Drum Microphone System",
+        "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
+        "1x Snare Mic LS-408 (Purpose-built FET condenser with up to 28dB off-axis rejection)",
+        "3x Tom Mic LS-508 (Large diaphragm condenser with dual-bias circuitry & sound shaping)",
+        "4x Rim Mount RM108 (Shock-absorbent articulating clips eliminating stand clutter)",
+        "Sample-quality transient response straight out of the box",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Bundle Contents", "1x LS-608 Kick, 1x LS-408 Snare, 3x LS-508 Toms, 4x RM108 Mounts"],
+        ["Transducer Architecture", "Purpose-Built Precision FET Condenser Elements"],
+        ["Polar Patterns", "Cardioid & Supercardioid Off-Axis Rejection (up to 28dB isolation)"],
+        ["Onboard Sound Shaping", "Analog attack and body shaping switches on Tom & Snare mics"],
+        ["Mounting System", "4x Articulating shock-absorbent rim clamps with vibration decoupling"],
+        ["Output Connectors", "Standard 3-Pin Balanced XLR Male"],
+        ["Operating Voltage", "48V Phantom Power (\xB14V)"],
+        ["Country of Engineering", "United States / Lauten Audio Precision Audio Labs"]
+      ]
+    },
+    {
+      id: "lauten-audio-drum-bundle-with-2x-la220",
+      name: "Lauten Audio - Kick Mic, Snare Mic, 3x Tom Mic, and 4x Rim Mount with 2x LA-220",
+      shortName: "Lauten Audio Drum Bundle with 2x LA-220",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Drum & Studio Microphone Systems",
+      price: 402360,
+      originalPrice: 447060,
+      rating: 5,
+      reviewCount: 3,
+      image: "assets/images/products/lauten-b2-1200.jpg",
+      images: [
+        "assets/images/products/lauten-b2-1200.jpg",
+        "assets/images/products/lauten-1200.jpg",
+        "assets/images/products/lauten-vintageking-bundle.jpg",
+        "assets/images/products/lauten-drum-3toms-mounts.jpg",
+        "assets/images/products/lauten-rim-mount-close.jpg"
+      ],
+      isFeatured: true,
+      badge: "Studio Master Bundle",
+      inStock: true,
+      stock: 3,
+      sku: "AK-LA-DRUM-STUDIO-220",
+      description: `Lauten Audio Complete Drum & Studio Microphone Bundle
+
+Experience the full spectrum of sound with the Lauten Audio Complete Drum & Studio Microphone Bundle \u2014 a purpose-built collection that delivers precision, musicality, and character for every instrument. From the power of your drum kit to the clarity of your vocals, this bundle is engineered to give you studio-quality sound in real-world spaces.
+
+Kick Mic LS-608 x 1
+
+Kick Mic is a reimagination of bass drum capture. It provides instant attack, clarity, and defined low-end power from a single position inside your drum. The unique design reduces bleed, manages air turbulence, and prevents low-frequency buildup, ensuring every hit delivers mix-ready, chest-pounding sound on stage or in the studio.
+
+Snare Mic LS-408
+
+Snare drums are the lifeblood of music. The materials, tuning, and way they are played tell us exactly how and what we should feel about a composition. Snare drums should be honored, but instead, they are often poorly recorded, heavily manipulated, or replaced entirely for various reasons. 
+
+Snare Mic is the only purpose-built FET condenser microphone made explicitly for snare drums. It ensures that each snare drum's distinct characteristics, impact, tone, and dynamics are captured with sample-quality sound at the microphone. Snare Mic\u2019s frequency response, SPL handling, and ultra-high dynamic range are made to ensure chest-pounding fundamental frequencies, tangible timbre, and explosively musical top-end impact with every note. Add on Snare Mic\u2019s ability to reject up to 28dB of off-axis sounds, and you get professional, mix-ready results straight out of the box.
+
+Tom Mic LS-508 x 3
+
+Tom Mic is the world\u2019s first large diaphragm condenser microphone custom-crafted for use on toms. Equipped with Lauten Audio\u2019s newly designed Supercardioid capsule and award-winning dual-bias circuitry, Tom Mic captures pure, high-definition rack and floor tom sonics with maximum impact and tone while minimizing cymbal bleed. In addition to its tom-tailored frequency response, Tom Mic also features onboard analog sound-shaping, which allows you to musically rebalance the attack and body of any tom on any drum kit at the flip of a switch.
+
+Rim Mount RM108 x 4
+
+Innovative, Shock-absorbent Drum Mic Clip
+
+Imagine if you could combine all the pros of a top-quality mic stand and a rim-mountable drum microphone system. Now, picture removing all the cons of both. Wouldn\u2019t that be something special? Well, that special something is here: the Lauten Audio Rim Mount drum mic clip. Say goodbye to positional limitations, gradual mount sagginess, buzzes, rattles, or general studio corner clutter. Just set the Rim Mount drum mic clip in position on your drums, and then focus on the music. Featuring a shock-absorbent design and a fully articulating arm system, the Rim Mount drum mic clip from Lauten Audio lets you optimally place near any mic on nearly any drum.
+
+LA-220 x 2
+
+Dual-tone, large-diaphragm FET condenser microphone
+
+The Series Black LA-220 large-diaphragm FET studio condenser microphone by Lauten Audio is a professional and versatile microphone for studio vocal and instrument recording. At its core, the LA-220 features a hand-tuned, ultra-low noise, 32mm large-diaphragm capsule. It\u2019s equipped with modern clarity and vintage warmth switches, providing two distinctly different sonic profiles in a single microphone.
+
+Features at a glance:
+\u2022 Dual-tone versatility (modern clarity or vintage warmth)
+\u2022 Ultra-low noise, hand-tuned 32mm large-diaphragm capsule
+\u2022 High-pass (120Hz) and low-pass (12kHz) analog tone-shaping filters
+\u2022 Ideal for vocals, acoustic instruments, drum overheads, and guitar cabs
+\u2022 Solid, studio-grade construction with roadworthy reliability`,
+      specs: [
+        "Complete Lauten Audio Drum & Studio Microphone System with 2x LA-220",
+        "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
+        "1x Snare Mic LS-408 (Purpose-built FET condenser with up to 28dB off-axis rejection)",
+        "3x Tom Mic LS-508 (Large diaphragm condenser with dual-bias circuitry & sound shaping)",
+        "4x Rim Mount RM108 (Shock-absorbent articulating clips eliminating stand clutter)",
+        "2x LA-220 Large Diaphragm FET Condenser Microphones (Dual-tone warmth & clarity)",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Bundle Contents", "1x Kick LS-608, 1x Snare LS-408, 3x Tom LS-508, 4x RM108, 2x LA-220 FET Mics"],
+        ["Transducer Architecture", "Large Diaphragm Precision FET Condenser Elements"],
+        ["Vocal & Overhead Mics", "2x LA-220 Dual-Tone (Modern Clarity / Vintage Warmth) with Custom 32mm Capsule"],
+        ["Polar Patterns", "Cardioid / Supercardioid Off-Axis Rejection (up to 28dB isolation)"],
+        ["Mounting System", "4x Articulating rim clamps + 2x spider shock mounts"],
+        ["Output Connectors", "Standard 3-Pin Balanced XLR Male (Gold-plated contacts)"],
+        ["Operating Voltage", "48V Phantom Power (\xB14V)"]
+      ]
+    },
+    {
+      id: "lauten-audio-atlantis-fc387",
+      name: "Lauten Audio Atlantis FC-387",
+      shortName: "Lauten Audio Atlantis FC-387 Multi-Voicing FET Condenser",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Studio Vocal & Instrument Condensers",
+      price: 241030,
+      originalPrice: 267800,
+      rating: 5,
+      reviewCount: 4,
+      image: "assets/images/products/lauten-atlantis-fc387-front.jpg",
+      images: [
+        "assets/images/products/lauten-atlantis-fc387-front.jpg",
+        "assets/images/products/lauten-atlantis-fc387-angle.jpg",
+        "assets/images/products/lauten-atlantis-fc387-shockmount.jpg",
+        "assets/images/products/lauten-atlantis-fc387-boom.jpg",
+        "assets/images/products/lauten-atlantis-fc387-box.jpg"
+      ],
+      isFeatured: true,
+      badge: "Multi-Voicing Flagship",
+      inStock: true,
+      stock: 4,
+      sku: "AK-LA-FC387-ATLANTIS",
+      description: `EXTRA LARGE DIAPHRAGM FET CONDENSER
+
+The Atlantis is three distinct FET microphones packed into a single, hand-finished brass enclosure. Designed in close collaboration with renowned producer and mix engineer Fab Dupont, the Atlantis provides a dynamic and versatile wealth of sound that makes picking the right microphone for even the most troublesome sources as easy as flipping a switch. From modern, tight and bright to smoky vintage velvet, the Atlantis offers an analog abundance of ready-for-mix sounds in a single microphone.
+
+ONE OF A KIND CAPSULE
+
+A microphone's capsule captures music's most meaningful moments and converts them into electricity with relentlessly unforgiving results. Our precision-crafted 38mm capsule is one of the largest in the world -- a one of a kind super-transducer designed in Silicon Valley and tuned by hand to capture the spirit, soul, and wonder of a performance with unprecedented authenticity and realism.
+
+THREE POLAR PATTERNS EACH SELECTION DETERMINES WHAT THE ATLANTIS HEARS
+
+Cardioid, Omnidirectional, and Figure-8 polar patterns offer complete architectural control over the acoustic environment, enabling precise soundstage capture in any studio setup.
+
+PREMIUM COMPONENTS
+
+The Atlantis signal path is populated with high resolution, low distortion polypropylene capacitors, a US-made low-noise FET, and a custom-wound output transformer that puts the finishing touches on every sound that passes through its copper windings. The result is a smooth, mix-ready sound brimming with life.
+
+THREE-WAY GAIN STAGING MUCH MORE THAN JUST A PAD
+
++10 dB
++10dB is ideal for use with quiet sound sources and consumer-grade audio interfaces where more character from the microphone itself is desired.
+
+0 dB
+0dB sets the output of the Atlantis to its default output gain selection.
+
+-10 dB
+-10dB is useful when more color and saturation from a high-end preamp is desired, or when paired with very loud sounds.
+
+DESIGNED & BUILT IN SILICON VALLEY, CA
+
+Each Atlantis is lovingly designed and crafted to last a lifetime in Silicon Valley, CA by the Lauten Audio family.`,
+      specs: [
+        "Extra-large 38mm dual-diaphragm capsule hand-tuned in Silicon Valley",
+        "Three distinct voicing profiles (Gentle, Neutral, Forward) in a single mic",
+        "Multi-pattern architecture: Cardioid, Omnidirectional, and Figure-8",
+        "Three-way gain staging: +10dB gain boost, 0dB neutral, and -10dB attenuation pad",
+        "Hand-finished solid brass enclosure with durable Cerakote ceramic coating",
+        "Includes heavy-duty spider shock mount and premium handcrafted wooden flight case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Pressure Gradient FET Condenser"],
+        ["Capsule Architecture", "38mm Dual-Diaphragm Precision Transducer"],
+        ["Voicing Profiles", "3-Way Multi-Voicing (Gentle / Neutral / Forward)"],
+        ["Polar Patterns", "Cardioid / Omnidirectional / Figure-8"],
+        ["Frequency Response", "20Hz \u2013 20kHz"],
+        ["Dynamic Range", "120dB minimum"],
+        ["Maximum SPL", "130dB (0.5% THD @ 1000Hz)"],
+        ["Impedance", "< 200 Ohms"],
+        ["Self-Noise Level", "< 12dB(A)"],
+        ["Sensitivity", "16mV/Pa or -36\xB12dB (0dB = 1V/Pa @ 1kHz)"],
+        ["Output Connector", "Standard 3-Pin Balanced XLR Male (Gold-plated contacts)"],
+        ["Finish & Body", "Hand-finished brass body with Cerakote ceramic coating"]
+      ]
+    },
+    {
+      id: "lauten-audio-clarion-fc357",
+      name: "Lauten Audio Clarion FC-357",
+      shortName: "Lauten Audio Clarion FC-357 Large Diaphragm FET Condenser",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Studio Vocal & Instrument Condensers",
+      price: 180330,
+      originalPrice: 200370,
+      rating: 5,
+      reviewCount: 3,
+      image: "assets/images/products/lauten-clarion-fc357-front.jpg",
+      images: [
+        "assets/images/products/lauten-clarion-fc357-front.jpg",
+        "assets/images/products/lauten-clarion-fc357-with-mount.jpg",
+        "assets/images/products/lauten-clarion-fc357-case.jpg"
+      ],
+      isFeatured: true,
+      badge: "Vintage FET Tone",
+      inStock: true,
+      stock: 0, isOutOfStock: true,
+      sku: "AK-LA-FC357-CLARION",
+      description: `EXTRA LARGE DIAPHRAGM FET CONDENSER
+
+The Clarion FC-357 is a classic FET microphone packed into a single, hand-finished brass enclosure. Designed to blend vintage warmth with a modern, open top-end air, the Clarion provides a dynamic and versatile wealth of sound that makes picking the right microphone for vocals, kick drums, and acoustic instruments as easy as flipping a switch.
+
+ONE OF A KIND CAPSULE
+
+A microphone's capsule captures music's most meaningful moments and converts them into electricity with relentlessly unforgiving results. Our precision-crafted 35mm dual-diaphragm capsule is custom designed in Silicon Valley and tuned by hand to capture the spirit, soul, and wonder of a performance with unprecedented authenticity and realism.
+
+THREE POLAR PATTERNS EACH SELECTION DETERMINES WHAT THE CLARION HEARS
+
+Cardioid, Omnidirectional, and Figure-8 polar patterns offer complete architectural control over the acoustic environment, enabling precise soundstage capture in any studio setup.
+
+PREMIUM COMPONENTS
+
+The Clarion signal path is populated with high resolution, low distortion polypropylene capacitors, a US-made low-noise FET, and a custom-wound output transformer that puts the finishing touches on every sound that passes through its copper windings. The result is a smooth, mix-ready sound brimming with life.
+
+THREE-WAY GAIN STAGING MUCH MORE THAN JUST A PAD
+
++10 dB
++10dB is ideal for use with quiet sound sources and consumer-grade audio interfaces where more character from the microphone itself is desired.
+
+0 dB
+0dB sets the output of the Clarion to its default output gain selection.
+
+-10 dB
+-10dB is useful when more color and saturation from a high-end preamp is desired, or when paired with very loud sounds.
+
+DESIGNED & BUILT IN SILICON VALLEY, CA
+
+Each Clarion is lovingly designed and crafted to last a lifetime in Silicon Valley, CA by the Lauten Audio family.`,
+      specs: [
+        "Custom 35mm dual-diaphragm capsule hand-tuned in Silicon Valley",
+        "Vintage FET warmth with modern open top-end air",
+        "Multi-pattern architecture: Cardioid, Omnidirectional, and Figure-8",
+        "Three-way gain staging: +10dB gain boost, 0dB neutral, and -10dB attenuation pad",
+        "Hand-finished solid brass enclosure with durable Cerakote ceramic coating",
+        "Includes heavy-duty spider shock mount and premium handcrafted wooden flight case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Pressure Gradient FET Condenser"],
+        ["Capsule Architecture", "35mm Dual-Diaphragm Precision Transducer"],
+        ["Sound Character", "Vintage FET Body & Warmth with Modern Air"],
+        ["Polar Patterns", "Cardioid / Omnidirectional / Figure-8"],
+        ["Frequency Response", "25Hz \u2013 20kHz"],
+        ["Dynamic Range", "120dB minimum"],
+        ["Maximum SPL", "130dB (0.5% THD @ 1000Hz)"],
+        ["Impedance", "< 200 Ohms"],
+        ["Self-Noise Level", "< 12dB(A)"],
+        ["Sensitivity", "16mV/Pa or -36\xB12dB (0dB = 1V/Pa @ 1kHz)"],
+        ["Output Connector", "Standard 3-Pin Balanced XLR Male (Gold-plated contacts)"],
+        ["Finish & Body", "Hand-finished brass body with Cerakote ceramic coating"],
+        ["Power Requirements", "+48V Phantom Power (\xB14V)"],
+        ["Origin & Craftsmanship", "Designed & hand-tuned in Silicon Valley, California, USA"]
+      ]
+    },
+    {
+      id: "lauten-audio-eden-lt386",
+      name: "Lauten Audio Eden LT-386",
+      shortName: "Lauten Audio Eden LT-386 Multi-Voicing Vacuum Tube Condenser",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Tube & Multi-Voicing Studio Condensers",
+      price: 524425,
+      originalPrice: 582690,
+      rating: 5,
+      reviewCount: 5,
+      image: "assets/images/products/lauten-eden-lt386-front.jpg",
+      images: [
+        "assets/images/products/lauten-eden-lt386-front.jpg",
+        "assets/images/products/lauten-eden-lt386-side-mount.jpg",
+        "assets/images/products/lauten-eden-lt386-case-open.jpg",
+        "assets/images/products/lauten-eden-lt386-full-kit.jpg"
+      ],
+      isFeatured: true,
+      badge: "Flagship Vacuum Tube",
+      inStock: true,
+      stock: 0, isPreOrder: true, badge: 'Pre-Order',
+      sku: "AK-LA-LT386-EDEN",
+      description: `The Lauten Audio Eden LT-386 is a Multi-voicing\u2122 vacuum tube large diaphragm condenser microphone. The LT-386 is for discerning recordists in search of the most diverse and useful studio vacuum tube microphone. It offers a unique blend of classic and modern design theory which exhibits a smooth, rich low and mid-range as well as high mid and high timbre reminiscent of premier classic vacuum tube microphones. From its attached, semi-permanent, suspension mount, to its three different switches housed on the microphone itself, Eden offers an endless palette of sound.
+
+Lauten Audio Eden LT-386 at a glance:
+\u2022 Designed for the most discerning ears in the business
+\u2022 Multi-voicing switch for three distinct timbres (Forward, Neutral, Gentle)
+\u2022 Vocal shaping high-pass filter
+\u2022 Kick-drum shaping high-pass filter
+\u2022 Switchable patterns on the microphone (Cardioid, Omnidirectional, Figure-8)
+\u2022 Stunning appearance, built to the hilt, refined character
+
+Pattern switching on the microphone:
+The polar pattern switch gives recordists the option of choosing between Cardioid, Omnidirectional or Figure-8 polar patterns. Having the pattern switch on the microphone, rather than the power supply, allows you or the artist to quickly and easily make your selection. Although not as common today, we were inspired by the most admired classics when we decided to put this feature on the microphone itself.
+
+Vocal and Kick-drum shaping high-pass filters:
+Next up we have our unique 2-stage, high-pass filters we call \u201CKick-shaper\u201D and \u201CVocal-shaper\u201D. These filters are uniquely tuned to shape the low-end for two of the most common trouble areas. In its default position there is no high-pass. Stage one, or the middle position, is the \u201CKick-shaper\u201D; designed specifically for kick-drums with a very steep low-end cut removing excess boominess. Stage 2, or the bottom position, is the \u201CVocal-shaper\u201D designed to clean up your vocal tracks for an amazingly smooth and classic sound.
+
+Proprietary Multi-voicing technology:
+Multi-voicing is a process that can only be achieved in the microphone itself. This is Lauten Audio\u2019s proprietary technology that uses three separate signal paths for unique frequency shaping. The multi-voicing functions in Eden are specifically designed and tuned for this microphone: Forward, Neutral, and Gentle. The Gentle position provides maximum control of bright or peaky sources or to achieve a very warm, vintage vibe. Neutral offers a nice even response with good control over sibilance. Lastly, Forward opens up the microphone for that familiar \u201Cair\u201D of classic microphones from the past with our own modern touch.
+
+Premium components throughout:
+The Eden LT-386 uses our proprietary 31.25mm dual-diaphragm pressure gradient condenser capsule tuned specifically for this mic. It uses a custom-wound US-made output transformer for excellent control of transients. The vacuum tube is a modern EF806s aged using a proprietary process developed by Lauten Audio. The mic also features high-quality, high-tolerance resistors and capacitors, Switchcraft\xAE connectors on the microphone, cable and power-supply, and our own custom tube microphone cable.`,
+      specs: [
+        "31.25mm dual large diaphragm pressure gradient transducer capsule",
+        "Aged EF806s vacuum tube circuit with custom-wound US output transformer",
+        "Proprietary 3-stage Multi-voicing\u2122 technology (Forward, Neutral, Gentle)",
+        "2-stage acoustic shaping high-pass filters: Kick-shaper and Vocal-shaper",
+        "Switchable polar patterns on the microphone: Cardioid, Omnidirectional, Figure-8",
+        "Includes custom power supply, 5-pin XLR tube cable, and heavy-duty flight case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Multi-Voicing Vacuum Tube Large Diaphragm Condenser"],
+        ["Capsule Architecture", "31.25mm Dual Large Diaphragm Pressure Gradient Transducer"],
+        ["Vacuum Tube & Circuit", "Modern EF806s Vacuum Tube (Lauten Aged) with Transformer-Balanced Output"],
+        ["Polar Patterns", "Cardioid / Omnidirectional / Figure-8 (Switchable on microphone)"],
+        ["Frequency Range", "20Hz \u2013 20kHz"],
+        ["Dynamic Range", "120dB minimum"],
+        ["Maximum SPL", "120dB (0.5% THD @ 1000Hz)"],
+        ["Impedance", "< 200 Ohms"],
+        ["Self-Noise Level", "< 20dB(A)"],
+        ["Sensitivity", "16mV/Pa or -36\xB12dB (0dB = 1V/Pa @ 1000Hz)"],
+        ["Special Filter Controls", "Kick-shaper & Vocal-shaper 2-stage High-Pass Filters"],
+        ["Voicing Profiles", "3-Stage Multi-Voicing\u2122 (Forward, Neutral, Gentle)"],
+        ["Connectors", "Switchcraft\xAE 5-Pin XLR (PSU to Mic), Standard 3-Pin XLR (PSU to Preamp)"],
+        ["Power Requirement", "Custom Regulated Power Supply (100V\u2013240V compatible)"],
+        ["Included Accessories", "Custom PSU, 5-pin tube cable, suspension mount, flight hardcase"]
+      ]
+    },
+    {
+      id: "lauten-audio-kick-mic-ls608",
+      name: "Lauten Audio Kick Mic LS-608",
+      shortName: "Lauten Audio Kick Mic LS-608 FET Condenser",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Drum & Percussion Microphones",
+      price: 68605,
+      originalPrice: 76230,
+      rating: 5,
+      reviewCount: 3,
+      image: "assets/images/products/lauten-kick-ls608-front.jpg",
+      images: [
+        "assets/images/products/lauten-kick-ls608-front.jpg",
+        "assets/images/products/lauten-kick-ls608-angle.jpg",
+        "assets/images/products/lauten-kick-ls608-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "Dedicated Kick Condenser",
+      inStock: true,
+      stock: 6,
+      sku: "AK-LA-LS608-KICK",
+      description: `FIXED BEFORE MIXED
+
+Kick Mic solves a fundamental problem of bass drum capture. Traditional microphones begin losing the integrity of their polar pattern as early as 2kHz, and become omnidirectional at 200Hz, where a bass drum\u2019s core energy is generated. This creates several time-consuming issues at the mixing stage, including low-frequency buildup and phase issues caused by reflections inside the drum, leading to inconsistent, fluctuant, and muddy sound.
+
+A BETTER KICKCAPSULE
+
+Lauten Audio\u2019s new KC608 capsule places a 17mm diaphragm within a 40mm element in a rear-ventilated chamber, ensuring the integrity of Kick Mic\u2019s polar pattern is retained down to 50Hz. From a single interior position, this distinct approach delivers superior transient response, timbral balance, and lifelike performance without losing low-end clarity or attack.
+
+SOUND & PERFORMANCE
+
+Designed specifically for bass drums, Kick Mic captures punchy lows, smooth highs, and a balanced overall sound that requires minimal EQ to sit perfectly in your mix. By managing acoustic reflections and bleed before they reach the capsule, it delivers a defined, high-impact sound with exceptional bleed rejection.
+
+EFFORTLESS EQ
+
+Kick Mic features two independent analog sound-shaping filters to contour low-end weight and high-end attack at the source:
+LOW PASS (LPF): Flat, 5kHz, 12kHz
+HIGH PASS (HPF): Flat, 50Hz, 80Hz
+Use them individually or together to dial in massive sub-bass, punchy attack, or a modern, scooped tone\u2014no digital processing required.
+
+MORE KICK. LESS NOISE.
+
+Inside the drum, bleed from the snare, toms, and cymbals can easily smear your low-end punch. Kick Mic\u2019s tight cardioid polar pattern delivers up to 28dB of off-axis rejection, ensuring you capture only the sound of your kick drum, free from unwanted room noise and spill.
+
+THRIVE LIVE
+
+Kick Mic\u2019s low-profile design and durable, all-brass construction make it ideal for touring and live applications. It easily fits through sound holes, withstands high SPLs without distorting, and remains securely in place during high-energy performances.
+
+INTEGRATED FILTER SYSTEM
+
+Kick Mic\u2019s two dedicated multi-stage sound shaping filters allow you to mold attack and balance at the source without altering the microphone\u2019s core low-end response:
+LPF (Flat, 5kHz, 12kHz): Smooths high-end bleed or rolls off treble for vintage warmth.
+HPF (Flat, 50Hz, 80Hz): Cleans up muddy sub frequencies or tightens low-end boom.
+
+BEST OF BOTH WORLDS
+
+Kick Mic offers the clarity, depth, and punch of a premium condenser with the toughness and SPL handling of a dynamic microphone, making it the ultimate tool for capturing mix-ready kick drums in any environment.
+
+SMALL AND MIGHTY
+
+Kick Mic\u2019s compact size, rugged solid-brass construction, and built-in articulating mount allow for fast, accurate placement even inside tight, crowded drum setups. It stays securely where you put it\u2014song after song, night after night.`,
+      specs: [
+        "Dedicated bass drum FET condenser microphone with KC608 capsule",
+        "Retains tight directional cardioid polar pattern down to 50Hz",
+        "Up to 28dB of off-axis bleed rejection from snare and cymbals",
+        "Two independent multi-stage analog sound-shaping filters (LPF & HPF)",
+        "High SPL handling up to 135dB with 135dB minimum dynamic range",
+        "All-brass solid construction with integrated precision locking swivel mount",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Transducer Architecture", "Precision FET Condenser with KC608 Custom Capsule"],
+        ["Diaphragm & Element", "17mm Diaphragm in 40mm Rear-Ventilated Acoustic Chamber"],
+        ["Polar Pattern", "Tight Cardioid (consistent directional response down to 50Hz)"],
+        ["Off-Axis Isolation", "Up to 28dB Acoustic Bleed Rejection"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["Dynamic Range", "135dB Minimum"],
+        ["Max SPL Handling", "135dB (0.5% THD @ 1,000Hz)"],
+        ["Analog Filter Shaping", "LPF: Flat / 5kHz / 12kHz | HPF: Flat / 50Hz / 80Hz"],
+        ["Housing & Mount", "Machined Solid Brass Body with Integrated Articulating Swivel Mount"],
+        ["Output Connector", "Standard 3-Pin Balanced XLR Male (Gold-plated contacts)"],
+        ["Power Requirements", "+48V Phantom Power (\xB14V)"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "lauten-audio-la120-v2-black-pair",
+      name: "Lauten Audio LA-120 V2 Black Pair",
+      shortName: "Lauten Audio LA-120 V2 Small Diaphragm FET Condenser Pair",
+      brand: "Lauten Audio",
+      category: "Condenser Microphones",
+      subcategory: "Small Diaphragm & Stereo Pairs",
+      price: 69140,
+      originalPrice: 76820,
+      rating: 5,
+      reviewCount: 4,
+      image: "assets/images/products/lauten-la120-pair-front.jpg",
+      images: [
+        "assets/images/products/lauten-la120-pair-front.jpg",
+        "assets/images/products/lauten-la120-pair-accessories.jpg",
+        "assets/images/products/lauten-la120-pair-stereobar.jpg",
+        "assets/images/products/lauten-la120-pair-box.jpg"
+      ],
+      isFeatured: true,
+      badge: "Matched Stereo Pair",
+      inStock: true,
+      stock: 4,
+      sku: "AK-LA-LA120V2-PAIR",
+      description: `WORLD-CLASS CONFIGURABILITY AND TRANSIENT RESPONSE
+
+DRUM OVERHEADS // ACOUSTIC GUITAR // PIANO // STRINGED INSTRUMENTS // CHOIR
+
+LIFELIKE TRANSPARENCY & UNMATCHED VERSATILITY
+
+The LA-120 is a transformerless condenser microphone with world-class transparency and sonic flexibility. This uniquely configurable design is equipped with analog sound-shaping onboard and includes interchangeable Cardioid and Omni capsules for added flexibility. Unlike traditional microphone designs that utilize a transformer to introduce color and saturation, the LA-120 is built around a US-made JFET to capture the vibrance and character of a sound with unprecedented realism and authenticity.
+
+MORE THAN MEETS THE EYE
+
+The LA-120\u2019s onboard sound-shaping eliminates the need for mic swaps and wasted time. Jump from crisp to smooth to ribbon-like sonics at the flip of a switch. Take the edge off harsh overheads, or warm up a bright piano. Add picking articulation to an acoustic guitar or perfectly capture a string quartet, all at the flip of a switch.
+
+CUSTOM CAPSULES
+
+Our hand-tuned 17mm capsules provide transparent, lifelike sound with a musical blend of transient response and natural compression. This makes the LA-120 an ideal choice for use on drum overheads, percussion, acoustic guitar, and piano.
+
+OMNI & CARDIOID POLAR PATTERNS
+
+Cardioid capsules will focus each microphone\u2019s attention directly to where it is pointed, reducing the overall sound of a room in a recording.
+Omnidirectional capsules allow the sound of a room or other off-axis instrumentation to be captured naturally and with uncolored authenticity.
+
+TRANSFORMERLESS TRANSPARENCY
+
+The LA-120 signal path is hand-populated with high-resolution, low-distortion polypropylene capacitors and resistors, built around a US-made JFET for articulate, uncolored, and high-impact performance.
+
+HIGH SPL ASSISTANCE (OPTIONAL)
+
+We designed the LA-120s to excel in numerous applications, but you may want to use them on something extra loud. The optional in-line pads allow the LA-120s dynamic range and depth to be fully utilized on high SPL sound sources like toms, snare drums, and more.
+
+IN THE BOX
+
+2X CARDIOD CAPSULES / 2X OMNI CAPSULES / 2X STAND MOUNTS / 2X WINDSCREENS / LUXURY STORAGE PRESENTATION BOX`,
+      specs: [
+        "Matched pair of transformerless small diaphragm FET condenser microphones",
+        "Interchangeable hand-tuned 17mm capsules: 2x Cardioid and 2x Omnidirectional",
+        "Built around a custom US-made low-noise JFET with polypropylene capacitors",
+        "Onboard 3-stage high-pass filter (Flat / 50Hz / 120Hz)",
+        "Onboard 3-stage low-pass filter (Flat / 15kHz / 10kHz)",
+        "Includes 2x stand mounts, 2x windscreens, 4x capsules & luxury presentation box",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Transformerless Small Diaphragm FET Condenser (Matched Pair)"],
+        ["Capsule Architecture", "17mm Pressure Gradient Transducer (Hand-Tuned)"],
+        ["Interchangeable Polar Patterns", "Cardioid (2x capsules) & Omnidirectional (2x capsules) included"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["High Pass Filter (HPF)", "Flat / 50Hz / 120Hz (3-Position Switch)"],
+        ["Low Pass Filter (LPF)", "Flat / 15kHz / 10kHz (3-Position Switch)"],
+        ["Dynamic Range", "120dB Minimum"],
+        ["Maximum SPL", "130dB (0.5% THD @ 1,000Hz)"],
+        ["Impedance", "< 200 Ohms"],
+        ["Self-Noise Level", "< 15dB(A)"],
+        ["Sensitivity", "10mV/Pa (-40dB, 0dB = 1V/Pa @ 1kHz)"],
+        ["Connector", "Standard 3-Pin Balanced XLR Male (Gold-plated contacts)"],
+        ["Power Requirements", "+48V Phantom Power Required (\xB14V)"],
+        ["Weight & Dimensions", 'Mic w/ mount: 6oz each | Box dimensions: 4" x 10" x 10" (2.7 lbs)'],
+        ["In The Box", "2x LA-120 Mics, 2x Cardioid Capsules, 2x Omni Capsules, 2x Stand Mounts, 2x Windscreens, Presentation Box"]
+      ]
+    },
+    {
+      id: "universal-audio-bock-167-tube-condenser",
+      name: "Universal Audio Bock 167 Tube Condenser Microphone",
+      shortName: "Universal Audio Bock 167 Multi-Pattern Tube Condenser",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Tube & Multi-Voicing Studio Condensers",
+      price: 354460,
+      originalPrice: 393840,
+      rating: 5,
+      reviewCount: 2,
+      image: "assets/images/products/ua-bock-167-mic-front.jpg",
+      images: [
+        "assets/images/products/ua-bock-167-mic-front.jpg",
+        "assets/images/products/ua-bock-167-angle.jpg",
+        "assets/images/products/ua-bock-167-back.jpg",
+        "assets/images/products/ua-bock-167-switches-close.jpg",
+        "assets/images/products/ua-bock-167-case-open.png",
+        "assets/images/products/ua-bock-167-kit.jpg"
+      ],
+      isFeatured: true,
+      badge: "Custom Shop Tube Condenser",
+      inStock: true,
+      stock: 2,
+      sku: "AK-UA-BOCK167-TUBE",
+      description: `Record with Rich Tube Magic
+
+The UA Bock 167 large-diaphragm tube condenser mic will give your vocals and instruments the classic smooth tone of the legendary U67 with modern sonic flexibility. Each microphone is handmade in Santa Cruz, California, to the exacting specifications of world\u2011renowned mic designer David Bock.
+
+Add a Handmade Masterpiece to your Studio
+
+The UA Bock 167 is David Bock's thoughtful reimagining of the iconic U67 mics he studied and maintained as chief technical engineer of the world's top recording studios for two decades. Handbuilt at UA\u2019s Custom Shop in Santa Cruz, California, the UA Bock 167 is the perfect choice for recording singers, acoustic instruments, drums, and voiceovers.
+
+Get Iconic Sounds with Modern Tone Sculpting
+
+Vintage U67 tube mics are cherished for their full sound and lively midrange. Our UA Bock 167 improves upon this classic design with three EQ filtering options, a unique "fat" switch for boosting between 10 Hz and 400 Hz, and continuously variable polar pattern. This translates into recordings with more dynamic range, tonal extension, and flexibility.
+
+Experience a Lifetime of Beautiful Recordings
+
+Handwired using premium components \u2014 including a dual-symmetrical K67 capsule, Lundahl transformer, and NOS tube \u2014 each UA Bock 167 is built and tested to David Bock's exacting specifications. With its premium case, professional shock mount, and hand-tuned power supply, this mic will provide years of exceptional recordings.
+
+\u2022 Premium large-diaphragm multi-pattern tube condenser mic, lovingly handmade at the UA Custom Shop in Santa Cruz, California
+\u2022 Iconic, "golden unit" mic sounds with modern enhancements by David Bock
+\u2022 Continuously variable omnidirectional, cardioid, and figure-8 polar patterns
+\u2022 Dual-symmetrical K67 capsule and Lundahl transformer
+\u2022 "Fat" switch provides low-end boost between 10 Hz and 400 Hz
+\u2022 Pad (-10 dB)
+\u2022 High frequency contour: cut (-1.5 dB @ 5 kHz), cut (-3 dB @ 10 kHz), flat, boost (+2 dB @ 10 kHz)
+\u2022 Frequency Range: 10 Hz \u2013 18 kHz, \xB12 dB
+\u2022 Max SPL: 118 dB SPL, 1% THD
+\u2022 NOS EF732 tube
+\u2022 Requires included UA Bock 167 PSU true linear power supply
+\u2022 Premium storage case`,
+      specs: [
+        "Handmade at the UA Custom Shop in Santa Cruz, California by David Bock",
+        "Dual-symmetrical K67 large-diaphragm capsule with Lundahl transformer",
+        "New Old Stock (NOS) EF732 vacuum tube audio circuit",
+        "Continuously variable polar patterns: Omnidirectional, Cardioid, and Figure-8",
+        "Analog 'Fat' switch providing deep low-end boost between 10Hz and 400Hz",
+        "High frequency contour switch with 4 distinct HF voicing options",
+        "Includes true linear UA Bock 167 PSU, professional shock mount & flight case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Multi-Pattern Tube Condenser"],
+        ["Capsule Architecture", "Dual-Symmetrical K67 Capsule (Hand-Tuned)"],
+        ["Vacuum Tube & Output", "NOS EF732 Subminiature Tube with Custom Lundahl Audio Transformer"],
+        ["Polar Patterns", "Continuously Variable (Omnidirectional through Cardioid to Figure-8)"],
+        ["Frequency Range", "10Hz \u2013 18,000Hz (\xB12 dB)"],
+        ["Maximum SPL", "118dB SPL (1% THD)"],
+        ["Attenuation Pad", "-10dB Switchable Pad"],
+        ["Low-End Shaping", "Analog 'Fat' Switch (low-end boost between 10Hz and 400Hz)"],
+        ["High-Frequency Contour", "Cut (-1.5dB @ 5kHz), Cut (-3dB @ 10kHz), Flat, Boost (+2dB @ 10kHz)"],
+        ["Power Supply", "Dedicated External True Linear UA Bock 167 PSU"],
+        ["Origin & Build", "Handcrafted in Santa Cruz, California, USA (UA Custom Shop)"],
+        ["Included Accessories", "UA Bock 167 PSU, Multi-Pin Tube Cable, Spider Shock Mount, Storage Flight Case"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "universal-audio-bock-187-large-diaphragm",
+      name: "Universal Audio Bock 187 Large-diaphragm Condenser Microphone",
+      shortName: "Universal Audio Bock 187 Large-Diaphragm FET Condenser",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Solid-State FET Studio Condensers",
+      price: 147625,
+      originalPrice: 164e3,
+      rating: 5,
+      reviewCount: 3,
+      image: "assets/images/products/ua-bock-187-front.jpg",
+      images: [
+        "assets/images/products/ua-bock-187-front.jpg",
+        "assets/images/products/ua-bock-187-angle.jpg",
+        "assets/images/products/ua-bock-187-back.jpg",
+        "assets/images/products/ua-bock-187-switches-close.jpg"
+      ],
+      isFeatured: true,
+      badge: "Custom Shop FET Condenser",
+      inStock: true,
+      stock: 0, isPreOrder: true, badge: 'Pre-Order',
+      sku: "AK-UA-BOCK187-FET",
+      description: `Do it all with a Classic Mic that Never Leaves your Mic Stand
+
+The UA Bock 187 large-diaphragm FET condenser mic will give your studio the classic tone of the legendary U87 with modern sonic enhancements. Each microphone is handmade in Santa Cruz, California, to the exacting specifications of world-renowned mic designer David Bock.
+
+Add a Handmade Masterpiece to your Mic Locker
+
+The UA Bock 187 is David Bock's inspired take on the legendary U87 microphones he studied and maintained as chief technical engineer of the world's top recording studios for two decades. Handbuilt at UA\u2019s Custom Shop in Santa Cruz, California, the UA Bock 187 mic gives you the "golden unit" tone of an iconic studio staple.
+
+Capture Classic Sounds, with Modern Flexibility
+
+Vintage U87 mics are known for their presence, but can get strident when pushed. Our UA Bock 187 enhances this classic design with a larger transformer, refined circuitry, and a unique "fat" mode that delivers a boost between 10 Hz and 400 Hz. This translates into more dynamic range, presence, and fullness on vocals, guitars, and more.
+
+\u2022 Premium large-diaphragm cardioid FET studio condenser mic, lovingly handmade at the UA Custom Shop in Santa Cruz, California
+\u2022 Iconic, "golden unit" mic sounds with modern enhancements by David Bock
+\u2022 Minimalist Class A FET circuitry
+\u2022 Large Cinemag output transformer for rich bass and increased low-frequency headroom
+\u2022 "Fat" mode provides low-end boost between 10 Hz and 400 Hz
+\u2022 Lo-cut (120 Hz), Pad (-10 dB)
+\u2022 Frequency Response: 20 Hz - 16 kHz, \xB12 dB
+\u2022 Max SPL: 125 dB SPL, 1% THD
+\u2022 Requires 48v phantom power
+\u2022 Signature wooden storage box & premium mic stand mount`,
+      specs: [
+        "Handmade at the UA Custom Shop in Santa Cruz, California by David Bock",
+        '1" (25.4mm) dual-symmetrical backplate K67-type large diaphragm capsule',
+        "Minimalist Class A FET circuitry with large custom Cinemag output transformer",
+        "Analog 'Fat' mode providing low-end boost between 10Hz and 400Hz",
+        "Switchable 120Hz Low-Cut rumble filter & -10dB attenuation pad",
+        "Cardioid polar pattern with high SPL handling up to 125dB SPL",
+        "Includes swivel mic stand mount and signature handcrafted wooden box",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Solid-State FET Condenser"],
+        ["Capsule Architecture", '1" (25.4mm) Dual-Symmetrical Backplate K67 Type'],
+        ["Circuit Topology", "Minimalist Class A FET with Large Custom Cinemag Output Transformer"],
+        ["Polar Pattern", "Cardioid"],
+        ["Frequency Range", "20Hz \u2013 16,000Hz (\xB12 dB)"],
+        ["Dynamic Range / Max SPL", "125dB SPL (1% THD)"],
+        ["Output Impedance", "200 Ohms"],
+        ["Sensitivity", "-42dB (8mV) ref 1V @ 1 Pa, 1kHz"],
+        ["Signal to Noise Ratio", "82dB (A-weighted)"],
+        ["Self-Noise", "12dB (A-weighted)"],
+        ["Low Cut Filter", "LO CUT: Off / On (120Hz)"],
+        ["Attenuation Pad", "-10dB Switchable Pad"],
+        ["Special Shaping", "Analog 'Fat' Switch (10Hz \u2013 400Hz low-end boost)"],
+        ["Housing Finish", "Satin Green with Nickel Grille & Machined Trim"],
+        ["Power Requirements", "+48V Phantom Power (\xB14V)"],
+        ["Dimensions & Weight", '2" diameter x 7.7" length | 1.6 lbs (725g)'],
+        ["Included Accessories", "Mic stand mount, signature wooden display storage box"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "universal-audio-bock-251-tube-condenser",
+      name: "Universal Audio Bock 251 Tube Condenser Mic",
+      shortName: "Universal Audio Bock 251 Flagship Tube Condenser",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Tube & Multi-Voicing Studio Condensers",
+      price: 709045,
+      originalPrice: 787830,
+      rating: 5,
+      reviewCount: 5,
+      image: "assets/images/products/ua-bock-251-front.jpg",
+      images: [
+        "assets/images/products/ua-bock-251-front.jpg",
+        "assets/images/products/ua-bock-251-angle.jpg",
+        "assets/images/products/ua-bock-251-grille-close.jpg",
+        "assets/images/products/ua-bock-251-switch-close.jpg"
+      ],
+      isFeatured: true,
+      badge: "Flagship Tube Masterpiece",
+      inStock: true,
+      stock: 0, isPreOrder: true, badge: 'Pre-Order',
+      sku: "AK-UA-BOCK251-FLAGSHIP",
+      description: `Universal Audio Bock 251 Tube Condenser Microphone
+
+The Universal Audio Bock 251 Tube Condenser Microphone is a premium studio microphone designed for capturing vocals, instruments and acoustic performances with exceptional detail, warmth and depth. Drawing inspiration from the legendary ELA M 251 microphone, it combines classic tube-microphone character with modern engineering and carefully selected components to deliver a rich, open and highly expressive sound.
+
+Designed in collaboration with renowned microphone designer David Bock, the microphone offers a refined tonal balance with smooth high frequencies, detailed midrange reproduction and a controlled low-end response. Its tube-based design adds natural harmonic richness and depth, making it particularly suitable for lead vocals, backing vocals, acoustic guitars, strings, piano, drums, voiceovers and other demanding recording applications.
+
+The Bock 251 is engineered to capture the natural character of a performance without making the sound feel overly processed. Its detailed response helps preserve subtle vocal textures, instrumental nuances and dynamic expression, making it a valuable tool for professional recording studios, vocal booths, music producers, engineers and content creators seeking a high-end recording experience.
+
+With its premium construction, versatile performance and distinctive vintage-inspired sonic character, the Universal Audio Bock 251 is built for artists and engineers who want a microphone capable of delivering studio-quality recordings with clarity, presence and musical warmth.
+
+Key Features:
+\u2022 Premium tube condenser microphone for professional studio recording
+\u2022 Vintage-inspired sound based on the classic ELA M 251 microphone design
+\u2022 Developed in collaboration with renowned microphone designer David Bock
+\u2022 Rich, warm and highly detailed sonic character
+\u2022 Smooth high-frequency response for natural and expressive recordings
+\u2022 Excellent vocal presence and midrange clarity
+\u2022 Suitable for both lead and backing vocals
+\u2022 Ideal for acoustic instruments, voiceovers, piano, strings and studio applications
+\u2022 High-quality construction and premium internal components
+\u2022 Handcrafted at UA's Custom Shop in Santa Cruz, California`,
+      specs: [
+        "Lovingly handmade at the UA Custom Shop in Santa Cruz, California by David Bock",
+        "Recreation of the legendary ELA M 251 'golden unit' tube microphone",
+        "German-style CK12-type large diaphragm brass capsule with NOS vacuum tube",
+        "Custom Cinemag audio transformer providing rich, open low-end and silky highs",
+        "Switchable Omnidirectional and Cardioid polar patterns",
+        "Includes dedicated true linear power supply, multi-pin tube cable & flight case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Multi-Pattern Vacuum Tube Condenser (Flagship)"],
+        ["Historical Pedigree", "David Bock recreation of the iconic Telefunken ELA M 251"],
+        ["Capsule Architecture", '1" Hand-Tuned German-Style CK12 Dual Diaphragm Brass Capsule'],
+        ["Vacuum Tube & Output", "NOS Vacuum Tube Circuit with Custom-Wound Cinemag Transformer"],
+        ["Polar Patterns", "Cardioid & Omnidirectional (Pattern switch on microphone body)"],
+        ["Frequency Range", "10Hz \u2013 18,000Hz (\xB12 dB)"],
+        ["Dynamic Range / Max SPL", "118dB SPL (1% THD)"],
+        ["Sensitivity", "19mV/Pa (-34dB, 0dB = 1V/Pa @ 1kHz)"],
+        ["Equivalent Noise Level", "< 18dB(A)"],
+        ["Power Supply Unit", "Dedicated External True Linear UA Bock 251 PSU (100\u2013240V)"],
+        ["Craftsmanship & Origin", "Handcrafted in Santa Cruz, California, USA (UA Custom Shop)"],
+        ["Included Accessories", "Dedicated Linear PSU, Multi-Pin Tube Cable, Shock Mount, Wood Storage Box"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "universal-audio-sc1-standard-condenser",
+      name: "Universal Audio SC-1 Standard Condenser Microphone",
+      shortName: "Universal Audio SC-1 Standard Large-Diaphragm Condenser with Hemisphere",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Studio Modeling & Solid-State Condensers",
+      price: 61540,
+      originalPrice: 68380,
+      rating: 5,
+      reviewCount: 6,
+      image: "assets/images/products/ua-sc1-front.jpg",
+      images: [
+        "assets/images/products/ua-sc1-front.jpg",
+        "assets/images/products/ua-sc1-back.jpg",
+        "assets/images/products/ua-sc1-hemisphere-251.png",
+        "assets/images/products/ua-sc1-hemisphere-ld12.png",
+        "assets/images/products/ua-sc1-hemisphere-414.png"
+      ],
+      isFeatured: true,
+      badge: "Hemisphere Mic Modeling",
+      inStock: true,
+      stock: 5,
+      sku: "AK-UA-SC1-MODELING",
+      description: `Universal Audio SC-1 Standard Condenser Microphone with Hemisphere Mic Modeling
+
+The SC-1 is Universal Audio's large-diaphragm condenser microphone for studio use that features extended dynamic range, ultra-low self-noise, and Hemisphere mic modeling software.
+
+Get the Sounds of the World's Most Famous Mics
+With the SC-1 microphone and Hemisphere mic modeling, you'll capture album-ready vocals and instruments with the authentic sound and character of the most popular studio mics ever made \u2014 all with a single pro-quality condenser.
+
+Key Benefits:
+\u2022 Get the sounds of the world's most famous studio condenser mics from Neumann, Sony, AKG, and more
+\u2022 Shape the sound of your recordings using filter, proximity, and axis controls \u2014 even after tracking
+\u2022 Enjoy smooth, professional recordings with SC-1's ultra-linear circuit and extended dynamic range
+\u2022 Enjoy years of uncompromising recordings with genuine UA craftsmanship
+
+Record Pro Vocals and Instruments:
+The SC-1 gives you classic condenser sound perfect for vocals, acoustic guitar, strings, even a loud guitar cab thanks to its high SPL handling. Plus, its ultra-linear circuit and extended dynamic range ensure distortion-free results in both low and high frequencies, giving you smooth results, every time.
+
+Authentic Mic Modeling Made Simple:
+Using the same award-winning tech as our UA Sphere modeling microphones, the included Hemisphere mic modeling plug-in gives your studio the authentic sound of essential condensers from Neumann, Sony, AKG, and more \u2014 in realtime with Apollo or natively in your DAW. You can also shape the sound of your recordings using filter, proximity, and axis controls \u2014 even after tracking.
+
+Enjoy a Studio Workhorse for Years to Come:
+With a sleek, modern design and rugged build quality, the SC-1 will give you decades of uncompromising recordings, no matter what you put in front of it.`,
+      specs: [
+        "Large-diaphragm studio condenser microphone with ultra-linear circuit",
+        "Includes Hemisphere mic modeling software for classic Neumann, AKG & Sony tones",
+        "Shape sound with virtual filter, proximity, and off-axis angle controls even after tracking",
+        "Extended dynamic range and ultra-low self-noise for pristine vocal & instrument capture",
+        "High SPL handling ideal for loud guitar cabs, brass, and aggressive drum overheads",
+        "Rugged all-metal body with included custom mic mount and UA carrying case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Studio Condenser with Virtual Modeling"],
+        ["Software Modeling", "Hemisphere Mic Modeling Plug-in (Apollo Realtime & Native DAW)"],
+        ["Modeled Classics", "Neumann U47/U67/U87, AKG C12/C414, Sony C37A/C800G emulation presets"],
+        ["Polar Pattern", "Cardioid (Hardware) / Multi-Pattern & Off-Axis Control (via Hemisphere)"],
+        ["Frequency Range", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-39 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Output Impedance", "200 Ohms"],
+        ["Connector", "3-Pin Gold-Plated XLRM"],
+        ["Power Requirements", "+48V DC Phantom Power (3 mA typical)"],
+        ["Dimensions", '6.4" (162 mm) length x 2.0" (52 mm) diameter'],
+        ["Weight", "0.8 lbs (363 g)"],
+        ["Included Accessories", 'Custom Mic Mount, 5/8" to 3/8" Thread Adapter, UA Carrying Case'],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "universal-audio-sp1-standard-pencil-pair",
+      name: "Universal Audio SP-1 Standard Pencil Microphone (Pair)",
+      shortName: "Universal Audio SP-1 Matched Pencil Condenser Pair with Hemisphere",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Small-Diaphragm Pencil Condensers",
+      price: 56965,
+      originalPrice: 63295,
+      rating: 5,
+      reviewCount: 7,
+      image: "assets/images/products/ua-sp1-pair-front.jpg",
+      images: [
+        "assets/images/products/ua-sp1-pair-front.jpg",
+        "assets/images/products/ua-sp1-pair-angle.png",
+        "assets/images/products/ua-sp1-pair-side.png",
+        "assets/images/products/ua-sp1-pair-closeup.png",
+        "assets/images/products/ua-sp1-pair-detail.png"
+      ],
+      isFeatured: true,
+      badge: "Matched Stereo Pair",
+      inStock: true,
+      stock: 4,
+      sku: "AK-UA-SP1-PENCIL-PAIR",
+      description: `Universal Audio SP-1 Standard Pencil Microphone (Pair)
+
+With the SP-1 small-diaphragm condenser pair, you can record acoustic instruments, drums and percussion, and live performances in stereo, with pristine fidelity for instant album-quality sound.
+
+Key Benefits:
+\u2022 Capture stringed instruments, drums, and more with a matched condenser pair
+\u2022 Harness smooth top-end for clear, professional stereo recordings in any environment
+\u2022 Add retro, road-worthy small diaphragm condenser pack to your mic collection
+\u2022 Get professional sound easily with included Apollo SP-1 presets
+
+The Perfect Pair for Stereo Recording:
+As a matched stereo pair, the SP-1 adds clarity, width, and dimension to your recordings. Whether it's tight X/Y patterns or spaced pairs, combine them how you want and hear the detail in your instrument like never before.
+
+Authentic Mic Modeling Made Simple:
+Using the same award-winning tech as our UA Sphere modeling microphones, the free Hemisphere mic modeling plug-in gives you the authentic sound of iconic mics from AKG and Neumann \u2014 in realtime with Apollo or natively in your DAW. You can also shape the sound of your recordings using filter, proximity effect, and axis controls \u2014 even after tracking.
+
+Capture Your Best Sounds, Anywhere:
+The SP-1's classic cardioid design, high SPL tolerance, and smooth, clear top-end deliver consistently clean capture of acoustic guitars, drum overheads, percussion, horns, and more \u2014 at any volume, in any environment.
+
+More Than Your Average Pencil Mics:
+We engineered the SP-1 pair to be your workhorse, everyday choice for stereo recording. With a retro finish and road-worthy build, these stylish condensers are a serious studio upgrade, with vintage elegance for days.
+
+Sound Like the Pros with Apollo Interface Presets:
+Take the guesswork out of getting professional sounds with custom Apollo SP-1 presets. Get the perfect EQ settings for adding shimmer to cymbals, or bolster horns and stringed instrument recordings with rich stereo sound.
+
+The UA SP-1 Microphone Pair includes everything you need for instant pro sound, including two mic stand mounts, stereo T-bar, two foam windscreens, and two 5/8" to 3/8" thread adapters.`,
+      specs: [
+        "Factory-matched small-diaphragm condenser pair for precision stereo recording",
+        "Includes free Hemisphere mic modeling plug-in for classic AKG & Neumann emulations",
+        "Shape sound with virtual filter, proximity, and off-axis controls even after tracking",
+        "High SPL handling (142 dB) for loud drum overheads, percussion, and brass",
+        "Smooth, clear top-end ideal for acoustic guitars, strings, piano, and cymbals",
+        "Complete stereo kit: 2x Mic Mounts, Stereo T-Bar, 2x Windscreens, 2x Thread Adapters",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Small-Diaphragm Cardioid Condenser (Factory-Matched Stereo Pair)"],
+        ["Software Modeling", "Hemisphere Mic Modeling Plug-in (Apollo Realtime & Native DAW)"],
+        ["Modeled Classics", "AKG & Neumann small-diaphragm condenser emulation presets"],
+        ["Polar Pattern", "Cardioid (Fixed)"],
+        ["Frequency Range", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-38.0 dB (12.6 mV) ref 1V @ 1 Pa, 1 kHz"],
+        ["Maximum SPL", "142 dB SPL (1% THD @ 1 kHz)"],
+        ["Output Impedance", "200 Ohms"],
+        ["Connector", "3-Pin Gold-Plated XLRM"],
+        ["Power Requirements", "+48V DC Phantom Power"],
+        ["Dimensions (Per Mic)", '5.0" (127 mm) length x 0.93" (23.5 mm) diameter'],
+        ["Weight (Per Mic)", "0.28 lbs (127 g)"],
+        ["Included Accessories", '2x Mic Stand Mounts, Stereo T-Bar, 2x Foam Windscreens, 2x 5/8" to 3/8" Thread Adapters, Travel Case'],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "universal-audio-sphere-dlx-modeling",
+      name: "Universal Audio Sphere DLX Modeling Microphone",
+      shortName: "Universal Audio Sphere DLX 38-Model Dual-Capsule Modeling Mic",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Modeling & Dual-Capsule Studio Condensers",
+      price: 177170,
+      originalPrice: 196860,
+      rating: 5,
+      reviewCount: 9,
+      image: "assets/images/products/ua-sphere-dlx-front.png",
+      images: [
+        "assets/images/products/ua-sphere-dlx-front.png",
+        "assets/images/products/ua-sphere-dlx-back.png",
+        "assets/images/products/ua-sphere-dlx-accessories.png"
+      ],
+      isFeatured: true,
+      badge: "38 Legendary Mic Models",
+      inStock: true,
+      stock: 3,
+      sku: "AK-UA-SPHERE-DLX-MODELING",
+      description: `UA Sphere DLX Modeling Microphone \u2014 Record with the Greatest Mics Ever Made
+
+The UA Sphere DLX modeling microphone system gives you the sound of classic mics used by everyone from The Beatles and Beyonc\xE9 to Radiohead and Frank Sinatra.
+
+Grab the Keys to the Ultimate Mic Locker:
+Featuring 38 legendary mic models of Neumann, Telefunken, AKG, Sony, and more, the Sphere DLX gives your productions the most sought-after ribbon, condenser, and dynamic microphones ever made.
+
+Find Your Perfect Mic in Realtime with Apollo:
+The Sphere DLX lets you audition classic mics before, during, and after recording with any interface, in any DAW. And when paired with an Apollo interface, you can do this with near-zero latency.
+
+Get Stereo Sound and More from a Single Mic:
+Thanks to its dual-capsule design, the Sphere DLX lets you easily record piano, drums, strings, and more in stereo. You can even use different mic models on the left and right channels for a more colorful stereo image. Plus, you can blend the sound of two mono mics using Dual Mode, and get classic-sounding mic recipes on snare drums and guitar cabs.
+
+Reduce Room Sound for Better Recordings:
+Easily tame room coloration for cleaner, more professional recordings using IsoSphere and its expert presets tailored for everything from your bedroom studio to popular isolation filters.
+
+Built to Last a Lifetime:
+With dual gold-sputtered diaphragms and the lowest noise of any mic in its class, the Sphere DLX outfits your studio with a premium, large-diaphragm condenser microphone, precision-built to deliver years of inspiration for your music, podcasts, and voiceovers.
+
+Key Features:
+\u2022 Record with 38 of the most sought-after ribbon, condenser, and dynamic microphones ever made
+\u2022 Change mic type, polar pattern, and other microphone characteristics, even after tracking
+\u2022 Dual gold-sputtered diaphragms and the lowest noise of any mic in its class (7 dBA)
+\u2022 Record acoustic guitar, strings, horns, and more in stereo with a single microphone
+\u2022 Includes shockmount, mic stand mount, 25' cable, and carrying case`,
+      specs: [
+        "38 legendary mic models including Neumann, Telefunken, AKG, Sony ribbon, condenser & dynamic emulations",
+        'Dual gold-sputtered 1" diaphragm capsule with industry-leading 7 dBA self-noise',
+        "Change mic type, polar pattern, proximity & axis characteristics even after tracking",
+        "Stereo recording from a single mic via dual-capsule design with independent L/R model selection",
+        "IsoSphere room correction technology for cleaner recordings in any environment",
+        "Complete kit: Professional Shockmount, 25' 5-Pin Cable, Mic Stand Mount & Carrying Case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Dual-Capsule Modeling Condenser (38 Mic Models)"],
+        ["Modeling Technology", "UA Sphere Modeling Engine with 38 Ribbon, Condenser & Dynamic Emulations"],
+        ["Modeled Classics", "Neumann U47/U67/U87, Telefunken ELA M 251, AKG C12/C414, Sony C-800G & more"],
+        ["Capsule Architecture", 'Dual 1" (25.4 mm) Gold-Sputtered Diaphragms'],
+        ["Polar Patterns", "All patterns available via modeling (Omni, Cardioid, Figure-8 & intermediates)"],
+        ["Frequency Range", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-33 dB (22 mV) ref 1V @ 1 Pa, 1 kHz"],
+        ["Self-Noise", "7 dBA (lowest in class)"],
+        ["Maximum SPL", "140 dB SPL (1% THD @ 1 kHz, with -20 dB pad)"],
+        ["Output Impedance", "200 Ohms (per channel)"],
+        ["Connector", "5-Pin XLR (Dual-Output) with Breakout Cable to 2x 3-Pin XLR"],
+        ["Power Requirements", "+48V DC Phantom Power (3 mA per channel typical)"],
+        ["Included Accessories", "Professional Shockmount, 25' 5-Pin to Dual 3-Pin XLR Cable, Mic Stand Mount, Carrying Case"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "universal-audio-sphere-lx-modeling",
+      name: "Universal Audio Sphere LX modeling microphone",
+      shortName: "Universal Audio Sphere LX 20-Model Modeling Mic",
+      brand: "Universal Audio",
+      category: "Condenser Microphones",
+      subcategory: "Modeling & Dual-Capsule Studio Condensers",
+      price: 118075,
+      originalPrice: 131195,
+      rating: 5,
+      reviewCount: 4,
+      image: "assets/images/products/ua-sphere-lx-front.png",
+      images: [
+        "assets/images/products/ua-sphere-lx-front.png",
+        "assets/images/products/ua-sphere-lx-back.png",
+        "assets/images/products/ua-sphere-lx-accessories.png"
+      ],
+      isFeatured: true,
+      badge: "20 Legendary Mic Models",
+      inStock: true,
+      stock: 4,
+      sku: "AK-UA-SPHERE-LX-MODELING",
+      description: `UA SPHERE LX MODELING MICROPHONE
+
+Get the sounds of the greatest mics ever made.
+
+The UA Sphere LX modeling microphone system gives you the sound of classic mics used by everyone from The Beatles and Beyonc\xE9 to Radiohead and Frank Sinatra, in a smaller, more affordable package.
+
+Grab the Keys to the Ultimate Mic Locker:
+Featuring 20 legendary mic models of Neumann, Telefunken, AKG, Sony, and more,* the Sphere LX gives your productions the most sought-after ribbon, condenser, and dynamic microphones ever made.
+
+Find your Perfect Mic in Real Time with Apollo:
+The Sphere LX lets you audition classic mics before, during, and after recording with any interface, in any DAW. And when paired with an Apollo interface, you can do this with near\u2011zero latency.
+
+Use Dual Mode for Classic Mic Pairings:
+Blend the sound of two mono mics with Sphere LX's Dual Mode, and get rich-sounding mic combinations on snare drums and guitar cabs.
+
+Reduce Room Sound for Better Recordings:
+Easily tame room coloration for cleaner, more professional recordings using IsoSphere and its expert presets tailored for everything from your bedroom studio to popular isolation filters from sE Reflexion Filters, Aston Halo, Kaotica Eyeball,* and more.
+
+Built to Last a Lifetime:
+With dual gold-sputtered diaphragms and the lowest noise of any mic in its class, the Sphere LX outfits your studio with a premium, large\u2011diaphragm condenser microphone, precision\u2011built to deliver years of inspiration for your music, podcasts, and voiceovers.
+
+Includes Everything you Need to Record:
+Right out of the box, the Sphere LX mic gives you a 10' cable, mic stand mount, and carrying case \u2014 so you'll be creating with the sound of legendary mics in no time.
+
+Key Features:
+\u2022 Record with 20 of the most sought-after ribbon, condenser, and dynamic microphones ever made
+\u2022 Change mic type, polar pattern, and other microphone characteristics, even after tracking
+\u2022 Get the ultimate mic modeling system with a large-diaphragm condenser mic featuring dual gold-sputtered diaphragms and the lowest noise of any mic in its class
+\u2022 Includes mic stand mount, 10\u2019 cable, and carrying case`,
+      specs: [
+        "20 legendary mic models including Neumann, Telefunken, AKG, Sony ribbon, condenser & dynamic emulations",
+        "Dual gold-sputtered diaphragms with lowest noise floor in its class",
+        "Change mic type, polar pattern, proximity & axis characteristics even after tracking",
+        "Dual Mode for blending two mono mic models on snare drums and guitar cabinets",
+        "IsoSphere room correction technology with expert presets for bedroom studios and reflection filters",
+        "Audition classic microphones in real-time with Apollo interfaces at near-zero latency",
+        "Complete package: Custom Mic Stand Mount, 10' Breakout Cable & Heavy-Duty Carrying Case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Dual-Capsule Modeling Condenser (20 Mic Models)"],
+        ["Modeling Technology", "UA Sphere Modeling Engine with 20 Ribbon, Condenser & Dynamic Emulations"],
+        ["Modeled Classics", "Neumann U47/U67/U87, Telefunken ELA M 251, AKG C12/C414, Sony C-800G, Shure SM57 & more"],
+        ["Capsule Architecture", "Dual Gold-Sputtered Precision Condenser Diaphragms"],
+        ["Polar Patterns", "Variable via software modeling (Omni, Cardioid, Figure-8 & hybrid intermediate patterns)"],
+        ["Frequency Range", "20 Hz \u2013 20,000 Hz"],
+        ["Sensitivity", "-39 dB (11 mV) ref 1V @ 1 Pa, 1 kHz"],
+        ["Self-Noise", "Lowest noise in its class"],
+        ["Maximum SPL", "145 dB SPL (1% THD @ 1 kHz)"],
+        ["Output Impedance", "200 Ohms (per channel)"],
+        ["Connector", "5-Pin XLR Male with 10' Breakout Cable to Dual 3-Pin XLR"],
+        ["Power Requirements", "+48V DC Phantom Power (per channel)"],
+        ["Included Accessories", "Mic Stand Mount, 10-Foot 5-Pin to Dual 3-Pin XLR Cable, Carrying Case"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-c14-condenser-studio-microphone",
+      name: "Eikon C14 - Condenser Studio Microphone",
+      shortName: 'Eikon C14 1.1" Gold Mylar Studio Condenser Microphone',
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Large-Diaphragm Studio Condensers",
+      price: 15667,
+      originalPrice: 17400,
+      rating: 5,
+      reviewCount: 8,
+      image: "assets/images/products/eikon-c14-front.jpg",
+      images: [
+        "assets/images/products/eikon-c14-front.jpg",
+        "assets/images/products/eikon-c14-studio.jpg",
+        "assets/images/products/eikon-c14-case.jpg",
+        "assets/images/products/eikon-c14-frequency.jpg",
+        "assets/images/products/eikon-c14-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: '1.1" Gold Mylar Capsule',
+      inStock: true,
+      stock: 0, isOutOfStock: true,
+      sku: "AK-EIKON-C14-CONDENSER",
+      description: `Eikon C14 - Condenser Studio Microphone
+
+The C14 condenser microphone is made following the strictest construction standards which make it the ideal microphone for any professional application.
+
+Equipped with a 1.1\u201C Mylar capsule with gold-coated surface that guarantees a transparent high frequencies response, getting an excellent vocal range and acoustic instruments image even in the most difficult mixing circumstances.
+
+The package includes a shockmount support, anti-pop filter and a sturdy aluminum carrying case.
+
+Key Highlights:
+\u2022 Transparent sound with superb detail and warm harmonic content
+\u2022 Extended low-frequency range response with linear reproduction
+\u2022 Audiophile-grade WIMA capacitors for ultra-clean signal integrity
+\u2022 High-performance integrated shockmount support and external pop filter included
+\u2022 Heavy-duty aluminum flight case for maximum protection during transit and storage`,
+      specs: [
+        "1.1\u201D Mylar capsule with gold-coated surface for transparent high-frequency response",
+        "Premium German WIMA audiophile capacitors for low-noise, transparent signal path",
+        "Uni-directional cardioid polar pattern delivering isolated, focused acoustic capture",
+        "High SPL handling up to 140 dB with extended low-frequency range response",
+        "Includes studio shockmount support, anti-pop filter, and sturdy aluminum flight case",
+        "4 Years Warranty (Efficient Standard + 2 Years Extended Warranty via Registration)",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Large-Diaphragm Pressure Gradient FET Condenser Studio Microphone"],
+        ["Capsule", '1.1" (28mm) Mylar Diaphragm with Gold-Coated Surface'],
+        ["Polar Pattern", "Uni-Directional (Cardioid)"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-35 dB \xB1 2 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum SPL", "140 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Signal-to-Noise Ratio", "80 dB (A-weighted)"],
+        ["Impedance", "100 Ohms \xB1 20% to 30% (@ 1 kHz)"],
+        ["Recommended Load Impedance", "\u2265 1000 Ohms"],
+        ["Internal Circuitry", "High-Grade WIMA Audiophile Capacitors & Low-Noise FET Preamp"],
+        ["Connector", "3-Pin Gold-Plated XLR Male"],
+        ["Power Requirements", "+48V DC Phantom Power"],
+        ["Included Accessories", "Integrated Shockmount Support, Pop Filter, Heavy-Duty Aluminum Carrying Case"],
+        ["Warranty", "4 Years Warranty (Efficient Standard + 2 Years Extended via Registration)"]
+      ]
+    },
+    {
+      id: "eikon-cm14usb-condenser-studio-microphone",
+      name: "Eikon CM14USB - Condenser Studio Microphone with USB Interface",
+      shortName: "Eikon CM14USB 24-Bit/96kHz USB & XLR Condenser Studio Microphone",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "USB & XLR Dual-Mode Condensers",
+      price: 11384,
+      originalPrice: 12650,
+      rating: 5,
+      reviewCount: 11,
+      image: "assets/images/products/eikon-cm14usb-front.jpg",
+      images: [
+        "assets/images/products/eikon-cm14usb-front.jpg",
+        "assets/images/products/eikon-cm14usb-bottom.jpg",
+        "assets/images/products/eikon-cm14usb-mount.jpg",
+        "assets/images/products/eikon-cm14usb-frequency.jpg",
+        "assets/images/products/eikon-cm14usb-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "24-Bit/96kHz USB & XLR",
+      inStock: true,
+      stock: 12,
+      sku: "AK-EIKON-CM14USB-CONDENSER",
+      description: `Eikon CM14USB - Condenser Studio Microphone with USB Interface
+
+The CM14USB is the perfect choice for vocal, acoustic instruments, VoIP and webcasting applications. The extended frequency and fast transient response ensures an accurate linear reproduction.
+
+The microphone also features a built-in headphone jack with volume control that allows you to monitor the direct microphone signal and the sound from your audio recording software.
+
+The microphone\u2019s cardioid polar pattern delivers excellent off-axis rejection, and 24-bit, 96 kHz converters ensures clear sound reproduction. It also features a blue LED indicating the microphone\u2019s power On.
+
+The CM14USB is a \u201CPlug & Play\u201D USB device, compatible with both Microsoft and Apple OS\u2019 based computers, as well as Mobile Devices through standard USB camera connection kits.
+
+Key Benefits & Features:
+\u2022 Pre-amp PCB and USB2.0 high speed audio processing
+\u2022 High-resolution 24-Bit / 96kHz sampling rate conversion
+\u2022 Dual Connectivity: High-speed USB audio interface plus standard XLR 3-pin analog output
+\u2022 Built-in 3.5mm stereo headphone output with zero-latency direct hardware monitoring
+\u2022 Dedicated microphone mute button and headphone output volume control knob
+\u2022 Blue LED power and status indicator
+\u2022 Dedicated microphone stand holder and USB cable included
+\u2022 4 Years Official Warranty (Efficient Standard + 2 Years Extended via Registration)`,
+      specs: [
+        "24-Bit / 96kHz studio-grade A/D converters for crystal-clear digital sound reproduction",
+        "Dual Output Flexibility: USB 2.0 digital connectivity plus standard 3-pin XLR analog output",
+        "3.5mm stereo headphone jack with volume control for direct zero-latency monitoring",
+        "Cardioid polar pattern providing superior feedback resistance and off-axis room isolation",
+        "Hardware mute switch with intuitive status LED illumination",
+        "Plug & Play driverless operation for Windows, macOS, iOS, and Android devices",
+        "Direct Pan-India Insured Dispatch & 4 Years Official Eikon Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dual-Mode USB & XLR Studio Condenser Microphone"],
+        ["Capsule Type", "16mm Back-Electret Condenser Transducer"],
+        ["Polar Pattern", "Cardioid (Uni-Directional)"],
+        ["A/D Conversion", "24-Bit High-Speed Pre-Amp PCB Conversion"],
+        ["Sampling Rates", "44.1 kHz / 48 kHz / 96 kHz"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz (30Hz \u2013 18,000Hz \xB13dB)"],
+        ["Sensitivity", "-36 dB \xB1 2 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum SPL", "138 dB SPL (1% THD @ 1 kHz)"],
+        ["Headphone Output", "3.5mm Stereo Mini-Jack with Independent Volume Control Knob"],
+        ["Monitoring Latency", "Zero-Latency Direct Hardware Monitoring"],
+        ["Mute Control", "Dedicated Hardware Mute Button with Status LED"],
+        ["Connectors", "USB 2.0 Type-B & Standard 3-Pin XLR Male"],
+        ["OS Compatibility", "Windows XP/Vista/7/8/10/11, macOS, iPadOS/iOS, Android (Plug & Play)"],
+        ["Included Accessories", "Heavy-Duty Swivel Mic Holder, USB Cable, Tripod/Stand Adapter"],
+        ["Warranty", "4 Years Warranty (Efficient Standard + 2 Years Extended via Registration)"]
+      ]
+    },
+    {
+      id: "eikon-cm150-professional-condenser-microphone",
+      name: "Eikon CM150 - Professional Condenser Microphone",
+      shortName: "Eikon CM150 Compact Professional Instrument Condenser Microphone",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Small-Diaphragm Instrument Condensers",
+      price: 3722,
+      originalPrice: 4135,
+      rating: 5,
+      reviewCount: 14,
+      image: "assets/images/products/eikon-cm150-front.jpg",
+      images: [
+        "assets/images/products/eikon-cm150-front.jpg",
+        "assets/images/products/eikon-cm150-setup.jpg",
+        "assets/images/products/eikon-cm150-clamp.jpg",
+        "assets/images/products/eikon-cm150-windscreen.jpg"
+      ],
+      isFeatured: true,
+      badge: "Compact Instrument Condenser",
+      inStock: true,
+      stock: 15,
+      sku: "AK-EIKON-CM150-CONDENSER",
+      description: `Eikon CM150 - Professional Condenser Microphone
+
+The CM150 is very compact high quality condenser microphone with a cardioid uni-directional polar pattern. Designed for vocals and percussion instruments, it is also suitable for all applications requiring very high quality sound performance and wide frequency response.
+
+The cardioid polar pattern captures the desired sound source while rejecting unwanted ambient noise and feedback.
+
+The microphone body is made with durable metal material and perfect weight distribution ensures a good maneuverability.
+
+Key Features & Highlights:
+\u2022 Condenser Professional Instrument Microphone
+\u2022 Very Compact Design for tight stage and studio placement
+\u2022 Cardioid Polar Pattern with high feedback rejection
+\u2022 Precision 16 mm Condenser Capsule
+\u2022 Wide Frequency Response: 30Hz - 18KHz
+\u2022 Ideal for any acoustic instrument, percussion, and live performance application
+\u2022 Swivel stand clamp and foam windscreen included`,
+      specs: [
+        "Compact rugged all-metal cylindrical body engineered for versatile instrument placement",
+        "Precision 16 mm condenser capsule delivering accurate linear transient reproduction",
+        "Uni-directional cardioid pattern for superior acoustic isolation and ambient feedback rejection",
+        "Wide 30Hz \u2013 18kHz frequency response optimized for percussion, acoustic guitars, and brass",
+        "High SPL capability up to 135 dB handling loud transient peaks with zero distortion",
+        "Includes dedicated swivel microphone stand clamp and custom foam windscreen",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Compact Professional Instrument Condenser Microphone"],
+        ["Transducer / Capsule", "16mm Back-Electret Condenser Capsule"],
+        ["Polar Pattern", "Cardioid (Uni-Directional)"],
+        ["Frequency Response", "30Hz \u2013 18,000Hz (18 kHz)"],
+        ["Sensitivity", "-38 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum SPL", "135 dB SPL (1% T.H.D. @ 1 kHz)"],
+        ["Nominal Impedance", "100 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Recommended Load Impedance", "\u2265 1000 Ohms"],
+        ["Housing Construction", "Heavy-Duty All-Metal Cylindrical Body with Gold Grille Accents"],
+        ["Output Connector", "Standard 3-Pin Balanced XLR Male"],
+        ["Power Requirements", "+48V DC Phantom Power (24V - 48V compatible)"],
+        ["Included Accessories", "Microphone Stand Clamp, Custom Foam Windscreen"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-cm500-professional-condenser-microphone",
+      name: "Eikon CM500 - Professional Condenser Microphone",
+      shortName: "Eikon CM500 Stick Condenser Microphone with -10dB Pad & High-Pass Filter",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Small-Diaphragm Instrument Condensers",
+      price: 7063,
+      originalPrice: 7848,
+      rating: 5,
+      reviewCount: 12,
+      image: "assets/images/products/eikon-cm500-front.jpg",
+      images: [
+        "assets/images/products/eikon-cm500-front.jpg",
+        "assets/images/products/eikon-cm500-shockmount.jpg",
+        "assets/images/products/eikon-cm500-setup.jpg",
+        "assets/images/products/eikon-cm500-bag.jpg"
+      ],
+      isFeatured: true,
+      badge: "-10dB Pad & Hi-Pass Filter",
+      inStock: true,
+      stock: 10,
+      sku: "AK-EIKON-CM500-CONDENSER",
+      description: `Eikon CM500 - Professional Condenser Microphone
+
+The CM500 is a versatile professional condenser microphone featuring an easy-to-position stick-type format.
+
+Designed for vocals and percussion instruments, it is also suitable for lectern, overhead, and acoustic instrument applications requiring very high quality sound performance and wide frequency response.
+
+The cardioid polar pattern captures the desired sound source while rejecting unwanted ambient noise and feedback.
+
+Key Features & Specifications:
+\u2022 Condenser Professional Instrument Microphone in an easy-to-position stick format
+\u2022 Cardioid Polar Pattern with superior off-axis isolation
+\u2022 25 mm Replaceable Condenser Capsule
+\u2022 Switchable -10 dB Attenuator Pad for high SPL instrument recording
+\u2022 Switchable High-Pass / Low-Cut Filter to remove stage rumble and handling noise
+\u2022 Wide Frequency Response: 20Hz - 20KHz
+\u2022 Ideal for any acoustic instrument Live or Studio application
+\u2022 Shock Mount with integrated Pop Filter holder included
+\u2022 Padded travel bag included`,
+      specs: [
+        "Precision 25 mm replaceable condenser capsule in a slim, positionable stick-type format",
+        "Switchable -10 dB attenuation pad handles high-SPL percussion and brass without clipping",
+        "Onboard switchable High-Pass / Low-Cut Filter eliminates stage vibrations and handling rumble",
+        "Tight cardioid polar pattern provides high acoustic isolation with superior feedback rejection",
+        "Full-bandwidth 20Hz \u2013 20kHz linear response ideal for vocals, acoustic strings, and lecterns",
+        "Includes studio shock mount with pop filter holder attachment and padded zipper carry bag",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Stick-Type Professional Instrument Condenser Microphone"],
+        ["Capsule / Element", "25mm Replaceable Condenser Capsule"],
+        ["Polar Pattern", "Cardioid (Uni-Directional)"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-36 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum SPL", "132 dB SPL (\u2264 1% T.H.D. @ 1 kHz, 142 dB with -10dB pad)"],
+        ["Attenuation Pad", "Switchable 0 dB / -10 dB Pad"],
+        ["High-Pass Filter", "Switchable Low-Cut / High-Pass Rumble Filter"],
+        ["Signal-to-Noise Ratio", "78 dB (A-weighted)"],
+        ["Output Impedance", "100 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Connector", "Standard 3-Pin Gold-Plated XLR Male"],
+        ["Power Requirements", "+48V DC Phantom Power (24V - 48V compatible)"],
+        ["Included Accessories", "Shock Mount with Pop Filter Holder, Heavy-Duty Padded Zipper Bag"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-hcm08pro-professional-condenser-headset",
+      name: "Eikon HCM08PRO - Professional Condenser Headset Microphone",
+      shortName: "Eikon HCM08PRO Miniature Flesh-Tone Condenser Headset Microphone",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Headset & Lavalier Miniature Condensers",
+      price: 8707,
+      originalPrice: 9675,
+      rating: 5,
+      reviewCount: 15,
+      image: "assets/images/products/eikon-hcm08pro-headset.jpg",
+      images: [
+        "assets/images/products/eikon-hcm08pro-headset.jpg",
+        "assets/images/products/eikon-hcm08pro-adapters.jpg"
+      ],
+      isFeatured: true,
+      badge: "3.5mm Miniature Capsule",
+      inStock: true,
+      stock: 8,
+      sku: "AK-EIKON-HCM08PRO-HEADSET",
+      description: `Eikon HCM08PRO - Professional Condenser Headset Microphone
+
+The HCM08PRO mini headset microphone is ideally suited for vocal sound and speech applications requiring freedom of movement. The unique tiny size and very light weight provides a comfortable and optimum fit for any use.
+
+Such as dance and sports instructors, live theatrical performances, broadcast presentations, and video capture \u2014 this mini microphone is practically invisible.
+
+It comes with 3 different replaceable connectors making it suitable for use with wireless belt packs from different manufacturers.
+
+Key Features & Specifications:
+\u2022 Very small size and super light-weight flexible miniature microphone
+\u2022 3.5 mm permanently polarized condenser capsule
+\u2022 Omni-directional polar pattern for natural voice pickup regardless of head turns
+\u2022 Double vent protection system for use in theatre and spoken word applications
+\u2022 3 interchangeable adaptors included (AD4SH, AD3SE, AD3AK)
+\u2022 Detachable and easily replaceable cable for extended service life
+\u2022 Flesh-tone beige aesthetic for unobtrusive, discrete on-camera presentation`,
+      specs: [
+        "Sub-miniature 3.5 mm back-electret permanently polarized condenser capsule",
+        "Virtually invisible flesh-tone design ideal for broadcast, theatrical, and live speech applications",
+        "Double windscreen protection system engineered for sweat, moisture, and breath plosive resistance",
+        "Universal transmitter compatibility: includes 3 replaceable connectors (AD4SH, AD3SE, AD3AK)",
+        "Broad 20Hz \u2013 20,000Hz frequency response with smooth omni-directional polar pattern",
+        "Replaceable high-flexibility 1.2-meter detachable cable structure",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Sub-Miniature Professional Condenser Headset Microphone"],
+        ["Capsule Transducer", "3.5mm Permanently Polarized Back-Electret Condenser Capsule"],
+        ["Polar Pattern", "Omni-Directional"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-45 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum SPL", "130 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Signal-to-Noise Ratio", "> 70 dB (A-weighted)"],
+        ["Nominal Impedance", "1500 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Operating Voltage", "1.5V \u2013 10V DC (via bodypack transmitter)"],
+        ["Cable Length", "1.2 meters (Detachable & Replaceable)"],
+        ["Flesh-Tone Color", "Beige / Skin-tone (practically invisible on camera)"],
+        ["Included Adapters", "AD4SH (Mini-XLR 4P), AD3SE (3.5mm Locking Jack), AD3AK (Mini-XLR 3P)"],
+        ["Compatibility", "Shure, Sennheiser, AKG, Line 6, Audio-Technica & compatible wireless beltpacks"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-hcm14ek-professional-condenser-headset",
+      name: "Eikon HCM14EK - Professional Condenser Headset Microphone",
+      shortName: "Eikon HCM14EK Reversible Cardioid Condenser Headset Microphone",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Headset & Lavalier Miniature Condensers",
+      price: 17721,
+      originalPrice: 19690,
+      rating: 5,
+      reviewCount: 9,
+      image: "assets/images/products/eikon-hcm14ek-headset.jpg",
+      images: [
+        "assets/images/products/eikon-hcm14ek-headset.jpg",
+        "assets/images/products/eikon-hcm14ek-earhook.jpg",
+        "assets/images/products/eikon-hcm14ek-cable.jpg",
+        "assets/images/products/eikon-hcm14ek-adapters.jpg"
+      ],
+      isFeatured: true,
+      badge: "Reversible Cardioid Headset",
+      inStock: true,
+      stock: 7,
+      sku: "AK-EIKON-HCM14EK-HEADSET",
+      description: `Eikon HCM14EK - Professional Condenser Headset Microphone
+
+The HCM14EK professional condenser headset microphone is ideally suited for vocal sound and speech applications requiring maximum freedom of movement.
+
+The unique tiny size and super light weight provides a comfortable fit for any user. Ergonomically designed to fit comfortably and securely, it is great for broadcast and video recording where the microphone is almost invisible.
+
+The microphone provides excellent off-axis rejection in high-SPL situations thanks to its precision uni-directional cardioid capsule. It comes complete with 3 different replaceable connector adapters, making it ideal for use with wireless belt-pack transmitters from various manufacturers.
+
+Key Features & Specifications:
+\u2022 Pristine studio-grade audio quality with high acoustic overload tolerance
+\u2022 Lightweight and flexible 18-gram ergonomic frame
+\u2022 Reversible design: Easy mounting to both the left and right ear
+\u2022 Minimal visual impact for discreet on-camera presentation
+\u2022 Cardioid polar pattern delivering superior off-axis noise and feedback rejection
+\u2022 3 different adapters included for use with most popular wireless beltpack systems
+\u2022 Detachable mini-cable for convenient maintenance and extended longevity`,
+      specs: [
+        "Precision 3 mm back-electret cardioid condenser capsule providing high off-axis ambient noise rejection",
+        "Ambidextrous reversible boom mount allows effortless mounting to either the left or right ear",
+        "Featherweight 18-gram ergonomic frame ensures hours of fatigue-free theatrical or vocal performance",
+        "High acoustic overload threshold of 135 dB SPL handles loud singing without distortion",
+        "Includes 3 swappable connector adapters (3.5mm locking jack, 3-pin mini-XLR, 4-pin mini-XLR)",
+        "Detachable and replaceable high-flexibility skin-tone mini cable structure",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Ultra-Lightweight Reversible Cardioid Condenser Headset Microphone"],
+        ["Capsule Transducer", "3mm Back-Electret Condenser Capsule"],
+        ["Polar Pattern", "Cardioid (Uni-Directional with High Off-Axis Rejection)"],
+        ["Mounting Configuration", "Reversible Dual-Side Mounting (Left or Right Ear)"],
+        ["Frequency Response", "50Hz \u2013 18,000Hz"],
+        ["Sensitivity", "-42 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum SPL", "135 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Equivalent Noise Level", "26 dBA"],
+        ["Nominal Impedance", "1500 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Recommended Load Impedance", "> 2000 Ohms"],
+        ["Operating Voltage", "1.5V \u2013 10V DC (via wireless bodypack transmitter)"],
+        ["Total Weight", "18 grams (Ultra-Lightweight)"],
+        ["Included Adapters", "3 Interchangeable Adapters: 3.5mm Locking Plug, 3-Pin Mini XLR, 4-Pin Mini XLR"],
+        ["Compatibility", "Shure, Sennheiser, AKG, Line 6, Audio-Technica Wireless Beltpacks"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-hcm23se-condenser-headset-microphone",
+      name: "Eikon HCM23SE - Condenser Headset Microphone",
+      shortName: "Eikon HCM23SE Ultra-Slim Condenser Headset with Locking 3.5mm Jack",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Headset & Lavalier Miniature Condensers",
+      price: 2306,
+      originalPrice: 2560,
+      rating: 5,
+      reviewCount: 18,
+      image: "assets/images/products/eikon-hcm23se-headset.jpg",
+      images: [
+        "assets/images/products/eikon-hcm23se-headset.jpg",
+        "assets/images/products/eikon-hcm23se-connector.jpg"
+      ],
+      isFeatured: true,
+      badge: "Locking 3.5mm Screw Jack",
+      inStock: true,
+      stock: 20,
+      sku: "AK-EIKON-HCM23SE-HEADSET",
+      description: `Eikon HCM23SE - Condenser Headset Microphone
+
+The EIKON HCM23 mini headset microphone is ideally suited for speech and vocal applications requiring complete freedom of movement.
+
+The unique tiny size and super lightweight wireframe provides an exceptionally comfortable and secure fit for any user.
+
+Ideal for dance and gym instructors, broadcast presenters, theatrical performers, and video recording \u2014 this mini microphone is practically invisible on camera.
+
+Featuring a dedicated 3.5mm screw-locking connector (SE version), it connects seamlessly to Sennheiser wireless bodypack transmitters and compatible systems.
+
+Key Features & Specifications:
+\u2022 Flexible miniature microphone with a simple, fast, and comfortable headset frame
+\u2022 Ideal for speech, fitness instruction, worship, and theatre applications
+\u2022 Tiny 5 mm capsule with minimal visual impact and skin-tone aesthetic
+\u2022 Omni-directional polar pattern delivering natural voice reproduction regardless of head movements
+\u2022 Threaded 3.5mm locking jack connector (Sennheiser-compatible bodypacks)
+\u2022 Includes foam windscreen and cable clip for secure clothing attachment`,
+      specs: [
+        "5 mm back-electret condenser capsule delivering crisp, articulate vocal speech reproduction",
+        "Ultra-slim lightweight ergonomic wireframe for maximum comfort during extended use",
+        "Smooth omni-directional polar pattern capturing natural voice dynamics even during head motion",
+        "Threaded locking 3.5 mm mini-jack connector designed for Sennheiser and compatible bodypacks",
+        "Broad 20Hz \u2013 20,000Hz frequency response with tailored vocal presence boost",
+        "Discreet flesh-tone beige finish ensuring practically invisible presentation on video and stage",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Ultra-Lightweight Miniature Condenser Headset Microphone"],
+        ["Transducer Principle", "5mm Back-Electret Condenser Capsule"],
+        ["Polar Pattern", "Omni-Directional"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-45 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "1500 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Operating Voltage", "1.5V \u2013 10V DC (via wireless bodypack transmitter)"],
+        ["Termination / Connector", "3.5mm Locking Screw-Thread Mini-Jack Plug (Sennheiser Type)"],
+        ["Cable Length", "1.2 meters High-Flexibility Miniature Cable"],
+        ["Color", "Beige / Flesh-Tone (Discreet Stage & Video Appearance)"],
+        ["Included Accessories", "Acoustic Foam Windscreen, Cable Clip"],
+        ["Compatibility", "Sennheiser Evolution G1/G2/G3/G4, EW-D, FreeLine & 3.5mm locking wireless systems"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-hcm25se-condenser-headset-microphone",
+      name: "Eikon HCM25SE - Condenser Headset Microphone",
+      shortName: "Eikon HCM25SE Cardioid Condenser Headset Microphone with Locking 3.5mm Jack",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Headset & Lavalier Miniature Condensers",
+      price: 974,
+      originalPrice: 1080,
+      rating: 4.8,
+      reviewCount: 16,
+      image: "assets/images/products/eikon-hcm25se-headset.jpg",
+      images: [
+        "assets/images/products/eikon-hcm25se-headset.jpg",
+        "assets/images/products/eikon-hcm25se-connector.jpg"
+      ],
+      isFeatured: true,
+      badge: "Cardioid Headset Mic",
+      inStock: true,
+      stock: 25,
+      sku: "AK-EIKON-HCM25SE-HEADSET",
+      description: `Eikon HCM25SE - Condenser Headset Microphone
+
+Lightweight, high-quality cardioid condenser headset microphone engineered for vocalists, fitness instructors, and educators requiring crystal-clear speech reproduction with absolute freedom of movement.
+
+Equipped with a permanently polarized back-electret capsule and a focused cardioid polar pattern, the HCM25SE ensures targeted sound pickup right at the voice source while rejecting unwanted ambient room noise, audience chatter, and stage feedback.
+
+Featuring a dedicated 3.5mm locking screw-thread mini-jack connector (SE version), it provides a robust, wobble-free connection directly to Sennheiser and compatible wireless bodypack transmitters.
+
+Key Features:
+\u2022 Lightweight, high-quality condenser headset microphone
+\u2022 Permanently polarized back-electret condenser capsule
+\u2022 Cardioid polar pattern delivering high off-axis ambient noise and feedback suppression
+\u2022 High SPL handling up to 130 dB for distortion-free speech and singing
+\u2022 Ergonomic flexible wireframe with adjustable boom for comfortable, fatigue-free fit
+\u2022 Threaded 3.5mm locking screw mini-jack connector (Sennheiser-compatible bodypacks)
+\u2022 Ideal for singers, gym and fitness instructors, lecturers, and corporate presentations`,
+      specs: [
+        "Permanently polarized back-electret condenser capsule delivers pristine vocal intelligibility",
+        "Cardioid directional polar pattern isolates the voice while rejecting ambient background noise",
+        "Threaded 3.5mm locking screw-jack connector designed for Sennheiser wireless bodypack transmitters",
+        "Ultra-lightweight black wireframe construction ensures all-day comfort during active movement",
+        "High acoustic input capability up to 130 dB SPL accommodates powerful vocals and shouting",
+        "Includes protective acoustic foam pop filter windscreen and secure cable clip",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Ultra-Lightweight Cardioid Condenser Headset Microphone"],
+        ["Transducer Principle", "Permanently Polarized Back-Electret Condenser Capsule"],
+        ["Polar Pattern", "Cardioid (Directional Off-Axis Rejection)"],
+        ["Frequency Response", "20Hz \u2013 20,000Hz"],
+        ["Sensitivity", "-45 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum Input SPL", "130 dB SPL"],
+        ["Nominal Impedance", "1500 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Operating Voltage", "1.5V \u2013 10V DC (via wireless bodypack transmitter)"],
+        ["Termination / Connector", "3.5mm Locking Screw-Thread Mini-Jack Plug (Sennheiser SE Type, Black)"],
+        ["Cable Length", "1.2 meters High-Flexibility Miniature Shielded Cable"],
+        ["Finish / Color", "Matt Black"],
+        ["Included Accessories", "Acoustic Foam Windscreen, Cable Retention Clip"],
+        ["Compatibility", "Sennheiser Evolution G1/G2/G3/G4, EW-D, FreeLine & 3.5mm locking wireless systems"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-lch100se-condenser-lavalier-microphone",
+      name: "Eikon LCH100SE - Condenser Lavalier Microphone",
+      shortName: "Eikon LCH100SE Miniature Condenser Lavalier Microphone with Locking 3.5mm Jack",
+      brand: "Eikon",
+      category: "Condenser Microphones",
+      subcategory: "Headset & Lavalier Miniature Condensers",
+      price: 1115,
+      originalPrice: 1240,
+      rating: 4.7,
+      reviewCount: 14,
+      image: "assets/images/products/eikon-lch100se-lavalier.jpg",
+      images: [
+        "assets/images/products/eikon-lch100se-lavalier.jpg",
+        "assets/images/products/eikon-lch100se-clip.jpg"
+      ],
+      isFeatured: true,
+      badge: "Miniature Lavalier Mic",
+      inStock: true,
+      stock: 25,
+      sku: "AK-EIKON-LCH100SE-LAVALIER",
+      description: `Eikon LCH100SE - Condenser Lavalier Microphone
+
+Compact and discreet miniature condenser lavalier microphone engineered for broadcast, theatre, video production, public speaking, and educational presentations.
+
+Equipped with a high-sensitivity back-electret condenser capsule and an omni-directional polar pattern, the LCH100SE provides natural, uncolored vocal reproduction from all angles without proximity effect. Its compact footprint ensures minimal visual presence on camera or stage.
+
+The microphone features a threaded 3.5mm locking screw mini-jack connector (SE version), making it directly compatible with Sennheiser Evolution wireless bodypack transmitters and compatible systems.
+
+Key Features:
+\u2022 Ultra-compact miniature lavalier form factor for discreet clothing attachment
+\u2022 High-performance back-electret condenser capsule with smooth 80Hz \u2013 16kHz frequency response
+\u2022 Omni-directional pickup pattern capturing clear, natural speech even with head movement
+\u2022 Robust alligator tie clip ensures secure and stable placement on shirts, lapels, and ties
+\u2022 Locking 3.5mm screw-thread mini-jack connector for secure, click-free connection to wireless bodypacks
+\u2022 Acoustic foam pop screen effectively suppresses plosives and mild wind noise
+\u2022 Ideal for interviews, television broadcasting, corporate presentations, houses of worship, and online lectures`,
+      specs: [
+        "High-sensitivity back-electret condenser capsule delivering natural, articulate speech capture",
+        "Omni-directional polar pattern provides consistent pickup and natural sound even as the speaker turns",
+        "Threaded 3.5mm locking screw mini-jack connector for Sennheiser and compatible wireless bodypacks",
+        "Ultra-compact 5-gram miniature capsule profile remains virtually invisible on camera",
+        "Maximum SPL capability up to 128 dB SPL handles dynamic vocal expressions without clipping",
+        "Includes heavy-duty metal alligator tie clip and high-density acoustic foam windscreen",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Discreet Miniature Condenser Lavalier Microphone"],
+        ["Transducer Principle", "Back-Electret Condenser Capsule"],
+        ["Polar Pattern", "Omni-Directional"],
+        ["Frequency Response", "80Hz \u2013 16,000Hz"],
+        ["Sensitivity", "-52 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Maximum Input SPL", "128 dB SPL"],
+        ["Nominal Impedance", "680 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Operating Voltage", "1.5V \u2013 10V DC (via wireless bodypack transmitter)"],
+        ["Termination / Connector", "3.5mm Locking Screw-Thread Mini-Jack Plug (Sennheiser SE Type)"],
+        ["Cable Length", "1.0 meter Flexible Shielded Miniature Cable"],
+        ["Microphone Weight", "5 grams"],
+        ["Finish / Color", "Matt Black"],
+        ["Included Accessories", "Alligator Tie Clip, Acoustic Foam Pop Windscreen"],
+        ["Compatibility", "Sennheiser Evolution G1/G2/G3/G4, EW-D, FreeLine & 3.5mm locking wireless systems"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "ua-sd1-standard-dynamic-microphone",
+      name: "Universal Audio SD-1 Standard Dynamic Microphone",
+      shortName: "Universal Audio SD-1 Dynamic Broadcast & Vocal Microphone with Hemisphere Modeling",
+      brand: "Universal Audio",
+      category: "Dynamic Microphones",
+      subcategory: "Broadcast & Vocal Dynamic Microphones",
+      price: 37840,
+      originalPrice: 42e3,
+      rating: 4.9,
+      reviewCount: 34,
+      image: "assets/images/products/ua-sd1-front.png",
+      images: [
+        "assets/images/products/ua-sd1-front.png",
+        "assets/images/products/ua-sd1-angle.png",
+        "assets/images/products/ua-sd1-rear.png",
+        "assets/images/products/ua-sd1-mount.png"
+      ],
+      isFeatured: true,
+      badge: "Hemisphere Modeling & EQ Switches",
+      inStock: true,
+      stock: 8,
+      sku: "AK-UA-SD1-DYNAMIC",
+      description: `Universal Audio SD-1 Standard Dynamic Microphone
+
+With the SD-1 Standard Dynamic Microphone, you can capture vocals, instruments, live streams, and podcasts like a pro, quickly giving you polished studio sound that\u2019s broadcast-ready.
+
+Capture Close-Miked Vocals and Instruments
+The SD-1 delivers studio-grade sound and iconic styling, no matter where you record. It is custom-tailored for close-miked speech and lead vocals, featuring an end-address dynamic design that naturally rejects background ambient noise like fans, air conditioners, room reverberation, and noisy bandmates.
+
+Hemisphere Mic Modeling System
+Powered by Universal Audio's award-winning Hemisphere mic modeling technology, the SD-1 lets you access the iconic sound of history's most celebrated dynamic microphones\u2014including classic broadcast staples from Shure, Electro-Voice, and Sennheiser. Shape your proximity effect, axis response, and tonal coloration in realtime with Apollo or natively inside your DAW.
+
+Shape Your Sound with Selectable Tone Controls
+Reduce low-end rumble and mechanical floor vibration with the SD-1's selectable 200 Hz low-cut filter. Engage the enhanced 3 kHz \u2013 5 kHz articulation boost switch to make vocals, speech, and acoustic instruments immediately cut through dense mixes with radio-ready presence.
+
+Custom Apollo Channel Strip Presets
+Take the guesswork out of achieving professional sound. Use Apollo's custom SD-1 channel strip presets featuring radio-ready EQ, compression, and saturation settings for vocals, podcasting, voiceover, electric guitar cabs, and brass.
+
+Integrated Shockmount & Built-in Windscreen
+Featuring an internal mechanical shockmount and integrated pop-filtering acoustic foam windscreen, your recordings and live streams will sound cleaner with minimal handling noise and explosive plosive air blasts. The integrated dual-pivot swivel yoke and rear XLR output facilitate neat desktop arm and boom stand installations.`,
+      specs: [
+        "Classic end-address dynamic cardioid microphone custom-tailored for close-miked vocals and broadcast",
+        "Hemisphere mic modeling plugin delivers authentic emulations of legendary dynamic studio microphones",
+        "Flat, wide-range 50Hz \u2013 16kHz frequency response captures natural vocal and instrument dynamics",
+        "Rear-panel selectable 200 Hz low-cut filter eliminates sub-bass mud, HVAC rumble, and handling noise",
+        "Selectable 3kHz \u2013 5kHz articulation boost adds presence, vocal crispness, and speech intelligibility",
+        "Internal capsule shockmount isolation system suppresses mechanical vibrations and desk bumps",
+        "Built-in windscreen drastically tames vocal plosives and breath blasts for broadcast-ready delivery",
+        "Integrated dual-pivot swivel yoke mount with rear XLR socket for tidy cable routing",
+        "Custom Apollo channel strip presets provide instant radio-ready EQ and dynamics processing",
+        "Direct Pan-India Insured Dispatch & Authorized Universal Audio Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional End-Address)"],
+        ["Frequency Range", "50Hz \u2013 16,000Hz"],
+        ["Sensitivity", "-58 dB (1.3 mV) ref 1V at 1 Pa, 1 kHz"],
+        ["Output Impedance", "200 Ohms"],
+        ["Recommended Load Impedance", "> 1000 Ohms"],
+        ["Low-Cut Filter", "200 Hz (-3 dB gentle high-pass filter switch)"],
+        ["Articulation Boost", "+3 dB Presence Boost between 3 kHz \u2013 5 kHz switch"],
+        ["Modeling System", "Hemisphere Mic Modeling Technology (Included Plugin)"],
+        ["Connector", "3-Pin XLR Male (Rear-Mounted Balanced)"],
+        ["Internal Isolation", "Mechanical Internal Shockmount & Multilayer Foam Windscreen"],
+        ["Mounting System", 'Integrated Dual-Pivot Swivel Yoke (5/8"-27 thread with 3/8" adapter)'],
+        ["Dimensions", "195 mm Length \xD7 60 mm Diameter"],
+        ["Weight", "735 grams (Solid Metal Die-Cast Body)"],
+        ["Included Accessories", 'Thread Adapter (5/8" to 3/8"), Integrated Swivel Mount'],
+        ["Warranty", "Official Universal Audio Importer Warranty with Serial Registration"]
+      ]
+    },
+    {
+      id: "ua-sd3-dynamic-microphone",
+      name: "Universal Audio SD-3 Dynamic Microphone",
+      shortName: "Universal Audio SD-3 Compact Dynamic Instrument Microphone with Hemisphere Modeling",
+      brand: "Universal Audio",
+      category: "Dynamic Microphones",
+      subcategory: "Instrument & Drum Dynamic Microphones",
+      price: 18415,
+      originalPrice: 20500,
+      rating: 4.9,
+      reviewCount: 28,
+      image: "assets/images/products/ua-sd3-front.jpg",
+      images: [
+        "assets/images/products/ua-sd3-front.jpg",
+        "assets/images/products/ua-sd3-side.jpg",
+        "assets/images/products/ua-sd3-accessories.jpg",
+        "assets/images/products/ua-sd3-pouch.jpg"
+      ],
+      isFeatured: true,
+      badge: "Hemisphere Modeling & High SPL",
+      inStock: true,
+      stock: 12,
+      sku: "AK-UA-SD3-DYNAMIC",
+      description: `Universal Audio SD-3 Dynamic Microphone
+
+Universal Audio\u2019s SD-3 is a compact cardioid dynamic microphone for drum and instrument recording featuring Hemisphere mic modeling technology, high SPL tolerance, and rugged vintage-style craftsmanship.
+
+A Modern Classic for Snare, Percussion, and Guitar Amps
+Easily capture snare and tom drums, loud guitar cabs, brass, and more with SD-3 \u2014 a classic dynamic mic with high SPL handling, cardioid polar pattern, and best-in-class Hemisphere mic modeling giving you pro sound in any environment.
+
+Record Through Five Workhorse Mics
+SD-3 is powered by the same mic modeling technology found in Universal Audio\u2019s award-winning UA Sphere microphones. With the included Hemisphere Mic Collection, it\u2019s the only dynamic modeling mic that gives you the authentic sound of famous dynamics from Shure, Sennheiser, and Audix.
+
+Included Hemisphere Mic Models:
+\u2022 DN-57: Based on the ubiquitous classic 57, a fixture on snares and guitar cabinets across every genre.
+\u2022 DN-545: Based on the Unidyne III capsule used extensively on The Beach Boys' Pet Sounds and Brian Wilson's lead vocal.
+\u2022 DN-604: European-made compact clip-on standard on stages and studios worldwide for punchy toms and snares.
+\u2022 DN-409U: Smooth high-end and controlled low-end response below 100 Hz tailored for electric guitar amplifiers.
+\u2022 DN-4: Modern compact instrument mic with 3-position filter for sculpting toms, cabs, and snares.
+
+A Modeling Mic That Works for You
+The included Hemisphere plug-in works with or without UA hardware, offering precise realtime control over filter, proximity effect, and axis positioning. Just set up the SD-3 and adjust your sound in your DAW or Apollo Console.
+
+Compact Size & Ultra-High SPL Tolerance
+SD-3's compact footprint allows hassle-free placement in tight drum kits and cramped stages, while its hand-selected capsule tolerates extreme sound pressure levels without distortion.`,
+      specs: [
+        "Compact dynamic cardioid instrument microphone optimized for snare, toms, percussion, and guitar cabs",
+        "Hemisphere mic modeling technology emulates 5 legendary dynamic microphones (DN-57, DN-545, DN-604, DN-409U, DN-4)",
+        "High SPL handling ensures distortion-free capture of explosive percussion and cranked amplifiers",
+        "Tailored cardioid polar pattern rejects off-axis bleed from adjacent drums and stage noise",
+        "Precise realtime filter, proximity, and axis angle positioning controls via included Hemisphere plugin",
+        "Rugged all-metal body construction with vintage cream finish and hand-selected dynamic capsule",
+        "Ultra-compact 91 mm length enables pinpoint mic placement in tight, complex drum kit setups",
+        'Includes adjustable standmount clip, 5/8" to 3/8" thread adapter, and zippered protective travel pouch',
+        "Direct Pan-India Insured Dispatch & Authorized Universal Audio Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Off-Axis Rejection)"],
+        ["Frequency Range", "40Hz \u2013 15,000Hz"],
+        ["Sensitivity", "-58 dB (1.3 mV) ref 1V at 1 Pa, 1 kHz"],
+        ["Output Impedance", "250 Ohms"],
+        ["Modeling Technology", "Hemisphere Mic Collection (5 Classic Dynamic Models)"],
+        ["Maximum SPL", "Ultra-High SPL Tolerant Capsule"],
+        ["Connector", "3-Pin XLR Male (Gold-Plated Balanced)"],
+        ["Chassis Construction", "All-Metal Die-Cast Body with Retro Cream Finish"],
+        ["Dimensions", '91 mm (3.58") Length \xD7 42 mm (1.65") Diameter'],
+        ["Weight", "214 grams (0.47 lbs)"],
+        ["Included Accessories", 'Swivel Standmount, 5/8" to 3/8" Thread Adapter, Zippered Storage Pouch'],
+        ["Warranty", "Official Universal Audio Importer Warranty with Serial Registration"]
+      ]
+    },
+    {
+      id: "ua-sd3-trio-pack-dynamic-microphones",
+      name: "Universal Audio SD-3 Dynamic Microphone (Trio Pack)",
+      shortName: "Universal Audio SD-3 Compact Dynamic Instrument Microphones (3-Pack with Modeling)",
+      brand: "Universal Audio",
+      category: "Dynamic Microphones",
+      subcategory: "Instrument & Drum Dynamic Microphones",
+      price: 44005,
+      originalPrice: 48900,
+      rating: 5,
+      reviewCount: 17,
+      image: "assets/images/products/ua-sd3-trio-front.jpg",
+      images: [
+        "assets/images/products/ua-sd3-trio-front.jpg",
+        "assets/images/products/ua-sd3-trio-pouches.jpg",
+        "assets/images/products/ua-sd3-accessories.jpg",
+        "assets/images/products/ua-sd3-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "Matched 3-Pack Value Bundle",
+      inStock: true,
+      stock: 6,
+      sku: "AK-UA-SD3-TRIO-DYNAMIC",
+      description: `Universal Audio SD-3 Dynamic Microphone (Trio Pack)
+
+The Universal Audio SD-3 Trio Pack delivers three compact cardioid dynamic microphones for drum, percussion, and guitar cabinet recording\u2014complete with Hemisphere mic modeling technology, ultra-high SPL handling, individual stand mounts, thread adapters, and three dedicated storage pouches.
+
+A Trio of Modern Classics for Snare, Toms, and Guitar Cabs
+Equip your entire drum kit or studio guitar array with three identical, hand-selected SD-3 microphones. Easily mic snare top and bottom, rack and floor toms, or multiple amplifier cabinets with consistent tone and exceptional off-axis phase coherence.
+
+Record Through Five Workhorse Microphones
+Each SD-3 in the Trio Pack is powered by Universal Audio's Hemisphere mic modeling technology found in the award-winning UA Sphere systems. Model 5 legendary dynamics from Shure, Sennheiser, and Audix:
+\u2022 DN-57: The undisputed standard for cracking snares and searing guitar amps.
+\u2022 DN-545: Vintage Unidyne III capsule with classic sweet midrange and vocal heritage.
+\u2022 DN-604: Snappy, European compact clip-on standard for tight tom and percussion capture.
+\u2022 DN-409U: Smooth high-end roll-off and low-end contour specifically tuned for guitar amplifiers.
+\u2022 DN-4: Versatile compact tom mic featuring a three-position tone contour filter.
+
+Advanced Proximity, Filter, and Axis Modeling
+The included Hemisphere plug-in works natively in any DAW or in realtime on Apollo interfaces, letting you sculpt the filter curve, proximity boost, and off-axis angle independently across all three microphones.
+
+Compact Footprint for Complex Drum Sets
+At just 91 mm in length, each SD-3 tucks into tight drum setups without interfering with cymbals or drummers' sticks, while tolerating the highest sound pressure levels without distortion.`,
+      specs: [
+        "Value 3-pack bundle including 3\xD7 Universal Audio SD-3 dynamic modeling instrument microphones",
+        "Engineered specifically for multi-mic snare, rack tom, floor tom, and stereo guitar cabinet setups",
+        "Hemisphere mic modeling technology emulates 5 legendary dynamic microphones across all 3 channels",
+        "Hand-selected dynamic capsules withstand extreme SPL without transient distortion or breakup",
+        "Independent filter, proximity, and axis angle positioning controls within the Hemisphere DAW plugin",
+        "Retro cream all-metal chassis with compact 91 mm length enables tight placement in crowded drum kits",
+        'Complete package includes 3\xD7 swivel standmounts, 3\xD7 5/8" to 3/8" thread adapters, and 3\xD7 storage pouches',
+        "Direct Pan-India Insured Dispatch & Authorized Universal Audio Warranty"
+      ],
+      deepSpecs: [
+        ["Package Configuration", "Trio Pack (3\xD7 Matching SD-3 Dynamic Microphones)"],
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Off-Axis Rejection)"],
+        ["Frequency Range", "40Hz \u2013 15,000Hz"],
+        ["Sensitivity", "-58 dB (1.3 mV) ref 1V at 1 Pa, 1 kHz"],
+        ["Output Impedance", "250 Ohms"],
+        ["Modeling System", "Hemisphere Mic Collection (5 Classic Dynamic Models per Mic)"],
+        ["Maximum SPL", "Ultra-High SPL Tolerant Capsule"],
+        ["Connector", "3-Pin XLR Male (Gold-Plated Balanced per Mic)"],
+        ["Chassis Construction", "All-Metal Die-Cast Body with Retro Cream Finish"],
+        ["Individual Dimensions", '91 mm (3.58") Length \xD7 42 mm (1.65") Diameter each'],
+        ["Individual Weight", "214 grams (0.47 lbs) each"],
+        ["Included Accessories", '3\xD7 Swivel Standmounts, 3\xD7 Thread Adapters (5/8" to 3/8"), 3\xD7 Zippered Pouches'],
+        ["Warranty", "Official Universal Audio Importer Warranty with Serial Registration"]
+      ]
+    },
+    {
+      id: "ua-sd5-dynamic-microphone",
+      name: "Universal Audio SD-5 Dynamic Microphone",
+      shortName: "Universal Audio SD-5 Supercardioid Dynamic Kick Drum & Bass Mic with Hemisphere Modeling",
+      brand: "Universal Audio",
+      category: "Dynamic Microphones",
+      subcategory: "Instrument & Drum Dynamic Microphones",
+      price: 28410,
+      originalPrice: 31500,
+      rating: 4.9,
+      reviewCount: 23,
+      image: "assets/images/products/ua-sd5-front.jpg",
+      images: [
+        "assets/images/products/ua-sd5-front.jpg",
+        "assets/images/products/ua-sd5-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "Sub-Bass & Kick Drum Specialist",
+      inStock: true,
+      stock: 0, isOutOfStock: true,
+      sku: "AK-UA-SD5-DYNAMIC",
+      description: `Universal Audio SD-5 Dynamic Microphone
+
+Universal Audio\u2019s SD-5 is a professional supercardioid dynamic microphone engineered specifically for kick drums, bass cabinets, and low-frequency sources\u2014featuring Hemisphere mic modeling technology, ultra-high SPL handling, and an integrated adjustable stand mount.
+
+Get Kick and Bass Tones from Your Favorite Era
+Easily capture all the punch, sub-harmonic weight, and beater attack of your kick drums, upright bass, and bass amplifier cabinets. With its supercardioid polar pattern, high acoustic overload tolerance, and best-in-class Hemisphere mic modeling, the SD-5 delivers radio-ready low-end authority in any recording space.
+
+Record Through Five Legendary Kick Mics
+Powered by the same modeling algorithms found in UA Sphere microphones, the included Hemisphere Mic Collection gives you instant access to history's most celebrated kick drum microphones:
+\u2022 DN-12A: Inspired by the legendary 1950s vintage dynamic favored by producer John Leckie (Radiohead, Pink Floyd) for warm, natural low-end roundness.
+\u2022 DN-112: The Austrian-made punchy kick drum benchmark heard on countless hip-hop and rock records, delivering massive sub frequencies and crisp beater slap.
+\u2022 DN-6: Classic American dynamic kick mic renowned for scooped mids, hyped lows, and aggressive punch required for modern rock and metal.
+\u2022 DN-52: Modern American standard kick microphone providing balanced low-frequency response, great sub-bass extension, and clear attack.
+\u2022 DN-SUB: Emulates the iconic studio trick of wiring a full-range sub-speaker in reverse (Subkick) for earth-shaking sub-bass energy below 50 Hz.
+
+Advanced Filter, Proximity, and Axis Controls
+Using the included Hemisphere plugin, you can adjust low-pass filters, proximity buildup, and off-axis angle in realtime on Apollo interfaces or natively inside your DAW to find the exact sweet spot inside or outside the kick drum port.
+
+Built for Decades of Low-End Tracking
+With rugged all-metal construction, vintage retro styling, an integrated angle-adjustable stand mount, and a hand-selected dynamic capsule handling extreme sound pressure levels, the SD-5 is your lifelong low-frequency companion.`,
+      specs: [
+        "Specialized dynamic microphone tailored for kick drums, bass guitar cabinets, and low-end acoustic instruments",
+        "Hemisphere modeling technology provides 5 iconic kick mic emulations (DN-12A, DN-112, DN-6, DN-52, DN-SUB)",
+        "Deep 20Hz \u2013 15kHz frequency response delivers subterranean sub-bass punch and articulate beater attack",
+        "Directional supercardioid polar pattern provides exceptional off-axis isolation and feedback immunity",
+        "Ultra-high acoustic overload capability tolerates inside-kick placement and loud bass transients without clipping",
+        "Built-in heavy-duty swivel standmount with integrated angle lock facilitates precise, sturdy positioning",
+        'Includes 5/8" to 3/8" thread adapter and zippered Universal Audio protective storage pouch',
+        "Direct Pan-India Insured Dispatch & Authorized Universal Audio Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Supercardioid (High Isolation & Deep Low-Frequency Extension)"],
+        ["Frequency Range", "20Hz \u2013 15,000Hz"],
+        ["Sensitivity", "-64 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Output Impedance", "50 Ohms"],
+        ["Modeling System", "Hemisphere Mic Collection (5 Classic Kick Drum Models)"],
+        ["Maximum SPL", "Ultra-High SPL Tolerant Capsule"],
+        ["Connector", "3-Pin XLR Male (Gold-Plated Balanced)"],
+        ["Chassis Construction", "All-Metal Die-Cast Body with Retro Cream Finish"],
+        ["Mounting System", 'Integrated Heavy-Duty Standmount with Angle Adjustment (5/8"-27 thread)'],
+        ["Dimensions", '103.2 mm (4.06") Length \xD7 142.6 mm (5.61") Height with Mount'],
+        ["Weight", "727 grams (1.6 lbs)"],
+        ["Included Accessories", 'Integrated Standmount, 5/8" to 3/8" Thread Adapter, Zippered Storage Pouch'],
+        ["Warranty", "Official Universal Audio Importer Warranty with Serial Registration"]
+      ]
+    },
+    {
+      id: "ua-sd7-dynamic-microphone",
+      name: "Universal Audio SD-7 Dynamic Microphone",
+      shortName: "Universal Audio SD-7 Hypercardioid Dynamic Instrument Microphone with Hemisphere Modeling",
+      brand: "Universal Audio",
+      category: "Dynamic Microphones",
+      subcategory: "Instrument & Drum Dynamic Microphones",
+      price: 21270,
+      originalPrice: 23600,
+      rating: 4.9,
+      reviewCount: 21,
+      image: "assets/images/products/ua-sd7-front.jpg",
+      images: [
+        "assets/images/products/ua-sd7-front.jpg",
+        "assets/images/products/ua-sd7-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "Hypercardioid Modeling Specialist",
+      inStock: true,
+      stock: 0, isPreOrder: true, badge: 'Pre-Order',
+      sku: "AK-UA-SD7-DYNAMIC",
+      description: `Universal Audio SD-7 Dynamic Microphone
+
+Universal Audio\u2019s SD-7 is a professional hypercardioid dynamic microphone for drums and instruments featuring Hemisphere mic modeling technology, ultra-high SPL tolerance, and rugged vintage-style craftsmanship.
+
+Capture Toms and Instruments with Legendary Clarity
+Easily capture rack and floor toms, guitar amplifier cabinets, brass, horns, and percussion with natural, open tone. With its focused hypercardioid polar pattern, high acoustic overload handling, and best-in-class Hemisphere mic modeling, the SD-7 gives you pro sound with surgical precision in any tracking environment.
+
+Record Through Five Famous Instrument Microphones
+SD-7 is powered by the same modeling algorithms found in Universal Audio\u2019s award-winning UA Sphere microphones. With the included Hemisphere Mic Collection, it\u2019s the only dynamic modeling microphone that delivers the authentic sound of famous dynamics and ribbons from Sennheiser and Beyerdynamic:
+\u2022 DN-421B: Based on a modern 421, which has a slightly brighter and harder sound\u2014the most famous tom mic of all time, also exceptional on kick drums and brass.
+\u2022 DN-421S: Based on a rare early vintage 421 with script logo, offering warmer vintage character for guitar amplifiers, drums, and vocals.
+\u2022 RB-160: Based on the legendary 1960\u2019s ribbon microphone with rich mid-forward character, immortalized on Jimi Hendrix\u2019s guitar cabs and Led Zeppelin's "When the Levee Breaks" drums.
+\u2022 DN-409N: Based on the earliest vintage 409, delivering distinct harmonic coloration ideal for electric guitars and live vocals (notably Pink Floyd\u2019s Live at Pompeii).
+\u2022 DN-441: The iconic balanced German dynamic heard on countless records from Fleetwood Mac and Tom Petty to Tame Impala, revered on snare, guitar cabs, and vocals.
+
+A Modeling Mic That Works for You
+The included Hemisphere Mic Collection plugin works natively in any DAW or in realtime on Apollo interfaces, going far beyond simple EQ curves to give you precise control over filter, proximity effect, and off-axis angle positioning.
+
+Discover Your Best Sound with Hypercardioid Precision
+From high-energy concert stages to controlled studio spaces, the SD-7\u2019s ultra-high SPL capability handles the loudest transient-rich instruments. Its hypercardioid pickup pattern allows you to place the mic further back for open natural air while maintaining tight isolation from bleed.
+
+Add Vintage Styling and Lifetime Reliability
+Featuring rugged all-metal construction, a cool retro finish, an integrated angle-adjustable swivel standmount, and hand-selected dynamic capsules, the SD-7 is a trusted companion engineered for decades of professional performance.`,
+      specs: [
+        "Professional hypercardioid dynamic instrument microphone tailored for toms, guitar cabs, brass & percussion",
+        "Hemisphere mic modeling technology emulates 5 legendary dynamic and ribbon microphones (DN-421B, DN-421S, RB-160, DN-409N, DN-441)",
+        "Tight hypercardioid polar pattern delivers surgical acoustic isolation and rejects off-axis stage spill",
+        "Ultra-high acoustic overload handling captures loud, transient-rich sound sources without clipping",
+        "Realtime filter, proximity effect, and off-axis angle sculpting via included Hemisphere plugin",
+        "Integrated heavy-duty swivel standmount with angle adjustment lock for flexible kit placement",
+        "Rugged all-metal die-cast body with stylish retro cream finish and hand-selected capsule",
+        'Includes integrated standmount, 5/8" to 3/8" thread adapter, and zippered protective storage pouch',
+        "Direct Pan-India Insured Dispatch & Authorized Universal Audio Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Hypercardioid (Directional Off-Axis Rejection)"],
+        ["Frequency Range", "30Hz \u2013 17,000Hz"],
+        ["Sensitivity", "-54 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Output Impedance", "600 Ohms"],
+        ["Modeling System", "Hemisphere Mic Collection (5 Classic Dynamic & Ribbon Models)"],
+        ["Maximum SPL", "Ultra-High SPL Tolerant Capsule"],
+        ["Connector", "3-Pin XLR Male (Gold-Plated Balanced)"],
+        ["Chassis Construction", "All-Metal Die-Cast Body with Retro Cream Finish"],
+        ["Mounting System", "Integrated Heavy-Duty Standmount with Angle Adjustment Lock"],
+        ["Dimensions", '113.5 mm (4.47") Length \xD7 50 mm (1.97") Width \xD7 97.5 mm (3.84") Height with Mount'],
+        ["Weight", "475 grams (1.05 lbs)"],
+        ["Included Accessories", 'Integrated Standmount w/ Angle Adjustment, 5/8" to 3/8" Thread Adapter, Storage Pouch'],
+        ["Warranty", "Official Universal Audio Importer Warranty with Serial Registration"]
+      ]
+    },
+    {
+      id: "eikon-dm220-professional-vocal-dynamic-microphone",
+      name: "Eikon DM220 - Professional Vocal Dynamic Microphone",
+      shortName: "Eikon DM220 Handheld Dynamic Vocal Microphone with On/Off Switch",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 2438,
+      originalPrice: 2700,
+      rating: 4.8,
+      reviewCount: 19,
+      image: "assets/images/products/eikon-dm220-front.jpg",
+      images: [
+        "assets/images/products/eikon-dm220-front.jpg",
+        "assets/images/products/eikon-dm220-clip.jpg",
+        "assets/images/products/eikon-dm220-kit.jpg",
+        "assets/images/products/eikon-dm220-capsule.jpg",
+        "assets/images/products/eikon-dm220-connector.jpg"
+      ],
+      isFeatured: true,
+      badge: "Ergonomic Stage Vocal Mic",
+      inStock: true,
+      stock: 20,
+      sku: "AK-EIKON-DM220-DYNAMIC",
+      description: `Eikon DM220 - Professional Vocal Dynamic Microphone
+
+With its modern ergonomic body design specifically engineered for demanding on-stage applications, the Eikon DM220 delivers a flat, wide frequency response and exceptional vocal clarity.
+
+Optimized On-Stage Vocal Isolation
+The tight cardioid polar pattern isolates the lead and backing vocals from ambient stage bleed, drum spill, and background noise in live venues or rehearsal spaces.
+
+Pristine Transparency & High SPL Tolerance
+Used in live performance or studio tracking, the DM220 cardioid microphone is the right choice for natural vocal transparency, high resistance to acoustic feedback, and the ability to handle high sound pressure levels up to 135 dB without distortion.
+
+Built for Stage Longevity
+Featuring an ergonomic barrel design that feels balanced and comfortable in hand, an integrated smooth ON/OFF switch for effortless stage management, and a heavy-duty steel mesh grille, the DM220 delivers reliable touring endurance. Includes an official microphone stand holder and padded storage pouch.
+
+Key Highlights:
+\u2022 Vocal microphone with high-performance dynamic capsule
+\u2022 Directional cardioid polar pattern with exceptional feedback rejection
+\u2022 Flat and extended 50Hz \u2013 15kHz frequency response
+\u2022 Integrated silent magnetic ON/OFF switch
+\u2022 Exceptional acoustic transparency across mid-bass and vocal registers
+\u2022 Ergonomic barrel design engineered for fatigue-free stage performance
+\u2022 Complete kit includes microphone stand clamp and storage pouch`,
+      specs: [
+        "Professional moving coil dynamic vocal microphone engineered for live performance and stage delivery",
+        "Cardioid directional polar pattern rejects stage feedback and ambient background noise",
+        "Flat, wide 50Hz \u2013 15kHz frequency response with enhanced mid-bass and vocal articulation",
+        "High acoustic overload tolerance up to 135 dB SPL handles loud singers without harmonic distortion",
+        "Integrated silent magnetic ON/OFF switch allows quick performer control on stage",
+        "Ergonomically contoured barrel design provides balanced, fatigue-free handheld comfort",
+        "Includes heavy-duty swivel microphone stand clip and protective padded storage pouch",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "50Hz \u2013 15,000Hz (15 kHz)"],
+        ["Sensitivity", "-53 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "600 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "135 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Equivalent Noise Level", "20 dBA"],
+        ["Controls / Switch", "Integrated Silent Magnetic ON/OFF Slide Switch"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Housing Construction", "Ergonomic Die-Cast Body with Durable Matt Black Barrel Finish"],
+        ["Dimensions", '180 mm (7.08") Length \xD7 45 mm (1.77") Diameter'],
+        ["Weight", "360 grams (0.79 lbs)"],
+        ["Included Accessories", "Heavy-Duty Swivel Mic Stand Holder, Protective Storage Pouch"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-dm226-professional-vocal-dynamic-microphone",
+      name: "Eikon DM226 - Professional Vocal Dynamic Microphone",
+      shortName: "Eikon DM226 Handheld Dynamic Stage Vocal Microphone",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 2051,
+      originalPrice: 2280,
+      rating: 4.8,
+      reviewCount: 17,
+      image: "assets/images/products/eikon-dm226-front.jpg",
+      images: [
+        "assets/images/products/eikon-dm226-front.jpg",
+        "assets/images/products/eikon-dm226-clip.jpg",
+        "assets/images/products/eikon-dm226-capsule.jpg",
+        "assets/images/products/eikon-dm226-connector.jpg"
+      ],
+      isFeatured: true,
+      badge: "Switchless Live Stage Vocal",
+      inStock: true,
+      stock: 22,
+      sku: "AK-EIKON-DM226-DYNAMIC",
+      description: `Eikon DM226 - Professional Vocal Dynamic Microphone
+
+Featuring an ergonomic switchless body design specifically engineered for high-energy on-stage vocalists, the Eikon DM226 provides flat, wide frequency response and uncompromising signal integrity.
+
+Switchless Design for Uninterrupted Performance
+Built without an external power switch, the DM226 eliminates accidental shutoffs during intense live performances, theatrical shows, and touring applications where continuous microphone reliability is critical.
+
+Acoustic Isolation & Feedback Rejection
+The precise cardioid polar pattern isolates lead and backing vocals from background stage rumble, floor monitors, and drum bleed, allowing higher stage gain before feedback.
+
+Mid-Bass Warmth & High SPL Tolerance
+Engineered for transparent vocal reproduction with rich mid-bass definition, the DM226 handles extreme sound pressure levels up to 135 dB without harmonic distortion or breakup.
+
+Tour-Grade Construction
+With a rugged die-cast metal body, ergonomic barrel profile, reinforced wire mesh grille, and gold-plated XLR termination, the DM226 is built to endure the rigors of the road. Includes a heavy-duty microphone stand clamp.
+
+Key Highlights:
+\u2022 Professional vocal microphone with precision moving coil dynamic capsule
+\u2022 Clean switchless handle design prevents accidental silencing during performances
+\u2022 Directional cardioid polar pattern with superior acoustic isolation
+\u2022 Flat and extended 50Hz \u2013 15kHz frequency response
+\u2022 Exceptional acoustic transparency across mid-bass and vocal registers
+\u2022 Ergonomic barrel design engineered for fatigue-free handheld comfort
+\u2022 Heavy-duty swivel microphone stand clamp included`,
+      specs: [
+        "Professional moving coil dynamic vocal microphone engineered for live concerts and demanding stage use",
+        "Switchless handle profile prevents accidental power toggles or muting during energetic live performances",
+        "Cardioid directional polar pattern rejects stage feedback and ambient background noise",
+        "Flat, wide 50Hz \u2013 15kHz frequency response delivering balanced vocal warmth and clear presence",
+        "High acoustic overload tolerance up to 135 dB SPL handles explosive vocal delivery without distortion",
+        "Ergonomically contoured die-cast barrel ensures balanced, fatigue-free handheld comfort",
+        "Includes heavy-duty swivel microphone stand clip with standard mounting thread",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "50Hz \u2013 15,000Hz (15 kHz)"],
+        ["Sensitivity", "-53 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "600 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "135 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Controls / Switch", "Switchless Purist Stage Design (No On/Off Switch)"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Housing Construction", "Ergonomic Die-Cast Body with Durable Matt Black Barrel Finish"],
+        ["Dimensions", '180 mm (7.08") Length \xD7 45 mm (1.77") Diameter'],
+        ["Weight", "360 grams (0.79 lbs)"],
+        ["Included Accessories", "Heavy-Duty Swivel Mic Stand Clip"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-dm55v2-vintage-professional-vocal-dynamic-mic",
+      name: "Eikon DM55V2 - Vintage Professional Vocal Dynamic Mic",
+      shortName: "Eikon DM55V2 Satin Chrome Vintage Vocal Dynamic Microphone",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Vintage & Stage Performance Dynamic Microphones",
+      price: 11917,
+      originalPrice: 13240,
+      rating: 4.9,
+      reviewCount: 26,
+      image: "assets/images/products/eikon-dm55v2-front.jpg",
+      images: [
+        "assets/images/products/eikon-dm55v2-front.jpg",
+        "assets/images/products/eikon-dm55v2-angle.jpg",
+        "assets/images/products/eikon-dm55v2-side.jpg",
+        "assets/images/products/eikon-dm55v2-top.jpg",
+        "assets/images/products/eikon-dm55v2-bottom.jpg"
+      ],
+      isFeatured: true,
+      badge: "Satin Chrome Vintage Classic",
+      inStock: true,
+      stock: 14,
+      sku: "AK-EIKON-DM55V2-DYNAMIC",
+      description: `Eikon DM55V2 - Vintage Professional Vocal Dynamic Mic
+
+The EIKON DM55V2 Vintage microphone is a high-grade moving coil dynamic microphone featuring an iconic 1950s classic silhouette, big-size diaphragm, and satin chrome-plated die-cast body.
+
+Iconic 1950s Satin Chrome Styling
+DM55V2 delivers an authentic mid-century retro presence for live stage vocalists, theatrical productions, broadcasters, podcasters, and music video shoots requiring unmistakable vintage charisma combined with modern acoustic fidelity.
+
+Big-Size Diaphragm & Wide Dynamic Range
+Equipped with an oversized moving coil diaphragm, the DM55V2 captures deep, punchy low frequencies, transparent midrange presence, and silky high-frequency air across a wide 50Hz \u2013 16kHz frequency spectrum.
+
+Internal Rubber Shock Mount Suspension
+An advanced internal rubber shock-mount system isolates the dynamic capsule from stand vibrations, stage tremors, and mechanical handling noises, guaranteeing clean, undisturbed broadcast delivery.
+
+Self-Tensioning Swivel Mount & On-Off Switch
+Featuring a rugged self-tensioning swivel mount with 45-degree forward and 80-degree backward tilt, the DM55V2 mounts securely to any standard 5/8"-27 threaded microphone stand. An integrated on-off slide switch provides effortless performer control during live shows.
+
+Key Highlights:
+\u2022 Satin chrome-plated die-cast casing for pure vintage look and roadworthy durability
+\u2022 Directional cardioid polar pattern delivers excellent off-axis feedback rejection
+\u2022 Big-size dynamic diaphragm tuned specifically for vocal and instrumental warmth
+\u2022 Internal rubber shock mount for reduced handling noise and mechanical isolation
+\u2022 Integrated ON/OFF slide switch on mounting stem
+\u2022 Self-tensioning swivel mount with standard 5/8"-27 threaded stand socket
+\u2022 EIKON custom Italian acoustic design and precision craftsmanship`,
+      specs: [
+        "Classic 1950s satin chrome-plated die-cast casing engineered for vintage stage presence and durability",
+        "Large-diaphragm moving coil dynamic capsule reproducing full-bodied vocal warmth and high clarity",
+        "Cardioid directional polar pattern rejects stage feedback and ambient background noise",
+        "Internal rubber shock-mount suspension system effectively suppresses stand handling and stage rumble",
+        "Wide 50Hz \u2013 16,000Hz frequency response tailored for speech, lead vocals, and acoustic instruments",
+        "Integrated heavy-duty ON/OFF slide switch on the chrome mounting bracket",
+        'Self-tensioning swivel mount with standard 5/8"-27 thread for versatile angle positioning',
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Moving Coil Dynamic Microphone (Vintage Design)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "50Hz \u2013 16,000Hz (16 kHz)"],
+        ["Sensitivity", "-52 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "300 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "130 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Internal Isolation", "Integrated Rubber Shock-Mount Suspension Support"],
+        ["Controls / Switch", "Integrated Mechanical ON/OFF Slide Switch on Stem"],
+        ["Mounting System", 'Self-Tensioning Swivel Mount (5/8"-27 Standard Stand Thread)'],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Chassis Construction", "Satin Chrome-Plated Heavy-Duty Die-Cast Metal Casing"],
+        ["Dimensions", '185 mm (7.28") Height \xD7 56 mm (2.20") Length \xD7 67 mm (2.64") Width'],
+        ["Weight", "485 grams (1.07 lbs)"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-dm580-professional-vocal-dynamic-microphone",
+      name: "Eikon DM580 - Professional Vocal Dynamic Microphone",
+      shortName: "Eikon DM580 High-SPL Vocal Dynamic Microphone",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 3678,
+      originalPrice: 4080,
+      rating: 4.9,
+      reviewCount: 22,
+      image: "assets/images/products/eikon-dm580-front.jpg",
+      images: [
+        "assets/images/products/eikon-dm580-front.jpg",
+        "assets/images/products/eikon-dm580-clip.jpg"
+      ],
+      isFeatured: true,
+      badge: "High-SPL Stage Vocal Specialist",
+      inStock: true,
+      stock: 16,
+      sku: "AK-EIKON-DM580-DYNAMIC",
+      description: `Eikon DM580 - Professional Vocal Dynamic Microphone
+
+Specifically engineered for demanding on-stage vocal performance, the Eikon DM580 offers a flat, wide frequency response, exceptional feedback rejection, and high SPL handling without acoustic distortion.
+
+Optimized Stage Monitor Feedback Immunity
+Equipped with a precision cardioid polar pattern and calibrated sensitivity, the DM580 delivers exceptional gain-before-feedback even on loud stages with high stage monitor volume levels.
+
+Natural Bass Roll-Off & Tailored Vocal Articulation
+The frequency response features a natural bass roll-off engineered specifically for close vocal miking, effectively neutralizing proximity mud, breath plosives, and handling noise. It is particularly voiced for crystal-clear female vocal applications, delivering an open, articulate top-end that cuts through dense live mixes.
+
+Ultra-High SPL Tolerance
+With a maximum sound pressure level capability of 137 dB SPL, the DM580 effortlessly absorbs high dynamic vocal peaks, screaming rock vocals, and brass instruments without saturation or harmonic distortion.
+
+Roadworthy Engineering
+Featuring a durable matte black metal body, steel mesh spherical ball grille with integrated pop foam, internal mechanical shockmount, and gold-plated 3-pin XLR contacts, the DM580 is ready for touring. Includes a heavy-duty swivel microphone stand holder.
+
+Key Highlights:
+\u2022 Professional vocal microphone with high-performance moving coil dynamic capsule
+\u2022 Cardioid polar pattern with high acoustic isolation and feedback resistance
+\u2022 Calibrated sensitivity optimized for high stage monitor environments
+\u2022 Flat, extended 50Hz \u2013 16kHz frequency response with natural low-end roll-off
+\u2022 Particularly tailored for female vocals, vocal clarity, and close miking
+\u2022 Rugged all-metal body with spherical steel mesh ball grille
+\u2022 Heavy-duty swivel microphone holder included`,
+      specs: [
+        "Professional moving coil dynamic vocal microphone engineered for live concerts and stage monitoring",
+        "Cardioid directional polar pattern rejects stage feedback and ambient background noise",
+        "Calibrated sensitivity engineered for high stage monitor levels with maximum gain before feedback",
+        "Flat, wide 50Hz \u2013 16,000Hz frequency response with natural low-end roll-off for close vocal miking",
+        "Particularly tailored for female vocal articulation, cutting cleanly through dense musical arrangements",
+        "High acoustic overload threshold of 137 dB SPL handles powerful singing without distortion",
+        "Durable metal body with spherical steel mesh grille and internal shock-mount isolation",
+        'Includes heavy-duty swivel microphone stand holder with standard 5/8" thread',
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "50Hz \u2013 16,000Hz (16 kHz)"],
+        ["Sensitivity", "-52 dBv \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "400 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "137 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Vocal Voicing", "Natural Bass Roll-Off (Tailored for Close Miking & Female Vocals)"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Housing Construction", "Rugged Die-Cast Metal Body with Spherical Steel Wire Mesh Grille"],
+        ["Dimensions", '164 mm (6.45") Length \xD7 51 mm (2.00") Diameter'],
+        ["Weight", "301 grams (0.66 lbs)"],
+        ["Included Accessories", "Heavy-Duty Swivel Mic Stand Holder"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-dm580lc-professional-vocal-dynamic-microphone",
+      name: "Eikon DM580LC - Professional Vocal Dynamic Microphone",
+      shortName: "Eikon DM580LC Vocal Dynamic Microphone with On/Off Switch & Cable",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 1668,
+      originalPrice: 1850,
+      rating: 4.8,
+      reviewCount: 18,
+      image: "assets/images/products/eikon-dm580lc-front.jpg",
+      images: [
+        "assets/images/products/eikon-dm580lc-front.jpg",
+        "assets/images/products/eikon-dm580lc-cable.jpg"
+      ],
+      isFeatured: true,
+      badge: "On/Off Switch & 4.5m Cable",
+      inStock: true,
+      stock: 18,
+      sku: "AK-EIKON-DM580LC-DYNAMIC",
+      description: `Eikon DM580LC - Professional Vocal Dynamic Microphone
+
+The Eikon DM580LC is a professional dynamic vocal microphone specifically tailored for live stage performances, speech reinforcement, and rehearsal spaces, equipped with an integrated on/off slide switch, durable metal construction, and an included 4.5-meter connection cable.
+
+Tailored for Vocal Applications
+Engineered with a high-performance moving coil dynamic capsule, the DM580LC is particularly tailored for speech and singing. It delivers a balanced, articulate frequency response that allows vocals to sit effortlessly in front of the mix with natural mid-range warmth and clear high-end intelligibility.
+
+Uniform Cardioid Directional Pickup
+The uniform cardioid polar pattern focuses tightly on the primary sound source while rejecting off-axis ambient noise, stage reflections, and floor monitor bleed. This directional isolation provides high gain before feedback, making it ideal for vocalists in live venues and houses of worship.
+
+Integrated On/Off Switch for On-Stage Control
+Featuring a built-in tactile on/off slide switch directly on the microphone barrel, the DM580LC gives performers, presenters, and sound engineers immediate control over their audio signal on stage without requiring mixer muting.
+
+Tour-Grade Metal Construction & Steel Mesh Ball Grille
+Constructed from a robust die-cast metal body, the DM580LC is built to withstand the physical demands of frequent rehearsals and gigs. The heavy-duty spherical steel wire mesh ball grille features an integral multi-layer filter that effectively suppresses wind noise, explosive vocal plosives, and breath pops.
+
+Complete Performance Kit with 4.5m Cable
+The DM580LC comes as a complete all-in-one package including a durable 4.5-meter (14.8 ft) XLR-to-Jack microphone cable and a heavy-duty swivel microphone stand clip, enabling instant plug-and-play operation with active speakers, PA mixers, and amplifiers.
+
+Key Highlights:
+\u2022 Vocal microphone with moving coil dynamic capsule
+\u2022 Particularly tailored for speech, lead vocals, and stage presentations
+\u2022 Uniform cardioid pattern for isolating the main sound source and avoiding acoustic feedback
+\u2022 Durable metal barrel construction with satin black finish
+\u2022 Integrated On/Off switch for convenient on-stage performer control
+\u2022 Spherical steel mesh ball grille with integral filter for reducing wind and breath noise
+\u2022 Complete bundle includes 4.5 mt connection cable and swivel microphone holder`,
+      specs: [
+        "Dynamic moving coil vocal microphone tailored specifically for stage performance and speech",
+        "Uniform cardioid polar pattern isolates the primary sound source and resists acoustic feedback",
+        "Integrated On/Off slide switch on microphone handle for instant performer control on stage",
+        "Wide 70Hz \u2013 14,000Hz frequency response optimized for vocal articulation and intelligibility",
+        "High acoustic overload threshold of 135 dB SPL handles loud singing without distortion",
+        "Durable die-cast metal construction built for rugged touring and live rehearsal demands",
+        "Reinforced spherical steel mesh ball grille with integral internal pop and wind filter",
+        "Includes 4.5-meter (14.8 ft) XLR cable and heavy-duty swivel microphone stand holder",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "70Hz \u2013 14,000Hz (14 kHz)"],
+        ["Sensitivity", "-55 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "600 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "135 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Controls / Switch", "Integrated On/Off Slide Switch on Barrel"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Included Cable", '4.5 meter (14.8 ft) XLR Female to 6.35 mm (1/4") TS Jack Cable'],
+        ["Housing Construction", "Rugged Die-Cast Metal Body with Spherical Steel Wire Mesh Grille"],
+        ["Dimensions", '195 mm (7.68") Length \xD7 50 mm (1.97") Diameter'],
+        ["Weight", "275 grams (0.61 lbs)"],
+        ["Included Accessories", "4.5m Connection Cable, Swivel Mic Stand Clip"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-dm585-professional-vocal-dynamic-microphone",
+      name: "Eikon DM585 - Professional Vocal Dynamic Microphone",
+      shortName: "Eikon DM585 High-Clarity Dynamic Vocal Microphone",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 3392,
+      originalPrice: 3750,
+      rating: 4.9,
+      reviewCount: 20,
+      image: "assets/images/products/eikon-dm585-front.jpg",
+      images: [
+        "assets/images/products/eikon-dm585-front.jpg",
+        "assets/images/products/eikon-dm585-clip.jpg",
+        "assets/images/products/eikon-dm585-stage.jpg"
+      ],
+      isFeatured: true,
+      badge: "Extended 17kHz Vocal Clarity",
+      inStock: true,
+      stock: 15,
+      sku: "AK-EIKON-DM585-DYNAMIC",
+      description: `Eikon DM585 - Professional Vocal Dynamic Microphone
+
+The Eikon DM585 is a professional handheld dynamic vocal microphone specifically engineered for demanding live stage performances, rehearsals, and broadcast applications where exceptional vocal clarity, feedback rejection, and high SPL handling are essential.
+
+High-Clarity Moving Coil Capsule
+Voiced with an extended 50Hz to 17,000Hz frequency response, the DM585 is tailored to provide exceptional transparency and articulation. Its acoustic tuning brings forward lead vocals with crisp presence and open high-frequency air, preventing vocals from getting lost in loud stage mixes.
+
+Cardioid Polar Pattern Resistant to Feedback
+Featuring a uniform cardioid pickup pattern, the DM585 isolates the performer's voice from adjacent stage bleed and floor monitor wedges. This high off-axis rejection delivers maximum gain before feedback, allowing sound engineers to push vocal levels confidently even on energetic concert stages.
+
+High SPL Handling Without Distortion
+With an applicable acoustic overload threshold of 135 dB SPL, the DM585 effortlessly captures powerful, dynamic vocal performances, belt singing, and high-energy rock vocals without saturation, harshness, or clipping.
+
+Distinctive Ergonomic Metal Body & Steel Grille
+Finished in an elegant champagne/platinum matte finish, the DM585 combines stage-commanding aesthetics with roadworthy die-cast metal construction. The reinforced flat-top cylindrical steel wire mesh grille features an internal multi-layer acoustic foam windscreen that shields the capsule from breath pops, plosives, and wind noise.
+
+Included Heavy-Duty Stand Holder
+The DM585 package includes an official Eikon heavy-duty swivel microphone stand clip with standard mounting threading, ensuring rock-solid stability on stage and in the studio.
+
+Key Highlights:
+\u2022 Professional vocal microphone with high-clarity dynamic moving coil capsule
+\u2022 Extended 50Hz \u2013 17,000Hz frequency response tailored for vocal definition
+\u2022 Cardioid polar pattern particularly resistant to acoustic stage feedback
+\u2022 High applicable SPL handling up to 135 dB without distortion
+\u2022 High acoustic transparency with enhanced presence and articulate high frequencies
+\u2022 Elegant platinum/champagne matte finish with flat-top steel wire mesh grille
+\u2022 Heavy-duty swivel microphone stand holder included`,
+      specs: [
+        "Professional moving coil dynamic vocal microphone engineered for concert stages and speech",
+        "Extended 50Hz \u2013 17,000Hz frequency response tailored specifically for crisp vocal presence",
+        "Cardioid directional polar pattern delivers exceptional rejection of monitor feedback and bleed",
+        "High acoustic overload threshold of 135 dB SPL handles dynamic, powerful vocalists without distortion",
+        "High-transparency capsule tuning allows lead vocals to cut through dense band mixes",
+        "Rugged all-metal body with distinctive platinum/champagne finish and flat-top steel mesh grille",
+        "Includes official heavy-duty swivel microphone stand holder with standard mounting thread",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "50Hz \u2013 17,000Hz (17 kHz Extended Highs)"],
+        ["Sensitivity", "-52 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "400 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "135 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Transducer Voicing", "High-Clarity Vocal Presence Tuning"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Grille Style", "Flat-Top Cylindrical Steel Wire Mesh with Internal Foam Windscreen"],
+        ["Housing Construction", "Rugged Die-Cast Metal Alloy with Satin Platinum/Champagne Finish"],
+        ["Dimensions", '180 mm (7.08") Length \xD7 44 mm (1.73") Diameter'],
+        ["Weight", "320 grams (0.71 lbs)"],
+        ["Included Accessories", "Heavy-Duty Swivel Mic Stand Holder Clip"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-dm800kit-vocal-dynamic-microphones-kit",
+      name: "Eikon DM800KIT - Kit made of 3 Vocal Dynamic Microphones",
+      shortName: "Eikon DM800KIT 3-Pack Dynamic Vocal Microphones with ABS Case",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Vocal Microphone Multi-Packs",
+      price: 3313,
+      originalPrice: 3680,
+      rating: 4.8,
+      reviewCount: 25,
+      image: "assets/images/products/eikon-dm800kit-trio.jpg",
+      images: [
+        "assets/images/products/eikon-dm800kit-trio.jpg",
+        "assets/images/products/eikon-dm800kit-clip.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Mic Stage Bundle with ABS Case",
+      inStock: true,
+      stock: 14,
+      sku: "AK-EIKON-DM800KIT-DYNAMIC",
+      description: `Eikon DM800KIT - Kit made of 3 Vocal Dynamic Microphones
+
+The Eikon DM800KIT is a complete professional vocal microphone package comprising three DM800 dynamic cardioid microphones, three matching swivel microphone stand holders, and a heavy-duty padded ABS carrying and storage case. Engineered for live performance, rehearsals, houses of worship, schools, and multi-vocalist stage setups, the DM800KIT provides unmatched reliability, warmth, and feedback resistance at an accessible price.
+
+High-Impact Multi-Vocalist Stage Solution
+Whether outfitting a full band with lead and backing vocal mics, running a panel presentation, or managing multi-speaker conference stages, the DM800KIT delivers three acoustically matched dynamic microphones ready for immediate deployment.
+
+Acoustic Isolation & Feedback Rejection
+Each DM800 microphone features an accurate cardioid polar pattern engineered to isolate lead vocals from ambient stage spill, acoustic reflections, and floor monitor bleed. This focused directional response provides optimal gain before feedback, allowing vocalists to perform with confidence on loud concert stages.
+
+Optimal Warmth, Clarity & Extended Frequency Response
+Equipped with a moving coil dynamic capsule, the DM800 offers a flat and extended 60Hz to 14,000Hz frequency response tuned specifically for vocal articulation. It delivers natural low-end warmth without proximity boom and a balanced mid-frequency lift that keeps vocalists intelligible and crisp in any live mix.
+
+Integrated On/Off Switches & Road-Ready Build
+Each microphone in the kit features an integrated tactile ON/OFF slide switch on the handle, giving performers immediate local control over their audio signal. Built with durable composite metal barrels and reinforced spherical steel mesh grilles with internal pop filters, the microphones effortlessly absorb high SPL levels up to 130 dB without distortion.
+
+Protective ABS Molded Road Case
+The kit includes a rugged, impact-resistant ABS molded flight case featuring a secure latching system, carry handle, and custom high-density foam cutouts designed to safely protect all three microphones and stand clips during transit and storage.
+
+Key Highlights:
+\u2022 Complete performance kit made of three DM800 dynamic vocal microphones
+\u2022 Accurately tuned cardioid polar pattern provides optimal gain before feedback
+\u2022 Flat and extended 60Hz \u2013 14,000Hz frequency response for balanced warmth and clarity
+\u2022 Integrated ON/OFF slide switch on each microphone handle for performer control
+\u2022 High acoustic overload tolerance handling up to 130 dB SPL without distortion
+\u2022 Includes three heavy-duty swivel microphone stand clips
+\u2022 Heavy-duty molded ABS carrying and protective storage case included`,
+      specs: [
+        "Complete 3-piece dynamic vocal microphone kit engineered for live stage, speech, and rehearsals",
+        "Directional cardioid polar pattern provides optimal gain before feedback and ambient noise isolation",
+        "Wide 60Hz \u2013 14,000Hz frequency response tuned specifically for vocal warmth and speech articulation",
+        "High SPL tolerance of 130 dB SPL accommodates loud, energetic singers without harmonic distortion",
+        "Integrated ON/OFF slide switch on each microphone handle for easy on-stage performer control",
+        "Rugged barrel construction with reinforced spherical steel wire mesh ball grilles and internal pop filters",
+        "Includes 3\xD7 heavy-duty swivel microphone stand clips and a protective molded ABS road carrying case",
+        "Direct Pan-India Insured Dispatch & Authorized Manufacturer Warranty"
+      ],
+      deepSpecs: [
+        ["Package Configuration", "Complete Kit with 3\xD7 DM800 Microphones, 3\xD7 Clips & ABS Case"],
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Cardioid (Directional Stage Isolation)"],
+        ["Frequency Response", "60Hz \u2013 14,000Hz (14 kHz)"],
+        ["Sensitivity", "-53 dB \xB1 3 dB (0 dB = 1V/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "600 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Maximum SPL", "130 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Controls / Switch", "Integrated ON/OFF Slide Switch on Each Microphone"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Dimensions (Each Mic)", '180 mm (7.08") Length \xD7 45 mm (1.77") Diameter'],
+        ["Weight (Each Mic)", "170 grams (0.37 lbs) per microphone"],
+        ["Kit Total Weight", "Approx. 1.2 kg (with ABS Case & Accessories)"],
+        ["Included Accessories", "3\xD7 Heavy-Duty Swivel Mic Stand Clips, Molded ABS Padded Flight Case"],
+        ["Warranty", "Official Authorized Indian Importer Warranty with Serial Verification"]
+      ]
+    },
+    {
+      id: "eikon-ekd8-dynamic-super-cardioid-professional-microphone",
+      name: "Eikon EKD8 - Dynamic Super-Cardioid Professional Microphone",
+      shortName: "Eikon EKD8 Dynamic Super-Cardioid Vocal Microphone",
+      brand: "Eikon",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 6162,
+      originalPrice: 6850,
+      rating: 4.9,
+      reviewCount: 24,
+      image: "assets/images/products/eikon-ekd8-front.jpg",
+      images: [
+        "assets/images/products/eikon-ekd8-front.jpg",
+        "assets/images/products/eikon-ekd8-mount.jpg",
+        "assets/images/products/eikon-ekd8-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "Super-Cardioid 18kHz Pro Vocal",
+      inStock: true,
+      stock: 12,
+      sku: "AK-EIKON-EKD8-DYNAMIC",
+      description: `Eikon EKD8 - Dynamic Super-Cardioid Professional Microphone
+
+The Eikon EKD8 is a professional dynamic super-cardioid handheld microphone engineered for vocalists, live touring artists, broadcasters, and high-energy stage performances where superior feedback isolation, pristine clarity, and ultra-wide frequency response are paramount.
+
+Wideband 50Hz to 18,000Hz Frequency Response
+Featuring a wide, extended 50Hz to 18kHz frequency curve, the EKD8 provides vocalists with studio-condenser-like air and brilliance while preserving the punch, warmth, and body of a high-end moving coil dynamic transducer. Its calibrated frequency contour brightens vocal articulation without harsh sibilance and maintains strict control over proximity effect.
+
+Precision Super-Cardioid Acoustic Isolation
+The tight super-cardioid polar pattern offers narrower front pickup and maximum side rejection, isolating the lead singer from loud guitar cabinets, drum bleed, and floor wedge monitor reflections. This directional focus ensures exceptional gain-before-feedback on loud, crowded concert stages.
+
+Dual Internal Shock-Mount Suspension
+Equipped with an advanced internal dual shock-mount suspension system decoupling the capsule from the chassis, the EKD8 drastically minimizes mechanical handling noise, stage vibrations, and cable rumble during active handheld performance.
+
+Tour-Grade Construction & High SPL Tolerance
+With an acoustic overload threshold of 137 dB SPL for 1% THD, the EKD8 easily withstands aggressive vocal bursts, shouting, and high dynamic swings without acoustic distortion. The heavy-duty die-cast metal handle is crowned with a reinforced spherical steel mesh grille featuring an internal foam pop filter.
+
+Complete Package & 4-Year Warranty Protection
+The EKD8 includes a heavy-duty swivel microphone stand holder clip and a protective padded transport bag, backed by an authorized 4-year manufacturer warranty.
+
+Key Highlights:
+\u2022 Professional moving coil dynamic vocal microphone with studio-grade articulation
+\u2022 Precision super-cardioid polar pattern with exceptional off-axis stage isolation
+\u2022 Extended 50Hz \u2013 18,000Hz frequency response tailored for vocal presence and clarity
+\u2022 Internal dual shock-mount capsule suspension eliminates stage handling noise
+\u2022 High acoustic overload threshold handling up to 137 dB SPL without distortion
+\u2022 Rugged die-cast metal body with reinforced spherical steel wire mesh grille
+\u2022 Includes heavy-duty swivel microphone stand clip and padded transport pouch
+\u2022 Backed by an official 4-Year Authorized Warranty`,
+      specs: [
+        "Professional dynamic moving coil vocal microphone engineered for concert touring and studio tracking",
+        "Directional super-cardioid polar pattern delivers surgical acoustic isolation and high gain before feedback",
+        "Wideband 50Hz \u2013 18,000Hz frequency response tailored for open vocal presence and natural low-end warmth",
+        "High acoustic overload threshold of 137 dB SPL handles explosive vocal delivery without harmonic distortion",
+        "Internal dual shock-mount capsule suspension system eliminates mechanical handling and stage noise",
+        "Durable die-cast metal alloy construction with reinforced steel wire mesh grille and internal pop filter",
+        "Includes heavy-duty swivel microphone stand clip and protective padded zippered carry pouch",
+        "Official Authorized 4-Year Manufacturer Warranty with Serial Verification"
+      ],
+      deepSpecs: [
+        ["Microphone Type", "Dynamic (Moving Coil)"],
+        ["Polar Pattern", "Super-Cardioid (High Stage Feedback Rejection)"],
+        ["Frequency Response", "50Hz \u2013 18,000Hz (18 kHz Wideband Studio Response)"],
+        ["Sensitivity", "-74 \xB1 3 dBV/\u03BCbar (-54 dBV/Pa @ 1 kHz)"],
+        ["Nominal Impedance", "300 Ohms \xB1 30% (@ 1 kHz)"],
+        ["Recommended Load Impedance", "\u2265 1000 Ohms"],
+        ["Maximum SPL", "137 dB SPL (for 1% THD @ 1 kHz)"],
+        ["Internal Isolation", "Dual Shock-Mount Mechanical Capsule Suspension"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Housing Construction", "Rugged Die-Cast Metal Alloy with Satin Black Finish"],
+        ["Dimensions", '182 mm (7.16") Length \xD7 52.5 mm (2.07") Diameter'],
+        ["Weight", "279 grams (0.61 lbs)"],
+        ["Included Accessories", "Heavy-Duty Swivel Mic Stand Clip, Padded Transport Pouch"],
+        ["Warranty", "Official Authorized 4-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "audix-om2-dynamic-vocal-microphone",
+      name: "Audix OM2 - Dynamic Vocal Microphone",
+      shortName: "Audix OM2 Hypercardioid Vocal Dynamic Microphone",
+      brand: "Audix",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 8395,
+      originalPrice: 9450,
+      rating: 4.9,
+      reviewCount: 34,
+      image: "assets/images/products/audix-om2-stand.jpg",
+      images: [
+        "assets/images/products/audix-om2-stand.jpg",
+        "assets/images/products/audix-om2-clip.jpg",
+        "assets/images/products/audix-om2-side.jpg",
+        "assets/images/products/audix-om2-connector.jpg"
+      ],
+      isFeatured: true,
+      badge: "Made in USA",
+      inStock: true,
+      stock: 18,
+      sku: "AK-AUDIX-OM2-DYNAMIC",
+      description: `Designed, assembled, and tested by Audix in Wilsonville, Oregon, USA, the Audix OM2 is an acclaimed handheld dynamic vocal microphone engineered for exceptional clarity, feedback rejection, and high sound pressure level handling across live sound stages, rehearsal spaces, and home recording studios.
+
+Tight Hypercardioid Isolation & Feedback Rejection
+Engineered with a tight, uniformly controlled hypercardioid polar pattern, the OM2 provides over 25 dB of off-axis rejection. This precision directional acoustic architecture isolates the lead vocal from loud drums, guitar cabinets, and stage monitor wash, ensuring pristine gain-before-feedback even on tight, loud concert stages.
+
+Proprietary VLM\u2122 (Very Low Mass) Diaphragm
+At the heart of the OM2 is Audix\u2019s proprietary VLM\u2122 Type B capsule technology. Featuring an ultra-lightweight, low-mass diaphragm, the OM2 delivers instantaneous transient response, open high-frequency air, and natural vocal articulation without the sluggish phase distortion common to traditional heavy dynamic diaphragms.
+
+Tailored Vocal Response for Small to Mid-Size PA Systems
+With a wide 50 Hz \u2013 16 kHz frequency response, the OM2 features a gentle bass proximity boost combined with an articulate, tailored mid-range presence. This acoustic contour guarantees full-bodied, intelligible vocal reproduction through small-to-midsize PA setups while preserving clarity and headroom on large concert touring sound systems.
+
+Exceptional SPL Handling & Roadworthy Durability
+Built to handle acoustic overload levels exceeding 140 dB SPL without harmonic distortion, the OM2 captures explosive lead rock vocals, brass, saxophones, and snare drums with clean fidelity. Housed in a precision die-cast zinc alloy chassis with a durable black E-coat finish, dent-resistant heavy-gauge steel mesh grille, and gold-plated XLR pins, the OM2 is built for decades of demanding stage life.
+
+Key Highlights:
+\u2022 All-purpose professional dynamic vocal microphone designed, assembled, and tested in the USA
+\u2022 Proprietary VLM\u2122 Type B low-mass capsule delivers lightning-fast transient response and natural vocal reproduction
+\u2022 Tight hypercardioid polar pattern delivers >25 dB off-axis acoustic isolation and extreme feedback rejection
+\u2022 Handles extreme sound pressure levels \u2265140 dB SPL without acoustic clipping or distortion
+\u2022 Optimized acoustic tuning provides warmth, slight bass proximity, and articulate vocal presence
+\u2022 Heavy-duty precision die-cast zinc alloy body with durable black E-coat finish and dent-resistant steel mesh grille
+\u2022 Complete performance package includes heavy-duty MC1 nylon mic clip and P1 protective zippered carrying pouch
+\u2022 Backed by Audix's industry-leading 5-Year Manufacturer Warranty`,
+      specs: [
+        "All-purpose professional dynamic vocal microphone designed, assembled, and tested by Audix in the USA",
+        "Proprietary VLM\u2122 (Very Low Mass) Type B capsule provides exceptional transient response and natural clarity",
+        "Uniformly controlled hypercardioid polar pattern delivers >25 dB off-axis stage isolation and feedback immunity",
+        "Handles extreme sound pressure levels exceeding 140 dB SPL without harmonic distortion",
+        "Tailored 50 Hz \u2013 16 kHz frequency response optimized for rich vocal warmth and articulate mid-range cut",
+        "Rugged precision die-cast zinc alloy barrel with scratch-resistant black E-coat finish and steel mesh grille",
+        "Gold-plated 3-pin XLR connector ensures lossless balanced signal transfer and corrosion resistance",
+        "Includes heavy-duty MC1 nylon microphone stand clip and P1 padded zippered transport pouch",
+        "Official 5-Year Audix Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Transducer Type", "Dynamic (Moving Coil)"],
+        ["Capsule Technology", "Audix VLM\u2122 (Very Low Mass) Type B"],
+        ["Polar Pattern", "Hypercardioid (Uniform Off-Axis Rejection)"],
+        ["Frequency Response", "50 Hz \u2013 16,000 Hz (16 kHz)"],
+        ["Output Impedance", "290 Ohms nominal"],
+        ["Sensitivity", "1.6 mV / Pa @ 1 kHz (-56 dBV/Pa)"],
+        ["Off-Axis Rejection", "> 25 dB Rejection at 180\xB0 / Null Points"],
+        ["Maximum SPL", "\u2265 140 dB SPL (for <0.5% THD)"],
+        ["Diaphragm Material", "Proprietary Low-Mass Mylar Membrane"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Housing Construction", "Precision Die-Cast Zinc Alloy with Durable Black E-Coat"],
+        ["Grille", "Dent-Resistant Heavy-Gauge Steel Mesh Ball Grille"],
+        ["Dimensions", '176 mm (6.93") Length \xD7 53 mm (2.09") Maximum Diameter'],
+        ["Weight", "307 grams (10.83 oz)"],
+        ["Included Accessories", "MC1 Heavy-Duty Nylon Stand Clip, P1 Zippered Carry Pouch"],
+        ["Country of Origin", "Designed, Assembled & Tested in Wilsonville, Oregon, USA"],
+        ["Warranty", "Audix 5-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "audix-om7-dynamic-vocal-microphone",
+      name: "Audix OM7 - Dynamic Vocal Microphone",
+      shortName: "Audix OM7 Concert-Grade Dynamic Vocal Microphone",
+      brand: "Audix",
+      category: "Dynamic Microphones",
+      subcategory: "Handheld Vocal Dynamic Microphones",
+      price: 19629,
+      originalPrice: 22500,
+      rating: 5,
+      reviewCount: 28,
+      image: "assets/images/products/audix-om7-stand.jpg",
+      images: [
+        "assets/images/products/audix-om7-stand.jpg",
+        "assets/images/products/audix-om7-clip.jpg",
+        "assets/images/products/audix-om7-side.jpg",
+        "assets/images/products/audix-om7-windscreen.jpg",
+        "assets/images/products/audix-om7-connector.jpg"
+      ],
+      isFeatured: true,
+      badge: "Made in USA",
+      inStock: true,
+      stock: 12,
+      sku: "AK-AUDIX-OM7-DYNAMIC",
+      description: `Designed, assembled, and tested by Audix in Wilsonville, Oregon, USA, the Audix OM7 is the premier concert-grade dynamic vocal microphone trusted worldwide by leading front-of-house touring engineers, mixing professionals, and high-profile sound production companies.
+
+Unprecedented Gain Before Feedback on Concert Stages
+The OM7 is celebrated across the professional live sound industry for delivering unprecedented gain before feedback on extremely loud concert stages. Engineered specifically to solve bleed and feedback issues on stages with high-volume monitor wedges, blaring guitar amps, and intense drum kits, the OM7 allows FOH engineers to achieve pristine vocal levels without fear of screeching howl or comb filtering.
+
+Innovative Low-Gain Capsule Architecture
+To achieve its legendary feedback immunity, Audix engineered the OM7 with an unconventionally low output sensitivity level (approximately 8 to 10 dB lower than conventional dynamic microphones). This deliberate design serves as an acoustic "natural pad" directly at the capsule element, preventing preamplifier clipping and preserving absolute source fidelity and dynamic headroom when performers sing with high energy or "cup" the microphone with both hands.
+
+Ultra-Tight Hypercardioid Directionality & VLM\u2122 Type C Diaphragm
+Characterized by a razor-sharp, uniformly controlled hypercardioid polar pattern, the OM7 offers greater than 30 dB of off-axis rejection. Backed by Audix's proprietary VLM\u2122 (Very Low Mass) Type C diaphragm, the microphone responds with lightning-fast transient response, crystalline high-end definition, and a transparent, punchy sound profile across an expansive 48 Hz \u2013 19 kHz frequency spectrum.
+
+Tour-Grade Engineering & Precision Manufacturing
+Machined with exact tolerances from a precision die-cast zinc alloy chassis, the OM7 features a durable black E-coat finish, dent-resistant heavy-gauge steel mesh ball grille, and gold-plated balanced 3-pin XLR contacts. It is engineered for artists who demand unyielding reliability and studio-quality vocal reproduction in high-SPL live environments.
+
+Key Highlights:
+\u2022 Premier concert-level dynamic vocal microphone designed, assembled, and tested by Audix in the USA
+\u2022 Delivers unprecedented gain before feedback on extremely loud concert touring stages
+\u2022 Innovative low-gain capsule architecture acts as a natural pad to prevent stage distortion and proximity clipping
+\u2022 Super-tight hypercardioid polar pattern provides >30 dB off-axis acoustic rejection
+\u2022 Proprietary VLM\u2122 Type C low-mass diaphragm delivers punchy, studio-transparent vocal reproduction from 48 Hz to 19 kHz
+\u2022 Exceptionally resistant to feedback even when vocalists "cup" the microphone grille during intense live performances
+\u2022 Heavy-duty precision die-cast zinc alloy body with durable black E-coat and dent-resistant steel mesh grille
+\u2022 Complete package includes heavy-duty MC1 nylon stand clip and P1 padded zippered storage pouch
+\u2022 Backed by an official 5-Year Audix Manufacturer Warranty`,
+      specs: [
+        "Concert-grade professional dynamic vocal microphone designed, assembled, and tested by Audix in the USA",
+        "Innovative low-output capsule architecture acts as a natural pad providing unprecedented gain before feedback",
+        "Super-tight hypercardioid polar pattern achieves >30 dB off-axis stage isolation and bleed elimination",
+        "Proprietary VLM\u2122 (Very Low Mass) Type C capsule provides studio-grade transient response and punch",
+        "Extended 48 Hz \u2013 19,000 Hz frequency response tailored for uncolored vocal articulation and natural presence",
+        "Handles extreme sound pressure levels exceeding 144 dB SPL without harmonic distortion",
+        "High immunity to feedback even when performers cup the microphone grille during live shows",
+        "Heavy-duty precision die-cast zinc alloy chassis with durable black E-coat and dent-resistant steel grille",
+        "Includes Audix MC1 heavy-duty nylon microphone clip and P1 zippered protective carrying pouch",
+        "Official 5-Year Audix Manufacturer Warranty with Authorized Pan-India Importer Support"
+      ],
+      deepSpecs: [
+        ["Transducer Type", "Dynamic (Moving Coil)"],
+        ["Capsule Technology", "Audix VLM\u2122 (Very Low Mass) Type C"],
+        ["Polar Pattern", "Super-Tight Hypercardioid (Precision Off-Axis Rejection)"],
+        ["Frequency Response", "48 Hz \u2013 19,000 Hz (19 kHz)"],
+        ["Output Impedance", "50 Ohms nominal (150 Ohms balanced load)"],
+        ["Sensitivity", "0.8 mV / Pa @ 1 kHz (-62 dBV/Pa)"],
+        ["Gain Architecture", "Unconventionally low output (8-10 dB pad) for extreme gain-before-feedback"],
+        ["Off-Axis Rejection", "> 30 dB Rejection at 180\xB0 / Null Points"],
+        ["Maximum SPL", "\u2265 144 dB SPL (for <0.5% THD)"],
+        ["Diaphragm Material", "Proprietary Low-Mass Mylar Membrane"],
+        ["Output Connector", "Standard 3-Pin Balanced Gold-Plated XLR Male"],
+        ["Housing Construction", "Precision Die-Cast Zinc Alloy with Durable Black E-Coat"],
+        ["Grille", "Dent-Resistant Heavy-Gauge Steel Mesh Ball Grille"],
+        ["Dimensions", '176 mm (6.93") Length \xD7 53 mm (2.09") Maximum Diameter'],
+        ["Weight", "307 grams (10.83 oz)"],
+        ["Included Accessories", "MC1 Heavy-Duty Nylon Stand Clip, P1 Zippered Carry Pouch"],
+        ["Country of Origin", "Designed, Assembled & Tested in Wilsonville, Oregon, USA"],
+        ["Warranty", "Audix 5-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-clarett-plus-octopre-audio-interface",
+      name: "Focusrite Clarett + Octo Pre - 8-In / 8-Out ADAT Mic Preamp & Converter",
+      shortName: "Focusrite Clarett+ OctoPre 8-Channel ADAT Preamp",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "ADAT Microphone Preamps & Converters",
+      price: 115645,
+      originalPrice: 129e3,
+      rating: 4.9,
+      reviewCount: 16,
+      image: "assets/images/products/focusrite-clarett-plus-octopre-hero.jpg",
+      images: [
+        "assets/images/products/focusrite-clarett-plus-octopre-hero.jpg",
+        "assets/images/products/focusrite-clarett-plus-octopre-front.jpg",
+        "assets/images/products/focusrite-clarett-plus-octopre-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Year Warranty",
+      inStock: true,
+      stock: 6,
+      sku: "AK-FR-CLARETT-PLUS-OCTOPRE",
+      description: `The Focusrite Clarett+ OctoPre is an industry-standard 8-in / 8-out ADAT microphone preamplifier and professional audio converter designed for recording engineers, commercial tracking facilities, and multi-track live recording rigs. Delivering pristine studio-console sound quality, the Clarett+ OctoPre expands any ADAT-equipped audio interface with eight professional-grade, ultra-low distortion, low-noise preamps.
+
+Eight High-Headroom Clarett+ Preamps with All-Analogue Air
+Featuring an exceptional 118 dB dynamic range and an ultra-quiet -129 dBu EIN floor, the Clarett+ preamps offer immense headroom for tracking high-transient drum kits, roaring guitar cabinets, and delicate acoustic instruments without unwanted colouration. Each channel includes Focusrite's signature all-analogue Air circuit, which engages relay-controlled impedance switching (2.2 k\u03A9) and cumulative high-shelf filters (+4 dB boost) to emulate the iconic transformer-based Focusrite ISA 110 studio console preamp.
+
+Dedicated Switchable Inserts on Every Channel
+Clarett+ OctoPre features eight dedicated, switchable balanced analog channel inserts on the rear panel. This intelligent design allows outboard analog hardware\u2014such as studio compressors, parametric EQs, and vintage tone shapers\u2014to remain permanently patched, while engineers can seamlessly toggle outboard processing in or out of the tracking path directly from the front panel without requiring a patchbay.
+
+Next-Generation A-D and D-A Conversion with 124 dB Dynamic Range
+Equipped with upgraded high-performance D-A converters boasting 124 dB of dynamic range, the OctoPre guarantees immaculate signal purity when returning DAW stems to analog mixing consoles or sending monitor feeds to headphone distribution systems. The unit operates at resolutions up to 24-bit / 192 kHz over dual optical ADAT TOSLink ports, supported by ultra-stable JetPLL word clock synchronization.
+
+Front-Panel JFET Instrument Inputs & Multi-Track DI
+Channels 1 and 2 feature dedicated front-panel ultra-high-impedance JFET instrument inputs that preserve the natural harmonic sparkle and high-frequency sparkle of electric guitars and basses, replicating the dynamic response of plugging straight into a classic tube amplifier.
+
+Professional Hitmaker Software Bundle Included
+Every Clarett+ OctoPre includes the comprehensive Focusrite Hitmaker Expansion suite featuring Antares Auto-Tune Access, Brainworx bx_console Focusrite SC, Softube Marshall Silver Jubilee 2555, Relab LX480 Essentials, XLN Audio Addictive Drums 2, plus a 3-month trial of Avid Pro Tools Artist and Complete Plugin Bundle.
+
+Key Highlights:
+\u2022 Professional 8-in / 8-out ADAT microphone preamplifier and 24-bit / 192 kHz digital converter
+\u2022 Eight Clarett+ mic preamps with fully balanced signal paths and ultra-low noise (-129 dBu EIN)
+\u2022 All-analogue relay-controlled Air mode recreating the classic Focusrite ISA 110 console sound
+\u2022 Eight dedicated rear-panel TRS analog channel inserts with front-panel bypass switching
+\u2022 Premium D-A conversion with 124 dB dynamic range for high-end outboard analog routing
+\u2022 Dual JFET front-panel instrument inputs retain pure electric guitar and bass transients
+\u2022 Dual ADAT optical I/O supporting 8 channels at 96 kHz (S/MUX) and 4 channels at 192 kHz
+\u2022 Word Clock BNC In and Out with 75\u03A9 termination switch and JetPLL jitter reduction
+\u2022 1U 19-inch steel rackmount enclosure with rugged anodized aluminum front panel
+\u2022 Backed by an official Focusrite 3-Year Manufacturer Warranty`,
+      specs: [
+        "Professional 8-in / 8-out ADAT microphone preamplifier and 24-bit / 192 kHz digital audio converter",
+        "Eight ultra-low noise, high-headroom Clarett+ preamps with fully balanced internal signal routing",
+        "All-analogue Air mode with relay-switched 2.2k\u03A9 impedance and 4dB high-frequency shelf boost (ISA 110 emulation)",
+        "Eight dedicated rear-panel TRS channel inserts allow direct outboard analog gear tracking without a patchbay",
+        "Next-generation D-A conversion with 124 dB dynamic range for pristine stem output and outboard summing",
+        "Two front-panel JFET high-impedance instrument inputs preserve electric guitar and bass harmonic detail",
+        "Dual ADAT optical I/O accommodates 8 channels at up to 96 kHz S/MUX or 4 channels at 192 kHz",
+        "Precision BNC Word Clock In/Out with switchable 75-Ohm internal termination and JetPLL jitter reduction",
+        "Includes Hitmaker Expansion software bundle with Antares Auto-Tune, Brainworx, Softube, and Pro Tools trial",
+        "Official Focusrite 3-Year Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Device Type", "8-Channel ADAT Microphone Preamplifier & Converter"],
+        ["Form Factor", "1U 19-Inch Standard Rackmount"],
+        ["Analog Inputs", '8x XLR / 1/4" TRS Combo (Ch 1-2 Front JFET/Line, Ch 3-8 Rear Mic/Line)'],
+        ["Analog Outputs", "8x Line Outputs via 25-Pin D-Sub (DB-25 balanced, Tascam pinout)"],
+        ["Analog Inserts", '8x 1/4" TRS Dedicated Channel Inserts (Switchable/Bypassable)'],
+        ["Digital I/O", "2x ADAT Optical Inputs, 2x ADAT Optical Outputs (TOSLink)"],
+        ["Supported Sample Rates", "44.1 kHz, 48 kHz, 88.2 kHz, 96 kHz, 176.4 kHz, 192 kHz (24-bit)"],
+        ["ADAT Channel Capacity", "8 Ch @ 44.1/48 kHz, 8 Ch @ 88.2/96 kHz (S/MUX), 4 Ch @ 176.4/192 kHz"],
+        ["Microphone Dynamic Range", "118 dB (A-weighted, minimum gain)"],
+        ["Microphone THD+N", "-110 dB (0.0003% @ -1 dBFS, +20 dB gain)"],
+        ["Microphone Noise (EIN)", "-129 dBu (A-weighted, 150 Ohm source)"],
+        ["Microphone Gain Range", "+57 dB"],
+        ["Line Output Dynamic Range", "124 dB (A-weighted)"],
+        ["Air Mode Circuitry", "All-Analogue Relay: 2.2 k\u03A9 input impedance + cumulative 4 dB high shelf @ 20 kHz"],
+        ["Clock Synchronization", "Internal, ADAT, Word Clock In (BNC 75-Ohm switchable), Word Clock Out (BNC)"],
+        ["Power Supply", "Internal Universal AC Power Supply (100\u2013240V, 50/60 Hz, IEC power cable)"],
+        ["Dimensions", '482 mm (19.0") Width \xD7 44.5 mm (1.75") Height \xD7 286 mm (11.26") Depth'],
+        ["Weight", "4.15 kg (9.15 lbs)"],
+        ["Included Accessories", "IEC Power Cable, Rackmount Hardware Kit"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-clarett-2pre-thunderbolt-audio-interface",
+      name: "Focusrite Clarett 2 Pre Thunderbolt - 10-In / 4-Out Audio Interface",
+      shortName: "Focusrite Clarett 2Pre Thunderbolt Audio Interface",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Thunderbolt Audio Interfaces",
+      price: 52433,
+      originalPrice: 59900,
+      rating: 4.9,
+      reviewCount: 22,
+      image: "assets/images/products/focusrite-clarett-2pre-tb-iso.png",
+      images: [
+        "assets/images/products/focusrite-clarett-2pre-tb-iso.png",
+        "assets/images/products/focusrite-clarett-2pre-tb-front.png",
+        "assets/images/products/focusrite-clarett-2pre-tb-rear.png",
+        "assets/images/products/focusrite-clarett-2pre-tb-angle.png",
+        "assets/images/products/focusrite-clarett-2pre-tb-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Year Warranty",
+      inStock: true,
+      stock: 9,
+      sku: "AK-FR-CLARETT-2PRE-TB",
+      description: `The Focusrite Clarett 2Pre Thunderbolt is an acclaimed 10-in / 4-out desktop Thunderbolt audio interface engineered for producers, songwriters, and audio engineers seeking studio-grade sonic fidelity, ultra-low latency, and expandable I/O. Boasting up to 119 dB of dynamic range, pristine 24-bit / 192 kHz conversion, and two specially designed Clarett microphone preamps with Focusrite's signature analogue "Air" effect, the Clarett 2Pre outperforms interfaces in its class and beyond.
+
+Ultra-Low 1.67 ms Round-Trip Latency over Thunderbolt
+Leveraging high-speed Thunderbolt connectivity, the Clarett 2Pre delivers an astonishing 1.67 ms round-trip latency. This revolutionary low-latency performance transforms the studio recording experience, allowing artists and musicians to track through guitar amp simulators, vocal pitch correctors, and native DAW plugins in real time without distracting latency or monitoring compromise.
+
+Two Custom Clarett Preamps with Analogue Air Mode
+Equipped with two specially designed high-headroom, ultra-low noise microphone preamplifiers, the Clarett 2Pre faithfully captures every subtle dynamic nuance. Engaging the relay-controlled analogue "Air" circuit switches the input impedance to 2.2 k\u03A9 and adds cumulative high-frequency shelving curves, perfectly recreating the transformer-coupled openness and high-end air of the legendary Focusrite ISA 110 console preamp.
+
+Pristine 24-bit / 192 kHz Conversion & 119 dB Dynamic Range
+Decades of analog design expertise combined with premium A-D and D-A converters deliver an expansive 119 dB of dynamic range. High-headroom JFET instrument inputs handle explosive passive and active electric guitar and bass pickups without clipping, while four balanced 1/4" analog line outputs and a dedicated high-power headphone amp offer transparent mixing and tracking feeds.
+
+Optical ADAT Expansion up to 10 Inputs
+The rear panel features an optical TOSLink digital input supporting 8 additional channels of ADAT audio at 44.1/48 kHz (4 channels at 96 kHz S/MUX), allowing effortless expansion with preamps like the Clarett+ OctoPre. Complete 5-pin DIN MIDI In and Out ports ensure seamless synchronization with synthesizers, drum machines, and outboard controllers.
+
+Comprehensive Studio Software Suite & Focusrite Control
+Includes Focusrite Control routing software (Mac, Windows, iOS), the Focusrite Red 2 & Red 3 Plug-in Suite, Softube Time & Tone Bundle, XLN Audio Addictive Keys, Ableton Live Lite, 2GB of Loopmasters samples, and access to the bi-monthly Focusrite Plug-in Collective offers.
+
+Key Highlights:
+\u2022 10-in / 4-out Thunderbolt audio interface with 24-bit / 192 kHz digital conversion
+\u2022 Ultra-low 1.67 ms round-trip latency enables real-time tracking through DAW plugins and amp sims
+\u2022 Two Clarett mic preamps with all-analogue Air mode emulating the transformer-based Focusrite ISA 110
+\u2022 Up to 119 dB dynamic range with ultra-quiet noise floor and massive dynamic headroom
+\u2022 High-headroom JFET instrument inputs preserve guitar tone without unwanted distortion
+\u2022 Optical ADAT digital input expands system by up to 8 additional preamp channels
+\u2022 Four balanced 1/4" TRS analog line outputs with anti-thump monitor protection
+\u2022 High-output front-panel headphone amplifier with dedicated volume control
+\u2022 Standard 5-Pin DIN MIDI In and MIDI Out ports for outboard hardware integration
+\u2022 Backed by an official Focusrite 3-Year Manufacturer Warranty`,
+      specs: [
+        "10-in / 4-out high-speed Thunderbolt audio interface with precision 24-bit / 192 kHz conversion",
+        "Industry-leading 1.67 ms round-trip latency allows real-time monitoring through native DAW plugins",
+        "Two specially designed Clarett microphone preamps with all-analogue Air mode (ISA 110 emulation)",
+        "Wide 119 dB dynamic range captures delicate acoustic nuances and high-transient source material",
+        "Two front-panel high-headroom JFET instrument inputs easily handle high-output active pickups",
+        "Optical TOSLink ADAT input accommodates up to 8 additional channels of digital preamp expansion",
+        'Four balanced 1/4" TRS analog line outputs and dedicated high-current headphone output',
+        "Integrated 5-pin DIN MIDI In and MIDI Out ports for hardware synths and MIDI controllers",
+        "Includes Focusrite Red Suite, Softube Time & Tone, XLN Addictive Keys, and Ableton Live Lite",
+        "Official Focusrite 3-Year Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Device Type", "Desktop 10-In / 4-Out Thunderbolt Audio Interface"],
+        ["Computer Connectivity", "Thunderbolt\u2122 1 / 2 Port (Requires Thunderbolt Cable)"],
+        ["Simultaneous I/O", "10 Inputs \xD7 4 Outputs"],
+        ["A/D & D/A Resolution", "24-bit / 192 kHz"],
+        ["Round-Trip Latency", "1.67 ms @ 96 kHz (32-sample buffer)"],
+        ["Analog Inputs", '2x XLR / 1/4" TRS Combo (Mic / Line / Instrument JFET)'],
+        ["Analog Outputs", '4x 1/4" TRS Balanced Line Outputs (Ch 1-4)'],
+        ["Headphone Outputs", '1x 1/4" TRS Stereo Headphone Output with Dedicated Level Control'],
+        ["Digital Inputs", "1x Optical TOSLink (ADAT 8 Ch @ 48 kHz / 4 Ch @ 96 kHz, or S/PDIF optical)"],
+        ["MIDI I/O", "Standard 5-Pin DIN MIDI In & MIDI Out"],
+        ["Microphone Dynamic Range", "118 dB (A-weighted)"],
+        ["Line Output Dynamic Range", "119 dB (A-weighted)"],
+        ["Microphone Noise (EIN)", "-128 dBu (A-weighted, 150 Ohm source)"],
+        ["Microphone Gain Range", "+57 dB"],
+        ["Air Mode Circuitry", "Analogue relay-switched ISA 110 transformer emulation (+4 dB high shelf)"],
+        ["Power Supply", "12V DC External Power Supply (Included)"],
+        ["Dimensions", '210 mm (8.27") Width \xD7 55 mm (2.17") Height \xD7 161 mm (6.34") Depth'],
+        ["Weight", "1.16 kg (2.56 lbs)"],
+        ["Included Accessories", "12V DC Power Adapter, Focusrite Control Software, Hitmaker Bundle"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-clarett-4pre-usb-audio-interface",
+      name: "Focusrite Clarett 4 Pre USB - 18-In / 8-Out Audio Interface",
+      shortName: "Focusrite Clarett 4Pre USB Audio Interface",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Desktop USB Audio Interfaces",
+      price: 73576,
+      originalPrice: 84900,
+      rating: 4.9,
+      reviewCount: 28,
+      image: "assets/images/products/focusrite-clarett-4pre-usb-iso.png",
+      images: [
+        "assets/images/products/focusrite-clarett-4pre-usb-iso.png",
+        "assets/images/products/focusrite-clarett-4pre-usb-front.png",
+        "assets/images/products/focusrite-clarett-4pre-usb-rear.png",
+        "assets/images/products/focusrite-clarett-4pre-usb-angle.png",
+        "assets/images/products/focusrite-clarett-4pre-usb-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Year Warranty",
+      inStock: true,
+      stock: 7,
+      sku: "AK-FR-CLARETT-4PRE-USB",
+      description: `The Focusrite Clarett 4Pre USB is an exceptional 18-in / 8-out audio interface for PC and Mac, engineered for demanding project studios, multi-instrumentalists, and tracking engineers seeking superior audio performance. Featuring four specially designed high-performance, ultra-low-noise (-128 dB EIN) mic preamps with an ultra-linear design, Clarett 4Pre USB guarantees a clean, open, and transparent capture that faithfully represents the original performance.
+
+The Clarett Sound \u2014 Now on USB
+Clarett USB lays down the challenge to interfaces twice its price, bringing legendary Clarett sonic fidelity to Mac and PC setups via standard USB and USB Type-C connections. High-speed USB connectivity delivers reliable, low-latency performance, allowing artists and engineers to record with confidence and monitor seamlessly through creative DAW plugin chains.
+
+Four Versatile Preamps with Analogue Air Mode
+The front panel houses four combo XLR/TRS inputs with independent Gain Halo level indicators. Channels 1 and 2 feature high-impedance JFET instrument inputs capable of handling super-hot electric guitar pickups without distortion. Engaging the Air circuit reproduces the input impedance, clarity, and frequency response curve of Focusrite's iconic ISA 110 console mic pre, giving vocals and acoustic instruments breathtaking presence and high-end sheen.
+
+Extensive 18-In / 8-Out Connectivity & ADAT Expansion
+In addition to the four front-panel mic/line inputs, four fixed rear-panel 1/4" line inputs accommodate synthesizers, samplers, and outboard gear. An optical TOSLink digital input provides 8 additional ADAT channels for effortless expansion with an external preamp like the Clarett+ OctoPre. Outputs include two main monitor outputs with anti-thump mute relays, two additional line outputs, and two independent stereo headphone outputs with dedicated front-panel volume controls.
+
+Pristine 24-bit / 192 kHz Conversion & 119 dB Dynamic Range
+Decades of analog design expertise, wrapped around premium 24-bit / 192 kHz A-D and D-A converters, deliver an expansive 119 dB dynamic range. From delicate ambient room reverberations to explosive percussion transients, every sonic nuance is preserved with pristine fidelity and ultra-low THD+N distortion.
+
+Complete Studio Software Bundle & Focusrite Control
+Includes Focusrite Control software for effortless mix and monitor routing across Mac, PC, iPad, and iPhone. Packed with the Hitmaker Expansion and creative software suite: Focusrite Red 2 & Red 3 Plug-in Suite, Softube Time & Tone Bundle, XLN Audio Addictive Keys, Ableton Live Lite, 2GB Loopmasters sample library, and ongoing Focusrite Plug-in Collective access.
+
+Key Highlights:
+\u2022 18-in / 8-out USB 2.0 / USB-C audio interface compatible with macOS and Windows
+\u2022 Four Clarett mic preamps with ultra-low noise (-128 dB EIN) and ultra-linear frequency response
+\u2022 Analogue Air mode models the classic transformer-based Focusrite ISA 110 preamp
+\u2022 Precision 24-bit / 192 kHz A-D and D-A conversion with wide 119 dB dynamic range
+\u2022 Two high-headroom JFET instrument inputs for guitars and basses without unwanted clipping
+\u2022 Four dedicated rear-panel 1/4" balanced line inputs for synths and outboard processors
+\u2022 Optical TOSLink ADAT input for adding 8 extra digital channels (e.g. Clarett+ OctoPre)
+\u2022 S/PDIF stereo coaxial digital input and output plus standard 5-pin DIN MIDI In/Out
+\u2022 Two balanced monitor outputs with anti-thump protection plus two line outputs
+\u2022 Dual independent 1/4" stereo headphone outputs with individual analog volume controls
+\u2022 Multi-color Gain Halo meters around gain dials for rapid, foolproof gain staging
+\u2022 Focusrite Control software for custom routing, cue mixes, and monitor setups
+\u2022 Backed by an official Focusrite 3-Year Manufacturer Warranty`,
+      specs: [
+        "18-in / 8-out high-performance desktop audio interface with USB and USB Type-C connectivity",
+        "Four Clarett microphone preamps with -128 dB EIN ultra-low noise and ultra-linear circuit architecture",
+        "Analogue Air mode switchable per channel emulating Focusrite's legendary ISA 110 console preamp",
+        "Pristine 24-bit / 192 kHz A-D and D-A converters boasting an expansive 119 dB dynamic range",
+        "Two front-panel high-headroom JFET instrument inputs to record hot pickups without distortion",
+        'Four fixed rear-panel 1/4" TRS line inputs for connecting synths, drum machines, and outboard gear',
+        "Optical TOSLink input supports up to 8 channels of ADAT digital expansion at 44.1/48 kHz",
+        "Two stereo headphone outputs with independent front-panel analog volume potentiometers",
+        'Dual balanced 1/4" TRS monitor outputs with anti-thump relay protection plus two line outputs',
+        "Stereo coaxial S/PDIF In/Out and standard 5-pin DIN MIDI In and Out for hardware synthesis",
+        "Includes Focusrite Red Suite, Softube Time & Tone, XLN Addictive Keys, and Ableton Live Lite",
+        "Official Focusrite 3-Year Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Device Type", "Desktop 18-In / 8-Out USB Audio Interface"],
+        ["Computer Connectivity", "USB 2.0 / USB Type-C (USB-C to USB-C & USB-C to USB-A cables included)"],
+        ["Simultaneous I/O", "18 Inputs \xD7 8 Outputs"],
+        ["A/D & D/A Resolution", "24-bit / 192 kHz"],
+        ["Dynamic Range", "119 dB (A-weighted, D-A converter)"],
+        ["Microphone Preamps", "4x Clarett Preamps with switchable Analogue Air Mode"],
+        ["Phantom Power", "+48V Phantom Power (switched in pairs: Ch 1-2, Ch 3-4)"],
+        ["Microphone Frequency Response", "20 Hz \u2013 35 kHz (\xB1 0.5 dB min gain)"],
+        ["Microphone Noise (EIN)", "-128 dBu (A-weighted, 150 Ohm source)"],
+        ["Microphone Gain Range", "+57 dB"],
+        ["Analog Inputs", '4x Combo XLR / 1/4" TRS (Front: 2 Mic/Line/Inst, 2 Mic/Line) + 4x 1/4" TRS Line (Rear Ch 5-8)'],
+        ["Analog Outputs", '4x 1/4" TRS Balanced Line Outputs (Outputs 1-4, Ch 1-2 Monitor anti-thump)'],
+        ["Headphone Outputs", '2x 1/4" TRS Stereo Headphone Outputs with independent volume controls'],
+        ["Digital Inputs", "1x Optical TOSLink (ADAT 8 Ch @ 48 kHz / 4 Ch @ 96 kHz) + 1x Coaxial S/PDIF RCA"],
+        ["Digital Outputs", "1x Coaxial S/PDIF RCA"],
+        ["MIDI I/O", "Standard 5-Pin DIN MIDI In & MIDI Out"],
+        ["Level Metering", "Focusrite Bi-Color Gain Halo rings around gain knobs"],
+        ["Software Routing", "Focusrite Control (macOS, Windows, iPadOS, iOS remote)"],
+        ["Power Supply", "12V DC, 2A External Power Supply (Included)"],
+        ["Dimensions", '222 mm (8.74") Width \xD7 63.5 mm (2.5") Height \xD7 192 mm (7.56") Depth'],
+        ["Weight", "1.91 kg (4.21 lbs)"],
+        ["Included Accessories", "External Power Supply, USB Cable, USB-C Cable, Hitmaker Software Suite"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-clarett-plus-2pre-audio-interface",
+      name: "Focusrite Clarett+ 2 Pre - 10-In / 4-Out Audio Interface",
+      shortName: "Focusrite Clarett+ 2Pre USB-C Audio Interface",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Desktop USB-C Audio Interfaces",
+      price: 66980,
+      originalPrice: 76900,
+      rating: 4.9,
+      reviewCount: 31,
+      image: "assets/images/products/focusrite-clarett-plus-2pre-iso.jpg",
+      images: [
+        "assets/images/products/focusrite-clarett-plus-2pre-iso.jpg",
+        "assets/images/products/focusrite-clarett-plus-2pre-front.jpg",
+        "assets/images/products/focusrite-clarett-plus-2pre-rear.jpg",
+        "assets/images/products/focusrite-clarett-plus-2pre-angle.jpg",
+        "assets/images/products/focusrite-clarett-plus-2pre-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Year Warranty",
+      inStock: true,
+      stock: 8,
+      sku: "AK-FR-CLARETT-PLUS-2PRE",
+      description: `The Focusrite Clarett+ 2Pre is a pure-sounding 10-in / 4-out USB-C audio interface meticulously crafted for the discerning recording artist, producer, and engineer. Whether recording vocals, tracking instruments, or composing entirely in the box, Clarett+ 2Pre delivers studio-grade sonic clarity, expansive dynamic range, and versatile portability with 15W USB bus powering for Mac and PC.
+
+Two Clarett\u207A Mic Preamps with All-Analogue Air
+Two newly upgraded Clarett+ mic preamps capture recordings with immense headroom, ultra-low distortion, and an astonishing -129 dBu EIN noise floor. Featuring All-analogue Air circuitry with impedance switching and relay control, the interface emulates the iconic transformer-coupled sound of the classic Focusrite ISA 110 console preamp. Vocals breathe with natural high-frequency shine, and acoustic guitars shimmer with authentic analog presence.
+
+Dedicated High-Headroom JFET Instrument Inputs
+Plug your electric guitar or bass directly into the front-panel JFET instrument inputs to preserve the organic timbre and transient bite of your instrument \u2014 delivering the true dynamic response and harmonic richness of plugging straight into an amplifier.
+
+Next-Generation Independent A-D and D-A Converters
+Clarett+ 2Pre features completely redesigned, independent A-D and D-A converters. The D-A converter dynamic range is boosted to an impressive 124 dB, giving engineers surgical precision during mixdown and mastering. Substantially reduced A-D distortion ensures that tracking stays transparent, articulate, and completely faithful to the sound source.
+
+Flexible 10-In / 4-Out Architecture & ADAT Expansion
+Scale up your session on demand: connect an external 8-channel mic preamp such as the Clarett+ OctoPre via the rear optical ADAT input to create a comprehensive 10-input tracking setup for full drum kits and live bands. Outputs include four balanced 1/4" line outputs with anti-thump monitor protection and a high-power headphone output with individual volume control.
+
+15W USB-C Bus-Power or AC Adapter Operation
+Experience true mobility: connect directly to a 15W USB-C computer port to power the Clarett+ 2Pre on location without a wall outlet, or use the included external 12V DC power adapter in fixed studio rigs.
+
+Hitmaker Expansion & Legendary Hardware Emulation
+Comes bundled with industry-standard production tools: Brainworx bx_console Focusrite SC (Sir George Martin & Rupert Neve ISA 110 console emulation), Focusrite Red 2 & Red 3 Plug-in Suite, Antares Auto-Tune Access, Relab LX480 Essentials, Softube Marshall Silver Jubilee 2555, XLN Audio Addictive Keys & Drums 2, Ableton Live Lite, and Focusrite Control software.
+
+Key Highlights:
+\u2022 10-in / 4-out desktop USB-C audio interface for macOS and Windows
+\u2022 Two Clarett+ mic preamps with -129 dB EIN ultra-low noise floor and exceptional headroom
+\u2022 All-analogue Air mode with relay control & impedance switching emulating the Focusrite ISA 110
+\u2022 Upgraded independent A-D / D-A converters with 124 dB D-A dynamic range
+\u2022 Two high-headroom JFET instrument inputs accurately preserve guitar amplifier dynamics
+\u2022 Optical TOSLink ADAT input enables 8 additional channels of digital preamp expansion
+\u2022 Four balanced 1/4" TRS analog outputs with anti-thump monitor muting
+\u2022 Powerful headphone output with dedicated front-panel analog volume knob
+\u2022 Standard 5-Pin DIN MIDI In and MIDI Out ports for hardware synthesizers and controllers
+\u2022 15W USB bus-powered operation or mains operation via included 12V DC adapter
+\u2022 Bundled with Brainworx bx_console ISA 110, Red 2 & 3, Antares Auto-Tune, and Hitmaker Expansion
+\u2022 Backed by Focusrite's 3-Year Global Manufacturer Warranty`,
+      specs: [
+        "Pure-sounding 10-in / 4-out desktop USB-C audio interface with next-generation digital conversion",
+        "Two Clarett+ mic preamps featuring All-analogue Air with impedance switching and relay control",
+        "Next-generation independent A-D and D-A converters boasting an expansive 124 dB D-A dynamic range",
+        "Two front-panel high-headroom JFET instrument inputs preserving natural guitar amplifier response",
+        "Optical TOSLink ADAT digital input for adding up to 8 extra channels (e.g. Clarett+ OctoPre)",
+        'Four balanced 1/4" TRS analog line outputs with anti-thump monitor mute circuit protection',
+        'Dedicated high-output 1/4" stereo headphone amplifier with front-panel volume potentiometer',
+        "15W USB-C bus-powered portable operation or mains powered via included 12V DC power adapter",
+        "Standard 5-Pin DIN MIDI In and MIDI Out ports for synths, sequencers, and MIDI gear",
+        "Includes Brainworx bx_console ISA 110, Focusrite Red 2 & 3 Suite, Antares Auto-Tune, and Hitmaker Suite",
+        "Official Focusrite 3-Year Global Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Device Type", "Desktop 10-In / 4-Out USB-C Audio Interface"],
+        ["Computer Connectivity", "USB 2.0 / USB-C (USB-C to USB-C & USB-C to USB-A cables included)"],
+        ["Simultaneous I/O", "10 Inputs \xD7 4 Outputs"],
+        ["A/D & D/A Resolution", "24-bit / 192 kHz"],
+        ["D/A Converter Dynamic Range", "124 dB (A-weighted, Line Outputs)"],
+        ["A/D Converter Dynamic Range", "118 dB (A-weighted, Inputs)"],
+        ["Microphone Preamps", "2x Clarett+ Mic Preamps with All-analogue Air Circuitry"],
+        ["Phantom Power", "+48V Phantom Power (individually switchable Ch 1 and Ch 2)"],
+        ["Microphone Frequency Response", "20 Hz \u2013 20 kHz (\xB1 < 0.03 dB)"],
+        ["Microphone Noise (EIN)", "-129 dBu (A-weighted, 150 Ohm source)"],
+        ["Microphone Gain Range", "+57 dB"],
+        ["Analog Inputs", '2x Combo XLR / 1/4" TRS (Front: Mic / Line / JFET Instrument)'],
+        ["Analog Outputs", '4x 1/4" TRS Balanced Line Outputs (Outputs 1-4, Ch 1-2 Monitor anti-thump)'],
+        ["Headphone Outputs", '1x 1/4" TRS Stereo Headphone Output with dedicated level knob'],
+        ["Digital Inputs", "1x Optical TOSLink (ADAT 8 Ch @ 48 kHz / 4 Ch @ 96 kHz S/MUX, or S/PDIF optical)"],
+        ["MIDI I/O", "Standard 5-Pin DIN MIDI In & MIDI Out"],
+        ["Level Metering", "Focusrite Bi-Color Gain Halo rings around gain knobs"],
+        ["Bus Powered", "Yes, 15W USB-C Bus-Powered (5V 3A) or External 12V DC Power Supply"],
+        ["Power Supply", "12V DC, 1.5A External Power Supply (Included)"],
+        ["Dimensions", '210 mm (8.27") Width \xD7 55 mm (2.17") Height \xD7 161 mm (6.34") Depth'],
+        ["Weight", "1.11 kg (2.45 lbs)"],
+        ["Included Accessories", "12V DC Power Adapter, USB-C to USB-C Cable, USB-C to USB-A Cable, Hitmaker Suite"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-clarett-plus-4pre-audio-interface",
+      name: "Focusrite Clarett+ 4Pre - 18-In / 8-Out Audio Interface",
+      shortName: "Focusrite Clarett+ 4Pre USB-C Audio Interface",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Desktop USB-C Audio Interfaces",
+      price: 93915,
+      originalPrice: 108900,
+      rating: 4.9,
+      reviewCount: 25,
+      image: "assets/images/products/focusrite-clarett-plus-4pre-iso.jpg",
+      images: [
+        "assets/images/products/focusrite-clarett-plus-4pre-iso.jpg",
+        "assets/images/products/focusrite-clarett-plus-4pre-front.jpg",
+        "assets/images/products/focusrite-clarett-plus-4pre-rear.jpg",
+        "assets/images/products/focusrite-clarett-plus-4pre-angle.jpg",
+        "assets/images/products/focusrite-clarett-plus-4pre-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Year Warranty",
+      inStock: true,
+      stock: 6,
+      sku: "AK-FR-CLARETT-PLUS-4PRE",
+      description: `The Focusrite Clarett+ 4Pre is a versatile, sonically true 18-in / 8-out USB-C audio interface tailored for the complete creator, multi-instrumentalist, and project studio engineer who demands uncompromising sonic fidelity during tracking, mixing, and production.
+
+Four Clarett\u207A Mic Preamps with All-Analogue Air
+Equipped with four high-headroom, low-noise, and low-distortion Clarett+ microphone preamps, the Clarett+ 4Pre captures vocals, acoustic instruments, and drums with breathtaking nuance and clarity. The relay-controlled All-analogue Air mode introduces custom input impedance switching and frequency shelving that faithfully recreates the open, transformer-coupled sound of Focusrite's legendary ISA 110 console preamp.
+
+Dedicated High-Headroom JFET Instrument Inputs
+Two dedicated front-panel JFET instrument inputs accommodate ultra-hot guitar and bass pickups without clipping or tone sucking, providing the natural feel and dynamic response of plugging straight into a tube amplifier.
+
+Next-Generation Independent A-D and D-A Converters
+Independent A-D and D-A conversion stages deliver an expansive 124 dB D-A dynamic range, empowering producers to make critical mixing decisions with laser accuracy. Dramatically reduced A-D converter distortion guarantees transparent audio capture with authentic transient preservation and spatial depth.
+
+Two Powerful, True-to-Life Headphone Outputs
+Two completely independent high-power stereo headphone amplifiers with dedicated front-panel analog level controls provide transparent monitoring and custom foldback cue mixes for both artist and engineer.
+
+Massive 18-In / 8-Out Expandability via ADAT
+Connect up to 18 input channels simultaneously to track full band rehearsals or drum kits. Expand your system seamlessly via the rear optical ADAT input with an 8-channel mic preamp like the Clarett+ OctoPre. Four balanced 1/4" analog outputs with anti-thump monitor protection, coaxial S/PDIF digital I/O, and 5-pin DIN MIDI I/O provide universal studio integration.
+
+Hitmaker Expansion & Iconic Focusrite Emulations
+Includes Brainworx bx_console Focusrite SC (authentic ISA 110 console channel strip), the Focusrite Red 2 & Red 3 Plug-in Suite, Antares Auto-Tune Access, Relab LX480 Essentials, Softube Marshall Silver Jubilee, XLN Audio Addictive Keys & Addictive Drums 2, Ableton Live Lite, and Focusrite Control software for Mac, PC, and iOS devices.
+
+Key Highlights:
+\u2022 18-in / 8-out studio-grade USB-C audio interface for PC and Mac
+\u2022 Four Clarett+ mic preamps with -129 dB EIN ultra-low noise and ultra-linear frequency response
+\u2022 All-analogue Air mode with relay control & impedance switching emulating the classic ISA 110
+\u2022 Upgraded independent A-D / D-A converters with 124 dB D-A dynamic range
+\u2022 Two high-headroom JFET instrument inputs preserve guitar tone without unwanted distortion
+\u2022 Four dedicated rear-panel 1/4" balanced line inputs for keyboards, synthesizers, and drum machines
+\u2022 Optical TOSLink ADAT input enables up to 8 additional channels of digital preamp expansion
+\u2022 Dual independent 1/4" stereo headphone outputs with dedicated analog volume controls
+\u2022 Four balanced 1/4" TRS analog outputs with anti-thump monitor muting
+\u2022 Stereo coaxial S/PDIF In/Out and standard 5-pin DIN MIDI In and MIDI Out
+\u2022 Multi-color Gain Halo meters around gain dials for rapid, foolproof gain staging
+\u2022 Includes Brainworx bx_console Focusrite SC, Red 2 & 3 Suite, Antares Auto-Tune, and Hitmaker Expansion
+\u2022 Backed by an official Focusrite 3-Year Global Manufacturer Warranty`,
+      specs: [
+        "18-in / 8-out studio-grade desktop USB-C audio interface with next-generation 24-bit / 192 kHz conversion",
+        "Four Clarett+ mic preamps featuring All-analogue Air with impedance switching and relay control",
+        "Upgraded independent A-D and D-A converters with an expansive 124 dB D-A dynamic range",
+        "Two front-panel high-headroom JFET instrument inputs preserving natural guitar amplifier response",
+        'Four fixed rear-panel 1/4" TRS line inputs for connecting synths, samplers, and outboard processors',
+        "Optical TOSLink ADAT digital input expands tracking setup with up to 8 extra channels (e.g. Clarett+ OctoPre)",
+        'Two powerful, true-to-life 1/4" stereo headphone outputs with independent front-panel volume controls',
+        'Four balanced 1/4" TRS analog line outputs with anti-thump monitor mute circuit protection',
+        "Stereo coaxial S/PDIF In/Out and standard 5-pin DIN MIDI In and Out for hardware studio gear",
+        "Includes Brainworx bx_console Focusrite SC, Focusrite Red 2 & 3, Antares Auto-Tune, and Hitmaker Suite",
+        "Official Focusrite 3-Year Global Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Device Type", "Desktop 18-In / 8-Out USB-C Audio Interface"],
+        ["Computer Connectivity", "USB 2.0 / USB-C (USB-C to USB-C & USB-C to USB-A cables included)"],
+        ["Simultaneous I/O", "18 Inputs \xD7 8 Outputs"],
+        ["A/D & D/A Resolution", "24-bit / 192 kHz"],
+        ["D/A Converter Dynamic Range", "124 dB (A-weighted, Line Outputs)"],
+        ["A/D Converter Dynamic Range", "118 dB (A-weighted, Inputs)"],
+        ["Microphone Preamps", "4x Clarett+ Preamps with switchable Analogue Air Mode"],
+        ["Phantom Power", "+48V Phantom Power (switched in pairs: Ch 1-2, Ch 3-4)"],
+        ["Microphone Frequency Response", "20 Hz \u2013 20 kHz (\xB1 < 0.03 dB)"],
+        ["Microphone Noise (EIN)", "-129 dBu (A-weighted, 150 Ohm source)"],
+        ["Microphone Gain Range", "+57 dB"],
+        ["Analog Inputs", '4x Combo XLR / 1/4" TRS (Front: 2 Mic/Line/Inst JFET, 2 Mic/Line) + 4x 1/4" TRS Line (Rear Ch 5-8)'],
+        ["Analog Outputs", '4x 1/4" TRS Balanced Line Outputs (Outputs 1-4, Ch 1-2 Monitor anti-thump)'],
+        ["Headphone Outputs", '2x 1/4" TRS Stereo Headphone Outputs with independent volume controls'],
+        ["Digital Inputs", "1x Optical TOSLink (ADAT 8 Ch @ 48 kHz / 4 Ch @ 96 kHz S/MUX, or S/PDIF optical) + 1x Coaxial S/PDIF RCA"],
+        ["Digital Outputs", "1x Coaxial S/PDIF RCA"],
+        ["MIDI I/O", "Standard 5-Pin DIN MIDI In & MIDI Out"],
+        ["Level Metering", "Focusrite Bi-Color Gain Halo rings around gain knobs"],
+        ["Software Routing", "Focusrite Control (macOS, Windows, iPadOS, iOS remote)"],
+        ["Power Supply", "12V DC, 2A External Power Supply (Included)"],
+        ["Dimensions", '222 mm (8.74") Width \xD7 63.5 mm (2.5") Height \xD7 192 mm (7.56") Depth'],
+        ["Weight", "1.95 kg (4.3 lbs)"],
+        ["Included Accessories", "12V DC Power Supply, USB-C to USB-C Cable, USB-C to USB-A Cable, Hitmaker Software Suite"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-clarett-plus-8pre-audio-interface",
+      name: "Focusrite Clarett+ 8Pre - 18-In / 20-Out Audio Interface",
+      shortName: "Focusrite Clarett+ 8Pre USB-C 1U Audio Interface",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Rackmount USB-C Audio Interfaces",
+      price: 135130,
+      originalPrice: 155900,
+      rating: 4.9,
+      reviewCount: 34,
+      image: "assets/images/products/focusrite-clarett-plus-8pre-iso.jpg",
+      images: [
+        "assets/images/products/focusrite-clarett-plus-8pre-iso.jpg",
+        "assets/images/products/focusrite-clarett-plus-8pre-front.jpg",
+        "assets/images/products/focusrite-clarett-plus-8pre-rear.jpg",
+        "assets/images/products/focusrite-clarett-plus-8pre-angle.jpg",
+        "assets/images/products/focusrite-clarett-plus-8pre-warranty.jpg"
+      ],
+      isFeatured: true,
+      badge: "3-Year Warranty",
+      inStock: true,
+      stock: 5,
+      sku: "AK-FR-CLARETT-PLUS-8PRE",
+      description: `The Focusrite Clarett+ 8Pre is an immensely powerful, studio-grade 18-in / 20-out 1U rackmount USB-C audio interface engineered to serve as the high-performance centerpiece for professional tracking studios, commercial facilities, and discerning producers working on Mac and PC.
+
+Eight High-Performance Clarett\u207A Mic Preamps
+Equipped with eight flagship Clarett+ microphone preamps boasting high headroom, ultra-low distortion, and an astonishing -129 dBu EIN noise floor, Clarett+ 8Pre captures vocals, full acoustic drum kits, multi-mic guitar cabinets, and orchestral ensembles with immaculate accuracy. Engaging the relay-controlled All-analogue Air circuit introduces custom input impedance switching and frequency shelving that faithfully recreates the legendary transformer-coupled clarity of Focusrite's iconic ISA 110 console preamp.
+
+Dedicated High-Headroom JFET Instrument Inputs
+Two front-panel JFET instrument inputs accommodate high-output active electric guitars and basses without clipping, preserving pristine harmonic detail and dynamic playing feel just like plugging into a high-end tube amplifier.
+
+Next-Generation Independent A-D and D-A Converters
+Redesigned independent A-D and D-A converters deliver an expansive 124 dB D-A dynamic range, allowing mixing and mastering engineers to hear every micro-detail with uncolored transparency. Incredibly low A-D converter distortion guarantees pure, authentic signal capture across all channels.
+
+Comprehensive 18-In / 20-Out Expandability
+Clarett+ 8Pre accommodates massive recording sessions: track up to 18 inputs and route 20 discrete outputs simultaneously. Expand your rig over optical ADAT I/O (8 in / 8 out) with an external converter like the Clarett+ OctoPre. Ten balanced 1/4" analog line outputs (with anti-thump monitor muting on outputs 1-2), coaxial S/PDIF digital I/O, BNC Word Clock output, and standard 5-pin DIN MIDI I/O provide total integration with outboard analog consoles, patchbays, and modular hardware.
+
+Dual Independent Headphone Outputs & Precision Metering
+Two high-power stereo headphone amplifiers feature discrete analog potentiometers, allowing custom artist and engineer cue mixes. A central 6-segment multi-channel LED meter panel delivers instant visual confirmation of input levels across all eight analog preamps and stereo monitor outputs.
+
+Hitmaker Expansion & Iconic Focusrite Software Suite
+Includes Brainworx bx_console Focusrite SC (authentic ISA 110 console channel strip), the Focusrite Red 2 & Red 3 Plug-in Suite, Antares Auto-Tune Access, Relab LX480 Essentials, Softube Marshall Silver Jubilee, XLN Audio Addictive Keys & Addictive Drums 2, Ableton Live Lite, and Focusrite Control software for macOS, Windows, and iOS.
+
+Key Highlights:
+\u2022 18-in / 20-out flagship 1U rackmount USB-C audio interface for PC and Mac
+\u2022 Eight Clarett+ mic preamps with -129 dB EIN ultra-low noise and ultra-linear frequency response
+\u2022 All-analogue Air mode with relay control & impedance switching emulating the classic ISA 110
+\u2022 Upgraded independent A-D / D-A converters with 124 dB D-A dynamic range
+\u2022 Two front-panel high-headroom JFET instrument inputs preserve guitar tone without unwanted distortion
+\u2022 Ten balanced 1/4" TRS analog line outputs with anti-thump monitor protection
+\u2022 Optical TOSLink ADAT I/O (8 in / 8 out) for massive multi-channel digital expandability
+\u2022 Dedicated BNC Word Clock output for master clock synchronization with outboard digital converters
+\u2022 Dual independent 1/4" stereo headphone outputs with individual front-panel analog volume controls
+\u2022 Central 6-segment LED input metering and monitor output level indicators
+\u2022 Includes Brainworx bx_console Focusrite SC, Red 2 & 3 Suite, Antares Auto-Tune, and Hitmaker Expansion
+\u2022 Backed by an official Focusrite 3-Year Global Manufacturer Warranty`,
+      specs: [
+        "18-in / 20-out 1U rackmount USB-C audio interface with next-generation 24-bit / 192 kHz conversion",
+        "Eight Clarett+ mic preamps featuring All-analogue Air with impedance switching and relay control",
+        "Upgraded independent A-D and D-A converters with an expansive 124 dB D-A dynamic range",
+        "Two front-panel high-headroom JFET instrument inputs preserving natural guitar amplifier response",
+        'Ten balanced 1/4" TRS analog line outputs with anti-thump monitor mute circuit protection',
+        "Optical TOSLink ADAT input and output (8 in / 8 out) for comprehensive digital system expansion",
+        "Dedicated BNC Word Clock output to lock external digital studio hardware to master interface clock",
+        'Two powerful, true-to-life 1/4" stereo headphone outputs with independent front-panel volume controls',
+        "Stereo coaxial S/PDIF In/Out and standard 5-pin DIN MIDI In and Out for hardware studio gear",
+        "Includes Brainworx bx_console Focusrite SC, Focusrite Red 2 & 3, Antares Auto-Tune, and Hitmaker Suite",
+        "Official Focusrite 3-Year Global Manufacturer Warranty with Pan-India Authorized Importer Support"
+      ],
+      deepSpecs: [
+        ["Device Type", "1U Rackmount 18-In / 20-Out USB-C Audio Interface"],
+        ["Computer Connectivity", "USB 2.0 / USB-C (USB-C to USB-C & USB-C to USB-A cables included)"],
+        ["Simultaneous I/O", "18 Inputs \xD7 20 Outputs"],
+        ["A/D & D/A Resolution", "24-bit / 192 kHz"],
+        ["D/A Converter Dynamic Range", "124 dB (A-weighted, Line Outputs)"],
+        ["A/D Converter Dynamic Range", "118 dB (A-weighted, Inputs)"],
+        ["Microphone Preamps", "8x Clarett+ Preamps with switchable Analogue Air Mode"],
+        ["Phantom Power", "+48V Phantom Power (switched in banks: Ch 1-4, Ch 5-8)"],
+        ["Microphone Frequency Response", "20 Hz \u2013 20 kHz (\xB1 < 0.03 dB)"],
+        ["Microphone Noise (EIN)", "-129 dBu (A-weighted, 150 Ohm source)"],
+        ["Microphone Gain Range", "+57 dB"],
+        ["Analog Inputs", '8x Combo XLR / 1/4" TRS (Front: 2 Mic/Line/Inst JFET, Rear: 6 Mic/Line)'],
+        ["Analog Outputs", '10x 1/4" TRS Balanced Line Outputs (Outputs 1-10, Ch 1-2 Monitor anti-thump)'],
+        ["Headphone Outputs", '2x 1/4" TRS Stereo Headphone Outputs with independent volume controls'],
+        ["Digital Inputs", "1x Optical TOSLink (ADAT 8 Ch @ 48 kHz / 4 Ch @ 96 kHz S/MUX, or S/PDIF optical) + 1x Coaxial S/PDIF RCA"],
+        ["Digital Outputs", "1x Optical TOSLink (ADAT 8 Ch @ 48 kHz / 4 Ch @ 96 kHz S/MUX, or S/PDIF optical) + 1x Coaxial S/PDIF RCA"],
+        ["Clocking", "1x BNC Word Clock Output"],
+        ["MIDI I/O", "Standard 5-Pin DIN MIDI In & MIDI Out"],
+        ["Level Metering", "Central 6-Segment LED Input Meters (Ch 1-8) & Monitor Output Level Meters"],
+        ["Software Routing", "Focusrite Control (macOS, Windows, iPadOS, iOS remote)"],
+        ["Power Supply", "Internal Universal 100\u2013240V AC Power Supply (Standard IEC Cable included)"],
+        ["Dimensions", '482.5 mm (19") Width \xD7 43.9 mm (1.73" / 1U) Height \xD7 291 mm (11.46") Depth'],
+        ["Weight", "4.08 kg (9.0 lbs)"],
+        ["Included Accessories", "IEC Power Cable, USB-C to USB-C Cable, USB-C to USB-A Cable, Hitmaker Software Suite"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── Product 46: Focusrite iTrack One Pre ─────────────────────────────
+    {
+      id: "focusrite-itrack-one-pre",
+      name: "Focusrite iTrack One Pre",
+      shortName: "iTrack One Pre",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Audio Interfaces",
+      price: 13287,
+      originalPrice: 15290,
+      rating: 4.3,
+      reviewCount: 58,
+      image: "assets/images/products/focusrite-itrack-one-pre-front.jpg",
+      images: [
+        "assets/images/products/focusrite-itrack-one-pre-front.jpg",
+        "assets/images/products/focusrite-itrack-one-pre-side.jpg",
+        "assets/images/products/focusrite-itrack-one-pre-angle.jpg",
+        "assets/images/products/focusrite-itrack-one-pre-top.jpg"
+      ],
+      isFeatured: true,
+      badge: "iOS Ready",
+      inStock: true,
+      stock: 22,
+      sku: "FOC-ITRACK-ONE-PRE",
+      description: `Capture high-resolution audio from a mic or guitar directly onto your iPhone or iPad.
+
+Never before have you been able to record a professional condenser microphone into your iPhone or iPad without needing any external power, making it even easier to record on the go.
+
+The iTrack One Pre lets you connect a microphone or musical instrument to your iPhone or iPad (your iOS device), and is powered from the iOS device. The signal at the input socket is routed to the audio recording app on your iOS device via its Lightning connector. You can monitor your recording by plugging headphones into your device in the usual way.
+
+The iTrack One Pre uses a renowned Focusrite analogue mic pre-amp design: as well as having great sound quality this can provide 48 V phantom power, so you can use a studio quality condenser microphone if you have one. The Combo input socket also allows direct connection of an electric guitar or bass \u2014 including those with high-output pickups.
+
+With just one gain control, one switch and two LEDs, the iTrack One Pre has been designed to be as easy to use as possible. Connect it to your iOS device using the Lightning cable supplied, plug your mic or instrument into the input, set the gain and start recording \u2014 that's really all there is to it.
+
+Key Features:
+\u2022 Phantom Power from your Phone \u2014 record a professional condenser mic without external power
+\u2022 Officially Apple MFi certified on all iOS devices up to the iPhone 6s Plus and iPad Pro
+\u2022 Illuminated gain halo \u2014 green is good, red is clipping \u2014 quickly find the perfect recording level
+\u2022 Compact and lightweight with micro-suction base to stick on any flat surface
+\u2022 Compatible with GarageBand, Auria, Cubasis and other favourite music making apps
+\u2022 Renowned Focusrite analogue mic pre-amp design with 48 V phantom power
+\u2022 Combo XLR/TRS input for microphones and instruments`,
+      specs: [
+        { label: "Type", value: "iOS Audio Interface" },
+        { label: "Input", value: '1x Combo XLR / 1/4" TRS (Mic/Instrument)' },
+        { label: "Phantom Power", value: "+48V (powered from iOS device)" },
+        { label: "Connectivity", value: "Lightning (iOS)" },
+        { label: "MFi Certified", value: "Yes (up to iPhone 6s Plus & iPad Pro)" },
+        { label: "Monitoring", value: "Via iOS device headphone output" },
+        { label: "Controls", value: "Gain knob with illuminated halo, 48V switch" },
+        { label: "Base", value: "Micro-suction technology" }
+      ],
+      deepSpecs: [
+        ["Device Type", "iOS Lightning Audio Interface with Mic Preamp"],
+        ["Input", '1x Combo XLR / 1/4" TRS (Microphone or Instrument)'],
+        ["Preamp Design", "Focusrite Analogue Mic Preamp"],
+        ["Phantom Power", "+48V (powered directly from iOS device)"],
+        ["Connectivity", "Lightning connector to iPhone / iPad"],
+        ["Apple MFi Certified", "Yes \u2014 compatible with iOS devices up to iPhone 6s Plus & iPad Pro"],
+        ["Gain Control", "Single gain knob with illuminated LED halo (Green = good, Red = clipping)"],
+        ["Switches", "1x 48V Phantom Power On/Off"],
+        ["LED Indicators", "2x LEDs (signal / clip)"],
+        ["Monitoring", "Via iOS device 3.5 mm headphone output"],
+        ["Compatible Apps", "GarageBand, Auria, Cubasis, and other Core Audio apps"],
+        ["Base", "Micro-suction technology \u2014 sticks to flat smooth surfaces"],
+        ["Power Source", "Bus-powered from iOS device (USB cable included for external power)"],
+        ["Included Accessories", "Lightning cable, USB power cable"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 47 ── Focusrite REDNET 1 ──
+    {
+      id: "focusrite-rednet-1",
+      name: "Focusrite REDNET 1",
+      shortName: "REDNET 1",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Dante I/O Interfaces",
+      price: 199244,
+      originalPrice: 229130,
+      rating: 4.7,
+      reviewCount: 18,
+      image: "assets/images/products/focusrite-rednet-1-front.png",
+      images: [
+        "assets/images/products/focusrite-rednet-1-front.png",
+        "assets/images/products/focusrite-rednet-1-rear.png",
+        "assets/images/products/focusrite-rednet-1-iso.png"
+      ],
+      isFeatured: true,
+      badge: "Pro Network",
+      inStock: true,
+      stock: 4,
+      sku: "FOC-REDNET-1",
+      description: `
+      <h3>Eight Channels of High-Quality Line-Level Analogue I/O for Dante Audio-Over-IP Networks</h3>
+      <p>RedNet 1 connects to your Dante\u2122 audio-over-IP network with a single Ethernet cable. It's remotely controlled via the network and can be placed anywhere in your facility. It offers eight channels of line-level analogue in and out, with Focusrite's precision 24-bit A-D and D-A conversion for superb audio performance, and 119dB dynamic range at sample rates up to 192kHz.</p>
+
+      <h3>AES59 Standard Connectivity</h3>
+      <p>The rear panel includes AES59 standard DB25 connectors for analogue patchbay or breakout cable interfacing. This allows seamless integration into existing professional studio and broadcast infrastructure.</p>
+
+      <h3>Precision Conversion & Dynamic Range</h3>
+      <p>With 24-bit precision conversion up to 192kHz and a flat frequency response from 20Hz \u2013 20kHz (\xB10.15dB), the RedNet 1 delivers reference-grade audio quality. The 119dB dynamic range ensures pristine capture and playback across demanding production environments.</p>
+
+      <h3>Flexible Level Alignment</h3>
+      <p>Software-selectable +24dBu or +18dBu level alignment accommodates different studio standards, letting you match the RedNet 1 to your existing equipment without compromise.</p>
+
+      <h3>Comprehensive Monitoring & Control</h3>
+      <p>Front-panel metering and indicators provide at-a-glance signal monitoring, while RedNet Control \u2014 the remote monitoring software with a powerful graphic user interface \u2014 enables full configuration from anywhere on the network.</p>
+
+      <h3>AES67 Compliant</h3>
+      <p>RedNet 1 is AES67 compliant, ensuring interoperability with other AES67-compatible audio networking systems for maximum flexibility in multi-vendor installations.</p>
+    `,
+      specs: [
+        { label: "Type", value: "Dante Audio-over-IP I/O" },
+        { label: "Channels", value: "8-In / 8-Out Line-Level" },
+        { label: "Conversion", value: "24-bit up to 192kHz" },
+        { label: "Dynamic Range", value: "119dB" },
+        { label: "Connectors", value: "AES59 DB25 (Analogue I/O)" },
+        { label: "Network", value: "Dante / AES67 via Ethernet" },
+        { label: "Level Alignment", value: "+24dBu / +18dBu (software-selectable)" },
+        { label: "Control", value: "RedNet Control software (network-based)" }
+      ],
+      deepSpecs: [
+        ["Type", "Dante Audio-over-IP Line-Level I/O Interface"],
+        ["Analogue Inputs", "8x Line-Level on DB25 (AES59)"],
+        ["Analogue Outputs", "8x Line-Level on DB25 (AES59)"],
+        ["Conversion", "24-bit precision A-D and D-A"],
+        ["Sample Rates", "Up to 192kHz"],
+        ["Dynamic Range", "119dB"],
+        ["Frequency Response", "20Hz \u2013 20kHz, \xB10.15dB"],
+        ["Level Alignment", "+24dBu or +18dBu (software-selectable)"],
+        ["Networking", "Dante audio-over-IP (Audinate)"],
+        ["AES67 Compliance", "Yes (may require hardware update)"],
+        ["Network Connection", "Gigabit Ethernet (single cable)"],
+        ["Metering", "Comprehensive front-panel LED metering and indicators"],
+        ["Remote Control", "RedNet Control software with graphic user interface"],
+        ["Form Factor", "1U Rackmount"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 48 ── Focusrite REDNET 3 ──
+    {
+      id: "focusrite-rednet-3",
+      name: "Focusrite REDNET 3",
+      shortName: "REDNET 3",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Dante Digital I/O",
+      price: 114427,
+      originalPrice: 120449,
+      rating: 4.8,
+      reviewCount: 16,
+      image: "assets/images/products/focusrite-rednet-3-front.png",
+      images: [
+        "assets/images/products/focusrite-rednet-3-front.png",
+        "assets/images/products/focusrite-rednet-3-combo.png"
+      ],
+      isFeatured: true,
+      badge: "Dante Digital",
+      inStock: true,
+      stock: 5,
+      sku: "FOC-REDNET-3",
+      description: `
+      <h3>Total of 32 Channels of ADAT and AES3 I/O for Dante Audio-over-IP Networks</h3>
+      <p>RedNet 3 interfaces your existing digital audio systems and components to any Dante\u2122 audio-over-IP network, with up to 32 inputs and outputs and full software remote control. The unit includes support for AES3, S/PDIF and ADAT digital audio formats and allows the network to be synchronised to incoming signal clock or a word clock source.</p>
+
+      <h3>High-Density Digital Connectivity</h3>
+      <p>Featuring 16 ADAT optical ports for 32x32 operation at up to 96kHz (16x16 at 192kHz) and eight channels of AES3 Combined Digital I/O to AES59 standard on a single DB25 connector, RedNet 3 effortlessly integrates legacy digital converters and consoles into modern Dante workflows.</p>
+
+      <h3>Word Clock & AES67 Support</h3>
+      <p>RedNet 3 offers Word Clock I/O with standard BNC connectors to sync your entire studio, alongside AES67 compliance for interoperability across broadcast and studio IP infrastructures.</p>
+
+      <h3>Comprehensive Metering & Remote Control</h3>
+      <p>Front-panel status and lock indicators ensure immediate confidence on stage or in the rack, with full routing, clocking, and parameter management handled seamlessly via RedNet Control.</p>
+    `,
+      specs: [
+        { label: "Type", value: "Dante Digital I/O Interface" },
+        { label: "Channels", value: "32-In / 32-Out Digital" },
+        { label: "Formats", value: "ADAT (16 ports), AES3 (DB25), S/PDIF" },
+        { label: "Sample Rates", value: "24-bit up to 192kHz" },
+        { label: "Network", value: "Dante / AES67 via Gigabit Ethernet" },
+        { label: "Clocking", value: "Word Clock I/O (BNC), Network Sync" },
+        { label: "Control", value: "RedNet Control GUI Software" },
+        { label: "Form Factor", value: "1U Rackmount" }
+      ],
+      deepSpecs: [
+        ["Type", "Dante Audio-over-IP 32x32 Digital I/O Interface"],
+        ["Digital Inputs", "16x ADAT Optical (TOSLINK), 8x AES3 (DB25 AES59), 2x S/PDIF (RCA)"],
+        ["Digital Outputs", "16x ADAT Optical (TOSLINK), 8x AES3 (DB25 AES59), 2x S/PDIF (RCA)"],
+        ["Channel Capacity", "32x32 up to 96kHz; 16x16 at 192kHz"],
+        ["Resolution & Sample Rates", "24-bit, 44.1kHz to 192kHz"],
+        ["Network Connection", "1x Gigabit Ethernet (RJ45 Dante / AES67)"],
+        ["Word Clock", "BNC In / Out (switchable 75\u03A9 termination)"],
+        ["AES67 Compliant", "Yes"],
+        ["Front Panel Indicators", "Power, Network Lock, Sample Rate, Clock Source, Input Status LEDs"],
+        ["Remote Control", "RedNet Control software (Mac & PC)"],
+        ["Form Factor", "1U 19-inch Rackmount"],
+        ["Power Supply", "Internal Universal 100V-240V AC"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 49 ── Focusrite REDNET 5 ──
+    {
+      id: "focusrite-rednet-5",
+      name: "Focusrite REDNET 5",
+      shortName: "REDNET 5",
+      brand: "Focusrite",
+      category: "Audio Interfaces",
+      subcategory: "Pro Tools | HD Dante Bridges",
+      price: 114427,
+      originalPrice: 120449,
+      rating: 4.8,
+      reviewCount: 14,
+      image: "assets/images/products/focusrite-rednet-5-front.png",
+      images: [
+        "assets/images/products/focusrite-rednet-5-front.png",
+        "assets/images/products/focusrite-rednet-5-rear.png",
+        "assets/images/products/focusrite-rednet-5-iso.png"
+      ],
+      isFeatured: true,
+      badge: "Pro Tools | HD",
+      inStock: true,
+      stock: 4,
+      sku: "FOC-REDNET-5",
+      description: `
+      <h3>32x32 Pro Tools | HD Interface for Dante Audio-over-IP Networks</h3>
+      <p>RedNet 5 is a 2U 32x32 Pro Tools | HD\u2122 interface for any Dante\u2122 audio-over-IP network, providing 32x32 I/O (16x16 at 192kHz). A pair of DigiLink connectors allows RedNet 5 to connect to any Pro Tools | HD system whether it's Native, HDX or even a legacy TDM system. Multiple RedNet 5 units can be on the same system to realise the maximum channel count of Pro Tools, while Loop Sync I/O allows seamless integration with other Pro Tools interfaces such as HD I/O and Sync HD I/O.</p>
+
+      <h3>Dual DigiLink Connectivity</h3>
+      <p>With Primary and Expansion DigiLink ports, RedNet 5 behaves exactly like a standard Pro Tools | HD interface, allowing Avid systems to access Dante networks directly without intermediate converters.</p>
+
+      <h3>Clocking, Loop Sync & Word Clock</h3>
+      <p>Features dedicated Word Clock and Loop Sync I/O on BNC connectors, giving engineers the highest level of clocking stability and frictionless integration alongside Avid HD I/O, Sync HD, and external master clocks.</p>
+
+      <h3>Full Network Routing via RedNet Control</h3>
+      <p>Comprehensive remote control, routing, and signal metering are managed across Ethernet through RedNet Control software, making complex multi-room and broadcast facilities simple to administer.</p>
+    `,
+      specs: [
+        { label: "Type", value: "Pro Tools | HD Dante Bridge" },
+        { label: "Channels", value: "32-In / 32-Out to Pro Tools | HD" },
+        { label: "Connectors", value: "Primary & Expansion DigiLink" },
+        { label: "Sample Rates", value: "24-bit up to 192kHz" },
+        { label: "Sync & Clock", value: "Loop Sync I/O, Word Clock I/O (BNC)" },
+        { label: "Network", value: "Dante / AES67 via Gigabit Ethernet" },
+        { label: "Form Factor", value: "2U Rackmount" },
+        { label: "Compatibility", value: "Pro Tools | HD Native, HDX, TDM" }
+      ],
+      deepSpecs: [
+        ["Type", "Pro Tools | HD to Dante Audio-over-IP Interface"],
+        ["Computer / DAW Interface", "Primary & Expansion DigiLink (Mini-DigiLink adapter supported)"],
+        ["Channel Count", "32x32 at up to 96kHz; 16x16 at 192kHz"],
+        ["DAW Compatibility", "Avid Pro Tools | HDX, HD Native, HD (TDM)"],
+        ["Network Connection", "1x Gigabit Ethernet port (RJ45 Dante / AES67)"],
+        ["Resolution & Sample Rates", "24-bit, 44.1kHz to 192kHz"],
+        ["Clock Synchronisation", "Loop Sync In / Out (BNC), Word Clock In / Out (BNC)"],
+        ["AES67 Compliance", "Yes"],
+        ["Front Panel Indicators", "PSU, Network Lock, Sample Rate, Clock Source, Loop Sync & Metering LEDs"],
+        ["Remote Management", "RedNet Control GUI software with live signal meters"],
+        ["Form Factor", "2U 19-inch Rackmount"],
+        ["Power Supply", "Internal Universal 100V-240V AC"],
+        ["Warranty", "Focusrite 3-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 50 ── Universal Audio Apollo Solo Thunderbolt 3 (Heritage Edition) ──
+    {
+      id: "universal-audio-apollo-solo-tb3-heritage",
+      name: "Universal Audio Apollo Solo - Thunderbolt 3 Audio Interface (for Mac & Windows) [Heritage Edition]",
+      shortName: "Apollo Solo TB3 Heritage",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 77945,
+      originalPrice: 89900,
+      rating: 4.9,
+      reviewCount: 38,
+      image: "assets/images/products/universal-audio-apollo-solo-tb3-top.png",
+      images: [
+        "assets/images/products/universal-audio-apollo-solo-tb3-top.png",
+        "assets/images/products/universal-audio-apollo-solo-tb3-angle.jpg",
+        "assets/images/products/universal-audio-apollo-solo-tb3-front.jpg",
+        "assets/images/products/universal-audio-apollo-solo-tb3-back.jpg",
+        "assets/images/products/universal-audio-apollo-solo-tb3-mac.jpg"
+      ],
+      isFeatured: true,
+      badge: "Heritage Edition",
+      inStock: true,
+      stock: 7,
+      sku: "UA-APOLLO-SOLO-TB3-HE",
+      description: `
+      <h3>A Special Edition of Universal Audio's Popular Apollo Solo Interface with Bundled UAD Plug-In Package Worth over $1,300</h3>
+      <p>Apollo Solo Heritage Edition has all the benefits of the popular Apollo Solo, including class-leading UA audio conversion, two Unison mic preamps, and SOLO Core realtime UAD plug-in processing. And it goes a step further, with a software suite of 5 award-winning UAD plug-in titles, featuring Collections from Teletronix,\xAE Pultec,\xAE and UA.</p>
+
+      <h3>Iconic UAD Analog Collections Onboard</h3>
+      <p>A hallmark feature of Apollo is its Realtime UAD Processing, letting you run the full library of UAD plug-ins at near-zero latency. Taking you a step further, Apollo Solo Heritage Edition gives you 5 premium plug-in titles worth over $1,300 \u2014 including the full suite of UA's Teletronix and 1176 compressors, all Pultec EQs, UA 610 Unison mic preamps, and Pure Plate Reverb. These premium Heritage Edition titles are in addition to Apollo Solo's included "Realtime Analog Classics" bundle, giving you the most accurate library of classic analog emulations included with any professional audio interface.</p>
+
+      <h3>Two Unison Preamps: The Sound of Neve, Helios, API, Avalon & More</h3>
+      <p>Apollo Solo Heritage Edition features two Unison-enabled mic preamps, letting you track through exacting mic preamp emulations from Neve, API, Manley, SSL, Avalon, Helios, and Universal Audio. A Universal Audio exclusive, Unison is a proprietary hardware-software integration that nails the tone of these sought-after tube and solid-state mic pres \u2014 including their input impedance, gain stage \u201Csweet spots,\u201D and component-level circuit behaviors. Unison technology is also found on Apollo Solo's front-panel Hi-Z instrument input, providing dead-on impedance and gain matching for guitar and bass amp models from Fender, Marshall, Ampeg, and more.</p>
+
+      <h3>LUNA Recording System with Accelerated Realtime Monitoring</h3>
+      <p>Apollo Solo Heritage Edition works with all major DAWs, including Logic Pro, Ableton Live, Pro Tools, and more. But it becomes a fully integrated recording system with LUNA, a powerful free recording application for Mac from Universal Audio. Bolstered by Accelerated Realtime Monitoring,\u2122 LUNA lets you track and mix in an intuitive single-window workflow with unlimited track counts, full AU support, and access to a suite of exclusive LUNA Instruments and Extensions.</p>
+
+      <h3>Built for Musicians, Electronic Producers, and Songwriters</h3>
+      <p>Apollo Solo Heritage Edition\u2019s portable Thunderbolt 3 bus-powered design, robust all-metal construction, best-in-class headphone amplifier, and superior audio conversion is perfect for musicians, songwriters, and electronic music producers who need UA quality in a compact package.</p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li>A special edition of UA's popular Apollo Solo interface \u2014 with a premium suite of 5 award-winning plug-in titles from Teletronix,\xAE Pultec,\xAE and UA \u2014 a $1,300 value</li>
+        <li>UAD SOLO Core Processing for tracking through vintage compressors, EQs, tape machines, mic preamps, and guitar amp plug-ins with near-zero latency</li>
+        <li>Unison mic preamp and guitar amp emulations from Neve,\xAE API,\xAE Avalon,\xAE Manley,\xAE Marshall,\xAE Fender,\xAE and more</li>
+        <li>Produce with LUNA Recording System \u2014 a free, fully-integrated recording application made for Apollo (Mac only)</li>
+        <li>Runs UAD Powered Plug-Ins via VST, AU, and AAX 64 formats in all major DAWs (Logic Pro, Pro Tools, Cubase, Ableton Live, and more)</li>
+        <li>Best-in-class headphone amplifier for loud, detailed, low-noise monitoring</li>
+        <li>Bus-powered Thunderbolt 3 connection to Mac and Windows systems for easy portability and reduced cable clutter</li>
+        <li>Uncompromising analog design, superior components, and premium build quality</li>
+      </ul>
+
+      <h3>Included in Apollo "Heritage Edition" Bundle ($1,300 Value):</h3>
+      <ul>
+        <li>UA 1176 Classic Limiter Collection</li>
+        <li>Teletronix LA-2A Classic Leveler Collection</li>
+        <li>Pultec Passive EQ Collection</li>
+        <li>UA 610 Tube Preamp & EQ Collection</li>
+        <li>Pure Plate Reverb</li>
+      </ul>
+
+      <h3>Included in the Realtime Analog Classics Bundle:</h3>
+      <ul>
+        <li>UA 610-B Tube Preamp & EQ</li>
+        <li>UA 1176LN Limiting Amplifier (Legacy) & UA 1176SE Limiting Amplifier (Legacy)</li>
+        <li>Pultec EQP-1A EQ (Legacy) & Pultec Pro EQ (Legacy)</li>
+        <li>Marshall\xAE Plexi Classic Guitar Amp</li>
+        <li>Teletronix LA-2A Leveling Amplifier (Legacy)</li>
+        <li>Raw Distortion & Ampeg\xAE SVT-VR Classic Bass Amp</li>
+        <li>Precision Mix Rack Collection (Channel Strip, Reflection Engine, Delay Mod, Delay Mod L)</li>
+        <li>RealVerb Pro Custom Room Modeler</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Connectivity", value: "Thunderbolt 3 (Bus-Powered)" },
+        { label: "Simultaneous I/O", value: "2 x 4" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps" },
+        { label: "A/D Resolution", value: "24-bit / 192kHz" },
+        { label: "DSP Processing", value: "UAD-2 SOLO Core Realtime Processing" },
+        { label: "Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Outputs", value: '2 x 1/4" TRS (Monitor), 1 x 1/4" (Headphones)' },
+        { label: "Included Software", value: "Heritage Edition Bundle + Realtime Analog Classics + LUNA" }
+      ],
+      deepSpecs: [
+        ["Type", "Thunderbolt 3 Desktop Audio Interface"],
+        ["Connectivity", "Thunderbolt 3 (Bus-powered, Mac & Windows)"],
+        ["Simultaneous I/O", "2-In / 4-Out"],
+        ["A/D & D/A Conversion", "24-bit / 192kHz class-leading conversion"],
+        ["Microphone Preamps", '2x Unison-enabled preamps (XLR-1/4" combo)'],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS balanced monitor outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone amplifier'],
+        ["DSP Acceleration", "UAD-2 SOLO Core onboard processor"],
+        ["Latency", "Sub-2ms realtime tracking through UAD plug-ins"],
+        ["DAW Software", "LUNA Recording System (Mac) + Console app"],
+        ["Included Bundles", "Heritage Edition 5 Premium Collections ($1,300 value) + Realtime Analog Classics"],
+        ["Enclosure", "Rugged all-metal desktop construction with rotary encoder"],
+        ["Compatibility", "macOS 10.15+ (Apple Silicon & Intel) / Windows 10/11 (64-bit)"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 51 ── Universal Audio Apollo Solo USB (Heritage Edition) ─────────
+    {
+      id: "universal-audio-apollo-solo-usb-heritage",
+      name: "Universal Audio Apollo Solo - USB [Heritage Edition]",
+      shortName: "Apollo Solo USB Heritage",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 77945,
+      originalPrice: 89900,
+      rating: 4.9,
+      reviewCount: 34,
+      image: "assets/images/products/universal-audio-apollo-solo-usb-top.png",
+      images: [
+        "assets/images/products/universal-audio-apollo-solo-usb-top.png",
+        "assets/images/products/universal-audio-apollo-solo-usb-rear.jpg",
+        "assets/images/products/universal-audio-apollo-solo-usb-angle.jpg",
+        "assets/images/products/universal-audio-apollo-solo-usb-front.jpg",
+        "assets/images/products/universal-audio-apollo-solo-usb-laptop.jpg"
+      ],
+      isFeatured: true,
+      badge: "Heritage Edition",
+      inStock: true,
+      stock: 6,
+      sku: "UA-APOLLO-SOLO-USB-HE",
+      description: `
+      <h3>A Special Edition of Universal Audio's Popular Apollo Solo Interface with Bundled UAD Plug-In Package Worth over $1,300</h3>
+      <p>Apollo Solo USB Heritage Edition has all the benefits of the popular Apollo Solo, including class-leading UA audio conversion, two Unison mic preamps, and SOLO Core realtime UAD plug-in processing. And it goes a step further, with a software suite of 5 award-winning UAD plug-in titles, featuring Collections from Teletronix,\xAE Pultec,\xAE and UA.</p>
+
+      <h3>Iconic UAD Analog Collections Onboard</h3>
+      <p>A hallmark feature of Apollo is its Realtime UAD Processing, letting you run the full library of UAD plug-ins at near-zero latency. Taking you a step further, Apollo Solo USB Heritage Edition gives you 5 premium plug-in titles worth over $1,300 \u2014 including the full suite of UA's Teletronix and 1176 compressors, all Pultec EQs, UA 610 Unison mic preamps, and Pure Plate Reverb. These premium Heritage Edition titles are in addition to Apollo Solo USB's included "Realtime Analog Classics" bundle, giving you the most accurate library of classic analog emulations included with any professional audio interface.</p>
+
+      <h3>Two Unison Preamps: The Sound of Neve, Helios, API, Avalon & More</h3>
+      <p>Apollo Solo USB Heritage Edition features two Unison-enabled mic preamps, letting you track through exacting mic preamp emulations from Neve, API, Manley, SSL, Avalon, Helios, and Universal Audio. A Universal Audio exclusive, Unison is a proprietary hardware-software integration that nails the tone of these sought-after tube and solid-state mic pres \u2014 including their input impedance, gain stage \u201Csweet spots,\u201D and component-level circuit behaviors. Unison technology is also found on Apollo Solo USB's front-panel Hi-Z instrument input, providing dead-on impedance and gain matching for guitar and bass amp models from Fender, Marshall, Ampeg, and more.</p>
+
+      <h3>Rapid, Low-Latency USB 3 Connection for Windows</h3>
+      <p>Apollo Solo USB features a high-speed USB 3 (Type-C) connection and external power supply, delivering reliable, low-latency performance with popular Windows recording software. Seamlessly track with realtime UAD processing on Windows systems with rock-solid stability.</p>
+
+      <h3>Built for Musicians, Electronic Producers, and Songwriters</h3>
+      <p>Apollo Solo USB Heritage Edition\u2019s desktop design, robust all-metal construction, best-in-class headphone amplifier, and superior audio conversion is perfect for musicians, songwriters, and electronic music producers who need UA quality in a compact package.</p>
+    `,
+      specs: [
+        { label: "Connectivity", value: "USB 3.0 Type-C (Windows)" },
+        { label: "Simultaneous I/O", value: "2 x 4" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps" },
+        { label: "A/D Resolution", value: "24-bit / 192kHz" },
+        { label: "DSP Processing", value: "UAD-2 SOLO Core Realtime Processing" },
+        { label: "Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Outputs", value: '2 x 1/4" TRS (Monitor), 1 x 1/4" (Headphones)' },
+        { label: "Power Supply", value: "12V DC External Power Supply (Included)" }
+      ],
+      deepSpecs: [
+        ["Type", "USB 3 Desktop Audio Interface for Windows"],
+        ["Connectivity", "USB 3.0 Type-C (External 12V DC Power Supply)"],
+        ["Simultaneous I/O", "2-In / 4-Out"],
+        ["A/D & D/A Conversion", "24-bit / 192kHz class-leading conversion"],
+        ["Microphone Preamps", '2x Unison-enabled preamps (XLR-1/4" combo)'],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS balanced monitor outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone amplifier'],
+        ["DSP Acceleration", "UAD-2 SOLO Core onboard processor"],
+        ["Latency", "Sub-2ms realtime tracking through UAD plug-ins"],
+        ["DAW Software", "Console application + ASIO driver support"],
+        ["Included Bundles", "Heritage Edition 5 Premium Collections ($1,300 value) + Realtime Analog Classics"],
+        ["Power", "External 12V DC 1.5A power supply (Included)"],
+        ["Compatibility", "Windows 10 / 11 (64-bit editions) with USB 3 port"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 52 ── Universal Audio Apollo Twin Duo MK2 [Heritage Edition] ──────
+    {
+      id: "universal-audio-apollo-twin-duo-mk2-heritage",
+      name: "Universal Audio Apollo Twin Duo MK2 [Heritage Edition]",
+      shortName: "Apollo Twin Duo MK2 Heritage",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 105570,
+      originalPrice: 117300,
+      rating: 4.9,
+      reviewCount: 42,
+      image: "assets/images/products/ua-apollo-twin-duo-mk2-top.png",
+      images: [
+        "assets/images/products/ua-apollo-twin-duo-mk2-top.png",
+        "assets/images/products/ua-apollo-twin-duo-mk2-front.png",
+        "assets/images/products/ua-apollo-twin-duo-mk2-back.png",
+        "assets/images/products/ua-apollo-twin-duo-mk2-board.png",
+        "assets/images/products/ua-apollo-twin-duo-mk2-angle.png"
+      ],
+      isFeatured: true,
+      badge: "Heritage Edition",
+      inStock: true,
+      stock: 5,
+      sku: "AK-UA-APOLLO-TWIN-DUO-MK2-HE",
+      description: `
+      <h3>A Special Edition of Universal Audio's Acclaimed Apollo Twin MkII Interface with Bundled UAD Plug-In Package Worth over $1,300</h3>
+      <p>Apollo Twin MkII Heritage Edition has all the benefits of the acclaimed Apollo Twin MkII, including next-generation Apollo A/D and D/A conversion, DUO Core realtime UAD plug-in processing, Unison-enabled mic preamps, and full LUNA Recording System integration. And it goes a step further, with a software suite of 5 award-winning UAD plug-in titles, featuring Collections from Teletronix,\xAE Pultec,\xAE and UA.</p>
+
+      <h3>Iconic UAD Analog Collections Onboard</h3>
+      <p>A hallmark feature of Apollo is its Realtime UAD Processing, letting you run the full library of UAD plug-ins at near-zero latency. Taking you a step further, Apollo Twin MkII Heritage Edition gives you 5 premium plug-in titles worth over $1,300 \u2014 including the full suite of UA's Teletronix and 1176 compressors, all Pultec EQs, UA 610 Unison mic preamps, and Pure Plate Reverb. These premium Heritage Edition titles are in addition to Apollo Twin MkII's included "Realtime Analog Classics" bundle, giving you the most accurate library of classic analog emulations included with any professional audio interface.</p>
+
+      <h3>Two Unison Preamps: The Sound of Neve, Helios, API, Avalon & More</h3>
+      <p>Apollo Twin MkII Heritage Edition features two Unison-enabled mic preamps, letting you track through exacting mic preamp emulations from Neve, API, Manley, SSL, Avalon, Helios, and Universal Audio. A Universal Audio exclusive, Unison is a proprietary hardware-software integration that nails the tone of these sought-after tube and solid-state mic pres \u2014 including their input impedance, gain stage \u201Csweet spots,\u201D and component-level circuit behaviors. Unison technology is also found on Apollo Twin MkII's front-panel Hi-Z instrument input, providing dead-on impedance and gain matching for guitar and bass amp models from Fender, Marshall, Ampeg, and more.</p>
+
+      <h3>LUNA Recording System \u2014 Deep Apollo Integration with a Fast, Natural Workflow</h3>
+      <p>Apollo Twin MkII works with all major DAWs, including Logic Pro, Ableton Live, Pro Tools, and more. But it becomes a fully integrated recording system with LUNA, a powerful recording application for Mac from Universal Audio. Bolstered by Accelerated Realtime Monitoring,\u2122 LUNA lets you track and mix in an intuitive single-window workflow with unlimited track counts, with full AU support and access to exclusive LUNA Instruments and Extensions.</p>
+
+      <h3>Built to Record: Improved Monitoring and Workflow</h3>
+      <p>Apollo Twin MkII Heritage Edition offers greatly improved monitor functionality versus previous Apollo Twin models, with added Mute, DIM, Mono, and ALT speaker switching. It also includes monitor remote controls and a built-in talkback mic for easy communication with talent or recording slate cues. These enhanced features make it the new standard for professional desktop recording.</p>
+
+      <h3>Professional Performance and Scalability with Console</h3>
+      <p>Users of Apollo Twin MkII can combine up to four Thunderbolt Apollos and six total UAD-2 devices \u2014 adding I/O and DSP as your studio grows. Once you expand your studio with additional Apollo rackmount units, you can use Apollo Twin MkII as a desktop monitor control while still tapping its additional I/O and DSP power.</p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li>A special edition of UA's acclaimed Apollo Twin MkII interface \u2014 with a premium suite of 5 award-winning plug-in titles from Teletronix,\xAE Pultec,\xAE and UA \u2014 a $1,300 value</li>
+        <li>Next-generation Apollo A/D and D/A conversion</li>
+        <li>2 Unison mic preamps offer stunning models of classic tube and transformer-based mic preamps and guitar amps</li>
+        <li>UAD DUO Core Processing for tracking through vintage compressors, EQs, tape machines, mic preamps, and guitar amp plug-ins with near-zero latency</li>
+        <li>Produce with LUNA Recording System \u2014 a fully-integrated recording application made for Apollo (Mac only)</li>
+        <li>Runs UAD Powered Plug-Ins via VST, AU, and AAX 64 formats in all major DAWs (Logic Pro, Pro Tools, Cubase, Ableton Live, and more)</li>
+        <li>Front-panel Unison-enabled Hi-Z instrument input and headphone out</li>
+        <li>Built-in Talkback mic for communication with studio talent and recording slate cues</li>
+        <li>Dedicated monitor functionality including monitor remote functions and Mono, Mute, DIM, and ALT monitor controls</li>
+        <li>Up to 8 channels of additional digital input via optical ADAT/SPDIF input</li>
+        <li>Also includes \u201CRealtime Analog Classics\u201D UAD plug-in bundle featuring UA 610-B, Pultec EQ, LA-2A and 1176 compressors, Marshall Plexi Classic, Ampeg SVT-VR Classic, and more</li>
+        <li>Uncompromising analog design, superior components, and premium build quality</li>
+      </ul>
+
+      <h3>Included in Apollo "Heritage Edition" Bundle ($1,300 Value):</h3>
+      <ul>
+        <li>UA 1176 Classic Limiter Collection</li>
+        <li>Teletronix LA-2A Classic Leveler Collection</li>
+        <li>Pultec Passive EQ Collection</li>
+        <li>UA 610 Tube Preamp & EQ Collection</li>
+        <li>Pure Plate Reverb</li>
+      </ul>
+
+      <h3>Included in the Realtime Analog Classics Bundle:</h3>
+      <ul>
+        <li>UA 610-B Tube Preamp & EQ</li>
+        <li>UA 1176LN Limiting Amplifier (Legacy) & UA 1176SE Limiting Amplifier (Legacy)</li>
+        <li>Pultec EQP-1A EQ (Legacy) & Pultec Pro EQ (Legacy)</li>
+        <li>Marshall\xAE Plexi Classic Guitar Amp</li>
+        <li>Teletronix LA-2A Leveling Amplifier (Legacy)</li>
+        <li>Raw Distortion & Ampeg\xAE SVT-VR Classic Bass Amp</li>
+        <li>Precision Mix Rack Collection (Channel Strip, Reflection Engine, Delay Mod, Delay Mod L)</li>
+        <li>RealVerb Pro Custom Room Modeler</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Connectivity", value: "Thunderbolt 2 (Thunderbolt 3 compatible via adapter)" },
+        { label: "Simultaneous I/O", value: "10 x 6" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps" },
+        { label: "A/D Resolution", value: "24-bit / 192kHz" },
+        { label: "DSP Processing", value: "UAD-2 DUO Core Realtime Processing" },
+        { label: "Analog Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Analog Outputs", value: '2 x 1/4" TRS (Monitor), 2 x 1/4" TRS (Line Out), 1 x 1/4" (Headphones)' },
+        { label: "Digital Inputs", value: "1 x Optical (TOSLINK) ADAT/SPDIF (up to 8 channels)" },
+        { label: "Talkback Mic", value: "Built-in talkback microphone" },
+        { label: "Included Software", value: "Heritage Edition Bundle + Realtime Analog Classics + LUNA" }
+      ],
+      deepSpecs: [
+        ["Type", "Thunderbolt Desktop Audio Interface with DUO Core DSP"],
+        ["Connectivity", "Thunderbolt (Mac & Windows compatible)"],
+        ["Simultaneous I/O", "10-In / 6-Out"],
+        ["A/D & D/A Conversion", "Next-generation 24-bit / 192kHz Apollo conversion"],
+        ["Microphone Preamps", '2x Unison-enabled preamps (XLR-1/4" combo)'],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS monitor outputs + 2x 1/4" TRS line outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone amplifier'],
+        ["Digital Inputs", "1x Optical TOSLINK ADAT (8-channel @ 48kHz) or S/PDIF"],
+        ["DSP Acceleration", "UAD-2 DUO Core onboard real-time DSP processor"],
+        ["Monitoring Controls", "Mute, DIM, Mono, and ALT speaker switching + Talkback mic"],
+        ["DAW Software", "LUNA Recording System (Mac) + Console application"],
+        ["Included Bundles", "Heritage Edition 5 Premium Collections ($1,300 value) + Realtime Analog Classics"],
+        ["Enclosure", "Heavy-duty cast metal desktop enclosure with smooth rotary encoder"],
+        ["Compatibility", "macOS 10.15+ (Apple Silicon & Intel) / Windows 10/11 (64-bit)"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 53 ── Universal Audio Apollo Twin USB [Heritage Edition] ─────────
+    {
+      id: "universal-audio-apollo-twin-usb-heritage",
+      name: "Universal Audio Apollo Twin USB [Heritage Edition]",
+      shortName: "Apollo Twin USB Heritage",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 112725,
+      originalPrice: 125250,
+      rating: 4.9,
+      reviewCount: 36,
+      image: "assets/images/products/ua-apollo-twin-usb-top.png",
+      images: [
+        "assets/images/products/ua-apollo-twin-usb-top.png",
+        "assets/images/products/ua-apollo-twin-usb-front.png",
+        "assets/images/products/ua-apollo-twin-usb-back.png"
+      ],
+      isFeatured: true,
+      badge: "Heritage Edition",
+      inStock: true,
+      stock: 6,
+      sku: "AK-UA-APOLLO-TWIN-USB-HE",
+      description: `
+      <h3>A Special Edition of Universal Audio's Esteemed Apollo Twin USB Interface with Bundled UAD Plug-In Package Worth over $1,300</h3>
+      <p>Apollo Twin USB Heritage Edition has all the benefits of the acclaimed Apollo Twin USB, including impeccable 24-bit/192kHz audio conversion, DUO Core realtime UAD plug-in processing, and Unison\u2122 preamp technology. And it goes a step further, with a software suite of 5 award-winning UAD plug-in titles, featuring Collections from Teletronix,\xAE Pultec,\xAE and UA.</p>
+
+      <h3>Iconic UAD Analog Collections Onboard</h3>
+      <p>A hallmark feature of Apollo is its Realtime UAD Processing, letting you run the full library of UAD plug-ins at near-zero latency. Taking you a step further, Apollo Twin USB Heritage Edition gives you 5 premium plug-in titles worth over $1,300 \u2014 including the full suite of UA's Teletronix and 1176 compressors, all Pultec EQs, UA 610 Unison mic preamps, and Pure Plate Reverb. These premium Heritage Edition titles are in addition to Apollo Twin USB's included "Realtime Analog Classics" bundle, giving you the most accurate library of classic analog emulations included with any professional audio interface.</p>
+
+      <h3>Two Unison Preamps: Get the Sound of Neve, Helios, API, Avalon & More</h3>
+      <p>Apollo Twin USB Heritage Edition features two Unison-enabled mic preamps, letting you track through exacting mic preamp emulations from Neve, API, Manley, SSL, Avalon, Helios, and Universal Audio. A Universal Audio exclusive, Unison is a proprietary hardware-software integration that nails the tone of these sought-after tube and solid-state mic pres \u2014 including their input impedance, gain stage \u201Csweet spots,\u201D and component-level circuit behaviors. Unison technology is also found on Apollo Twin USB's front-panel Hi-Z instrument input, providing dead-on impedance and gain matching for guitar and bass amp models from Fender, Marshall, Ampeg, and more.</p>
+
+      <h3>Additional Connections for Professional Tracking</h3>
+      <p>With its two Unison-equipped preamps, two analog line outs, and optical ADAT/SPDIF input \u2014 plus two digitally controlled analog monitor outputs \u2014 the 10 x 6 Apollo Twin USB Heritage Edition gives you the I/O you need for professional tracks and mixes on Windows recording systems.</p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li>A special edition of UA's esteemed Apollo Twin USB interface \u2014 with a premium suite of 5 award-winning plug-in titles from Teletronix,\xAE Pultec,\xAE and UA \u2014 a $1,300 value</li>
+        <li>UAD DUO Core Processing for tracking through vintage compressors, EQs, tape machines, mic preamps, and guitar amp plug-ins with near-zero latency</li>
+        <li>World-class Apollo 24-bit / 192kHz A/D and D/A conversion</li>
+        <li>High-speed USB 3 connection for modern Windows systems with rock-solid ASIO performance</li>
+        <li>Unison\u2122 technology provides stunning models of classic mic preamps and guitar amps</li>
+        <li>2 premium mic/line preamps, 2 line outputs, front-panel Hi-Z instrument input and stereo headphone output</li>
+        <li>2 analog monitor outputs for full resolution at all listening levels</li>
+        <li>Up to 8 channels of additional digital input via optical ADAT/SPDIF input</li>
+        <li>Runs UAD Powered Plug-Ins via VST, RTAS, and AAX 64 formats in major DAWs (Pro Tools, Cubase, Ableton Live, Studio One, and more)</li>
+        <li>Uncompromising analog design, superior components, and premium desktop build quality</li>
+      </ul>
+
+      <h3>Included in Apollo "Heritage Edition" Bundle ($1,300 Value):</h3>
+      <ul>
+        <li>UA 1176 Classic Limiter Collection</li>
+        <li>Teletronix LA-2A Classic Leveler Collection</li>
+        <li>Pultec Passive EQ Collection</li>
+        <li>UA 610 Tube Preamp & EQ Collection</li>
+        <li>Pure Plate Reverb</li>
+      </ul>
+
+      <h3>Included in the Realtime Analog Classics Bundle:</h3>
+      <ul>
+        <li>UA 610-B Tube Preamp & EQ</li>
+        <li>UA 1176LN Limiting Amplifier (Legacy) & UA 1176SE Limiting Amplifier (Legacy)</li>
+        <li>Pultec EQP-1A EQ (Legacy) & Pultec Pro EQ (Legacy)</li>
+        <li>Marshall\xAE Plexi Classic Guitar Amp</li>
+        <li>Teletronix LA-2A Leveling Amplifier (Legacy)</li>
+        <li>Raw Distortion & Ampeg\xAE SVT-VR Classic Bass Amp</li>
+        <li>Precision Mix Rack Collection (Channel Strip, Reflection Engine, Delay Mod, Delay Mod L)</li>
+        <li>RealVerb Pro Custom Room Modeler</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Connectivity", value: "USB 3.0 SuperSpeed (Windows)" },
+        { label: "Simultaneous I/O", value: "10 x 6" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps" },
+        { label: "A/D Resolution", value: "24-bit / 192kHz" },
+        { label: "DSP Processing", value: "UAD-2 DUO Core Realtime Processing" },
+        { label: "Analog Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Analog Outputs", value: '2 x 1/4" TRS (Monitor), 2 x 1/4" TRS (Line Out), 1 x 1/4" (Headphones)' },
+        { label: "Digital Inputs", value: "1 x Optical (TOSLINK) ADAT/SPDIF (up to 8 channels)" },
+        { label: "Power Supply", value: "12V DC External Power Supply (Included)" },
+        { label: "Included Software", value: "Heritage Edition Bundle + Realtime Analog Classics" }
+      ],
+      deepSpecs: [
+        ["Type", "USB 3 Desktop Audio Interface with DUO Core DSP for Windows"],
+        ["Connectivity", "USB 3.0 SuperSpeed (External 12V DC Power Supply)"],
+        ["Simultaneous I/O", "10-In / 6-Out"],
+        ["A/D & D/A Conversion", "24-bit / 192kHz pristine conversion"],
+        ["Microphone Preamps", '2x Unison-enabled preamps (XLR-1/4" combo)'],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS monitor outputs + 2x 1/4" TRS line outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone amplifier'],
+        ["Digital Inputs", "1x Optical TOSLINK ADAT (8-channel @ 48kHz) or S/PDIF"],
+        ["DSP Acceleration", "UAD-2 DUO Core onboard real-time DSP processor"],
+        ["DAW Compatibility", "Pro Tools, Cubase, Ableton Live, Studio One, FL Studio via ASIO/VST/AAX"],
+        ["Included Bundles", "Heritage Edition 5 Premium Collections ($1,300 value) + Realtime Analog Classics"],
+        ["Power", "External 12V DC power supply with locking connector (Included)"],
+        ["Compatibility", "Windows 10 / 11 (64-bit editions) with native USB 3 port"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 54 ── Universal Audio Apollo Twin X Duo USB [Heritage Edition] ───
+    {
+      id: "universal-audio-apollo-twin-x-duo-usb-heritage",
+      name: "Universal Audio Apollo Twin X Duo USB [Heritage Edition]",
+      shortName: "Apollo Twin X USB Duo Heritage",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 125260,
+      originalPrice: 139180,
+      rating: 4.9,
+      reviewCount: 45,
+      image: "assets/images/products/ua-apollo-twin-x-usb-duo-top.jpg",
+      images: [
+        "assets/images/products/ua-apollo-twin-x-usb-duo-top.jpg",
+        "assets/images/products/ua-apollo-twin-x-usb-duo-front.jpg",
+        "assets/images/products/ua-apollo-twin-x-usb-duo-angle.jpg",
+        "assets/images/products/ua-apollo-twin-x-usb-duo-back.jpg",
+        "assets/images/products/ua-apollo-twin-x-usb-duo-plugins.png"
+      ],
+      isFeatured: true,
+      badge: "Heritage Edition",
+      inStock: true,
+      stock: 5,
+      sku: "AK-UA-APOLLO-TWIN-X-USB-DUO-HE",
+      description: `
+      <h3>Desktop 10 x 6 USB 3 Audio Interface w/ Realtime UAD DUO Core Processing and Two Unison\u2122 Mic Preamps \u2014 for Windows</h3>
+      <p>Apollo Twin X USB has all the benefits of the acclaimed Apollo Twin X, including elite-class A/D and D/A conversion, DUO Core realtime UAD plug-in processing, and Unison-enabled mic preamps, and a software suite of 25 award-winning UAD plug-in titles, featuring Collections from Teletronix,\xAE Pultec,\xAE UA, and more.</p>
+
+      <h3>Record with the World's Best Desktop Interface for Windows</h3>
+      <p>Apollo Twin X USB gives musicians and producers elite-class audio conversion with the tone, feel, and flow of analog recording. Letting you record through preamps from Neve, API, Manley, and more \u2014 with near-zero latency \u2014 Apollo Twin X is born to make records.</p>
+      <ul>
+        <li>Experience elite-class Apollo sound \u2014 as heard on hundreds of hit records</li>
+        <li>Record your vocals and synths in realtime through classic mic preamp emulations from Neve, API, Manley, Avalon, and more</li>
+        <li>Mix with UAD plug-ins like the included Teletronix LA-2A and 1176 compressors, Pultec EQs, and iconic UA 610 tube preamp</li>
+      </ul>
+
+      <h3>Hear Every Detail in your Recordings</h3>
+      <p>Apollo Twin X USB improves upon the original Apollo Twin\u2019s gold-standard audio quality with completely redesigned A/D and D/A conversion \u2014 giving you increased dynamic range and ultra-low THD. This elite-class conversion gives you a spacious, organic sound that easily rivals dedicated high-end converters.</p>
+
+      <h3>Record Synths and Vocals through Iconic Preamps</h3>
+      <p>With its two Unison\u2122 preamps and front panel Hi-Z instrument input, Apollo Twin X USB lets you track in realtime through preamp and channel strip plug-ins from Neve, Manley, API, and dozens more, giving you the same rich analog texture as the hardware used on decades of iconic music.</p>
+
+      <h3>Get the Pro Sounds of Analog Hardware, Right on your Desktop</h3>
+      <p>Out of the box, Apollo Twin X USB's included plug-ins give you album-ready tones in realtime with professional tools like the UA 610-B Tube Preamp & EQ, Teletronix LA-2A tube compressor, amps from Marshall and Ampeg, and more. Plus, Apollo Twin X USB lets you tap into the entire UAD plug-in library, giving you the proven hit-making sounds of Ocean Way Studios, Capitol Chambers, and hundreds more.</p>
+
+      <h3>Features</h3>
+      <ul>
+        <li>Desktop 10 x 6 USB 3 audio interface for Windows with next-generation 24-bit/192 kHz audio conversion</li>
+        <li>Available UAD-2 DUO Core Processing for tracking through vintage compressors, EQs, tape machines, mic preamps, and guitar amp plug-ins with near-zero latency, regardless of audio buffer size</li>
+        <li>Unison\u2122 technology offers stunning models of classic tube and transformer-based preamps, guitar amps, and stompboxes</li>
+        <li>Built-in talkback mic for communication with studio talent and recording slate cues</li>
+        <li>Improved monitor functionality including monitor remote functions and Mono, Mute, DIM, and ALT monitor controls</li>
+        <li>2 premium Unison mic/line preamps; 2 line outputs; front-panel Hi-Z instrument input and headphone output</li>
+        <li>2 digitally controlled analog monitor outputs for full resolution at all listening levels</li>
+        <li>Up to 8 channels of additional digital input via optical ADAT or S/PDIF</li>
+        <li>Includes Heritage Edition UAD plug-in bundle, featuring Teletronix LA-2A and 1176 compressor collections, 610-B Tube Preamp & EQ Collection, Pultec Passive EQ Collection, Pure Plate Reverb, and more</li>
+        <li>Runs UAD Powered Plug-Ins via VST, Audio Units, & AAX in all major DAWs</li>
+        <li>Uncompromising analog design, superior components, and premium build quality</li>
+      </ul>
+
+      <h3>Included in the Heritage Edition Plug-In Bundle (25 Titles):</h3>
+      <ul>
+        <li>1176 Classic Limiter Collection (3)</li>
+        <li>1176LN Legacy Compressor/Limiter & 1176SE Legacy Compressor/Limiter</li>
+        <li>610 Tube Preamp & EQ Collection (2)</li>
+        <li>Ampeg SVT-VR Classic Bass Amplifier</li>
+        <li>Pultec\xAE Passive EQ Collection (3)</li>
+        <li>Pultec EQP-1A Legacy & Pultec Pro Legacy</li>
+        <li>Pure Plate Reverb</li>
+        <li>Precision Channel Strip</li>
+        <li>Precision Delay Modulation & Precision Delay Modulation L</li>
+        <li>Precision Reflection Engine</li>
+        <li>RAW Distortion Pedal</li>
+        <li>RealVerb Pro</li>
+        <li>Softube Marshall Plexi Classic Guitar Amp</li>
+        <li>Teletronix\xAE LA-2A Classic Leveler Collection (3)</li>
+        <li>Teletronix LA-2A Legacy Limiter</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Connectivity", value: "USB 3.0 Type-C (Windows)" },
+        { label: "Simultaneous I/O", value: "10 x 6" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps" },
+        { label: "A/D Resolution", value: "Elite-Class 24-bit / 192kHz" },
+        { label: "DSP Processing", value: "UAD-2 DUO Core Realtime Processing" },
+        { label: "Analog Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Analog Outputs", value: '2 x 1/4" TRS (Monitor), 2 x 1/4" TRS (Line Out), 1 x 1/4" (Headphones)' },
+        { label: "Digital Inputs", value: "1 x Optical (TOSLINK) ADAT/SPDIF (up to 8 channels)" },
+        { label: "Talkback Mic", value: "Built-in talkback microphone" },
+        { label: "Included Software", value: "Heritage Edition 25 Plug-In Suite + Realtime Analog Classics" }
+      ],
+      deepSpecs: [
+        ["Type", "Elite-Class USB 3 Desktop Audio Interface with DUO Core DSP for Windows"],
+        ["Connectivity", "USB 3.0 Type-C (External 12V DC Locking Power Supply)"],
+        ["Simultaneous I/O", "10-In / 6-Out"],
+        ["A/D & D/A Conversion", "Elite-class next-generation 24-bit / 192kHz audio conversion with ultra-low THD"],
+        ["Dynamic Range", "127.5 dB D/A dynamic range"],
+        ["Microphone Preamps", '2x Unison-enabled preamps (XLR-1/4" combo)'],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS digitally controlled monitor outputs + 2x 1/4" TRS line outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone amplifier'],
+        ["Digital Inputs", "1x Optical TOSLINK ADAT (8-channel @ 48kHz) or S/PDIF"],
+        ["DSP Acceleration", "UAD-2 DUO Core onboard real-time DSP processor"],
+        ["Monitoring Controls", "Mute, DIM, Mono, and ALT speaker switching + Talkback mic"],
+        ["DAW Compatibility", "Pro Tools, Cubase, Ableton Live, Studio One, FL Studio via ASIO/VST/AAX 64"],
+        ["Included Bundles", "Heritage Edition 25 Premium UAD Plug-In Titles + Realtime Analog Classics"],
+        ["Power", "External 12V DC power supply with locking barrel connector (Included)"],
+        ["Compatibility", "Windows 10 / 11 (64-bit editions) with native USB 3 port"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 55 ── Universal Audio Apollo Twin X DUO | Gen 2 (Essentials+) ────
+    {
+      id: "universal-audio-apollo-twin-x-duo-gen2-essentials",
+      name: "Universal Audio Apollo Twin X DUO | Gen 2 (Essentials+)",
+      shortName: "Apollo Twin X DUO Gen 2 Essentials+",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 150340,
+      originalPrice: 167e3,
+      rating: 5,
+      reviewCount: 28,
+      image: "assets/images/products/ua-apollo-twin-x-duo-gen2-box.jpg",
+      images: [
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-box.jpg",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-collage.jpg",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-angle.png",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-front.png",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-back.png"
+      ],
+      isFeatured: true,
+      badge: "Gen 2 \xB7 129 dB D/A",
+      inStock: true,
+      stock: 4,
+      sku: "AK-UA-APOLLO-TWIN-X-DUO-GEN2-ESS",
+      description: `
+      <h3>Decades of Analog, on Your Desktop \u2014 Gen 2 Evolution</h3>
+      <p>Hear every detail in your recordings with the next generation of UA\u2019s Apollo Twin X interfaces, featuring highest-resolution audio conversion, dual Unison\u2122 mic preamps, and DUO Core DSP processing letting you record in realtime through the world\u2019s best UAD plug-ins from Auto-Tune, Neve, Manley, SSL, and hundreds more.</p>
+      <p>Trusted for decades by top artists and producers around the globe, Apollo Twin X brings timeless sound and legendary UA craftsmanship right to your desktop.</p>
+
+      <h3>Key Benefits</h3>
+      <ul>
+        <li>Hear next generation audio conversion with the widest dynamic range and lowest distortion of any Apollo</li>
+        <li>Experience analog tones with Unison\u2122 preamps, letting you record in realtime through authentic emulations of Neve, API, Avalon, Manley, Fender, and more</li>
+        <li>Access the full library of 200+ Apollo DSP and UAD Native plug-ins, including award-winning titles like Capitol Chambers, UAD Sound City Studios, EL8 Distressor, and more</li>
+        <li>Mix with confidence in any room or through headphones using Apollo Monitor Correction powered by Sonarworks\xAE</li>
+        <li>Use Auto-Gain to set your levels across multiple inputs in seconds and never miss the take</li>
+        <li>Hear all the low-end detail in your mixes using bass management to add a subwoofer to your monitor setup</li>
+        <li>Quickly set up low-latency cues, plug-in scenes, and immersive audio monitoring with the UAD Console app</li>
+        <li>Get included software worth thousands with UAD Analog Classics suite plus special upgrade pricing</li>
+      </ul>
+
+      <h3>Hear Details Like Never Before</h3>
+      <p>Now in its Gen 2 design, Apollo Twin X features UA\u2019s highest-resolution D/A converters ever paired with Apollo Monitor Correction powered by Sonarworks.\xAE With an unprecedented 129 dB dynamic range, when you playback your audio through monitors or headphones, you\u2019ll not only hear the most pristine representation of your recordings, there will be no surprises when you listen to your final mix or master.</p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li>10 x 6 Thunderbolt audio interface with DUO Core DSP plug-in processing</li>
+        <li>Two Unison\u2122 mic preamps, Hi-Z instrument input, optical Toslink input (ADAT or S/PDIF)</li>
+        <li>Two 1/4" monitor outs, two 1/4" line outs (ALT), one 1/4" TRS headphone out</li>
+        <li>Elite-class Apollo X Gen 2 converters with 24-bit / 192 kHz resolution</li>
+        <li>Enhanced D/A for critical monitoring and playback with 129 dB dynamic range</li>
+        <li>Calibrate your main monitor and headphone outputs with Apollo Monitor Correction powered by Sonarworks\xAE</li>
+        <li>Fully-featured monitor controller with alternate speaker switching and integrated talkback</li>
+        <li>Updated UAD Console app featuring Auto-Gain, Plug-In Scenes, subwoofer integration with Bass Management, immersive audio support, and more</li>
+        <li>Onboard DSP supports over 200 UAD plug-ins via VST, AU, and AAX 64 formats in all major DAWs</li>
+        <li>Includes 30+ UAD plug-ins with UAD Analog Classics</li>
+        <li>Expandable with Thunderbolt Apollo interfaces or select models over Dante</li>
+      </ul>
+
+      <h3>Over 30 Included Plug-Ins in UAD Analog Classics:</h3>
+      <ul>
+        <li><strong>Channel Strips & Preamps:</strong> Century Tube Channel Strip, CS-1 Channel Strip, LA-6176 Signature Channel Strip, Precision Channel Strip, UA 610-A Preamp & EQ, UA 610-B Preamp & EQ</li>
+        <li><strong>Compressors / Limiters:</strong> Fairchild 670 Legacy Compressor, Teletronix LA-2A Legacy Leveling Amplifier, Teletronix LA-2A Tube Compressor, Precision Buss Compressor, UA 1176 FET Compressor, UA 1176LN Legacy, UA 1176SE Legacy</li>
+        <li><strong>Equalizers:</strong> Precision Equalizer, Pultec EQP-1A Legacy EQ, Pultec Pro Legacy EQ</li>
+        <li><strong>Special Processing:</strong> Oxide Tape Recorder, Precision De-Esser, Precision Enhancer Hz, Precision Enhancer kHz, Vibe Analog Machines Essentials</li>
+        <li><strong>Instruments:</strong> PolyMAX Polyphonic Synth</li>
+        <li><strong>Delay & Modulation:</strong> Galaxy Tape Echo, Precision Delay Mod, Precision Delay Mod L</li>
+        <li><strong>Reverbs & Rooms:</strong> Precision Reflection Engine, Pure Plate Reverb</li>
+        <li><strong>Mastering:</strong> Precision Limiter, Precision Maximizer, Precision Multiband</li>
+        <li><strong>Guitar & Bass:</strong> Bermuda Triangle, Raw Distortion, TS Overdrive Pedal, UAD Lion \u201968 Super Lead Amp, UAD Showtime \u201964 Tube Amp</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Generation", value: "Apollo X Gen 2" },
+        { label: "Connectivity", value: "Thunderbolt 3 (Mac & Windows)" },
+        { label: "Simultaneous I/O", value: "10 x 6" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps + Auto-Gain" },
+        { label: "A/D & D/A Resolution", value: "Elite-Class Gen 2 24-bit / 192kHz (129 dB D/A Dynamic Range)" },
+        { label: "DSP Processing", value: "UAD-2 DUO Core Realtime Processing" },
+        { label: "Monitor Correction", value: "Powered by Sonarworks\xAE SoundID Reference" },
+        { label: "Analog Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Analog Outputs", value: '2 x 1/4" TRS (Monitor), 2 x 1/4" TRS (Line Out / ALT), 1 x 1/4" (Headphones)' },
+        { label: "Digital Inputs", value: "1 x Optical (TOSLINK) ADAT/SPDIF (up to 8 channels)" },
+        { label: "Included Software", value: "UAD Analog Classics Suite (30+ Plug-ins) + LUNA System" }
+      ],
+      deepSpecs: [
+        ["Type", "Next-Gen Apollo X Gen 2 Desktop Thunderbolt Audio Interface"],
+        ["Connectivity", "Thunderbolt 3 (Mac & Windows compatible)"],
+        ["Simultaneous I/O", "10-In / 6-Out"],
+        ["A/D & D/A Conversion", "Elite-class Gen 2 24-bit / 192kHz audio conversion"],
+        ["D/A Dynamic Range", "129 dB \u2014 highest dynamic range and lowest distortion of any Apollo interface"],
+        ["Microphone Preamps", "2x Unison-enabled preamps with Auto-Gain level detection"],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS monitor outputs + 2x 1/4" TRS line/ALT outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone output with Sonarworks correction support'],
+        ["Digital Inputs", "1x Optical TOSLINK ADAT (8-channel @ 48kHz) or S/PDIF"],
+        ["DSP Acceleration", "UAD-2 DUO Core onboard real-time DSP processor"],
+        ["Monitoring Controls", "Alternate speaker switching, Talkback mic, Bass Management & Subwoofer integration"],
+        ["Monitor Calibration", "Apollo Monitor Correction powered by Sonarworks\xAE SoundID Reference"],
+        ["Console Features", "Auto-Gain, Plug-In Scenes, Immersive Audio Monitoring"],
+        ["DAW Compatibility", "LUNA (Mac), Logic Pro, Pro Tools, Cubase, Ableton Live, Studio One via AU/VST/AAX 64"],
+        ["Included Plug-ins", "30+ UAD Analog Classics Plug-ins (Fairchild, LA-2A, 1176, Pultec, PolyMAX, Lion '68)"],
+        ["Expandability", "Cascadable with up to 4 Thunderbolt Apollo interfaces (up to 128 channels I/O)"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Universal Audio Apollo Twin X DUO | Gen 2 (Studio+) - UAD Complete Plug-In Bundle ──
+    {
+      id: "universal-audio-apollo-twin-x-duo-gen2-studio-complete",
+      name: "Universal Audio Apollo Twin X DUO | Gen 2 (Studio+) - UAD Complete Plug-In Bundle",
+      shortName: "Apollo Twin X DUO Gen 2 Studio+ Complete",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 304260,
+      originalPrice: 338e3,
+      rating: 5,
+      reviewCount: 21,
+      badge: "Flagship DSP Bundle",
+      isFeatured: true,
+      image: "assets/images/products/ua-apollo-twin-x-duo-gen2-studio-box.jpg",
+      images: [
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-studio-box.jpg",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-complete-collage.jpg",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-analog-pro-box.jpg",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-analog-pro-collage.jpg",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-angle.png",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-front.png",
+        "assets/images/products/ua-apollo-twin-x-duo-gen2-back.png"
+      ],
+      inStock: true,
+      stock: 4,
+      stockCount: 4,
+      sku: "AK-UA-APOLLO-TWIN-X-DUO-GEN2-STUDIO-COMPLETE",
+      keyFeatures: [
+        "Next-generation Apollo X Gen 2 24-bit / 192kHz elite audio conversion with 129 dB dynamic range",
+        "Realtime UAD DUO Core DSP processing for tracking with classic plug-ins at near-zero latency",
+        "Dual Unison\u2122 mic/line preamps + front Hi-Z instrument input with analog hardware modeling",
+        "Includes UAD Complete Plug-in Bundle with over 200+ world-class UAD plug-in titles",
+        "Includes over 80+ plug-ins in UAD Analog Classics Pro suite",
+        "Apollo Monitor Correction powered by Sonarworks\xAE SoundID Reference directly on DSP",
+        "Auto-Gain feature to automatically set levels across multiple inputs in seconds",
+        "Updated UAD Console app featuring Bass Management, Subwoofer integration, and Plug-In Scenes",
+        "10 x 6 simultaneous I/O expandable up to 8 channels via optical ADAT/SPDIF",
+        "Integrated talkback mic and dedicated monitor controls (Mono, Mute, DIM, ALT speaker switching)"
+      ],
+      description: `
+      <p><strong>Decades of analog, on your desktop.</strong></p>
+      <p>Hear every detail in your recordings with the next generation of UA\u2019s Apollo Twin X interfaces, featuring highest-resolution audio conversion, dual Unison\u2122 mic preamps, and DUO Core DSP processing letting you record in realtime through the world\u2019s best UAD plug-ins from Auto-Tune, Neve, Manley, SSL, and hundreds more.</p>
+      <p>Trusted for decades by top artists and producers around the globe, Apollo Twin X brings timeless sound and legendary UA craftsmanship right to your desktop.</p>
+
+      <h3>Key Benefits</h3>
+      <ul>
+        <li>Hear next generation audio conversion with the widest dynamic range and lowest distortion of any Apollo</li>
+        <li>Experience analog tones with Unison\u2122 preamps, letting you record in realtime through authentic emulations of Neve, API, Avalon, Manley, Fender, and more</li>
+        <li>Access the full library of 200+ Apollo DSP and UAD Native plug-ins, including award-winning titles like Capitol Chambers, UAD Sound City Studios, EL8 Distressor, and more</li>
+        <li>Mix with confidence in any room or through headphones using Apollo Monitor Correction powered by Sonarworks\xAE</li>
+        <li>Use Auto-Gain to set your levels across multiple inputs in seconds and never miss the take</li>
+        <li>Hear all the low-end detail in your mixes using bass management to add a subwoofer to your monitor setup</li>
+        <li>Quickly set up low-latency cues, plug-in scenes, and immersive audio monitoring with the UAD Console app</li>
+        <li>Get included software worth thousands with UAD Complete Plug-In Bundle plus UAD Analog Classics Pro versions</li>
+      </ul>
+
+      <h3>Get the Best Apollo Yet on Your Desktop</h3>
+      <p>Universal Audio built Apollo Twin X for the next generation of music producers looking to get the sounds used by the world\u2019s biggest artists for decades. With its unprecedented dynamic range and elite-class 24-bit / 192 kHz audio conversion \u2014 now with enhanced monitoring \u2014 Apollo Twin X is ready for your own creative journey, bringing the sound of the stars into your studio.</p>
+
+      <h3>Record Through World-Famous Preamps</h3>
+      <p>With two Unison\u2122 preamps and front panel Hi\u2011Z instrument input, Apollo Twin X lets you track in realtime through emulations of classic gear from Neve, Manley, API, and dozens more, giving you the same rich analog textures used on the greatest recordings of our time.</p>
+
+      <h3>All of the Best UAD Plug-Ins Ever Made, in a Single Bundle</h3>
+      <p><strong>UAD Complete</strong> is the last plug-in bundle you'll ever need. With over 200 plug-ins in total, including the best UA-developed plug-ins plus third-party software from Brainworx, Softube, C-Suite, and Sonnox \u2014 it's UA\u2019s only plug-in bundle built specifically for commercial studios, broadcast facilities, and pro engineers who need the most complete library from Universal Audio.</p>
+
+      <h3>Comprehensive Included Plug-Ins in UAD Complete (200+ Titles):</h3>
+      <ul>
+        <li><strong>Vocals & Pitch Correction (2):</strong> Topline Vocal Suite, Topline Key Finder</li>
+        <li><strong>Channel Strips & Preamps (19):</strong> API\xAE Preamp, API\xAE Vision Channel Strip, API\xAE Vision Channel Strip Legacy, Avalon\xAE VT-737sp Channel Strip, CS-1 Channel Strip, Century Tube Channel Strip, Helios\xAE Type 69 Preamp and EQ, LA-6176 Signature Channel Strip, Manley\xAE Reference Microphone Preamp, Manley\xAE VOXBOX Channel Strip, Neve\xAE 1073 Preamp & EQ, Neve\xAE 88RS Channel Strip, Neve\xAE 88RS Channel Strip Legacy, Precision Channel Strip, SSL\xAE E Series Channel Strip, SSL\xAE E Series Channel Strip Legacy, UA 610-A Preamp & EQ, UA 610-B Preamp & EQ, V76 Preamplifier</li>
+        <li><strong>Compressors / Limiters (36):</strong> API\xAE 2500 Stereo Bus Compressor, Chandler Limited\xAE Zener Limiter\xAE, dbx\xAE 160 Compressor / Limiter, elysia\u2022\xAE alpha compressor V2, elysia\u2022\xAE alpha Mix Compressor, elysia\u2022\xAE mpressor, Empirical Labs EL8 Distressor\u2122, Fairchild 660 Compressor, Fairchild 670 Compressor, Fairchild 670 Legacy Compressor, FATSO\xAE Jr. Tape Sim. & Compressor, FATSO\xAE Sr. Tape Sim. & Compressor, Manley Variable Mu\xAE Limiter Compressor, Precision Buss Compressor, Sonnox\xAE Oxford Limiter v2, Summit Audio\xAE TLA-100A Compressor, SSL\xAE G Series Bus Compressor, SSL\xAE G Series Bus Compressor Legacy, Teletronix LA-2 Classic Leveler, Teletronix LA-2A Gray Classic Leveler, Teletronix LA-2A Silver Classic Leveler, Teletronix LA-2A Legacy, Teletronix LA-2A Tube Compressor, Teletronix LA-3A Classic Audio Leveler, Tube-Tech\xAE CL 1B Compressor, Tube-Tech\xAE CL 1B MkII Compressor, UA 1176 FET Compressor, UA 1176 Rev A Classic Limiter, UA 1176AE Classic Limiter, UA 1176LN Rev E Classic Limiter, UA 1176LN Legacy, UA 1176SE Legacy, UA 175B Tube Compressor, UA 176 Tube Compressor, Valley People\xAE Dyna-mite\u2122, Vertigo Sound\xAE VSC-2 Compressor</li>
+        <li><strong>Equalizers (32):</strong> API\xAE 550A Parametric EQ, API\xAE 560 Graphic EQ, Brainworx\xAE bx_digital V2 EQ, Brainworx\xAE bx_digital V2 Mono EQ, Brainworx\xAE bx_digital V3 EQ, Brainworx\xAE bx_digital V3 Mix EQ, Cambridge EQ, Dangerous\xAE BAX EQ Mix, Harrison\xAE 32C Channel EQ, Harrison\xAE 32C SE Channel EQ, Hitsville EQ, Helios\xAE Type 69 Legacy EQ, Maag EQ4\xAE MS Equalizer, Maag EQ4\xAE EQ, Massenburg DesignWorks\xAE MDWEQ5-3B Parametric EQ, Manley\xAE Massive Passive EQ, Millennia\xAE NSEQ-2 EQ, Neve\xAE 1073 Legacy Classic Console EQ, Neve\xAE 1073SE Legacy Classic Console EQ, Precision Equalizer, Pultec EQP-1A Legacy EQ, Pultec EQP-1A Passive EQ, Pultec HLF-3C Passive EQ, Pultec MEQ-5 Passive EQ, Pultec Pro Legacy EQ, Sonnox\xAE Oxford Dynamic EQ, Sonnox\xAE Oxford EQ, Tonelux\xAE Tilt EQ, Tonelux\xAE Tilt Live EQ, Trident\xAE A-Range Classic Console EQ, Tube-Tech\xAE ME 1B EQ, Tube-Tech\xAE PE 1C EQ</li>
+        <li><strong>Special Processing (28):</strong> A/DA\xAE Flanger, A-Type Multiband Dynamic Enhancer, Ampex\xAE ATR-102 Mastering Tape Recorder, Brainworx\xAE bx_saturator V2, Brainworx\xAE bx_subsynth Subharmonic Synthesizer, C-Suite C-Vox\u2122 Noise & Ambience Reduction, Eventide\xAE H910 Harmonizer, Little Labs\xAE IBP Phase Alignment Tool, Little Labs\xAE Voice Of God Bass Resonance, Moog\xAE Multimode Filter, Moog\xAE Multimode Filter SE, Moog\xAE Multimode Filter XL, Oxide Tape Recorder, OTO\xAE BISCUIT 8-Bit Effects, Precision De-Esser, Precision Enhancer Hz, Precision Enhancer kHz, Softube\xAE Vocoder, Sonnox\xAE Oxford Inflator, Sonnox\xAE Oxford Envolution, Sonnox\xAE Oxford SuprEsser DS, SPL\xAE TwinTube Processor, SPL\xAE Vitalizer MK3-T, Studer\xAE A800 Multichannel Tape Recorder, Thermionic Culture Vulture, Vertigo Sound\xAE VSM-3 Mix Satellite, Vibe Analog Machines, Vibe Analog Machines Essentials</li>
+        <li><strong>Instruments (7):</strong> Anthem Analog Synthesizer, Electra 88 Vintage Keyboard Studio, Moog\xAE Minimoog Synth, Opal Morphing Synth, PolyMAX Polyphonic Synth, Ravel Grand Piano, Waterfall B3 Organ</li>
+        <li><strong>Delay & Modulation (11):</strong> A/DA\xAE STD-1 Stereo Tapped Delay, Brigade Chorus Pedal, Cooper\xAE Time Cube MkII Delay, EP-34 Tape Echo, Galaxy Tape Echo, KORG\xAE SDD-3000 Digital Delay, MXR\xAE Flanger/Doubler, Precision Delay Mod, Precision Delay Mod L, Studio D Chorus, Waterfall Rotary Speaker</li>
+        <li><strong>Reverbs & Rooms (14):</strong> AKG\xAE BX 20 Spring Reverb, Capitol Chambers, DreamVerb Room Modeler, EMT\xAE 140 Classic Plate Reverb, EMT\xAE 250 Electronic Reverb, Hitsville Reverb Chambers, Lexicon\xAE 224 Digital Reverb, Lexicon\xAE 480L Digital Reverb and Effects, Ocean Way Studios Deluxe, Ocean Way Studios, Precision Reflection Engine, Pure Plate Reverb, RealVerb Pro Custom Room Modeler, UAD Sound City Studios</li>
+        <li><strong>Mastering (15):</strong> Brainworx\xAE bx_masterdesk, Brainworx\xAE bx_masterdesk Classic, Brainworx\xAE bx_refinement, Capitol Mastering Compressor, Chandler Limited\xAE Curve Bender Mastering EQ, C-Suite C-Max\u2122 Limiter, Dangerous\xAE BAX EQ Master, elysia\u2022\xAE alpha Master Compressor, Hitsville Mastering EQ, Manley\xAE Massive Passive Mastering EQ, Precision K-Stereo Ambience Recovery, Precision Limiter, Precision Maximizer, Precision Multiband, Shadow Hills Mastering Compressor Class A</li>
+        <li><strong>Guitar & Bass (41):</strong> Ampeg\xAE B-15N Bass Amplifier, Ampeg\xAE SVT-3 PRO Bass Amplifier, Ampeg\xAE SVT-VR Bass Amplifier, Ampeg\xAE SVT-VR Classic Bass Amplifier, Bermuda Triangle, Brainworx\xAE bx_tuner, Chandler Limited\xAE GAV19T Amplifier, C-Suite C-Axe\u2122 Guitar Noise Suppressor, Diezel\xAE Herbert Amplifier, Diezel\xAE VH4 Amplifier, Eden\xAE WT800 Bass Amplifier, ENGL\xAE E646 VS Limited Edition, ENGL\xAE E765 Retro Tube, ENGL\xAE Savage 120 Amplifier, Fender\xAE \u201955 Tweed Deluxe, Friedman\xAE BE100 Amplifier, Friedman\xAE Buxom Betty Amplifier, Friedman\xAE DS40 Amplifier, Fuchs\xAE Overdrive Supreme 50 Amplifier, Fuchs\xAE Train II Amplifier, Gallien-Krueger\xAE 800RB Bass Amp, Marshall\xAE Bluesbreaker 1962, Marshall\xAE JMP 2203, Marshall\xAE Plexi Classic, Marshall\xAE Plexi Super Lead 1959, Marshall\xAE Silver Jubilee 2555, Raw Distortion, Softube\xAE Amp Room Half-Stack, Softube\xAE Bass Amp Room, Softube\xAE Bass Amp Room 8x10, Softube\xAE Metal Amp Room, Softube\xAE Vintage Amp Room, TS Overdrive Pedal, Sound Machine\xAE Wood Works, Suhr\xAE PT100 Amplifier, Suhr\xAE SE100 Amplifier, UAD Dream \u201965 Reverb Amplifier, UAD Lion \u201968 Super Lead Amp, UAD Ruby \u201963 Top Boost Amplifier, UAD Woodrow \u201955 Instrument Amplifier, UAD Showtime \u201964 Tube Amp</li>
+        <li><strong>LUNA Extensions (4):</strong> Ampex\xAE ATR-102 Master Tape Extension, API\xAE Summing Extension, API\xAE Vision Console Emulation, Studer\xAE A800 Multitrack Tape Extension</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Generation", value: "Apollo X Gen 2" },
+        { label: "Connectivity", value: "Thunderbolt 3 (Mac & Windows)" },
+        { label: "Simultaneous I/O", value: "10 x 6" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps + Auto-Gain" },
+        { label: "A/D & D/A Resolution", value: "Elite-Class Gen 2 24-bit / 192kHz (129 dB D/A Dynamic Range)" },
+        { label: "DSP Processing", value: "UAD-2 DUO Core Realtime Processing" },
+        { label: "Monitor Correction", value: "Powered by Sonarworks\xAE SoundID Reference" },
+        { label: "Analog Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Analog Outputs", value: '2 x 1/4" TRS (Monitor), 2 x 1/4" TRS (Line Out / ALT), 1 x 1/4" (Headphones)' },
+        { label: "Digital Inputs", value: "1 x Optical (TOSLINK) ADAT/SPDIF (up to 8 channels)" },
+        { label: "Included Software", value: "UAD Complete Plug-In Bundle (200+ Plug-ins) + UAD Analog Classics Pro (80+ Plug-ins)" }
+      ],
+      deepSpecs: [
+        ["Type", "Next-Gen Apollo X Gen 2 Desktop Thunderbolt Audio Interface with UAD Complete"],
+        ["Connectivity", "Thunderbolt 3 (Mac & Windows compatible)"],
+        ["Simultaneous I/O", "10-In / 6-Out"],
+        ["A/D & D/A Conversion", "Elite-class Gen 2 24-bit / 192kHz audio conversion"],
+        ["D/A Dynamic Range", "129 dB \u2014 highest dynamic range and lowest distortion of any Apollo interface"],
+        ["Total Harmonic Distortion", "-120 dB THD+N for elite monitoring transparency"],
+        ["Microphone Preamps", "2x Unison-enabled preamps with Auto-Gain level detection"],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS monitor outputs + 2x 1/4" TRS line/ALT outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone output with Sonarworks correction support'],
+        ["Digital Inputs", "1x Optical TOSLINK ADAT (8-channel @ 48kHz) or S/PDIF"],
+        ["DSP Acceleration", "UAD-2 DUO Core onboard real-time DSP processor"],
+        ["Monitoring Controls", "Alternate speaker switching, Talkback mic, Bass Management & Subwoofer integration"],
+        ["Monitor Calibration", "Apollo Monitor Correction powered by Sonarworks\xAE SoundID Reference"],
+        ["Console Features", "Auto-Gain, Plug-In Scenes, Immersive Audio Monitoring"],
+        ["DAW Compatibility", "LUNA (Mac), Logic Pro, Pro Tools, Cubase, Ableton Live, Studio One via AU/VST/AAX 64"],
+        ["Included Bundle", "UAD Complete Bundle (200+ plug-ins from UA, Neve, SSL, Brainworx, Softube, C-Suite, Sonnox)"],
+        ["Pro Suite Included", "UAD Analog Classics Pro (80+ plug-ins) + 4 LUNA Extensions"],
+        ["Expandability", "Cascadable with up to 4 Thunderbolt Apollo interfaces (up to 128 channels I/O)"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Universal Audio Apollo Twin X QUAD | Gen 2 (Essentials+) ───────────
+    {
+      id: "universal-audio-apollo-twin-x-quad-gen2-essentials",
+      name: "Universal Audio Apollo Twin X QUAD | Gen 2 (Essentials+)",
+      shortName: "Apollo Twin X QUAD Gen 2 (Essentials+)",
+      brand: "Universal Audio",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 187955,
+      originalPrice: 208800,
+      rating: 5,
+      reviewCount: 34,
+      badge: "Gen 2 \xB7 QUAD Core",
+      isFeatured: true,
+      image: "assets/images/products/ua-apollo-twin-x-quad-gen2-box.jpg",
+      images: [
+        "assets/images/products/ua-apollo-twin-x-quad-gen2-box.jpg",
+        "assets/images/products/ua-apollo-twin-x-quad-gen2-collage.jpg",
+        "assets/images/products/ua-apollo-twin-x-quad-gen2-angle.png",
+        "assets/images/products/ua-apollo-twin-x-quad-gen2-front.png",
+        "assets/images/products/ua-apollo-twin-x-quad-gen2-back.png"
+      ],
+      inStock: true,
+      stock: 5,
+      stockCount: 5,
+      sku: "AK-UA-APOLLO-TWIN-X-QUAD-GEN2-ESS",
+      keyFeatures: [
+        "Desktop 10 x 6 Thunderbolt audio interface with powerful QUAD Core DSP plug-in processing",
+        "Elite-class Apollo X Gen 2 24-bit / 192kHz converters with class-leading 129 dB D/A dynamic range",
+        "Two Unison\u2122 mic/line preamps + front Hi-Z instrument input with authentic vintage gear modeling",
+        "Auto-Gain feature to automatically set input levels across multiple channels in seconds",
+        "Calibrate main monitor and headphone outputs with Apollo Monitor Correction powered by Sonarworks\xAE",
+        "Updated UAD Console app featuring Bass Management, Subwoofer integration, and Plug-In Scenes",
+        "Includes 30+ UAD plug-ins with UAD Analog Classics suite plus LUNA Recording System",
+        "Onboard DSP supports over 200 UAD plug-ins via VST, AU, and AAX 64 formats in all major DAWs",
+        "Fully-featured monitor controller with alternate speaker switching and integrated talkback mic",
+        "Optical Toslink digital input expandable up to 8 channels via ADAT or S/PDIF"
+      ],
+      description: `
+      <p><strong>Decades of analog, on your desktop.</strong></p>
+      <p>Hear every detail in your recordings with the next generation of UA\u2019s Apollo Twin X interfaces, featuring highest-resolution audio conversion, dual Unison\u2122 mic preamps, and QUAD Core DSP processing letting you record in realtime through the world\u2019s best UAD plug-ins from Auto-Tune, Neve, Manley, SSL, and hundreds more.</p>
+      <p>Trusted for decades by top artists and producers around the globe, Apollo Twin X brings timeless sound and legendary UA craftsmanship right to your desktop.</p>
+
+      <h3>Key Benefits</h3>
+      <ul>
+        <li>Hear next generation audio conversion with the widest dynamic range and lowest distortion of any Apollo</li>
+        <li>Experience analog tones with Unison\u2122 preamps, letting you record in realtime through authentic emulations of Neve, API, Avalon, Manley, Fender, and more</li>
+        <li>Access the full library of 200+ Apollo DSP and UAD Native plug-ins, including award-winning titles like Capitol Chambers, UAD Sound City Studios, EL8 Distressor, and more</li>
+        <li>Mix with confidence in any room or through headphones using Apollo Monitor Correction powered by Sonarworks\xAE</li>
+        <li>Use Auto-Gain to set your levels across multiple inputs in seconds and never miss the take</li>
+        <li>Hear all the low-end detail in your mixes using bass management to add a subwoofer to your monitor setup</li>
+        <li>Quickly set up low-latency cues, plug-in scenes, and immersive audio monitoring with the UAD Console app</li>
+        <li>Get included software worth thousands with UAD Analog Classics. Plus enjoy special upgrade pricing on even more UAD plug-ins with your purchase</li>
+      </ul>
+
+      <h3>Get the Best Apollo Yet on Your Desktop</h3>
+      <p>Universal Audio built Apollo Twin X for the next generation of music producers looking to get the sounds used by the world\u2019s biggest artists for decades. With its unprecedented dynamic range and elite-class 24-bit / 192 kHz audio conversion \u2014 now with enhanced monitoring \u2014 Apollo Twin X is ready for your own creative journey, bringing the sound of the stars into your studio.</p>
+
+      <h3>Record Through World-Famous Preamps</h3>
+      <p>With two Unison\u2122 preamps and front panel Hi\u2011Z instrument input, Apollo Twin X lets you track in realtime through emulations of classic gear from Neve, Manley, API, and dozens more, giving you the same rich analog textures used on the greatest recordings of our time.</p>
+
+      <h3>Unlock Authentic Analog Sounds</h3>
+      <p>Right out of the box, Apollo Twin X gives you the plug-ins used by the world\u2019s best engineers. Along with included Teletronix LA-2A and 1176 compressors, UA 610, Century, and LA-6176 tube channel strips, plus UAD guitar amps like Showtime \u201964 and Lion \u201968 \u2014 you can tap into the entire UAD library of over 200 titles to unlock proven hit-making sounds.</p>
+
+      <h3>Hear the Details Like Never Before</h3>
+      <p>Now in its Gen 2 design, Apollo Twin X features UA\u2019s highest-resolution D/A converters ever paired with Apollo Monitor Correction powered by Sonarworks\xAE. This means that when you playback your audio through monitors or headphones, you\u2019ll not only hear the most pristine representation of your recordings, there will be no surprises when you listen to your final mix or master.</p>
+
+      <h3>Find Your Flow in the UAD Console App</h3>
+      <p>Just like an analog studio, where a console is the heart of the workflow, Apollo Twin X has a powerful digital mixing engine where you control plug-in routing and monitoring. And with the latest features like Auto-Gain, Bass Management and Plug-In Scenes, it\u2019s easy to find a flow that fits your needs.</p>
+
+      <h3>A Hybrid System, Made for Your Mission</h3>
+      <p>Combine Apollo Twin X\u2019s QUAD Core DSP with native processing from your host computer to produce large sessions with complex plug-in chains \u2014 a powerhouse hybrid workflow that outpaces any native-only recording setup.</p>
+
+      <h3>Expand Your Studio as You Grow</h3>
+      <p>Build your studio by linking up to four Thunderbolt Apollo interfaces with up to 128 channels of premium I/O to your DAW, and control it all from your desktop using Apollo Twin X. So no matter how far your music takes you, an Apollo will always be in reach.</p>
+
+      <h3>Key Features</h3>
+      <ul>
+        <li>10 x 6 Thunderbolt audio interface with QUAD Core DSP plug-in processing</li>
+        <li>Two Unison\u2122 mic preamps, Hi-Z instrument input, optical Toslink input (ADAT or S/PDIF)</li>
+        <li>Two 1/4" monitor outs, two 1/4" line outs (ALT), one 1/4" TRS headphone out</li>
+        <li>Elite-class Apollo X Gen 2 converters with 24-bit / 192 kHz resolution</li>
+        <li>Enhanced D/A for critical monitoring and playback with 129 dB dynamic range</li>
+        <li>Calibrate your main monitor and headphone outputs with Apollo Monitor Correction powered by Sonarworks\xAE</li>
+        <li>Updated UAD Console app featuring Auto-Gain, Plug-In Scenes, subwoofer integration with Bass Management, immersive audio support, and more</li>
+        <li>Fully-featured monitor controller with alternate speaker switching and integrated talkback for easy communication with talent</li>
+        <li>Onboard DSP supports over 200 UAD plug-ins via VST, AU, and AAX 64 formats in all major DAWs</li>
+        <li>Includes 30+ UAD plug-ins with UAD Analog Classics</li>
+        <li>Compatible with LUNA, Logic Pro, Pro Tools, Cubase, Ableton Live, and more</li>
+        <li>Expandable with Thunderbolt Apollo interfaces or select models over Dante</li>
+      </ul>
+
+      <h3>Over 30 Included Plug-Ins in UAD Analog Classics:</h3>
+      <ul>
+        <li><strong>Channel Strips & Preamps (6):</strong> Century Tube Channel Strip, CS-1 Channel Strip, LA-6176 Signature Channel Strip, Precision Channel Strip, UA 610-A Preamp & EQ, UA 610-B Preamp & EQ</li>
+        <li><strong>Compressors / Limiters (7):</strong> Fairchild 670 Legacy Compressor, Teletronix LA-2A Legacy Leveling Amplifier, Teletronix LA-2A Tube Compressor, Precision Buss Compressor, UA 1176 FET Compressor, UA 1176LN Legacy, UA 1176SE Legacy</li>
+        <li><strong>Equalizers (3):</strong> Precision Equalizer, Pultec EQP-1A Legacy EQ, Pultec Pro Legacy EQ</li>
+        <li><strong>Special Processing (5):</strong> Oxide Tape Recorder, Precision De-Esser, Precision Enhancer Hz, Precision Enhancer kHz, Vibe Analog Machines Essentials</li>
+        <li><strong>Instruments (1):</strong> PolyMAX Polyphonic Synth</li>
+        <li><strong>Delay & Modulation (3):</strong> Galaxy Tape Echo, Precision Delay Mod, Precision Delay Mod L</li>
+        <li><strong>Reverbs & Rooms (2):</strong> Precision Reflection Engine, Pure Plate Reverb</li>
+        <li><strong>Mastering (3):</strong> Precision Limiter, Precision Maximizer, Precision Multiband</li>
+        <li><strong>Guitar & Bass (5):</strong> Bermuda Triangle, Raw Distortion, TS Overdrive Pedal, UAD Lion \u201968 Super Lead Amp, UAD Showtime \u201964 Tube Amp</li>
+      </ul>
+    `,
+      specs: [
+        { label: "Generation", value: "Apollo X Gen 2" },
+        { label: "Connectivity", value: "Thunderbolt 3 (Mac & Windows)" },
+        { label: "Simultaneous I/O", value: "10 x 6" },
+        { label: "Preamps", value: "2 x Unison Mic Preamps + Auto-Gain" },
+        { label: "A/D & D/A Resolution", value: "Elite-Class Gen 2 24-bit / 192kHz (129 dB D/A Dynamic Range)" },
+        { label: "DSP Processing", value: "UAD-2 QUAD Core Realtime Processing (4 SHARC DSPs)" },
+        { label: "Monitor Correction", value: "Powered by Sonarworks\xAE SoundID Reference" },
+        { label: "Analog Inputs", value: '2 x XLR-1/4" combo (Mic/Line), 1 x 1/4" (Hi-Z)' },
+        { label: "Analog Outputs", value: '2 x 1/4" TRS (Monitor), 2 x 1/4" TRS (Line Out / ALT), 1 x 1/4" (Headphones)' },
+        { label: "Digital Inputs", value: "1 x Optical (TOSLINK) ADAT/SPDIF (up to 8 channels)" },
+        { label: "Included Software", value: "UAD Analog Classics Suite (30+ Plug-ins) + LUNA System" }
+      ],
+      deepSpecs: [
+        ["Type", "Next-Gen Apollo X Gen 2 Desktop Thunderbolt Audio Interface with QUAD Core DSP"],
+        ["Connectivity", "Thunderbolt 3 (Mac & Windows compatible)"],
+        ["Simultaneous I/O", "10-In / 6-Out"],
+        ["A/D & D/A Conversion", "Elite-class Gen 2 24-bit / 192kHz audio conversion"],
+        ["D/A Dynamic Range", "129 dB \u2014 highest dynamic range and lowest distortion of any Apollo interface"],
+        ["Total Harmonic Distortion", "-120 dB THD+N for elite monitoring transparency"],
+        ["Microphone Preamps", "2x Unison-enabled preamps with Auto-Gain level detection"],
+        ["Instrument Inputs", '1x Front-panel 1/4" Hi-Z with Unison impedance matching'],
+        ["Analog Outputs", '2x 1/4" TRS monitor outputs + 2x 1/4" TRS line/ALT outputs'],
+        ["Headphone Output", '1x Front-panel 1/4" TRS stereo headphone output with Sonarworks correction support'],
+        ["Digital Inputs", "1x Optical TOSLINK ADAT (8-channel @ 48kHz) or S/PDIF"],
+        ["DSP Acceleration", "UAD-2 QUAD Core onboard real-time DSP processor (4 SHARC chips)"],
+        ["Monitoring Controls", "Alternate speaker switching, Talkback mic, Bass Management & Subwoofer integration"],
+        ["Monitor Calibration", "Apollo Monitor Correction powered by Sonarworks\xAE SoundID Reference"],
+        ["Console Features", "Auto-Gain, Plug-In Scenes, Immersive Audio Monitoring"],
+        ["DAW Compatibility", "LUNA (Mac), Logic Pro, Pro Tools, Cubase, Ableton Live, Studio One via AU/VST/AAX 64"],
+        ["Included Plug-ins", "30+ UAD Analog Classics Plug-ins (Fairchild, LA-2A, 1176, Pultec, PolyMAX, Lion '68)"],
+        ["Expandability", "Cascadable with up to 4 Thunderbolt Apollo interfaces (up to 128 channels I/O)"],
+        ["Warranty", "Universal Audio 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 56 ── Native Instruments Komplete Audio 1 ─────────────────────────
+    {
+      id: "native-instruments-komplete-audio-1",
+      name: "Native Instruments Komplete Audio 1",
+      shortName: "Komplete Audio 1",
+      brand: "Native Instruments",
+      category: "Audio Interfaces",
+      subcategory: "Desktop Audio Interfaces",
+      price: 13420,
+      originalPrice: 15490,
+      rating: 4.8,
+      reviewCount: 29,
+      image: "assets/images/products/native-instruments-komplete-audio-1-top-angle.png",
+      images: [
+        "assets/images/products/native-instruments-komplete-audio-1-top-angle.png",
+        "assets/images/products/native-instruments-komplete-audio-1-front.png",
+        "assets/images/products/native-instruments-komplete-audio-1-rear.png",
+        "assets/images/products/native-instruments-komplete-audio-1-rear-angle.png"
+      ],
+      isFeatured: true,
+      badge: "2-Channel Interface",
+      inStock: true,
+      stock: 12,
+      sku: "NI-KOMPLETE-AUDIO-1",
+      description: `
+      <h3>2-Channel Audio Interface: Easily Record Audio into Your Computer</h3>
+      <p>KOMPLETE AUDIO 1 is a simple, great-sounding audio interface with all the software you need to put ideas into action. From recording songs, to mixing down and playing out \u2013 it helps you go from a spark of inspiration, to finished results you can be proud of. Designed with pristine audio conversion, flexible connectivity, and a generous software package, KOMPLETE AUDIO 1 makes creating outside of the box effortless.</p>
+
+      <h3>Capture, Create, Finish</h3>
+      <p>KOMPLETE AUDIO 1 provides pristine 24-bit / 192kHz recording quality with two individual input channels: an XLR microphone input with +48V phantom power for studio condenser mics, and a dedicated 1/4" jack input with independent gain control for guitar, bass, or line-level instruments. Stereo RCA outputs connect directly to your hi-fi speakers or studio monitors, while the front-panel headphone jack features high output power and independent volume control.</p>
+
+      <h3>For Songwriters, Storytellers, and Producers</h3>
+      <p><strong>For the Songwriters:</strong> Easily record vocals, guitar, or any other instruments straight into your DAW in high quality. With Ableton Live 10 Lite, MASCHINE Essentials, and KOMPLETE instruments and effects included, you have everything needed to create songs from scratch.</p>
+      <p><strong>For Your Story:</strong> Whether it\u2019s a beatmaking vlog, livestream, or podcast, KOMPLETE AUDIO 1 gives you broadcast-quality vocal recording and the pro mastering touch of included studio plugins.</p>
+      <p><strong>For the Performers:</strong> Ultra-compact and bag-friendly, KOMPLETE AUDIO 1 is a simple way to incorporate a laptop into your live performance. Make swift on-stage level adjustments on the fly using the oversized, ultra-smooth top-panel volume dial.</p>
+      <p><strong>For the Producers:</strong> Bring external synths, guitars, and hardware instruments into your sessions, track with zero-latency direct monitoring, and polish your mixes with studio-grade instruments and effects.</p>
+
+      <h3>Oversized Volume Knob & Top-Panel VU Metering</h3>
+      <p>Keep tactile control over your master listening levels with the prominent top-panel rotary knob, accompanied by ultra-responsive LED VU meters that give you immediate visual feedback on input gain levels without having to gaze at your computer screen.</p>
+    `,
+      specs: [
+        { label: "Connectivity", value: "USB 2.0 (Bus-Powered)" },
+        { label: "Simultaneous I/O", value: "2 x 2" },
+        { label: "A/D Resolution", value: "24-bit / 192kHz" },
+        { label: "Inputs", value: '1 x XLR (Mic with +48V), 1 x 1/4" TS (Line/Inst)' },
+        { label: "Outputs", value: '1 x Stereo RCA (L/R), 1 x 1/4" Headphone' },
+        { label: "Controls", value: "Oversized Volume Dial, Dual VU Meters, Direct Monitor" },
+        { label: "Included Software", value: "Ableton Live Lite, MASCHINE Essentials, MONARK, NI FX" },
+        { label: "Power", value: "USB Bus-Powered (No PSU Required)" }
+      ],
+      deepSpecs: [
+        ["Type", "2x2 USB Desktop Audio Interface"],
+        ["Connectivity", "USB 2.0 (Type-B, Bus-powered)"],
+        ["Simultaneous I/O", "2-In / 2-Out"],
+        ["A/D & D/A Resolution", "24-bit / 192kHz high-definition audio"],
+        ["Microphone Inputs", "1x XLR with +48V phantom power switch & gain knob"],
+        ["Instrument / Line Inputs", '1x 1/4" TS jack with line/instrument switch & gain knob'],
+        ["Main Analog Outputs", "1x Stereo RCA line outputs (unbalanced)"],
+        ["Headphone Output", '1x 1/4" TRS stereo jack with independent volume knob'],
+        ["Monitoring", "Zero-latency direct hardware monitoring switch"],
+        ["Master Level Control", "Oversized top-panel volume dial"],
+        ["Metering", "Dual top-panel LED VU meters for inputs 1 and 2"],
+        ["Bundled Software", "Ableton Live 10 Lite, MASCHINE Essentials, MONARK, REPLIKA, SOLID BUS COMP, PHASIS"],
+        ["Compatibility", "macOS 10.12+ / Windows 10 (64-bit) ASIO, Core Audio, WASAPI"],
+        ["Dimensions & Weight", "140 x 117.5 x 52 mm / 360 g"],
+        ["Warranty", "Native Instruments 1-Year Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 53 ── ADAM Audio D3V - Black (Pair) ──────────────────────────────
+    {
+      id: "adam-audio-d3v-black-pair",
+      name: "ADAM Audio D3V - Black (Pair)",
+      shortName: "ADAM Audio D3V Desktop Monitors",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Desktop Monitors",
+      price: 45680,
+      originalPrice: 52900,
+      rating: 4.9,
+      reviewCount: 24,
+      image: "assets/images/products/adam-audio-d3v-black-pair-main.png",
+      images: [
+        "assets/images/products/adam-audio-d3v-black-pair-main.png",
+        "assets/images/products/adam-audio-d3v-black-pair-rear.jpg",
+        "assets/images/products/adam-audio-d3v-black-pair-side.jpg",
+        "assets/images/products/adam-audio-d3v-black-pair-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: "Active Desktop Pair",
+      inStock: true,
+      stock: 8,
+      sku: "ADAM-D3V-BLK-PAIR",
+      description: `
+      <h3>ADAM Audio D3V - Active Desktop Monitoring System (Pair)</h3>
+      <p>The D3V is a fully active desktop monitoring system that stays true to ADAM Audio\u2019s industrial design heritage and features iconic AMT ribbon tweeters. Each pair features 3.5\u201D aluminum woofers and a ferrite magnet system, driven by an astonishing 240W peak total system amplification. Dual-sided 3.5\u201D passive radiators bolster bass frequencies and allow the D3V to extend down to an impressive 45 Hz.</p>
+
+      <h3>High-Fidelity Digital USB-C & Analog TRS Connectivity</h3>
+      <p>Equipped with a direct class-compliant USB-C input and two balanced 1/4" TRS sockets, D3V offers seamless digital playback from laptops, Macs, PCs, and mobile devices without requiring an external audio interface, as well as balanced analog connections for professional studio gear. Streamlined controls include a multi-function front-panel volume knob, intuitive room compensation EQ switches, and a multi-color LED status indicator.</p>
+
+      <h3>Iconic D-ART Ribbon Tweeter & Dual Passive Radiators</h3>
+      <p>ADAM Audio\u2019s renowned Air Motion Transformer technology delivers pristine, fatigue-free high frequencies up to 23.2 kHz with pinpoint stereo imaging. Complementing the 3.5" aluminum woofer, dual-sided passive radiators on each cabinet deliver clean, punchy, and extended low end that defies the monitor\u2019s compact footprint.</p>
+
+      <h3>Acoustic Room Compensation & Ergonomic Angled Stands</h3>
+      <p>Tailor your sound to any desktop workspace with rear-panel DSP room compensation switches that adjust for desk reflections, boundary positioning, and wall loading. The D3V comes complete with detachable 15\xB0 angled isolation desktop stands as well as standard 3/8" threaded mounting inserts on the base for microphone stand mounting.</p>
+
+      <h3>Front-Panel Headphone Amplifier & Direct Control</h3>
+      <p>A built-in 3.5mm stereo headphone amplifier on the front of the primary speaker automatically mutes the main monitors when headphones are plugged in, providing seamless personal monitoring without disrupting your workflow.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Desktop Monitor System with Passive Radiators" },
+        { label: "Woofer Size", value: '3.5" Aluminum Cone with Ferrite Magnet' },
+        { label: "Tweeter Type", value: '1.5" D-ART Air Motion Transformer (AMT)' },
+        { label: "Frequency Response", value: "45 Hz \u2013 23.2 kHz (-6 dB)" },
+        { label: "Amplification Power", value: "240 W Total Peak System Power (4x 60 W Class-D)" },
+        { label: "Max SPL", value: "98 dB SPL (1m full space)" },
+        { label: "Inputs", value: 'USB-C Digital (Class-Compliant), 2x Balanced 1/4" TRS Analog' },
+        { label: "Headphone Output", value: "3.5 mm TRS Front-Panel Mini-Jack (32 Ohm)" }
+      ],
+      deepSpecs: [
+        ["Type", "2-Way Active Desktop Monitoring System with Dual Passive Radiators"],
+        ["Configuration", "Primary Active Unit + Secondary Passive Satellite (Pair)"],
+        ["Low Frequency Driver", '3.5" Aluminum Cone Woofer with Ferrite Magnet'],
+        ["High Frequency Driver", '1.5" D-ART Ribbon Folded Diaphragm Tweeter'],
+        ["Passive Radiators", 'Dual-Sided 3.5" Passive Radiators on each cabinet'],
+        ["Total Amplification", "240 W Peak (4x 60 W Class-D RMS Bi-amplification)"],
+        ["Frequency Response (-3 dB)", "48 Hz \u2013 22.6 kHz"],
+        ["Frequency Response (-6 dB)", "45 Hz \u2013 23.2 kHz"],
+        ["Crossover Frequency", "4.0 kHz DSP-controlled crossover"],
+        ["Maximum Peak SPL", "98 dB SPL (1 m full space) / 106 dB SPL (Dolby DARDT bass managed)"],
+        ["Analog Inputs", '2x Balanced 1/4" TRS Jacks (+9 dBu max, 47 k\u03A9)'],
+        ["Digital Input", "USB Type-C (Class-compliant USB 1.1 audio, up to 24-bit)"],
+        ["Headphone Output", "3.5 mm TRS stereo mini-jack (32 \u03A9, auto-mutes monitors)"],
+        ["Acoustic Room Tuning", "Rear-panel 3-band Room Compensation EQ Switches (Position, Desk, Room)"],
+        ["Desk Placement & Mounting", 'Detachable 15\xB0 angled stands included + 3/8" threaded bottom inserts'],
+        ["Cabinet Enclosure", "Acoustically tuned PC-ABS composite with dual passive radiators"],
+        ["Dimensions (H x W x D)", "200 mm (240 mm with stand) x 115 mm x 150 mm"],
+        ["System Weight", "3.58 kg total (Primary: 1.85 kg, Secondary: 1.73 kg)"],
+        ["Operating Voltage", "100 \u2013 240 V, 50/60 Hz universal internal power supply"],
+        ["Warranty", "5 Years (Efficient Standard + 3 Years upon ADAM Audio Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT 54 ── ADAM Audio D3V - White (Pair) ──────────────────────────────
+    {
+      id: "adam-audio-d3v-white-pair",
+      name: "ADAM Audio D3V - White (Pair)",
+      shortName: "ADAM Audio D3V Desktop Monitors (White)",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Desktop Monitors",
+      price: 45680,
+      originalPrice: 52900,
+      rating: 4.9,
+      reviewCount: 19,
+      image: "assets/images/products/adam-audio-d3v-white-pair-main.jpg",
+      images: [
+        "assets/images/products/adam-audio-d3v-white-pair-main.jpg",
+        "assets/images/products/adam-audio-d3v-white-pair-rear.jpg",
+        "assets/images/products/adam-audio-d3v-white-pair-side.jpg",
+        "assets/images/products/adam-audio-d3v-white-pair-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: "White Edition",
+      inStock: true,
+      stock: 6,
+      sku: "ADAM-D3V-WHT-PAIR",
+      description: `
+      <h3>ADAM Audio D3V White Edition - Active Desktop Monitoring System (Pair)</h3>
+      <p>The D3V White Edition is a fully active desktop monitoring system that stays true to ADAM Audio\u2019s industrial design heritage, finished in a clean modern white aesthetic with iconic AMT ribbon tweeters. Each pair features 3.5\u201D aluminum woofers and a ferrite magnet system, driven by an astonishing 240W peak total system amplification. Dual-sided 3.5\u201D passive radiators bolster bass frequencies and allow the D3V to extend down to an impressive 45 Hz.</p>
+
+      <h3>High-Fidelity Digital USB-C & Analog TRS Connectivity</h3>
+      <p>Equipped with a direct class-compliant USB-C input and two balanced 1/4" TRS sockets, D3V offers seamless digital playback from laptops, Macs, PCs, and mobile devices without requiring an external audio interface, as well as balanced analog connections for professional studio gear. Streamlined controls include a multi-function front-panel volume knob, intuitive room compensation EQ switches, and a multi-color LED status indicator.</p>
+
+      <h3>Iconic D-ART Ribbon Tweeter & Dual Passive Radiators</h3>
+      <p>ADAM Audio\u2019s renowned Air Motion Transformer technology delivers pristine, fatigue-free high frequencies up to 23.2 kHz with pinpoint stereo imaging. Complementing the 3.5" aluminum woofer, dual-sided passive radiators on each cabinet deliver clean, punchy, and extended low end that defies the monitor\u2019s compact footprint.</p>
+
+      <h3>Acoustic Room Compensation & Ergonomic Angled Stands</h3>
+      <p>Tailor your sound to any desktop workspace with rear-panel DSP room compensation switches that adjust for desk reflections, boundary positioning, and wall loading. The D3V comes complete with matching detachable 15\xB0 angled isolation desktop stands as well as standard 3/8" threaded mounting inserts on the base for microphone stand mounting.</p>
+
+      <h3>Front-Panel Headphone Amplifier & Direct Control</h3>
+      <p>A built-in 3.5mm stereo headphone amplifier on the front of the primary speaker automatically mutes the main monitors when headphones are plugged in, providing seamless personal monitoring without disrupting your workflow.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Desktop Monitor System with Passive Radiators" },
+        { label: "Color / Finish", value: "White Edition" },
+        { label: "Woofer Size", value: '3.5" Aluminum Cone with Ferrite Magnet' },
+        { label: "Tweeter Type", value: '1.5" D-ART Air Motion Transformer (AMT)' },
+        { label: "Frequency Response", value: "45 Hz \u2013 23.2 kHz (-6 dB)" },
+        { label: "Amplification Power", value: "240 W Total Peak System Power (4x 60 W Class-D)" },
+        { label: "Inputs", value: 'USB-C Digital (Class-Compliant), 2x Balanced 1/4" TRS Analog' },
+        { label: "Headphone Output", value: "3.5 mm TRS Front-Panel Mini-Jack (32 Ohm)" }
+      ],
+      deepSpecs: [
+        ["Type", "2-Way Active Desktop Monitoring System with Dual Passive Radiators"],
+        ["Finish", "White Edition (Matte White Enclosure)"],
+        ["Configuration", "Primary Active Unit + Secondary Passive Satellite (Pair)"],
+        ["Low Frequency Driver", '3.5" Aluminum Cone Woofer with Ferrite Magnet'],
+        ["High Frequency Driver", '1.5" D-ART Ribbon Folded Diaphragm Tweeter'],
+        ["Passive Radiators", 'Dual-Sided 3.5" Passive Radiators on each cabinet'],
+        ["Total Amplification", "240 W Peak (4x 60 W Class-D RMS Bi-amplification)"],
+        ["Frequency Response (-3 dB)", "48 Hz \u2013 22.6 kHz"],
+        ["Frequency Response (-6 dB)", "45 Hz \u2013 23.2 kHz"],
+        ["Crossover Frequency", "4.0 kHz DSP-controlled crossover"],
+        ["Maximum Peak SPL", "98 dB SPL (1 m full space) / 106 dB SPL (Dolby DARDT bass managed)"],
+        ["Analog Inputs", '2x Balanced 1/4" TRS Jacks (+9 dBu max, 47 k\u03A9)'],
+        ["Digital Input", "USB Type-C (Class-compliant USB 1.1 audio, up to 24-bit)"],
+        ["Headphone Output", "3.5 mm TRS stereo mini-jack (32 \u03A9, auto-mutes monitors)"],
+        ["Acoustic Room Tuning", "Rear-panel 3-band Room Compensation EQ Switches (Position, Desk, Room)"],
+        ["Desk Placement & Mounting", 'Matching white 15\xB0 angled stands included + 3/8" threaded bottom inserts'],
+        ["Cabinet Enclosure", "Acoustically tuned PC-ABS composite with dual passive radiators"],
+        ["Dimensions (H x W x D)", "200 mm (240 mm with stand) x 115 mm x 150 mm"],
+        ["System Weight", "3.58 kg total (Primary: 1.85 kg, Secondary: 1.73 kg)"],
+        ["Operating Voltage", "100 \u2013 240 V, 50/60 Hz universal internal power supply"],
+        ["Warranty", "5 Years (Efficient Standard + 3 Years upon ADAM Audio Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT 55 ── ADAM Audio T5V (Single) ────────────────────────────────────
+    {
+      id: "adam-audio-t5v-single",
+      name: "ADAM Audio T5V (Single)",
+      shortName: "ADAM Audio T5V Nearfield Monitor",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 30455,
+      originalPrice: 34900,
+      rating: 4.9,
+      reviewCount: 37,
+      image: "assets/images/products/adam-audio-t5v-single-angle.png",
+      images: [
+        "assets/images/products/adam-audio-t5v-single-angle.png",
+        "assets/images/products/adam-audio-t5v-single-front.jpg",
+        "assets/images/products/adam-audio-t5v-single-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Nearfield Studio Monitor",
+      inStock: true,
+      stock: 10,
+      sku: "ADAM-T5V-SGL",
+      description: `
+      <h3>ADAM Audio T5V - Professional Active 2-Way Nearfield Studio Monitor</h3>
+      <p>Professional sounding, high-quality audio meets affordability with the ADAM Audio T5V. Designed with the home and professional studio in mind, the compact dimensions of the T5V ideally complement smaller control rooms and desktop environments without sacrificing the pristine acoustic signature ADAM Audio is revered for.</p>
+
+      <h3>U-ART Accelerated Ribbon Tweeter with Precision HPS Waveguide</h3>
+      <p>Equipped with ADAM Audio\u2019s proprietary 1.9\u201D U-ART accelerated ribbon tweeter calibrated with the High Frequency Propagation (HPS) waveguide \u2014 identical to the waveguide design utilized in ADAM\u2019s flagship S Series monitors \u2014 the T5V delivers consistent, wide horizontal dispersion up to 25 kHz. This gives you an exceptionally expansive stereo sweet spot that lets you work freely from multiple listening positions across your studio desk.</p>
+
+      <h3>Efficient 70W Class-D Bi-Amplification & Punchy Lows</h3>
+      <p>The T5V is powered by highly efficient Class-D bi-amplification: 50W RMS dedicated to the 5" polypropylene woofer and 20W RMS to the U-ART tweeter, producing sound pressure levels up to 106 dB SPL per pair. A large rear-firing bass reflex port delivers bass extension down to 45 Hz with low port turbulence and tight transient response.</p>
+
+      <h3>Fine-Tuned Room Acoustics & Dual Analog Connectivity</h3>
+      <p>Integrated DSP crossovers provide High (-2 dB / 0 dB / +2 dB) and Low (-2 dB / 0 dB / +2 dB) shelving filters on the rear panel to compensate for acoustic boundary reflections and wall proximity. Balanced XLR and unbalanced RCA inputs with switchable +4 dBu / -10 dBV input sensitivity ensure seamless connection to audio interfaces, mixers, and audio gear.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Monitor" },
+        { label: "Woofer Size", value: '5" Polypropylene Cone' },
+        { label: "Tweeter Type", value: '1.9" U-ART Accelerated Ribbon Tweeter' },
+        { label: "Frequency Response", value: "45 Hz \u2013 25 kHz" },
+        { label: "Amplification Power", value: "70 W Total (50 W Woofer + 20 W Tweeter Class-D)" },
+        { label: "Max SPL per Pair", value: "\u2265 106 dB SPL (at 1 m)" },
+        { label: "Inputs", value: "1 x Balanced XLR, 1 x Unbalanced RCA" },
+        { label: "Room Acoustic Controls", value: "HF Shelving (\xB12 dB), LF Shelving (\xB12 dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Nearfield Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Monitor"],
+        ["Low Frequency Driver", '5" (127 mm) Polypropylene Cone Woofer'],
+        ["High Frequency Driver", '1.9" (48 mm) U-ART Accelerated Ribbon Tweeter'],
+        ["Waveguide", "High Frequency Propagation (HPS) Waveguide"],
+        ["Amplifier Configuration", "Bi-amped Class-D (PWM)"],
+        ["Woofer Amp Power", "50 W RMS"],
+        ["Tweeter Amp Power", "20 W RMS"],
+        ["Total Output Power", "70 W RMS"],
+        ["Frequency Response", "45 Hz \u2013 25 kHz (\xB13 dB)"],
+        ["Crossover Frequency", "3.0 kHz"],
+        ["Maximum Peak SPL", "\u2265 106 dB SPL per pair at 1 m"],
+        ["Analog Inputs", "1x XLR (Balanced, +4 dBu), 1x RCA (Unbalanced, -10 dBV)"],
+        ["Input Sensitivity Switch", "+4 dBu / -10 dBV selector switch"],
+        ["Room Correction Controls", "HF Shelving Filter (-2 dB, 0 dB, +2 dB), LF Shelving Filter (-2 dB, 0 dB, +2 dB)"],
+        ["Enclosure Type", "Rear-ported Bass Reflex Acoustic Cabinet"],
+        ["Cabinet Dimensions", '298 mm x 179 mm x 297 mm (11.7" x 7.0" x 11.7")'],
+        ["Weight", "5.7 kg (12.6 lbs)"],
+        ["AC Input Voltage", "100 \u2013 240 V AC, 50/60 Hz universal internal power supply"],
+        ["Power Consumption", "132 W max / 15 W idle"],
+        ["Warranty", "5 Years (Efficient Standard + 3 Years upon ADAM Audio Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT: ADAM Audio T7V (Single) ──────────────────────────────────────────
+    {
+      id: "adam-audio-t7v-single",
+      name: "ADAM Audio T7V (Single)",
+      shortName: "ADAM Audio T7V Nearfield Monitor",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 41110,
+      originalPrice: 46500,
+      rating: 4.9,
+      reviewCount: 42,
+      badge: "Award-Winning Nearfield",
+      isFeatured: true,
+      image: "assets/images/products/adam-audio-t7v-single-angle.png",
+      images: [
+        "assets/images/products/adam-audio-t7v-single-angle.png",
+        "assets/images/products/adam-audio-t7v-single-front.jpg",
+        "assets/images/products/adam-audio-t7v-single-rear.jpg"
+      ],
+      inStock: true,
+      stock: 8,
+      stockCount: 8,
+      sku: "ADAM-T7V-SGL",
+      keyFeatures: [
+        '7" Polypropylene woofer delivering extended bass reproduction down to 39 Hz',
+        'U-ART 1.9" accelerated ribbon tweeter with precision High Frequency Propagation (HPS) waveguide',
+        "Class-D bi-amplification: 50W RMS woofer + 20W RMS tweeter producing up to 110 dB SPL per pair",
+        "Extended high-frequency response up to 25 kHz for pristine high-end detail and imaging",
+        "Rear-firing bass reflex port for smooth, accurate midrange and tight, extended low-end",
+        "Rear acoustic room correction controls: High and Low shelving filters (\xB12 dB)",
+        "Balanced XLR and unbalanced RCA inputs with switchable +4 dBu / -10 dBV sensitivity",
+        "Seamless subwoofer integration with the ADAM Audio T10S active studio subwoofer",
+        "5-Year manufacturer warranty (2-year standard + 3-year optional registration)"
+      ],
+      description: `
+      <p>The award-winning, <strong>ADAM Audio T7V</strong> is a high-performance home and studio monitor, with great low-end and an exceptionally wide sweet spot that comes at an extremely affordable price point.</p>
+
+      <p>Intricately designed to be long-lasting and professional-sounding, the two-way nearfield monitor is equipped with ADAM Audio\u2019s U-ART accelerated ribbon tweeter and calibrated using the High Frequency Propagation (HPS) waveguide, giving it the utmost clarity. It is this custom-made technology that can also be found in ADAM\u2019s flagship S Series studio monitors, which gives the monitors an extended high-frequency response of up to 25 kHz, which is unheard of at this price range.</p>
+
+      <p>The T7V also comes with new DSP technology and is powered with two D-Class amplifiers, one that controls the subwoofer at 50 watts, and the other the tweeter at 20 watts, producing SPLs of up to 110 dB SPL per pair. It\u2019s these detailed features, along with the U-ART tweeter, that give the T7V such low frequencies and unprecedented detail.</p>
+
+      <p>On the rear side of the T7V, a rear-firing bass reflex port is responsible for giving the speaker its ultra-smooth, highly accurate midrange and extended bass response. Here on the back you can also find an input selector for desired sensitivity, and additional XLR and RCA inputs.</p>
+
+      <p>When compared to the ADAM Audio T5V, the T7V\u2019s larger 7" polypropylene woofer really sets the two monitors apart. Along with having a higher SPL of 110 dB, the larger woofer gives the T7V a much larger audio-impact. Adding to that the larger cabinet, standing 347mm tall, the T7V is very much the larger brother to its T5V counterpart. Should you need more bottom end, the T7V is compatible with the ADAM Audio T10S subwoofer.</p>
+
+      <p>With its simple elegant design and compact size, the ADAM Audio T7V is a perfect fit for when space is a consideration, without having to make a compromise on professional sound. The T7V is a no gimmicks monitor, with the highest of audio reproduction qualities, and an extremely entry-level price.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response:</strong> 39 Hz - 25 kHz (-6 dB)</li>
+        <li><strong>THD:</strong> 80 Hz: 0.5%</li>
+        <li><strong>Max. SPL per pair at 1 m:</strong> \u2265110 dB</li>
+        <li><strong>Crossover Frequency:</strong> 2.6 kHz</li>
+        <li><strong>Max. Power Consumption:</strong> 132 W</li>
+        <li><strong>Weight:</strong> 15.7 lbs (7.1 kg)</li>
+        <li><strong>Dimensions (H x W x D):</strong> 13.7" x 8.3" x 11.5" (347 mm x 210 mm x 293 mm)</li>
+        <li><strong>Warranty:</strong> 5 years (2-year standard plus 3-year optional with product registration)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Monitor" },
+        { label: "Woofer Size", value: '7" Polypropylene Cone' },
+        { label: "Tweeter Type", value: '1.9" U-ART Accelerated Ribbon Tweeter' },
+        { label: "Frequency Response", value: "39 Hz \u2013 25 kHz (-6 dB)" },
+        { label: "Amplification Power", value: "70 W Total (50 W Woofer + 20 W Tweeter Class-D)" },
+        { label: "Max SPL per Pair", value: "\u2265 110 dB SPL (at 1 m)" },
+        { label: "Crossover Frequency", value: "2.6 kHz" },
+        { label: "Inputs", value: "1 x Balanced XLR, 1 x Unbalanced RCA" },
+        { label: "Dimensions (H x W x D)", value: '347 mm x 210 mm x 293 mm (13.7" x 8.3" x 11.5")' },
+        { label: "Weight", value: "7.1 kg (15.7 lbs)" },
+        { label: "Warranty", value: "5 Years (2-year standard + 3-year with registration)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Nearfield Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Monitor"],
+        ["Low Frequency Driver", '7" (178 mm) Polypropylene Cone Woofer'],
+        ["High Frequency Driver", '1.9" (48 mm) U-ART Accelerated Ribbon Tweeter'],
+        ["Waveguide", "High Frequency Propagation (HPS) Waveguide (from flagship S-Series)"],
+        ["Amplifier Configuration", "Bi-amped Class-D (PWM)"],
+        ["Woofer Amp Power", "50 W RMS"],
+        ["Tweeter Amp Power", "20 W RMS"],
+        ["Total Output Power", "70 W RMS (132 W Max Power Consumption)"],
+        ["Frequency Response", "39 Hz \u2013 25 kHz (-6 dB)"],
+        ["Total Harmonic Distortion", "80 Hz: 0.5%"],
+        ["Crossover Frequency", "2.6 kHz"],
+        ["Maximum Peak SPL", "\u2265 110 dB SPL per pair at 1 m"],
+        ["Analog Inputs", "1x XLR (Balanced, +4 dBu), 1x RCA (Unbalanced, -10 dBV)"],
+        ["Input Sensitivity Switch", "+4 dBu / -10 dBV selector switch"],
+        ["Room Correction Controls", "HF Shelving Filter (-2 dB, 0 dB, +2 dB), LF Shelving Filter (-2 dB, 0 dB, +2 dB)"],
+        ["Enclosure Type", "Rear-firing Bass Reflex Port"],
+        ["Cabinet Dimensions", '347 mm x 210 mm x 293 mm (13.7" x 8.3" x 11.5")'],
+        ["Weight", "7.1 kg (15.7 lbs)"],
+        ["AC Input Voltage", "100 \u2013 240 V AC, 50/60 Hz universal internal power supply"],
+        ["Max Power Consumption", "132 W"],
+        ["Subwoofer Compatibility", "Fully compatible with ADAM Audio T10S Subwoofer"],
+        ["Warranty", "5 Years (2-Year Standard + 3-Year Optional with Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT: ADAM Audio T8V (Single) ──────────────────────────────────────────
+    {
+      id: "adam-audio-t8v-single",
+      name: "ADAM Audio T8V (Single)",
+      shortName: "ADAM Audio T8V Nearfield Monitor",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 50250,
+      originalPrice: 56900,
+      rating: 5,
+      reviewCount: 48,
+      badge: 'Flagship T-Series 8"',
+      isFeatured: true,
+      image: "assets/images/products/adam-audio-t8v-single-angle.png",
+      images: [
+        "assets/images/products/adam-audio-t8v-single-angle.png",
+        "assets/images/products/adam-audio-t8v-single-front.jpg",
+        "assets/images/products/adam-audio-t8v-single-rear.jpg"
+      ],
+      inStock: true,
+      stock: 6,
+      stockCount: 6,
+      sku: "ADAM-T8V-SGL",
+      keyFeatures: [
+        'Most powerful model in the T Series range equipped with an 8" polypropylene woofer',
+        "Deep bass extension down to 33 Hz (-6 dB) \u2014 ideal for bass-heavy modern music production",
+        'Precision U-ART 1.9" accelerated ribbon tweeter with HPS waveguide system (from flagship S Series)',
+        "Powerful Class-D bi-amplification delivering up to 118 dB SPL per pair at 1 meter",
+        "70W RMS Class-D woofer amplifier + 20W RMS Class-D tweeter amplifier (90W Total RMS)",
+        "Rear-firing bass reflex port for ultra-clean low-end and low turbulence",
+        "Rear acoustic room correction controls: High and Low shelving filters (\xB12 dB)",
+        "Balanced XLR and unbalanced RCA inputs with switchable input sensitivity (+4 dBu / -10 dBV)",
+        "5-Year manufacturer warranty (2-year standard plus 3-year optional with product registration)"
+      ],
+      description: `
+      <p>With incredible quality, matched with an equally impressive affordable price point, the award-winning <strong>ADAM Audio T8V</strong> is the most powerful and impressive model from the T Series range.</p>
+
+      <p>Meticulously designed to meet ADAM Audio\u2019s high standards of durability and high performance, the T8V is perfect for those who have always wanted to work with monitors equipped with 8\u201D drivers, but have been deterred through budgetary reasons.</p>
+
+      <p>Like the T5V and T7V models, the T8V is powered with Class D amplification and uses the precision U-Art tweeter with the HPS-waveguide system. What makes the T8V stand out from its counterparts, is its more pronounced sound and power, thanks in part to its larger, polypropylene 8\u201D woofer, and 70 watt amplifier.</p>
+
+      <p>The ADAM Audio T8V pair can reach SPLS of 118 dBs, in addition to going as low as 33 Hz, which makes it particularly suitable for those making bass-heavy music.</p>
+
+      <p>With great headroom, high-end detail and a large sweet spot, the T8V has enough quality to perform as a main monitor in most professional recording setups, in addition to being compact enough for home studio environments. Providing best-in-class characteristics with a non-fatiguing sound at only 9.8kg, the T8V is one of the best sounding 8\u201D monitors around.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response:</strong> 33 Hz \u2013 25 kHz (-6 dB)</li>
+        <li><strong>THD > 80 Hz:</strong> 0.5%</li>
+        <li><strong>Max. SPL per pair at 1 m:</strong> \u2265118 dB</li>
+        <li><strong>Crossover Frequency:</strong> 2.6 kHz</li>
+        <li><strong>Max. Power Consumption:</strong> 150 W</li>
+        <li><strong>Weight:</strong> 21.6 lb (9.8 kg)</li>
+        <li><strong>Dimensions (H x W x D):</strong> 15.8\u2033 x 9.8\u2033 x 13.2\u2033 (400 mm x 250 mm x 335 mm)</li>
+        <li><strong>Warranty:</strong> 5 years (2 years warranty plus 3 years optional with product registration)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Monitor" },
+        { label: "Woofer Size", value: '8" Polypropylene Cone' },
+        { label: "Tweeter Type", value: '1.9" U-ART Accelerated Ribbon Tweeter' },
+        { label: "Frequency Response", value: "33 Hz \u2013 25 kHz (-6 dB)" },
+        { label: "Amplification Power", value: "90 W Total (70 W Woofer + 20 W Tweeter Class-D)" },
+        { label: "Max SPL per Pair", value: "\u2265 118 dB SPL (at 1 m)" },
+        { label: "Crossover Frequency", value: "2.6 kHz" },
+        { label: "Inputs", value: "1 x Balanced XLR, 1 x Unbalanced RCA" },
+        { label: "Dimensions (H x W x D)", value: "400 mm x 250 mm x 335 mm (15.8\u2033 x 9.8\u2033 x 13.2\u2033)" },
+        { label: "Weight", value: "9.8 kg (21.6 lbs)" },
+        { label: "Warranty", value: "5 Years (2-year standard + 3-year with registration)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Nearfield Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Monitor"],
+        ["Low Frequency Driver", '8" (203 mm) Polypropylene Cone Woofer'],
+        ["High Frequency Driver", '1.9" (48 mm) U-ART Accelerated Ribbon Tweeter'],
+        ["Waveguide", "High Frequency Propagation (HPS) Waveguide (from flagship S-Series)"],
+        ["Amplifier Configuration", "Bi-amped Class-D (PWM)"],
+        ["Woofer Amp Power", "70 W RMS"],
+        ["Tweeter Amp Power", "20 W RMS"],
+        ["Total Output Power", "90 W RMS (150 W Max Power Consumption)"],
+        ["Frequency Response", "33 Hz \u2013 25 kHz (-6 dB)"],
+        ["Total Harmonic Distortion", "> 80 Hz: 0.5%"],
+        ["Crossover Frequency", "2.6 kHz"],
+        ["Maximum Peak SPL", "\u2265 118 dB SPL per pair at 1 m"],
+        ["Analog Inputs", "1x XLR (Balanced, +4 dBu), 1x RCA (Unbalanced, -10 dBV)"],
+        ["Input Sensitivity Switch", "+4 dBu / -10 dBV selector switch"],
+        ["Room Correction Controls", "HF Shelving Filter (-2 dB, 0 dB, +2 dB), LF Shelving Filter (-2 dB, 0 dB, +2 dB)"],
+        ["Enclosure Type", "Rear-firing Bass Reflex Port"],
+        ["Cabinet Dimensions", "400 mm x 250 mm x 335 mm (15.8\u2033 x 9.8\u2033 x 13.2\u2033)"],
+        ["Weight", "9.8 kg (21.6 lbs)"],
+        ["AC Input Voltage", "100 \u2013 240 V AC, 50/60 Hz universal internal power supply"],
+        ["Max Power Consumption", "150 W"],
+        ["Subwoofer Compatibility", "Fully compatible with ADAM Audio T10S Subwoofer"],
+        ["Warranty", "5 Years (2-Year Standard + 3-Year Optional with Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT: ADAM Audio T10S (Single) ──────────────────────────────────────────
+    {
+      id: "adam-audio-t10s-single",
+      name: "ADAM Audio T10S (Single)",
+      shortName: "ADAM Audio T10S Active Studio Subwoofer",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Studio Subwoofers",
+      price: 63955,
+      originalPrice: 72e3,
+      rating: 4.9,
+      reviewCount: 29,
+      badge: '10" Active Studio Subwoofer',
+      isFeatured: true,
+      image: "assets/images/products/adam-audio-t10s-single-angle.jpg",
+      images: [
+        "assets/images/products/adam-audio-t10s-single-angle.jpg",
+        "assets/images/products/adam-audio-t10s-single-front.jpg",
+        "assets/images/products/adam-audio-t10s-single-rear.jpg"
+      ],
+      inStock: true,
+      stock: 5,
+      stockCount: 5,
+      sku: "ADAM-T10S-SGL",
+      keyFeatures: [
+        'Powerful active 10" downward-firing studio subwoofer with 130W Class-D amplification',
+        "Deep frequency response down to 28 Hz (-6 dB) for critical low-end monitoring and translation",
+        "Engineered specifically to complement ADAM Audio T5V, T7V, and T8V nearfield monitors",
+        "Internal adjustable crossover network (80 Hz, 120 Hz, or Bypass) for optimal satellite integration",
+        "Maximum sound pressure level of \u2265 104 dB SPL at 1 meter (hemisphere)",
+        "Four acoustically decoupling rubber feet prevent unwanted mechanical resonance transfer",
+        "Subwoofer bypass via optional footswitch and automatic energy-saving standby mode",
+        "Balanced XLR and unbalanced RCA stereo inputs and outputs",
+        "5-Year manufacturer warranty (2-year standard plus 3-year optional with product registration)"
+      ],
+      description: `
+      <p>The <strong>ADAM Audio T10S</strong> is a powerful yet compact active subwoofer, with a particularly attractive price/performance ratio, designed for extending the bass range of smaller and medium nearfield monitors. Its dimensions make the T10S especially useful for home studio and semi-professional use. The subwoofer\u2019s performance, features, and connectivity are engineered specifically to complement ADAM Audio\u2019s T5V and T7V speakers.</p>
+
+      <p>Equipped with a downward-firing 10\u02DD woofer, ample-sized bass reflex port, and commanding 130-watt Class-D amplifier, the T10S\u2019 frequency response ranges from 28 Hz to 120 Hz and offers an impressive maximum sound pressure level of 104 dB.</p>
+
+      <p>An adjustable low-pass filter for matching to satellites, automatic or manual on/off, and four acoustically decoupling rubber feet complete the T10S's features. The qualities of the T10S subwoofer have found favor in numerous tests by the international trade press.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response:</strong> 28 Hz \u2013 120 Hz (-6 dB)</li>
+        <li><strong>Amplifier Type & Power:</strong> PWM (Class-D), 130 W RMS</li>
+        <li><strong>THD > 60 Hz:</strong> 0.6%</li>
+        <li><strong>Max. SPL at 1 m (hemisphere):</strong> \u2265104 dB</li>
+        <li><strong>Max. Power Consumption:</strong> 190 W</li>
+        <li><strong>Input Sensitivity:</strong> +4 dBu / -10 dBV switchable</li>
+        <li><strong>Bypass:</strong> Yes, via footswitch (not included)</li>
+        <li><strong>Standby:</strong> Yes, activates automatically after 15 minutes of inactivity</li>
+        <li><strong>Weight:</strong> 27 lb (12.2 kg)</li>
+        <li><strong>Dimensions (H x W x D):</strong> 15.4\u2033 x 12.5\u2033 x 16.25\u2033 (390 mm x 318 mm x 413 mm)</li>
+        <li><strong>Warranty:</strong> 5 years (2 years warranty plus 3 years optional with product registration)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "Active Bass Reflex Studio Subwoofer" },
+        { label: "Woofer Size", value: '10" Downward-Firing Cone' },
+        { label: "Amplification Power", value: "130 W RMS Class-D (PWM)" },
+        { label: "Frequency Response", value: "28 Hz \u2013 120 Hz (-6 dB)" },
+        { label: "Max SPL at 1 m", value: "\u2265 104 dB SPL (hemisphere)" },
+        { label: "Crossover Options", value: "80 Hz / 120 Hz / Bypass" },
+        { label: "Inputs", value: "2 x Balanced XLR, 2 x Unbalanced RCA" },
+        { label: "Outputs", value: "2 x Balanced XLR, 2 x Unbalanced RCA (Satellite pass-through)" },
+        { label: "Dimensions (H x W x D)", value: "390 mm x 318 mm x 413 mm (15.4\u2033 x 12.5\u2033 x 16.25\u2033)" },
+        { label: "Weight", value: "12.2 kg (27 lbs)" },
+        { label: "Warranty", value: "5 Years (2-year standard + 3-year with registration)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active Bass Reflex Studio Subwoofer"],
+        ["Configuration", "Downward-firing Single Subwoofer"],
+        ["Low Frequency Driver", '10" (260 mm) High-Excursion Paper Woofer'],
+        ["Enclosure Design", "Rear-firing Bass Reflex Enclosure with Decoupling Feet"],
+        ["Amplifier Configuration", "Class-D (PWM) Subwoofer Amplifier"],
+        ["Amplifier Power RMS", "130 W RMS"],
+        ["Max Power Consumption", "190 W"],
+        ["Frequency Response", "28 Hz \u2013 120 Hz (-6 dB)"],
+        ["Total Harmonic Distortion", "> 60 Hz: 0.6%"],
+        ["Maximum Peak SPL", "\u2265 104 dB SPL at 1 m (hemisphere)"],
+        ["Crossover Frequency", "Switchable: 80 Hz / 120 Hz / Bypass"],
+        ["Phase Reversal Switch", "0\xB0 / 180\xB0 selectable"],
+        ["Analog Inputs", "2x XLR (Balanced, +4 dBu), 2x RCA (Unbalanced, -10 dBV)"],
+        ["Analog Outputs", "2x XLR (Balanced Satellite Out), 2x RCA (Unbalanced Satellite Out)"],
+        ["Input Sensitivity Switch", "+4 dBu / -10 dBV selector"],
+        ["Bypass Control", '1/4" Footswitch jack for remote Subwoofer / High-pass Bypass'],
+        ["Auto Standby", "Automatic energy-saving standby mode after 15 min no signal"],
+        ["Cabinet Dimensions", "390 mm x 318 mm x 413 mm (15.4\u2033 x 12.5\u2033 x 16.25\u2033)"],
+        ["Weight", "12.2 kg (27 lbs)"],
+        ["AC Input Voltage", "100 \u2013 240 V AC, 50/60 Hz universal internal power supply"],
+        ["Matching Satellites", "ADAM Audio T5V, T7V, T8V, D3V, and similar nearfield monitors"],
+        ["Warranty", "5 Years (2-Year Standard + 3-Year Optional with Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT: ADAM Audio A4V (Single) ──────────────────────────────────────────
+    {
+      id: "adam-audio-a4v-single",
+      name: "ADAM Audio A4V (Single)",
+      shortName: "ADAM Audio A4V Active Studio Monitor",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 76355,
+      originalPrice: 84900,
+      rating: 5,
+      reviewCount: 38,
+      badge: "A-Series \xB7 DSP & Sonarworks",
+      isFeatured: true,
+      image: "assets/images/products/adam-audio-a4v-single-angle.jpg",
+      images: [
+        "assets/images/products/adam-audio-a4v-single-angle.jpg",
+        "assets/images/products/adam-audio-a4v-single-front.jpg",
+        "assets/images/products/adam-audio-a4v-single-rear.jpg",
+        "assets/images/products/adam-audio-a4v-single-horizontal.jpg"
+      ],
+      inStock: true,
+      stock: 6,
+      stockCount: 6,
+      sku: "ADAM-A4V-SGL",
+      keyFeatures: [
+        '4" Multi-Layer Mineral (MLM) fibre woofer delivering low-distortion, linear bass down to 52 Hz',
+        "Handmade German X-ART tweeter within rotatable HPS waveguide (90\xB0 rotatable for vertical/horizontal setup)",
+        "Hybrid amplification: Class-D woofer amplifier (110W peak) + Class-AB tweeter amplifier (20W peak)",
+        "DSP-based electronics with Ethernet connection for remote control, firmware updates, and calibration",
+        "Integrated Sonarworks SoundID Reference embedded filter integration directly on monitor DSP",
+        "A Control software for remote real-time multi-speaker tuning, 6-band parametric EQ, and delay adjustment",
+        'Dual voicings on rear panel: "Pure" (flat, clinical mastering profile) and "UNR" (Uniform Natural Response\u2122)',
+        "Rear panel room adaptation EQ: 4-band controls (Bass, Desk, Presence, Treble) with >100 tuning combinations",
+        "Dual front-ported cabinet design with flared ports, deep bevels, and underside 4x M8 mounting inserts"
+      ],
+      description: `
+      <p>Designed for small studio spaces, short listening distances and immersive multi-speaker configurations, the <strong>ADAM Audio A4V</strong> delivers accurate, full-bodied sound in a compact form factor. This two-way speaker incorporates a 4-inch long-throw woofer made from the same Multi-Layer Mineral (MLM) fibres as other A Series speakers plus the classic X-ART tweeter. Onboard DSP-based tuning capabilities let you easily dial in the perfect sound for your space. With a frequency range of 53 Hz to 42 kHz, the A4V can accommodate a broad spectrum of audio applications\u2014from producing podcasts to mixing string quartets\u2014and will fit well within immersive and 3D setups.</p>
+
+      <h3>Rotatable HPS Waveguide & Handmade X-ART Tweeter</h3>
+      <p>ADAM Audio HPS (high-frequency propagation system) waveguide technology enables tweeters to disperse sound with controlled consistency, broad in the horizontal axis but tightly focused in the vertical plane. The A Series introduces a rotatable HPS waveguide design. You can shift A Series tweeters in 90-degree steps to continue to benefit from HPS waveguide technology whether you position the speakers horizontally or vertically.</p>
+      <p>The A Series HPS Waveguide is made from a new glass fibre polymer compound that helps create a clear sound, free of unwanted resonance. The ADAM Audio X-ART tweeter is at the heart of the rotatable HPS waveguide. Handmade in Germany, the X-ART tweeter provides a precise transient response and reproduces the finest sonic details.</p>
+
+      <h3>Multi-Layer Mineral Woofer</h3>
+      <p>A Series woofers are constructed with a unique blend of mineral stone fibres that have been baked together to create a lightweight but highly stable material. The mineral composition, layering and geometry of each cone is specific to the driver used in each model. By combining this material with a new magnet system, A Series woofers produce high output with low distortion, delivering a clean low-end.</p>
+
+      <h3>Hybrid Amplification & DSP-Based Electronics</h3>
+      <p>The A Series combines the best of both digital and analogue worlds. The woofers are driven by Class D amplifiers that help produce linear performance while reducing distortion. Tweeters and midrange drivers are powered by Class AB amplifiers which offer a smooth, natural reproduction of high frequencies. Firmware can be updated through an Ethernet connection to integrate the latest DSP-based capabilities from ADAM Audio.</p>
+
+      <h3>Room Adaptation & Voicings</h3>
+      <p>On the back panel, you will find four bands of room adaptation equalization: Bass, Desk, Presence and Treble with more than 100 tuning options. Two selectable sound profiles include <strong>"UNR" (Uniform Natural Response\u2122)</strong> for engaging songwriting and flow, and <strong>"Pure"</strong> for honest, flat representation during critical mixing and mastering.</p>
+
+      <h3>A Control & Sonarworks Integration</h3>
+      <p>Using the free A Control software via Ethernet, push advanced room correction filters directly to an embedded platform onboard the monitors powered by industry-leading <strong>Sonarworks\xAE SoundID Reference</strong>.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response @ -3 dB:</strong> 58 Hz \u2013 41 kHz</li>
+        <li><strong>Frequency Response @ -6 dB:</strong> 52 Hz \u2013 45 kHz</li>
+        <li><strong>Crossover Frequency:</strong> 3.0 kHz</li>
+        <li><strong>Max SPL per speaker at 1 m (sine bursts):</strong> 100 dB SPL (109 dB IEC-weighted noise)</li>
+        <li><strong>Dolby DARDT max SPL in full space:</strong> 112 dB SPL (117 dB bass managed)</li>
+        <li><strong>Woofer Amplifier:</strong> Class-D PWM (110 W peak)</li>
+        <li><strong>Tweeter Amplifier:</strong> Class-AB (20 W peak)</li>
+        <li><strong>Cabinet Design:</strong> Dual front ported MDF with bevelled baffle</li>
+        <li><strong>Mounting:</strong> 4 x M8 threaded inserts on bottom</li>
+        <li><strong>Dimensions (H x W x D):</strong> 268 mm x 158 mm x 220 mm (10.5\u2033 x 6.25\u2033 x 8.625\u2033)</li>
+        <li><strong>Weight:</strong> 5.8 kg (12 lbs 13 oz)</li>
+        <li><strong>Warranty:</strong> 5 years (2 years warranty plus 3 years optional with product registration)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active DSP Nearfield Studio Monitor" },
+        { label: "Woofer Size", value: '4" Multi-Layer Mineral (MLM) Fibre Cone' },
+        { label: "Tweeter Type", value: "Handmade German X-ART Ribbon Tweeter" },
+        { label: "Waveguide", value: "90\xB0 Rotatable HPS Glass Fibre Waveguide" },
+        { label: "Frequency Response", value: "53 Hz \u2013 42 kHz (52 Hz \u2013 45 kHz @ -6 dB)" },
+        { label: "Amplification Power", value: "Hybrid (110 W Class-D Woofer + 20 W Class-AB Tweeter)" },
+        { label: "Max SPL per Speaker", value: "109 dB SPL (IEC-weighted noise at 1 m)" },
+        { label: "Room Calibration", value: "Embedded Sonarworks\xAE SoundID Reference DSP + A Control" },
+        { label: "Inputs", value: "1 x Balanced XLR, 1 x Unbalanced RCA, 1 x RJ45 Ethernet" },
+        { label: "Dimensions (H x W x D)", value: "268 mm x 158 mm x 220 mm (10.5\u2033 x 6.25\u2033 x 8.625\u2033)" },
+        { label: "Weight", value: "5.8 kg (12 lbs 13 oz)" },
+        { label: "Warranty", value: "5 Years (2-year standard + 3-year with registration)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way DSP Studio Monitor with Rotatable HPS Waveguide"],
+        ["Configuration", "Single Bi-Amplified Nearfield / Immersive Monitor"],
+        ["Low Frequency Driver", '4" (102 mm) Multi-Layer Mineral (MLM) Long-Throw Woofer'],
+        ["High Frequency Driver", "Rotatable Handmade German X-ART Accelerated Ribbon Tweeter"],
+        ["Waveguide", "Rotatable High Frequency Propagation (HPS) Waveguide (0\xB0 / 90\xB0 for Horizontal/Vertical)"],
+        ["Amplifier Configuration", "Hybrid Bi-Amp: Class-D (Woofer) + Class-AB (Tweeter)"],
+        ["Woofer Amp Power", "110 W Peak (Class-D PWM)"],
+        ["Tweeter Amp Power", "20 W Peak (Class-AB Analogue)"],
+        ["Frequency Response", "58 Hz \u2013 41 kHz (@ -3 dB), 52 Hz \u2013 45 kHz (@ -6 dB)"],
+        ["Crossover Frequency", "3.0 kHz"],
+        ["Maximum Peak SPL", "109 dB SPL (IEC-weighted noise at 1 m), Dolby DARDT 117 dB SPL (bass managed)"],
+        ["Analog Inputs", "1x XLR (Balanced, +4 dBu), 1x RCA (Unbalanced, -10 dBV)"],
+        ["Network Connection", "RJ45 Ethernet for A Control remote control & Sonarworks calibration"],
+        ["Embedded DSP", "Room correction filters, 6-band parametric EQ, delay, firmware updatable"],
+        ["Room Adaptation EQ", "4-Band rear panel switches: Bass, Desk, Presence, Treble (>100 combinations)"],
+        ["Voicings", "Selectable: Pure (flat mastering), UNR (Uniform Natural Response\u2122), Ext (A Control custom)"],
+        ["Cabinet Design", "Dual front-ported with flared ports, deep bevels, and thick baffle walls"],
+        ["Mounting Inserts", "4x M8 threaded inserts on bottom for ceiling/wall/mic stand mounting"],
+        ["Cabinet Dimensions", "268 mm x 158 mm x 220 mm (10.5\u2033 x 6.25\u2033 x 8.625\u2033)"],
+        ["Weight", "5.8 kg (12 lbs 13 oz)"],
+        ["AC Input Voltage", "100 \u2013 240 V AC, 50/60 Hz universal internal power supply"],
+        ["Power Consumption", "220 W max / 10 W idle / 3.5 W sleep"],
+        ["Warranty", "5 Years (2-Year Standard + 3-Year Optional with Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT: ADAM Audio A44H (Single) ──────────────────────────────────────────
+    {
+      id: "adam-audio-a44h-single",
+      name: "ADAM Audio A44H (Single)",
+      shortName: "ADAM Audio A44H Low-Profile / Center Studio Monitor",
+      brand: "ADAM Audio",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 107190,
+      originalPrice: 119e3,
+      rating: 5,
+      reviewCount: 36,
+      badge: 'Dual 4" Woofers \xB7 Rotatable HPS & Sonarworks',
+      isFeatured: true,
+      image: "assets/images/products/adam-audio-a44h-single-angle.png",
+      images: [
+        "assets/images/products/adam-audio-a44h-single-angle.png",
+        "assets/images/products/adam-audio-a44h-single-front.jpg",
+        "assets/images/products/adam-audio-a44h-single-rear.jpg"
+      ],
+      inStock: true,
+      stock: 5,
+      stockCount: 5,
+      sku: "ADAM-A44H-SGL",
+      keyFeatures: [
+        "Low-profile 19-inch rack-compatible horizontally oriented 2-way monitor or center speaker for immersive/3D setups",
+        'Dual 4" Multi-Layer Mineral (MLM) fibre long-throw woofers for clean, high-output bass down to 46 Hz (-6 dB)',
+        "Handmade German X-ART accelerated ribbon tweeter mounted in a 90\xB0 rotatable HPS glass-fibre waveguide",
+        "Hybrid bi-amplification: 110W peak Class-D woofer amplifier + 20W peak Class-AB analogue tweeter amplifier",
+        "Maximum SPL: 110 dB SPL (IEC-weighted noise at 1 m); Dolby DARDT 118 dB SPL (bass managed)",
+        "Onboard DSP-based electronics with Ethernet connection for remote real-time control via A Control software",
+        "Direct embedded Sonarworks SoundID Reference room correction filter integration running natively on monitor DSP",
+        "4-Band rear room adaptation EQ (Bass, Desk, Presence, Treble) offering over 100 acoustic tuning combinations",
+        'Switchable voicings: "Pure" (clinical flat mastering profile) and "UNR" (Uniform Natural Response\u2122)',
+        "Dual front-ported cabinet with flared ports, deep bevels, and underside 4x M8 threaded mounting inserts"
+      ],
+      description: `
+      <p>The <strong>ADAM Audio A44H</strong> offers a low-profile alternative to the A Series A7V while delivering similar performance characteristics. With a 19-inch width, the horizontally oriented A44H can sit on a standard rack shelf or be mounted above or below a display. The completely new design also enables the A44H to serve as a centre speaker in immersive and 3D speaker configurations. Dual 4-inch long-throw woofers and the X-ART tweeter deliver a wide frequency range, while onboard DSP-based tuning capabilities enable you to tweak the sound easily.</p>
+
+      <h3>Rotatable HPS Waveguide & X-ART Tweeter</h3>
+      <p>ADAM Audio HPS (high-frequency propagation system) waveguide technology enables tweeters to disperse sound with controlled consistency, broad in the horizontal axis but tightly focused in the vertical plane. The A Series introduces a rotatable HPS waveguide design. You can shift A Series tweeters in 90-degree steps to continue to benefit from HPS waveguide technology whether you position the speakers horizontally or vertically.</p>
+      <p>The A Series HPS Waveguide is made from a new glass fibre polymer compound that helps create a clear sound, free of unwanted resonance. The ADAM Audio X-ART tweeter is at the heart of the rotatable HPS waveguide. Handmade in Germany, the X-ART tweeter provides a precise transient response and reproduces the finest sonic details. This X-ART tweeter is used in every A Series speaker, providing a detailed, consistent sound across the product line.</p>
+
+      <h3>Multi-Layer Mineral Woofers</h3>
+      <p>A Series woofers are constructed with a unique blend of mineral stone fibres that have been baked together to create a lightweight but highly stable material. The mineral composition, layering and geometry of each cone is specific to the driver used in each model. By combining this material with a new magnet system, dual 4-inch woofers produce high output with low distortion, delivering a clean low-end.</p>
+
+      <h3>Hybrid Amplification & DSP-Based Electronics</h3>
+      <p>The A Series combines the best of both digital and analogue worlds. The dual woofers are driven by Class D amplifiers that help produce linear performance while reducing distortion. Tweeters and midrange drivers are powered by Class AB amplifiers which offer a smooth, natural reproduction of high frequencies. Firmware can be updated through an Ethernet connection, allowing you to integrate the latest DSP-based capabilities from ADAM Audio\u2014including new filter types and features, plus alternative voicings.</p>
+
+      <h3>Room Adaptation & Voicings</h3>
+      <p>On the back panel of A Series speakers, you will find four bands of room adaptation equalization: Bass, Desk, Presence and Treble. Each band is adjustable in predefined steps, offering more than 100 tuning options to help compensate for typical acoustic problems. Two selectable sound profiles include <strong>"UNR" (Uniform Natural Response\u2122)</strong> for engaging songwriting and production, and <strong>"Pure"</strong> for neutral, flat representation during critical mixing and mastering. The <strong>"Ext"</strong> option allows custom 6-band EQ curves designed in A Control to be pushed directly to the monitor.</p>
+
+      <h3>A Control & Sonarworks SoundID Reference Integration</h3>
+      <p>The DSP-based functionality can be controlled remotely in real time over Ethernet using the free A Control software. A Series monitors also support advanced room correction filters from industry-leading <strong>Sonarworks\xAE SoundID Reference</strong> running directly onboard the embedded DSP platform, eliminating the need for DAW plugins.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response @ -3 dB:</strong> 49 Hz \u2013 41 kHz</li>
+        <li><strong>Frequency Response @ -6 dB:</strong> 46 Hz \u2013 45 kHz</li>
+        <li><strong>Crossover Frequency:</strong> 2.4 kHz</li>
+        <li><strong>Max SPL per speaker at 1 m:</strong> 103 dB SPL (110 dB SPL IEC-weighted noise)</li>
+        <li><strong>Dolby DARDT max SPL in full space:</strong> 114 dB SPL (118 dB SPL bass managed)</li>
+        <li><strong>Cabinet Design:</strong> Dual front ported, vinyl wrapped MDF with painted MDF front panel</li>
+        <li><strong>Mounting:</strong> 4 x M8 threaded inserts on bottom of cabinet</li>
+        <li><strong>Dimensions (H x W x D):</strong> 135 mm x 432 mm x 350 mm (5 3/8\u2033 x 17\u2033 x 13 3/4\u2033)</li>
+        <li><strong>Weight:</strong> 9.7 kg (21 lbs 6 oz)</li>
+        <li><strong>Power Rating & Consumption:</strong> 300 W max (220 W max, 10 W idle, 3.5 W sleep)</li>
+        <li><strong>Warranty:</strong> 5 years (2 years warranty plus 3 years optional with product registration)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Dual-Woofer DSP Studio / Center Monitor" },
+        { label: "Woofer Configuration", value: 'Dual 4" Multi-Layer Mineral (MLM) Long-Throw Woofers' },
+        { label: "Tweeter Type", value: "Handmade German X-ART Ribbon Tweeter" },
+        { label: "Waveguide", value: "90\xB0 Rotatable HPS Glass Fibre Waveguide" },
+        { label: "Frequency Response", value: "49 Hz \u2013 41 kHz @ -3 dB (46 Hz \u2013 45 kHz @ -6 dB)" },
+        { label: "Amplification Power", value: "Hybrid (Class-D Woofers + Class-AB Tweeter; 300W Max Rating)" },
+        { label: "Max SPL per Speaker", value: "110 dB SPL (IEC-weighted at 1 m); Dolby DARDT 118 dB SPL" },
+        { label: "Room Calibration", value: "Embedded Sonarworks\xAE SoundID Reference DSP + A Control" },
+        { label: "Inputs", value: "1 x Balanced XLR, 1 x Unbalanced RCA, 1 x RJ45 Ethernet" },
+        { label: "Dimensions (H x W x D)", value: "135 mm x 432 mm x 350 mm (5 3/8\u2033 x 17\u2033 x 13 3/4\u2033)" },
+        { label: "Weight", value: "9.7 kg (21 lbs 6 oz)" },
+        { label: "Warranty", value: "5 Years (2-year standard + 3-year with registration)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Dual-Woofer DSP Studio / Center Monitor with Rotatable HPS Waveguide"],
+        ["Configuration", "Single Bi-Amplified Low-Profile Rack / Desktop / Center Channel Monitor"],
+        ["Low Frequency Drivers", 'Dual 4" (102 mm) Multi-Layer Mineral (MLM) Long-Throw Woofers'],
+        ["High Frequency Driver", "Rotatable Handmade German X-ART Accelerated Ribbon Tweeter"],
+        ["Waveguide", "Rotatable High Frequency Propagation (HPS) Waveguide (0\xB0 / 90\xB0 for Horizontal/Vertical)"],
+        ["Amplifier Configuration", "Hybrid Bi-Amp: Class-D (Woofers) + Class-AB (Tweeter)"],
+        ["Power Rating", "300 W max rating"],
+        ["Frequency Response @ -3 dB", "49 Hz \u2013 41 kHz"],
+        ["Frequency Response @ -6 dB", "46 Hz \u2013 45 kHz"],
+        ["Crossover Frequency", "2.4 kHz"],
+        ["Max SPL per Speaker (1 m)", "103 dB SPL sine burst; 110 dB SPL IEC-weighted noise"],
+        ["Max SPL in Full Space (100 Hz - 6 kHz)", "103 dB SPL RMS / 106 dB SPL Peak (@ 3% THD)"],
+        ["Max SPL in Full Space (50 Hz - 100 Hz)", "95 dB SPL RMS / 98 dB SPL Peak (@ 3% THD)"],
+        ["Dolby DARDT Max SPL", "114 dB SPL full space; 118 dB SPL (bass managed)"],
+        ["Analog Inputs", "1x XLR (Balanced, +4 dBu), 1x RCA (Unbalanced, -10 dBV)"],
+        ["Network Connection", "RJ45 Ethernet for A Control remote real-time control & Sonarworks calibration"],
+        ["Embedded DSP", "Room correction filters, 6-band parametric EQ, delay, firmware updatable"],
+        ["Room Adaptation EQ", "4-Band rear panel switches: Bass, Desk, Presence, Treble (>100 combinations)"],
+        ["Voicings", "Selectable: Pure (flat mastering), UNR (Uniform Natural Response\u2122), Ext (A Control custom)"],
+        ["Cabinet Design", "Dual front ported, vinyl wrapped MDF with painted MDF front panel and deep bevels"],
+        ["Mounting Options", "4x M8 threaded inserts on bottom of cabinet for rack shelf, stand, or wall mount"],
+        ["Cabinet Dimensions", "135 mm x 432 mm x 350 mm (5 3/8\u2033 x 17\u2033 x 13 3/4\u2033)"],
+        ["Weight", "9.7 kg (21 lbs 6 oz)"],
+        ["AC Input Voltage", "100 \u2013 240 V AC, 50/60 Hz universal internal power supply"],
+        ["Power Consumption", "220 W max / 10 W idle / 3.5 W sleep"],
+        ["Delivery Contents", "A44H loudspeaker, power cable, Quick Start Guide"],
+        ["Warranty", "5 Years (2-Year Standard + 3-Year Optional with Product Registration)"]
+      ]
+    },
+    // ─── PRODUCT 56 ── Focal Alpha 50 Evo (each) ──────────────────────────────────
+    {
+      id: "focal-alpha-50-evo-single",
+      name: "Focal Alpha 50 Evo (each)",
+      shortName: "Focal Alpha 50 Evo Active Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 45285,
+      originalPrice: 51900,
+      rating: 4.9,
+      reviewCount: 31,
+      image: "assets/images/products/focal-alpha-50-evo-angle.jpg",
+      images: [
+        "assets/images/products/focal-alpha-50-evo-angle.jpg",
+        "assets/images/products/focal-alpha-50-evo-front.jpg",
+        "assets/images/products/focal-alpha-50-evo-rear.jpg",
+        "assets/images/products/focal-alpha-50-evo-rear-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: "Slatefiber Cone",
+      inStock: true,
+      stock: 12,
+      sku: "FOCAL-ALPHA-50-EVO",
+      description: `
+      <h3>Focal Alpha 50 Evo - Professional Active 2-Way Nearfield Loudspeaker</h3>
+      <p>Alpha 50 Evo features a 1\u201D (25mm) inverted aluminium dome tweeter and a 5\u201D (13cm) Slatefiber cone woofer, exclusively developed and manufactured in Focal's workshops in Saint-\xC9tienne, France. This monitor stands out for its remarkable dynamics, clinical neutrality of tonal balance, and excellent sonic coherence, guaranteed wherever you are listening.</p>
+
+      <h3>Slatefiber Cone Woofer & Large Laminar Vent</h3>
+      <p>The recycled non-woven carbon fiber Slatefiber cone delivers exceptional rigidity, damping, and lightness, ensuring tight, controlled bass and uncolored midrange reproduction. A large front-firing laminar port delivers optimal aerodynamic airflow, eliminating acoustic compression and port turbulence even at extreme sound pressure levels.</p>
+
+      <h3>High-Current Class-D Bi-Amplification</h3>
+      <p>Alpha 50 Evo features custom Class-D bi-amplification with 35W dedicated to the 5" woofer and 25W to the 1" tweeter (60W total RMS), reaching peak SPLs of 101 dB at 1m. Its high current capacity ensures total mastery over audio dynamics with distortion-free headroom at high monitoring volumes.</p>
+
+      <h3>Versatile Triple-Input Connectivity & Acoustic Filtering</h3>
+      <p>Connect up to three audio sources simultaneously via balanced 1/4" (6.35mm) TRS jack, balanced XLR, and unbalanced RCA inputs. Fine-tune your monitor response with rear-panel LF shelving (\xB16dB from 0\u2013250Hz) and HF shelving (\xB13dB from 4.5\u201335kHz), with an automatic disengageable standby mode and threaded inserts for wall or ceiling mounting.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Loudspeaker" },
+        { label: "Woofer Size", value: '5" (13cm) Slatefiber Cone Woofer (France)' },
+        { label: "Tweeter Type", value: '1" (25mm) Inverted Aluminium Dome Tweeter' },
+        { label: "Frequency Response", value: "45 Hz \u2013 22 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "60 W RMS (35 W Bass + 25 W Treble Class-D)" },
+        { label: "Max SPL", value: "101 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "LF Shelving (\xB16 dB), HF Shelving (\xB13 dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional 2-Way Active Nearfield Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Active Loudspeaker"],
+        ["Low Frequency Transducer", '5\\" (13 cm) Slatefiber cone woofer (Made in France)'],
+        ["High Frequency Transducer", '1\\" (25 mm) Inverted Aluminium dome tweeter'],
+        ["Amplification Architecture", "Custom Class-D Bi-amplification"],
+        ["LF Amplifier Power", "35 W RMS"],
+        ["HF Amplifier Power", "25 W RMS"],
+        ["Total System Power", "60 W RMS"],
+        ["Frequency Response", "45 Hz \u2013 22 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "101 dB SPL (peak @ 1 m)"],
+        ["Inputs", '1x XLR (Balanced 10 k\u03A9), 1x 1/4\\" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)'],
+        ["Sensitivity", "Switchable 0 / +6 dB sensitivity selector"],
+        ["Low Frequency Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["High Frequency Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Disengageable automatic standby mode (after ~15 min inactivity)"],
+        ["Port Tuning", "Front-firing large laminar bass-reflex port"],
+        ["Enclosure & Construction", "15 mm MDF with molded robust side panels"],
+        ["Inserts & Mounting", "Threaded inserts for wall and ceiling mounting"],
+        ["Dimensions (H x W x D)", '310 x 228 x 239 mm (12.2\\" x 9.0\\" x 9.4\\")'],
+        ["Weight", "5.95 kg (13.1 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply"],
+        ["Warranty", "Focal Efficient Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 57 ── Focal Alpha 65 Evo (each) ──────────────────────────────────
+    {
+      id: "focal-alpha-65-evo-single",
+      name: "Focal Alpha 65 Evo (each)",
+      shortName: "Focal Alpha 65 Evo Active Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 60430,
+      originalPrice: 69900,
+      rating: 4.9,
+      reviewCount: 38,
+      image: "assets/images/products/focal-alpha-65-evo-angle.jpg",
+      images: [
+        "assets/images/products/focal-alpha-65-evo-angle.jpg",
+        "assets/images/products/focal-alpha-65-evo-front.jpg",
+        "assets/images/products/focal-alpha-65-evo-rear.jpg",
+        "assets/images/products/focal-alpha-65-evo-rear-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: 'Slatefiber 6.5"',
+      inStock: true,
+      stock: 10,
+      sku: "FOCAL-ALPHA-65-EVO",
+      description: `
+      <h3>Focal Alpha 65 Evo - Professional Active 2-Way Nearfield Loudspeaker</h3>
+      <p>Alpha 65 Evo has a 1\u201D (25mm) aluminium inverted dome tweeter and a 6.5\u201D (16.5 cm) Slatefiber cone woofer developed and manufactured exclusively in Focal's workshops in Saint-\xC9tienne, France. This monitor stands out for its exceptional dynamics, wide dispersion, and neutral tonal balance, guaranteeing uncompromising sonic coherence across any control room or studio environment.</p>
+
+      <h3>Slatefiber Cone Technology & Large Laminar Vent</h3>
+      <p>Manufactured from recycled non-woven carbon fibers sandwiched between thermoplastic polymer layers, the French-made Slatefiber cone provides high rigidity, excellent internal damping, and ultra-light acoustic responsiveness. The front-firing large laminar bass-reflex port prevents air turbulence and port compression, ensuring deep, clean low frequencies down to 40 Hz even when positioned near studio walls.</p>
+
+      <h3>High-Current Class-D Bi-Amplification (85W RMS)</h3>
+      <p>Equipped with dual dedicated high-current Class-D amplifiers delivering 55W to the 6.5" woofer and 30W to the 1" tweeter (85W total RMS), the Alpha 65 Evo reaches high listening volumes up to 104 dB peak SPL with zero distortion and total control over musical transients.</p>
+
+      <h3>Triple-Input Connectivity & Precision Acoustic Tailoring</h3>
+      <p>Connect up to 3 sources simultaneously via balanced XLR, balanced 1/4" (6.35mm) TRS jack, and unbalanced RCA inputs. Tailor acoustic performance to your room acoustics using the rear-panel LF shelving (\xB16dB) and HF shelving (\xB13dB) equalization controls. Features disengageable automatic standby and integrated inserts for wall or ceiling mounting brackets.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Loudspeaker" },
+        { label: "Woofer Size", value: '6.5" (16.5cm) Slatefiber Cone Woofer (France)' },
+        { label: "Tweeter Type", value: '1" (25mm) Inverted Aluminium Dome Tweeter' },
+        { label: "Frequency Response", value: "40 Hz \u2013 22 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "85 W RMS (55 W Bass + 30 W Treble Class-D)" },
+        { label: "Max SPL", value: "104 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "LF Shelving (\xB16 dB), HF Shelving (\xB13 dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional 2-Way Active Nearfield Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Active Loudspeaker"],
+        ["Low Frequency Transducer", '6.5" (16.5 cm) Slatefiber cone woofer (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) Inverted Aluminium dome tweeter'],
+        ["Amplification Architecture", "Custom Class-D Bi-amplification"],
+        ["LF Amplifier Power", "55 W RMS"],
+        ["HF Amplifier Power", "30 W RMS"],
+        ["Total System Power", "85 W RMS"],
+        ["Frequency Response", "40 Hz \u2013 22 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "104 dB SPL (peak @ 1 m)"],
+        ["Inputs", '1x XLR (Balanced 10 k\u03A9), 1x 1/4" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)'],
+        ["Sensitivity", "Switchable 0 / +6 dB sensitivity selector"],
+        ["Low Frequency Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["High Frequency Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Disengageable automatic standby mode (after ~15 min inactivity)"],
+        ["Port Tuning", "Front-firing large laminar bass-reflex port"],
+        ["Enclosure & Construction", "15 mm MDF with molded robust side panels"],
+        ["Grilles Included", "Tweeter protective grille included (Woofer grille not included)"],
+        ["Inserts & Mounting", "Threaded inserts for wall and ceiling mounting"],
+        ["Dimensions (H x W x D)", '339 x 261 x 289 mm (13.3" x 10.3" x 11.4")'],
+        ["Weight", "7.6 kg (16.8 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply"],
+        ["Warranty", "Focal Efficient Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 58 ── Focal Alpha 80 Evo (each) ──────────────────────────────────
+    {
+      id: "focal-alpha-80-evo-single",
+      name: "Focal Alpha 80 Evo (each)",
+      shortName: "Focal Alpha 80 Evo Active Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 75575,
+      originalPrice: 86900,
+      rating: 4.9,
+      reviewCount: 42,
+      image: "assets/images/products/focal-alpha-80-evo-angle.jpg",
+      images: [
+        "assets/images/products/focal-alpha-80-evo-angle.jpg",
+        "assets/images/products/focal-alpha-80-evo-front.jpg",
+        "assets/images/products/focal-alpha-80-evo-rear.jpg",
+        "assets/images/products/focal-alpha-80-evo-rear-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: 'Slatefiber 8"',
+      inStock: true,
+      stock: 8,
+      sku: "FOCAL-ALPHA-80-EVO",
+      description: `
+      <h3>Focal Alpha 80 Evo - Flagship Active 2-Way Nearfield Loudspeaker</h3>
+      <p>Alpha 80 Evo is the flagship model of the Alpha Evo line, characterised by breathtaking dynamics, an impressively neutral tonal balance, and extensive acoustic integration capabilities. Featuring a 1\u201D (25mm) aluminium inverted dome tweeter and an 8\u201D (21cm) Slatefiber cone woofer handcrafted in Saint-\xC9tienne, France, the Alpha 80 Evo delivers uncompromised monitoring performance down to 38 Hz.</p>
+
+      <h3>Heavy-Duty 15mm Braced MDF Enclosure & Laminar Port</h3>
+      <p>Alpha 80 Evo is constructed from a rigid 5/8\u201D (15mm)-thick MDF enclosure incorporating internal acoustic braces to ensure exceptional rigidity even at extreme sound pressure levels. A large front-firing laminar aerodynamic port eliminates air turbulence and port compression, allowing seamless flush placement against control room walls without boundary smearing.</p>
+
+      <h3>High-Current Class-D Bi-Amplification (115W RMS)</h3>
+      <p>Driven by dual high-current Class-D amplifiers delivering 80W to the 8" woofer and 35W to the 1" tweeter (115W total RMS), Alpha 80 Evo achieves an astounding 106 dB peak SPL at 1 meter. The system maintains identical tonal balance and transient precision at both whisper-quiet mixing levels and high-energy monitoring volumes.</p>
+
+      <h3>Triple-Input Connectivity & Comprehensive Room Tuning</h3>
+      <p>Connect up to 3 independent audio sources simultaneously via balanced XLR, balanced 1/4" (6.35mm) TRS, and unbalanced RCA. The rear panel provides intuitive LF shelving (\xB16dB from 0\u2013250Hz) and HF shelving (\xB13dB from 4.5\u201335kHz) adjustment, disengageable automatic standby after 15 minutes of inactivity, and reinforced inserts for wall or ceiling mounting brackets.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Loudspeaker" },
+        { label: "Woofer Size", value: '8" (21cm) Slatefiber Cone Woofer (France)' },
+        { label: "Tweeter Type", value: '1" (25mm) Inverted Aluminium Dome Tweeter' },
+        { label: "Frequency Response", value: "38 Hz \u2013 22 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "115 W RMS (80 W Bass + 35 W Treble Class-D)" },
+        { label: "Max SPL", value: "106 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "LF Shelving (\xB16 dB), HF Shelving (\xB13 dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional 2-Way Active Nearfield Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Active Loudspeaker"],
+        ["Low Frequency Transducer", '8" (21 cm) Slatefiber cone woofer (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) Inverted Aluminium dome tweeter'],
+        ["Amplification Architecture", "Custom Class-D Bi-amplification"],
+        ["LF Amplifier Power", "80 W RMS"],
+        ["HF Amplifier Power", "35 W RMS"],
+        ["Total System Power", "115 W RMS"],
+        ["Frequency Response", "38 Hz \u2013 22 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "106 dB SPL (peak @ 1 m)"],
+        ["Inputs", '1x XLR (Balanced 10 k\u03A9), 1x 1/4" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)'],
+        ["Sensitivity", "Switchable 0 / +6 dB sensitivity selector"],
+        ["Low Frequency Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["High Frequency Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Disengageable automatic standby mode (after ~15 min inactivity)"],
+        ["Port Tuning", "Front-firing large laminar bass-reflex port"],
+        ["Enclosure & Construction", '15 mm (5/8") MDF with internal bracing and molded robust side panels'],
+        ["Grilles Included", "Tweeter protective grille included (Woofer grille not included)"],
+        ["Inserts & Mounting", "Threaded inserts for wall and ceiling mounting"],
+        ["Dimensions (H x W x D)", '390 x 296 x 330 mm (15.35" x 11.65" x 13.0")'],
+        ["Weight", "9.8 kg (21.6 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply"],
+        ["Warranty", "Focal Efficient Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Focal Alpha Twin Evo (each) ──────────────────────────────────────
+    {
+      id: "focal-alpha-twin-evo-single",
+      name: "Focal Alpha Twin Evo (each)",
+      shortName: "Focal Alpha Twin Evo Active 2.5-Way Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 86116,
+      originalPrice: 96900,
+      rating: 5,
+      reviewCount: 28,
+      badge: 'Active 2.5-Way \xB7 Dual 6.5" Slatefiber',
+      isFeatured: true,
+      image: "assets/images/products/focal-alpha-twin-evo-angle.jpg",
+      images: [
+        "assets/images/products/focal-alpha-twin-evo-angle.jpg",
+        "assets/images/products/focal-alpha-twin-evo-front.jpg",
+        "assets/images/products/focal-alpha-twin-evo-rear.jpg",
+        "assets/images/products/focal-alpha-twin-evo-pair.jpg"
+      ],
+      inStock: true,
+      stock: 6,
+      stockCount: 6,
+      sku: "FOCAL-ALPHA-TWIN-EVO",
+      keyFeatures: [
+        'Active 2.5-way horizontal monitor with dual 6.5" (16.5 cm) French Slatefiber woofers and 1" aluminium inverted dome tweeter',
+        "Selectable midrange driver via rear-panel switch (assign midrange to left or right woofer for optimal stereo imaging)",
+        "Tri-amplification Class-D architecture: 2x 50W RMS for woofers + 30W RMS for tweeter (130W total RMS)",
+        "Maximum SPL of 108 dB SPL (peak @ 1 m) with remarkable dynamics and extremely low distortion",
+        "Identical tonal balance and neutral response preserved across both low and high monitoring volumes",
+        "Front-firing large laminar bass-reflex port prevents turbulence and acoustic compression",
+        "Wide, uniform horizontal dispersion ensuring an identical sound signature across an expanded sweet spot",
+        '3 Analog inputs: Balanced XLR, Balanced 1/4" TRS jack, and Unbalanced RCA inputs',
+        "Rear acoustic room correction controls: LF shelving (0\u2013250 Hz, \xB16 dB) and HF shelving (4.5\u201335 kHz, \xB13 dB)",
+        "Disengageable automatic standby mode (triggers after 15 minutes of inactivity)",
+        "Tweeter protective grille included (woofer grilles sold separately)"
+      ],
+      description: `
+      <p>The <strong>Focal Alpha Twin Evo</strong> is characterised by excellent dynamics, neutrality in the tonal balance and amazing dispersion to preserve an identical sound signature across a wide sweet spot. This monitor boasts a 1\u201D (25mm) aluminium inverted dome tweeter and two 6.5\u201D (16.5cm) woofers with a Slatefiber cone, handcrafted in France in the Focal workshops.</p>
+
+      <h3>Active 2.5-Way Architecture with Assignable Midrange</h3>
+      <p>Alpha Twin Evo is positioned horizontally; you can choose which speaker driver will produce the midrange frequencies using a dedicated switch located on the rear plate (we recommend keeping the midrange speaker driver on the inside, so to the right for the left loudspeaker, and vice versa). This flexible 2.5-way configuration provides sub-bass extension down to 38 Hz while ensuring pinpoint stereo imaging and seamless midrange clarity.</p>
+
+      <h3>French Slatefiber Cone Woofers & Inverted Aluminium Tweeter</h3>
+      <p>Exclusively manufactured in France, the recycled non-woven carbon fiber Slatefiber cone delivers exceptional rigidity, damping, and lightness, ensuring tight, controlled bass and uncolored midrange reproduction. Paired with Focal's signature 1" inverted aluminium dome tweeter, the Alpha Twin Evo provides pristine high-frequency extension and wide, controlled acoustic dispersion.</p>
+
+      <h3>High-Current Tri-Amplification & Large Laminar Vent</h3>
+      <p>Powered by three dedicated Class-D amplifiers (50W + 50W for the dual 6.5" woofers and 30W for the 1" tweeter \u2014 130W total RMS), the Alpha Twin Evo reaches up to 108 dB peak SPL with zero distortion and total control over musical transients. A large front-firing laminar port delivers optimal aerodynamic airflow, eliminating acoustic compression and port turbulence even at extreme sound pressure levels.</p>
+
+      <h3>Versatile Triple-Input Connectivity & Acoustic Room Tailoring</h3>
+      <p>Connect up to three audio sources simultaneously via balanced XLR, balanced 1/4" TRS jack, and unbalanced RCA inputs. Fine-tune your monitor response with rear-panel LF shelving (\xB16dB from 0\u2013250Hz) and HF shelving (\xB13dB from 4.5\u201335kHz), with an automatic disengageable standby mode.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response (\xB13 dB):</strong> 38 Hz \u2013 22 kHz</li>
+        <li><strong>Maximum SPL:</strong> 108 dB SPL (peak @ 1 m)</li>
+        <li><strong>Woofer Amplification:</strong> 2 x 50 W Class-D RMS</li>
+        <li><strong>Tweeter Amplification:</strong> 30 W Class-D RMS (130 W Total RMS)</li>
+        <li><strong>Inputs:</strong> 1x XLR balanced, 1x 1/4" TRS balanced, 1x RCA unbalanced with sensitivity compensation</li>
+        <li><strong>Controls:</strong> LF shelving (\xB16 dB), HF shelving (\xB13 dB), Midrange speaker assign switch (L/R)</li>
+        <li><strong>Standby:</strong> Disengageable automatic standby mode (after ~15 min)</li>
+        <li><strong>Dimensions (H x W x D):</strong> 260 x 550 x 290 mm (10.2 x 21.6 x 11.4")</li>
+        <li><strong>Weight:</strong> 12.2 kg (26.9 lbs)</li>
+        <li><strong>Included:</strong> Tweeter protective grille, power cable</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "Active 2.5-Way Horizontal Studio Monitor" },
+        { label: "Woofer Configuration", value: 'Dual 6.5" (16.5cm) Slatefiber Cone Woofers (Made in France)' },
+        { label: "Tweeter Type", value: '1" (25mm) Aluminium Inverted Dome Tweeter' },
+        { label: "Midrange Driver Assignment", value: "Switchable Rear Selector (Left or Right Woofer produces midrange)" },
+        { label: "Frequency Response", value: "38 Hz \u2013 22 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "Tri-Amped Class-D: 130 W RMS (2x 50 W Woofers + 30 W Tweeter)" },
+        { label: "Max SPL", value: "108 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "LF Shelving (0\u2013250 Hz, \xB16 dB), HF Shelving (4.5\u201335 kHz, \xB13 dB)" },
+        { label: "Dimensions (H x W x D)", value: '260 x 550 x 290 mm (10.2" x 21.6" x 11.4")' },
+        { label: "Weight", value: "12.2 kg (26.9 lbs)" },
+        { label: "Warranty", value: "Focal Official Manufacturer Warranty" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional Active 2.5-Way Studio Monitor"],
+        ["Configuration", "Horizontal Tri-Amplified 2.5-Way Active Loudspeaker"],
+        ["Low Frequency / Midrange Drivers", '2x 6.5" (16.5 cm) Slatefiber cone woofers (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) Inverted Aluminium dome tweeter'],
+        ["Midrange Selector", "Rear panel L/R switch to assign midrange reproduction to left or right woofer"],
+        ["Amplification Architecture", "Custom Class-D Tri-amplification"],
+        ["LF Amplifiers Power", "2x 50 W RMS (100 W total woofer RMS)"],
+        ["HF Amplifier Power", "30 W RMS"],
+        ["Total System Power", "130 W RMS"],
+        ["Frequency Response", "38 Hz \u2013 22 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "108 dB SPL (peak @ 1 m)"],
+        ["Inputs", '1x XLR (Balanced 10 k\u03A9), 1x 1/4" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)'],
+        ["Sensitivity", "Switchable 0 / +6 dB sensitivity selector"],
+        ["Low Frequency Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["High Frequency Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Disengageable automatic standby mode (after ~15 min inactivity)"],
+        ["Port Tuning", "Front-firing large laminar bass-reflex port"],
+        ["Enclosure & Construction", '15 mm (5/8") MDF with internal bracing and molded robust side panels'],
+        ["Grilles Included", "Tweeter protective grille included (Woofer grilles not included)"],
+        ["Dimensions (H x W x D)", '260 x 550 x 290 mm (10.2" x 21.6" x 11.4")'],
+        ["Weight", "12.2 kg (26.9 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply"],
+        ["Warranty", "Focal Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Focal Shape 40 (each) ───────────────────────────────────────────
+    {
+      id: "focal-shape-40-single",
+      name: "Focal Shape 40 (each)",
+      shortName: "Focal Shape 40 Compact Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 65080,
+      originalPrice: 72900,
+      rating: 5,
+      reviewCount: 24,
+      badge: "Flax Cone \xB7 Double Passive Radiator",
+      isFeatured: true,
+      image: "assets/images/products/focal-shape-40-single-angle.png",
+      images: [
+        "assets/images/products/focal-shape-40-single-angle.png",
+        "assets/images/products/focal-shape-40-single-side.jpg",
+        "assets/images/products/focal-shape-40-single-tilted.jpg",
+        "assets/images/products/focal-shape-40-single-rear.jpg",
+        "assets/images/products/focal-shape-40-single-grille.jpg"
+      ],
+      inStock: true,
+      stock: 8,
+      stockCount: 8,
+      sku: "FOCAL-SHAPE-40",
+      keyFeatures: [
+        'Most compact studio monitor in the Focal Professional line \u2014 perfect nearfield solution from 23" (60 cm) listening distance',
+        'Flax sandwich cone 4" (10 cm) woofer providing controlled bass, natural lower midrange, and acoustic neutrality',
+        '1" (25 mm) "M"-shaped aluminium-magnesium inverted dome tweeter with Poron\xAE suspension for low directivity',
+        'Portless acoustic design equipped with dual 4" (10 cm) side-firing passive radiators for placement against walls',
+        "Neutral Inductance Circuit (N.I.C.) technology for an ultra-stable magnetic field and minimal distortion",
+        "Tuned Mass Damper (TMD) surround delivering linear frequency response between 1 kHz and 2 kHz",
+        "Class-AB bi-amplification: 25W RMS woofer + 25W RMS tweeter (50W total RMS)",
+        "Acoustic integration controls: High-pass filter, LF shelving, and HF shelving",
+        "XLR balanced (10 k\u03A9) and RCA unbalanced (10 k\u03A9 with sensitivity compensation) inputs",
+        "Mounting inserts on rear and underside for microphone stand, table stand, ceiling, or wall brackets",
+        "Handcrafted in France with natural walnut veneer finish and painted MDF cabinet"
+      ],
+      description: `
+      <p>The <strong>Focal Shape 40</strong> is the most compact studio monitor in the Focal Professional line, and the perfect solution for nearfield monitoring. These monitors can be used from 23\u2033 away (60cm), and they have an astonishingly extended low end frequency response. Whether you have a room of less than 107 ft\xB2 (10 m\xB2), or an installation where compactness is paramount, Shape 40 is the ultimate acoustic solution.</p>
+
+      <p>Handcrafted in France, Shape 40 integrates five major acoustic innovations to maximise acoustic transparency, wide stereo imaging, and articulated bass register without masking effects.</p>
+
+      <h3>Flax Sandwich Cone & TMD Surround</h3>
+      <p>The 4-inch woofer features Focal\u2019s patented <strong>Flax sandwich cone</strong> composed of high-quality French flax fibers encased in two thin glass-fiber layers, delivering high rigidity, lightness, and internal damping. Combined with <strong>TMD (Tuned Mass Damper) surround</strong>, it produces a linear response between 1 and 2 kHz while dramatically reducing mid-range harmonic distortion.</p>
+
+      <h3>"M"-Shaped Inverted Dome Tweeter</h3>
+      <p>Focal\u2019s 1-inch aluminium-magnesium inverted dome tweeter features a distinctive <strong>\u201CM\u201D profile</strong> and a Poron\xAE suspension. This design achieves very low directivity for flexible listening positions, silky-smooth transients, and exceptional definition up to 35 kHz without ear fatigue.</p>
+
+      <h3>Dual Side-Firing Passive Radiators (Portless Design)</h3>
+      <p>Engineered without traditional bass reflex ports, Shape 40 utilizes <strong>dual 4-inch side-firing passive radiators</strong>. This allows the monitors to be positioned directly against back walls or in cramped control rooms without boundary bass buildup or port wind noise.</p>
+
+      <h3>Neutral Inductance Circuit (N.I.C.) & Class-AB Amplification</h3>
+      <p>Focal\u2019s proprietary <strong>N.I.C. technology</strong> utilizes a custom Faraday ring to stabilize the magnetic field regardless of coil excursion, voice coil frequency, or current. Driven by discrete Class-AB bi-amplification (25W woofer + 25W tweeter), the monitor preserves full musical dynamics across the spectrum.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response (\xB13 dB):</strong> 60 Hz \u2013 35 kHz</li>
+        <li><strong>Maximum SPL:</strong> 102 dB SPL (peak @ 1 m)</li>
+        <li><strong>Woofer Amplifier:</strong> 25 W Class-AB RMS</li>
+        <li><strong>Tweeter Amplifier:</strong> 25 W Class-AB RMS (50 W Total RMS)</li>
+        <li><strong>Inputs:</strong> Balanced XLR (10 k\u03A9), Unbalanced RCA (10 k\u03A9 with sensitivity compensation)</li>
+        <li><strong>Acoustic EQ Settings:</strong> High-pass filter (Full / 80 Hz), Bass shelving (0\u2013250 Hz, \xB16 dB), Treble shelving (4.5\u201335 kHz, \xB13 dB)</li>
+        <li><strong>Cabinet:</strong> 12 mm MDF, genuine walnut veneer, black painted finish</li>
+        <li><strong>Mounting:</strong> Underside M6 inserts for K&M\xAE table/mic stands; Rear M6 inserts for wall/ceiling brackets</li>
+        <li><strong>Dimensions (H x W x D):</strong> 257 x 161 x 200 mm (10.1 x 6.3 x 7.9")</li>
+        <li><strong>Weight:</strong> 5.0 kg (11 lbs)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Nearfield Monitor with Dual Passive Radiators" },
+        { label: "Woofer Size", value: '4" (10cm) Flax Sandwich Cone with TMD Surround' },
+        { label: "Tweeter Type", value: '1" (25mm) "M"-Profile Aluminium-Magnesium Inverted Dome' },
+        { label: "Passive Radiators", value: '2 x 4" (10cm) Side-Firing Passive Radiators' },
+        { label: "Frequency Response", value: "60 Hz \u2013 35 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "50 W Total RMS Class-AB (25 W Woofer + 25 W Tweeter)" },
+        { label: "Max SPL", value: "102 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: "1x Balanced XLR (10 k\u03A9), 1x Unbalanced RCA (10 k\u03A9)" },
+        { label: "Room EQ Filters", value: "High-Pass (Full / 80 Hz), LF Shelving (\xB16 dB), HF Shelving (\xB13 dB)" },
+        { label: "Dimensions (H x W x D)", value: '257 x 161 x 200 mm (10.1" x 6.3" x 7.9")' },
+        { label: "Weight", value: "5.0 kg (11 lbs)" },
+        { label: "Warranty", value: "Focal Official Manufacturer Warranty" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional 2-Way Active Studio Monitor with Passive Radiators"],
+        ["Configuration", "Single Bi-Amplified Active Nearfield Loudspeaker"],
+        ["Low Frequency Transducer", '4" (10 cm) Flax sandwich cone woofer (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) "M"-shaped Aluminium-Magnesium inverted dome tweeter'],
+        ["Passive Radiators", '2x 4" (10 cm) side-firing passive radiators'],
+        ["Amplification Architecture", "Class-AB Bi-amplification"],
+        ["LF Amplifier Power", "25 W RMS"],
+        ["HF Amplifier Power", "25 W RMS"],
+        ["Total System Power", "50 W RMS"],
+        ["Frequency Response", "60 Hz \u2013 35 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "102 dB SPL (peak @ 1 m)"],
+        ["Inputs", "1x XLR (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)"],
+        ["High-Pass Filter", "Adjustable Full range / 80 Hz"],
+        ["Bass Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["Treble Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Automatic standby mode (after ~30 min inactivity, <0.5W consumption)"],
+        ["Enclosure & Construction", '12 mm (0.5") MDF with genuine natural walnut veneer and black painted finish'],
+        ["Mounting Inserts", "Underside M6 thread (for K&M table/stand); Rear M6 threads (for wall/ceiling mounts)"],
+        ["Grilles Included", "Protective grilles for woofer and tweeter included"],
+        ["Dimensions (H x W x D)", '257 x 161 x 200 mm (10.1" x 6.3" x 7.9")'],
+        ["Weight", "5.0 kg (11 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply with IEC socket"],
+        ["Warranty", "Focal Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Focal Shape 50 (each) ───────────────────────────────────────────
+    {
+      id: "focal-shape-50-single",
+      name: "Focal Shape 50 (each)",
+      shortName: "Focal Shape 50 Active Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 95685,
+      originalPrice: 107500,
+      rating: 5,
+      reviewCount: 32,
+      badge: '5" Flax Cone \xB7 Double Passive Radiator',
+      isFeatured: true,
+      image: "assets/images/products/focal-shape-50-single-angle.png",
+      images: [
+        "assets/images/products/focal-shape-50-single-angle.png",
+        "assets/images/products/focal-shape-50-single-front.jpg",
+        "assets/images/products/focal-shape-50-single-side.jpg",
+        "assets/images/products/focal-shape-50-single-tilted.jpg",
+        "assets/images/products/focal-shape-50-single-rear.jpg"
+      ],
+      inStock: true,
+      stock: 7,
+      stockCount: 7,
+      sku: "FOCAL-SHAPE-50",
+      keyFeatures: [
+        'Versatile nearfield monitoring loudspeaker par excellence \u2014 optimized for listening distances from 30" (80 cm)',
+        "Extended low-end frequency response down to 50 Hz (-3 dB) within a remarkably compact enclosure",
+        'Flax sandwich cone 5" (13 cm) woofer delivering controlled, articulated bass and extreme midrange neutrality',
+        '1" (25 mm) "M"-shaped aluminium-magnesium inverted dome tweeter with Poron\xAE suspension for low directivity',
+        'Portless acoustic design equipped with dual 5" (13 cm) side-firing passive radiators for placement against walls',
+        "Neutral Inductance Circuit (N.I.C.) technology for an ultra-stable magnetic circuit and minimal harmonic distortion",
+        "Tuned Mass Damper (TMD) surround delivering linear frequency response between 1 kHz and 2 kHz",
+        "Class-AB bi-amplification: 60W RMS woofer + 25W RMS tweeter (85W total RMS)",
+        "Comprehensive acoustic integration controls: High-pass filter, LF shelving, Mid EQ, and HF shelving",
+        "XLR balanced (10 k\u03A9) and RCA unbalanced (10 k\u03A9 with sensitivity compensation) inputs",
+        "Mounting inserts on rear and underside for microphone stand, table stand, ceiling, or wall brackets"
+      ],
+      description: `
+      <p>The <strong>Focal Shape 50</strong> is the versatile monitoring loudspeaker par excellence. Designed for nearfield listening from 30\u2033 away (80cm), it delivers a remarkably extended low-end frequency response (50 Hz) despite its compact footprint. Thanks to its portless design and extensive acoustic settings, Shape 50 is ideal for control rooms and production studios measuring less than 130 ft\xB2 (12 m\xB2).</p>
+
+      <p>Handcrafted in France, Shape 50 integrates five major acoustic innovations that maximize acoustic transparency, providing a wide and extremely precise stereo image without masking effects in the critical midrange.</p>
+
+      <h3>Flax Sandwich Cone & TMD Surround</h3>
+      <p>The 5-inch woofer utilizes Focal\u2019s patented <strong>Flax sandwich cone</strong>, featuring organic French flax fiber encased between two structural glass-fiber skins. This structure achieves an ideal ratio of low mass, high rigidity, and superior internal damping. Enhanced by a <strong>TMD (Tuned Mass Damper) surround</strong>, it provides an exceptionally linear response between 1 and 2 kHz while slashing harmonic distortion.</p>
+
+      <h3>"M"-Shaped Inverted Dome Tweeter</h3>
+      <p>Focal\u2019s 1-inch aluminium-magnesium inverted dome tweeter features a proprietary <strong>\u201CM\u201D profile</strong> and a Poron\xAE suspension. This architecture yields remarkably low directivity, allowing engineers greater freedom of movement across the console without losing high-frequency detail, extending smoothly up to 35 kHz.</p>
+
+      <h3>Dual Side-Firing Passive Radiators (Portless Enclosure)</h3>
+      <p>Engineered without conventional bass-reflex ports, Shape 50 incorporates <strong>dual 5-inch side-firing passive radiators</strong>. This allows the monitor to be placed directly adjacent to studio walls or corners without the acoustic turbulence, port compression, or low-end boominess typical of ported monitors.</p>
+
+      <h3>Neutral Inductance Circuit (N.I.C.) & Class-AB Amplification</h3>
+      <p>Focal\u2019s proprietary <strong>N.I.C. technology</strong> utilizes an optimized Faraday ring to stabilize the magnetic field regardless of driver excursion, current, or signal frequency. Driven by discrete Class-AB bi-amplification (60W woofer + 25W tweeter \u2014 85W total RMS), the monitor delivers effortless dynamic headroom and pristine transient response.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response (\xB13 dB):</strong> 50 Hz \u2013 35 kHz</li>
+        <li><strong>Maximum SPL:</strong> 106 dB SPL (peak @ 1 m)</li>
+        <li><strong>Woofer Amplifier:</strong> 60 W Class-AB RMS</li>
+        <li><strong>Tweeter Amplifier:</strong> 25 W Class-AB RMS (85 W Total RMS)</li>
+        <li><strong>Inputs:</strong> Balanced XLR (10 k\u03A9), Unbalanced RCA (10 k\u03A9 with sensitivity compensation)</li>
+        <li><strong>Acoustic EQ Settings:</strong> High-pass filter (Full / 45 / 60 / 90 Hz), Bass shelving (0\u2013250 Hz, \xB16 dB), Midrange EQ (160 Hz, Q=1, \xB13 dB), Treble shelving (4.5\u201335 kHz, \xB13 dB)</li>
+        <li><strong>Cabinet:</strong> 15 mm MDF, genuine walnut veneer, black painted finish</li>
+        <li><strong>Mounting:</strong> Underside M6 inserts for K&M\xAE table/mic stands; Rear M6 inserts for wall/ceiling brackets</li>
+        <li><strong>Dimensions (H x W x D):</strong> 312 x 191 x 242 mm (12.3 x 7.5 x 9.5")</li>
+        <li><strong>Weight:</strong> 6.5 kg (14.3 lbs)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Nearfield Monitor with Dual Passive Radiators" },
+        { label: "Woofer Size", value: '5" (13cm) Flax Sandwich Cone with TMD Surround' },
+        { label: "Tweeter Type", value: '1" (25mm) "M"-Profile Aluminium-Magnesium Inverted Dome' },
+        { label: "Passive Radiators", value: '2 x 5" (13cm) Side-Firing Passive Radiators' },
+        { label: "Frequency Response", value: "50 Hz \u2013 35 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "85 W Total RMS Class-AB (60 W Woofer + 25 W Tweeter)" },
+        { label: "Max SPL", value: "106 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: "1x Balanced XLR (10 k\u03A9), 1x Unbalanced RCA (10 k\u03A9)" },
+        { label: "Room EQ Filters", value: "High-Pass (Full/45/60/90Hz), LF Shelving (\xB16dB), Mid EQ (\xB13dB), HF Shelving (\xB13dB)" },
+        { label: "Dimensions (H x W x D)", value: '312 x 191 x 242 mm (12.3" x 7.5" x 9.5")' },
+        { label: "Weight", value: "6.5 kg (14.3 lbs)" },
+        { label: "Warranty", value: "Focal Official Manufacturer Warranty" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional 2-Way Active Studio Monitor with Passive Radiators"],
+        ["Configuration", "Single Bi-Amplified Active Nearfield Loudspeaker"],
+        ["Low Frequency Transducer", '5" (13 cm) Flax sandwich cone woofer (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) "M"-shaped Aluminium-Magnesium inverted dome tweeter'],
+        ["Passive Radiators", '2x 5" (13 cm) side-firing passive radiators'],
+        ["Amplification Architecture", "Class-AB Bi-amplification"],
+        ["LF Amplifier Power", "60 W RMS"],
+        ["HF Amplifier Power", "25 W RMS"],
+        ["Total System Power", "85 W RMS"],
+        ["Frequency Response", "50 Hz \u2013 35 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "106 dB SPL (peak @ 1 m)"],
+        ["Inputs", "1x XLR (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)"],
+        ["High-Pass Filter", "Adjustable Full range / 45 / 60 / 90 Hz"],
+        ["Bass Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["Midrange EQ", "160 Hz (Q=1, \xB13 dB adjustable)"],
+        ["Treble Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Automatic standby mode (after ~30 min inactivity, <0.5W consumption)"],
+        ["Enclosure & Construction", '15 mm (0.6") MDF with genuine natural walnut veneer and black painted finish'],
+        ["Mounting Inserts", "Underside M6 thread (for K&M table/stand); Rear M6 threads (for wall/ceiling mounts)"],
+        ["Grilles Included", "Protective grilles for woofer and tweeter included"],
+        ["Dimensions (H x W x D)", '312 x 191 x 242 mm (12.3" x 7.5" x 9.5")'],
+        ["Weight", "6.5 kg (14.3 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply with IEC socket"],
+        ["Warranty", "Focal Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Focal Shape 65 (each) ───────────────────────────────────────────
+    {
+      id: "focal-shape-65-single",
+      name: "Focal Shape 65 (each)",
+      shortName: "Focal Shape 65 Active Studio Reference Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 123065,
+      originalPrice: 138e3,
+      rating: 5,
+      reviewCount: 39,
+      badge: '6.5" Flax Cone \xB7 Double Passive Radiator',
+      isFeatured: true,
+      image: "assets/images/products/focal-shape-65-single-angle.png",
+      images: [
+        "assets/images/products/focal-shape-65-single-angle.png",
+        "assets/images/products/focal-shape-65-single-front.jpg",
+        "assets/images/products/focal-shape-65-single-side.jpg",
+        "assets/images/products/focal-shape-65-single-tilted.jpg",
+        "assets/images/products/focal-shape-65-single-rear.jpg"
+      ],
+      inStock: true,
+      stock: 5,
+      stockCount: 5,
+      sku: "FOCAL-SHAPE-65",
+      keyFeatures: [
+        "Flagship reference monitor of the Shape series \u2014 delivers extraordinary monitoring fidelity from 3 feet away (1 m)",
+        "Deep, extended bass response down to 40 Hz (\xB13 dB) with exceptional articulacy and control",
+        'Flax sandwich cone 6.5" (16.5 cm) woofer providing extreme midrange neutrality and low-end definition',
+        '1" (25 mm) "M"-shaped aluminium-magnesium inverted dome tweeter with Poron\xAE suspension for low directivity',
+        'Portless acoustic design equipped with dual 6.5" (16.5 cm) side-firing passive radiators for placement against walls',
+        "Neutral Inductance Circuit (N.I.C.) technology for an ultra-stable magnetic circuit and minimal distortion",
+        "Tuned Mass Damper (TMD) surround delivering linear frequency response between 1 kHz and 2 kHz",
+        "Class-AB bi-amplification: 80W RMS woofer + 25W RMS tweeter (105W total RMS)",
+        "Comprehensive acoustic integration controls: High-pass filter, LF shelving, Mid EQ, and HF shelving",
+        "XLR balanced (10 k\u03A9) and RCA unbalanced (10 k\u03A9 with sensitivity compensation) inputs",
+        "Mounting mechanisms on back and underneath for table stands, microphone stands, ceiling, or wall brackets"
+      ],
+      description: `
+      <p>The <strong>Focal Shape 65</strong> is the reference monitor of the Shape line. Although dedicated to nearfield monitoring, this monitor enables extraordinary monitoring quality from the lowest to the highest frequencies. Expressing its full potential from a listening distance of 3 feet away (1 metre), Shape 65 is a must-have for mastering engineers, music producers, and demanding broadcast facilities.</p>
+
+      <p>Handcrafted in France, Shape 65 integrates five breakthrough innovations to maximise acoustic transparency, creating a wide, surgically precise stereo image with an articulated bass register and uncolored midrange reproduction.</p>
+
+      <h3>Flax Sandwich Cone & TMD Surround</h3>
+      <p>The 6.5-inch woofer features Focal\u2019s patented <strong>Flax sandwich cone</strong> composed of high-quality French flax fibers encased in two thin glass-fiber layers, delivering high rigidity, lightness, and internal damping. Combined with <strong>TMD (Tuned Mass Damper) surround</strong>, it produces a linear response between 1 and 2 kHz while significantly reducing mid-range harmonic distortion.</p>
+
+      <h3>"M"-Shaped Inverted Dome Tweeter</h3>
+      <p>Focal\u2019s 1-inch aluminium-magnesium inverted dome tweeter features a distinctive <strong>\u201CM\u201D profile</strong> and a Poron\xAE suspension. This design achieves very low directivity for flexible listening positions, silky-smooth transients, and exceptional definition up to 35 kHz without ear fatigue.</p>
+
+      <h3>Dual 6.5" Side-Firing Passive Radiators (Portless Design)</h3>
+      <p>Engineered without traditional bass reflex ports, Shape 65 utilizes <strong>dual 6.5-inch side-firing passive radiators</strong>. This allows the monitors to be positioned directly against back walls or in acoustically challenging control rooms without boundary bass buildup or port wind noise.</p>
+
+      <h3>Neutral Inductance Circuit (N.I.C.) & Class-AB Amplification</h3>
+      <p>Focal\u2019s proprietary <strong>N.I.C. technology</strong> utilizes a custom Faraday ring to stabilize the magnetic field regardless of coil excursion, voice coil frequency, or current. Driven by discrete Class-AB bi-amplification (80W woofer + 25W tweeter \u2014 105W total RMS), the monitor delivers effortless dynamic headroom and pristine transient accuracy.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response (\xB13 dB):</strong> 40 Hz \u2013 35 kHz</li>
+        <li><strong>Maximum SPL:</strong> 109 dB SPL (peak @ 1 m)</li>
+        <li><strong>Woofer Amplifier:</strong> 80 W Class-AB RMS</li>
+        <li><strong>Tweeter Amplifier:</strong> 25 W Class-AB RMS (105 W Total RMS)</li>
+        <li><strong>Inputs:</strong> Balanced XLR (10 k\u03A9), Unbalanced RCA (10 k\u03A9 with sensitivity compensation)</li>
+        <li><strong>Acoustic EQ Settings:</strong> High-pass filter (Full / 45 / 60 / 90 Hz), Bass shelving (0\u2013250 Hz, \xB16 dB), Midrange EQ (160 Hz, Q=1, \xB13 dB), Treble shelving (4.5\u201335 kHz, \xB13 dB)</li>
+        <li><strong>Cabinet:</strong> 15 mm MDF, genuine walnut veneer, black painted finish</li>
+        <li><strong>Mounting:</strong> Underside M6 inserts for K&M\xAE table/mic stands; Rear M6 inserts for wall/ceiling brackets</li>
+        <li><strong>Dimensions (H x W x D):</strong> 355 x 218 x 285 mm (14.0 x 8.6 x 11.2")</li>
+        <li><strong>Weight:</strong> 8.5 kg (18.7 lbs)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Reference Nearfield Monitor with Dual Passive Radiators" },
+        { label: "Woofer Size", value: '6.5" (16.5cm) Flax Sandwich Cone with TMD Surround' },
+        { label: "Tweeter Type", value: '1" (25mm) "M"-Profile Aluminium-Magnesium Inverted Dome' },
+        { label: "Passive Radiators", value: '2 x 6.5" (16.5cm) Side-Firing Passive Radiators' },
+        { label: "Frequency Response", value: "40 Hz \u2013 35 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "105 W Total RMS Class-AB (80 W Woofer + 25 W Tweeter)" },
+        { label: "Max SPL", value: "109 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: "1x Balanced XLR (10 k\u03A9), 1x Unbalanced RCA (10 k\u03A9)" },
+        { label: "Room EQ Filters", value: "High-Pass (Full/45/60/90Hz), LF Shelving (\xB16dB), Mid EQ (\xB13dB), HF Shelving (\xB13dB)" },
+        { label: "Dimensions (H x W x D)", value: '355 x 218 x 285 mm (14.0" x 8.6" x 11.2")' },
+        { label: "Weight", value: "8.5 kg (18.7 lbs)" },
+        { label: "Warranty", value: "Focal Official Manufacturer Warranty" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional 2-Way Active Reference Studio Monitor with Passive Radiators"],
+        ["Configuration", "Single Bi-Amplified Active Nearfield Loudspeaker"],
+        ["Low Frequency Transducer", '6.5" (16.5 cm) Flax sandwich cone woofer (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) "M"-shaped Aluminium-Magnesium inverted dome tweeter'],
+        ["Passive Radiators", '2x 6.5" (16.5 cm) side-firing passive radiators'],
+        ["Amplification Architecture", "Class-AB Bi-amplification"],
+        ["LF Amplifier Power", "80 W RMS"],
+        ["HF Amplifier Power", "25 W RMS"],
+        ["Total System Power", "105 W RMS"],
+        ["Frequency Response", "40 Hz \u2013 35 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "109 dB SPL (peak @ 1 m)"],
+        ["Inputs", "1x XLR (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)"],
+        ["High-Pass Filter", "Adjustable Full range / 45 / 60 / 90 Hz"],
+        ["Bass Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["Midrange EQ", "160 Hz (Q=1, \xB13 dB adjustable)"],
+        ["Treble Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Automatic standby mode (after ~30 min inactivity, <0.5W consumption)"],
+        ["Enclosure & Construction", '15 mm (0.6") MDF with genuine natural walnut veneer and black painted finish'],
+        ["Mounting Inserts", "Underside M6 thread (for K&M table/stand); Rear M6 threads (for wall/ceiling mounts)"],
+        ["Grilles Included", "Protective grilles for woofer and tweeter included"],
+        ["Dimensions (H x W x D)", '355 x 218 x 285 mm (14.0" x 8.6" x 11.2")'],
+        ["Weight", "8.5 kg (18.7 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply with IEC socket"],
+        ["Warranty", "Focal Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT: Focal Shape Twin (each) ─────────────────────────────────────────
+    {
+      id: "focal-shape-twin-single",
+      name: "Focal Shape Twin (each)",
+      shortName: "Focal Shape Twin Active 2.5-Way Studio Monitor",
+      brand: "Focal Professional",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 157290,
+      originalPrice: 176500,
+      rating: 5,
+      reviewCount: 44,
+      badge: '2.5-Way \xB7 Dual 5" Flax Cone \xB7 Double Passive Radiator',
+      isFeatured: true,
+      image: "assets/images/products/focal-shape-twin-single-angle.png",
+      images: [
+        "assets/images/products/focal-shape-twin-single-angle.png",
+        "assets/images/products/focal-shape-twin-single-front.jpg",
+        "assets/images/products/focal-shape-twin-single-rear.png",
+        "assets/images/products/focal-shape-twin-single-rear-angle.jpg"
+      ],
+      inStock: true,
+      stock: 4,
+      stockCount: 4,
+      sku: "FOCAL-SHAPE-TWIN",
+      keyFeatures: [
+        'Line benchmark 2.5-way nearfield monitor with dual 5" (13 cm) Flax cone woofers and 1" "M"-shaped inverted dome tweeter',
+        "2.5-Way acoustic architecture gives ultimate control over bass and lower-midrange registers in small to medium listening rooms",
+        'Portless acoustic design equipped with dual 8" (20 cm) side-firing passive radiators for boundary wall placement',
+        "Tri-amplified Class-AB architecture: 2x 85W RMS woofers + 50W RMS tweeter (210W total RMS / 420W peak)",
+        "Neutral Inductance Circuit (N.I.C.) technology for an ultra-stable magnetic circuit and minimal distortion",
+        "Tuned Mass Damper (TMD) surround delivering linear frequency response between 1 kHz and 2 kHz",
+        "Broad frequency response from 40 Hz to 35 kHz (\xB13 dB) with high 110.5 dB peak SPL",
+        "Comprehensive acoustic room integration: High-pass filter, LF shelving, Mid EQ, and HF shelving",
+        "Mounting inserts on rear and underneath for microphone stand, table stand, ceiling, or wall brackets"
+      ],
+      description: `
+      <p>The <strong>Focal Shape Twin</strong> is the standard bearer and benchmark product of the Shape series. Featuring two passive radiators, woofers equipped with a new Flax sandwich cone, and the latest \u201CM\u201D-shaped Aluminium/Magnesium inverted dome tweeter, it is the perfect weapon of mass production for recording and mastering professionals.</p>
+
+      <p>Handcrafted in France, Shape Twin stands out through its extraordinary rendering over the entire audio spectrum, broad frequency response in the low end down to 40 Hz, and high SPL considering its compact dimensions. Its 2.5-way design provides a decisive acoustic advantage when controlling bass and lower mid-range registers\u2014the hardest to tame in small and medium rooms.</p>
+
+      <h3>Flax Sandwich Cones & TMD Surround</h3>
+      <p>The dual 5-inch woofers utilize Focal\u2019s patented <strong>Flax sandwich cone</strong> composed of high-quality French flax fibers encased in structural glass-fiber skins. One woofer reproduces frequencies from 40 Hz to 2.5 kHz while the second is dedicated to low-mid and sub-bass from 40 Hz to 250 Hz. Combined with <strong>TMD (Tuned Mass Damper) surround</strong>, it produces remarkable neutrality without masking effects.</p>
+
+      <h3>"M"-Shaped Inverted Dome Tweeter</h3>
+      <p>Focal\u2019s 1-inch aluminium-magnesium inverted dome tweeter features a distinctive <strong>\u201CM\u201D profile</strong> and a Poron\xAE suspension. This design achieves very low directivity for a flexible listening position, pristine high-definition detail up to 35 kHz, and fatigue-free mixing.</p>
+
+      <h3>Dual 8" Side-Firing Passive Radiators (Portless Design)</h3>
+      <p>Engineered without traditional bass reflex ports, Shape Twin utilizes <strong>dual 8-inch (20 cm) side-firing passive radiators</strong>. This allows the monitor to be positioned directly against back walls without boundary bass buildup or port noise.</p>
+
+      <h3>Neutral Inductance Circuit (N.I.C.) & Class-AB Tri-Amplification</h3>
+      <p>Focal\u2019s proprietary <strong>N.I.C. technology</strong> stabilizes the magnetic field regardless of driver excursion or current. Powered by discrete Class-AB tri-amplification (2x 85W woofers + 50W tweeter \u2014 210W total RMS), the monitor provides massive dynamic headroom and surgical precision.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>Frequency Response (\xB13 dB):</strong> 40 Hz \u2013 35 kHz</li>
+        <li><strong>Maximum SPL:</strong> 110.5 dB SPL (peak @ 1 m)</li>
+        <li><strong>Woofer Amplification:</strong> 2 x 85 W Class-AB RMS</li>
+        <li><strong>Tweeter Amplification:</strong> 50 W Class-AB RMS (210 W Total RMS)</li>
+        <li><strong>Inputs:</strong> Balanced XLR (10 k\u03A9), Unbalanced RCA (10 k\u03A9 with sensitivity compensation)</li>
+        <li><strong>Acoustic EQ Settings:</strong> High-pass filter (Full / 45 / 60 / 90 Hz), Bass shelving (0\u2013250 Hz, \xB16 dB), Midrange EQ (160 Hz, Q=1, \xB13 dB), Treble shelving (4.5\u201335 kHz, \xB13 dB)</li>
+        <li><strong>Cabinet:</strong> 15 mm MDF, genuine walnut veneer, black painted finish</li>
+        <li><strong>Mounting:</strong> Underside M6 inserts for K&M\xAE table/mic stands; Rear M6 inserts for wall/ceiling brackets</li>
+        <li><strong>Dimensions (H x W x D):</strong> 478 x 211 x 279 mm (18.8 x 8.3 x 11.0")</li>
+        <li><strong>Weight:</strong> 11.0 kg (24.2 lbs)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: 'Active 2.5-Way Studio Monitor with Dual 8" Passive Radiators' },
+        { label: "Woofer Configuration", value: 'Dual 5" (13cm) Flax Sandwich Cones with TMD Surround' },
+        { label: "Tweeter Type", value: '1" (25mm) "M"-Profile Aluminium-Magnesium Inverted Dome' },
+        { label: "Passive Radiators", value: '2 x 8" (20cm) Side-Firing Passive Radiators' },
+        { label: "Frequency Response", value: "40 Hz \u2013 35 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "210 W Total RMS Class-AB (2x 85 W Woofers + 50 W Tweeter)" },
+        { label: "Max SPL", value: "110.5 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: "1x Balanced XLR (10 k\u03A9), 1x Unbalanced RCA (10 k\u03A9)" },
+        { label: "Room EQ Filters", value: "High-Pass (Full/45/60/90Hz), LF Shelving (\xB16dB), Mid EQ (\xB13dB), HF Shelving (\xB13dB)" },
+        { label: "Dimensions (H x W x D)", value: '478 x 211 x 279 mm (18.8" x 8.3" x 11.0")' },
+        { label: "Weight", value: "11.0 kg (24.2 lbs)" },
+        { label: "Warranty", value: "Focal Official Manufacturer Warranty" }
+      ],
+      deepSpecs: [
+        ["Type", "Professional Active 2.5-Way Studio Monitor with Dual Passive Radiators"],
+        ["Configuration", "Single Tri-Amplified Active Nearfield Loudspeaker"],
+        ["Low Frequency / Midrange Drivers", '2x 5" (13 cm) Flax sandwich cone woofers (Made in France)'],
+        ["High Frequency Transducer", '1" (25 mm) "M"-shaped Aluminium-Magnesium inverted dome tweeter'],
+        ["Passive Radiators", '2x 8" (20 cm) side-firing passive radiators'],
+        ["Amplification Architecture", "Class-AB Tri-amplification"],
+        ["LF Amplifiers Power", "2x 85 W RMS (170 W total woofer RMS)"],
+        ["HF Amplifier Power", "50 W RMS"],
+        ["Total System Power", "210 W RMS / 420 W Peak"],
+        ["Frequency Response", "40 Hz \u2013 35 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "110.5 dB SPL (peak @ 1 m)"],
+        ["Inputs", "1x XLR (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9 with sensitivity compensation)"],
+        ["High-Pass Filter", "Adjustable Full range / 45 / 60 / 90 Hz"],
+        ["Bass Shelving", "0 \u2013 250 Hz (\xB16 dB adjustable)"],
+        ["Midrange EQ", "160 Hz (Q=1, \xB13 dB adjustable)"],
+        ["Treble Shelving", "4.5 \u2013 35 kHz (\xB13 dB adjustable)"],
+        ["Automatic Standby", "Automatic standby mode (after ~30 min inactivity, <0.5W consumption)"],
+        ["Enclosure & Construction", '15 mm (0.6") MDF with genuine natural walnut veneer and black painted finish'],
+        ["Mounting Inserts", "Underside M6 thread (for K&M table/stand); Rear M6 threads (for wall/ceiling mounts)"],
+        ["Grilles Included", "Protective grilles for woofers and tweeter included"],
+        ["Dimensions (H x W x D)", '478 x 211 x 279 mm (18.8" x 8.3" x 11.0")'],
+        ["Weight", "11.0 kg (24.2 lbs)"],
+        ["Power Supply", "100 \u2013 240 V AC, 50/60 Hz universal internal supply with IEC socket"],
+        ["Warranty", "Focal Official Manufacturer Warranty"]
+      ]
+    },
+    // ─── PRODUCT 59 ── Eikon EK5NF - 5” Near-field Studio Monitor (each) ─────────
+    {
+      id: "eikon-ek5nf-single",
+      name: "Eikon EK5NF - 5\u201D Near-field Studio Monitor (each)",
+      shortName: 'Eikon EK5NF 5" Studio Monitor',
+      brand: "Eikon",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 21883,
+      originalPrice: 25900,
+      rating: 4.8,
+      reviewCount: 27,
+      image: "assets/images/products/eikon-ek5nf-angle.jpg",
+      images: [
+        "assets/images/products/eikon-ek5nf-angle.jpg",
+        "assets/images/products/eikon-ek5nf-front.jpg",
+        "assets/images/products/eikon-ek5nf-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Class AB Bi-Amp",
+      inStock: true,
+      stock: 15,
+      sku: "EIKON-EK5NF",
+      description: `
+      <h3>Eikon EK5NF - 5.25" Bi-Amplified Near-Field Studio Monitor</h3>
+      <p>The EK NF series represents the ideal nearfield monitor solution for music production, tracking, and mixing applications. From meticulously selected transducers to proprietary elliptical waveguides and a low-resonance cabinet architecture, every element has been custom tailored by Italian audio engineers at Proel/Eikon to offer unmatched acoustic accuracy across the entire audible frequency spectrum.</p>
+
+      <h3>High-Headroom Class AB Bi-Amplification & Dual Limiters</h3>
+      <p>Optimized electronics include dedicated high-headroom Class AB amplifiers delivering 45W to the low frequencies and 25W to the high frequencies (70W continuous total). Separate precision limiters protect each driver against clipping and overload, providing transparent dynamics, expansive headroom, and minimum listening fatigue during long mixing sessions.</p>
+
+      <h3>Proprietary Elliptical Waveguide & 5.25" Lightweight Fiberglass Woofer</h3>
+      <p>Featuring a 0.75\u201D soft-dome tweeter nestled within an integrated elliptical waveguide, the EK5NF provides uniform high-frequency dispersion and a broad stereo sweet spot. The long-excursion 5.25\u201D lightweight fiberglass composite woofer and precisely tuned front laminar port produce tight, articulate bass down to 55 Hz without port turbulence.</p>
+
+      <h3>Multi-Format Input Connectivity & HF Calibration</h3>
+      <p>Equipped with balanced XLR, balanced 1/4" (6.35mm) TRS, and unbalanced RCA input connectors, the EK5NF integrates seamlessly into any studio audio chain. A rear-panel 4-position HF adjustment switch (-2dB, -1dB, 0dB, +1dB) provides flexible acoustic compensation for reflective or damped mixing environments.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Loudspeaker" },
+        { label: "Woofer Size", value: '5.25" Long-Excursion Fiberglass Woofer' },
+        { label: "Tweeter Type", value: '0.75" Soft-Dome Tweeter in Elliptical Waveguide' },
+        { label: "Frequency Response", value: "55 Hz \u2013 20 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "70 W Continuous (45 W LF + 25 W HF Class-AB)" },
+        { label: "Max SPL", value: "106 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "HF Level Switch (-2dB, -1dB, 0dB, +1dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Near-Field Reference Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Active Loudspeaker"],
+        ["Low Frequency Transducer", '5.25" (133 mm) Long-excursion lightweight fiberglass composite cone'],
+        ["High Frequency Transducer", '0.75" (19 mm) Soft-dome tweeter in elliptical waveguide'],
+        ["Amplification Architecture", "Bi-Amplified Analog Class-AB"],
+        ["LF Amplifier Power", "45 W Continuous (Class AB)"],
+        ["HF Amplifier Power", "25 W Continuous (Class AB)"],
+        ["Total System Power", "70 W Continuous / 140 W Peak"],
+        ["Frequency Response", "55 Hz \u2013 20 kHz (\xB13 dB)"],
+        ["Crossover Frequency", "2.0 kHz (active 4th order Linkwitz-Riley)"],
+        ["Maximum Peak SPL", "106 dB SPL (peak @ 1 m)"],
+        ["Input Connectors", '1x XLR (Balanced 10 k\u03A9), 1x 1/4" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9)'],
+        ["Input Sensitivity", "-10 dBV / +4 dBu switchable / continuous level trim"],
+        ["High Frequency Adjustment", "-2 dB, -1 dB, 0 dB, +1 dB (above 5 kHz)"],
+        ["Protection Circuits", "Dual independent optical limiter / clip protection, thermal & subsonic filters"],
+        ["Port Tuning", "Front-firing aerodynamically calculated bass-reflex slot"],
+        ["Cabinet Construction", "High-density MDF vinyl-laminated cabinet with low-resonance baffle"],
+        ["Dimensions (H x W x D)", '280 x 185 x 230 mm (11.0" x 7.3" x 9.1")'],
+        ["Weight", "5.0 kg (11.0 lbs)"],
+        ["Power Requirements", "230 V AC / 115 V AC switchable, 50/60 Hz"],
+        ["Warranty", "4 Years Proel / Eikon Official Warranty (Efficient Standard + 2 Years Extended)"]
+      ]
+    },
+    // ─── PRODUCT 60 ── Eikon EK6NF - 6.5” Near-field Studio Monitor (each) ───────
+    {
+      id: "eikon-ek6nf-single",
+      name: "Eikon EK6NF - 6.5\u201D Near-field Studio Monitor (each)",
+      shortName: 'Eikon EK6NF 6.5" Studio Monitor',
+      brand: "Eikon",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 25993,
+      originalPrice: 30900,
+      rating: 4.9,
+      reviewCount: 33,
+      image: "assets/images/products/eikon-ek6nf-angle.jpg",
+      images: [
+        "assets/images/products/eikon-ek6nf-angle.jpg",
+        "assets/images/products/eikon-ek6nf-front.jpg",
+        "assets/images/products/eikon-ek6nf-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Class AB 95W",
+      inStock: true,
+      stock: 12,
+      sku: "EIKON-EK6NF",
+      description: `
+      <h3>Eikon EK6NF - 6.5" Bi-Amplified Near-Field Studio Monitor</h3>
+      <p>The Eikon EK6NF represents the ideal nearfield monitoring solution for music production, professional recording, and critical mixing applications. From carefully selected Italian transducers to proprietary enhanced elliptical waveguides and low-resonance cabinet architecture, every element has been engineered to deliver uncompromising accuracy across the full audible spectrum.</p>
+
+      <h3>High-Headroom Class AB Bi-Amplification & Dual Limiters</h3>
+      <p>The optimized electronics feature dedicated Class AB amplifiers delivering 60W to the 6.5" low-frequency driver and 35W to the 1" tweeter (95W continuous total). Dual high-precision clip limiter circuits guard against overload distortion, ensuring expansive dynamic resolution and minimal ear fatigue during prolonged studio sessions.</p>
+
+      <h3>Proprietary Elliptical Waveguide & 6.5" Lightweight Fiberglass Woofer</h3>
+      <p>Featuring a 1\u201D soft-dome tweeter coupled to an integrated elliptical waveguide, the EK6NF delivers pristine high-frequency dispersion and a broad, stable stereo image. The long-excursion 6.5\u201D lightweight fiberglass composite woofer with a precisely tuned front laminar bass-reflex port generates extended low-end response down to 50 Hz with zero port turbulence.</p>
+
+      <h3>Multi-Format Input Connectivity & HF Acoustic Calibration</h3>
+      <p>Equipped with balanced XLR, balanced 1/4" (6.35mm) TRS, and unbalanced RCA connectors, the EK6NF connects directly to audio interfaces, mixers, or consumer playback gear. A rear-panel 4-position HF adjustment switch (-2dB, -1dB, 0dB, +1dB) provides exact room compensation for various acoustic environments.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Loudspeaker" },
+        { label: "Woofer Size", value: '6.5" Long-Excursion Fiberglass Woofer' },
+        { label: "Tweeter Type", value: '1" Soft-Dome Tweeter in Elliptical Waveguide' },
+        { label: "Frequency Response", value: "50 Hz \u2013 20 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "95 W Continuous (60 W LF + 35 W HF Class-AB)" },
+        { label: "Max SPL", value: "108 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "HF Level Switch (-2dB, -1dB, 0dB, +1dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Near-Field Reference Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Active Loudspeaker"],
+        ["Low Frequency Transducer", '6.5" (165 mm) Long-excursion lightweight fiberglass composite cone'],
+        ["High Frequency Transducer", '1" (25 mm) Soft-dome tweeter in elliptical waveguide'],
+        ["Amplification Architecture", "Bi-Amplified Analog Class-AB"],
+        ["LF Amplifier Power", "60 W Continuous (Class AB)"],
+        ["HF Amplifier Power", "35 W Continuous (Class AB)"],
+        ["Total System Power", "95 W Continuous / 190 W Peak"],
+        ["Frequency Response", "50 Hz \u2013 20 kHz (\xB13 dB)"],
+        ["Crossover Frequency", "2.0 kHz (active 4th order Linkwitz-Riley)"],
+        ["Maximum Peak SPL", "108 dB SPL (peak @ 1 m)"],
+        ["Input Connectors", '1x XLR (Balanced 10 k\u03A9), 1x 1/4" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9)'],
+        ["Input Sensitivity", "-10 dBV / +4 dBu switchable / continuous level trim"],
+        ["High Frequency Adjustment", "-2 dB, -1 dB, 0 dB, +1 dB (above 5 kHz)"],
+        ["Protection Circuits", "Dual independent optical limiter / clip protection, thermal & subsonic filters"],
+        ["Port Tuning", "Front-firing aerodynamically calculated bass-reflex slot"],
+        ["Cabinet Construction", "High-density MDF vinyl-laminated cabinet with low-resonance baffle"],
+        ["Dimensions (H x W x D)", '320 x 215 x 260 mm (12.6" x 8.5" x 10.2")'],
+        ["Weight", "6.5 kg (14.3 lbs)"],
+        ["Power Requirements", "230 V AC / 115 V AC switchable, 50/60 Hz"],
+        ["Warranty", "4 Years Proel / Eikon Official Warranty (Efficient Standard + 2 Years Extended)"]
+      ]
+    },
+    // ─── PRODUCT 61 ── Eikon EK8NF - 8” Near-field Studio Monitor (each) ─────────
+    {
+      id: "eikon-ek8nf-single",
+      name: "Eikon EK8NF - 8\u201D Near-field Studio Monitor (each)",
+      shortName: 'Eikon EK8NF 8" Studio Monitor',
+      brand: "Eikon",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 31508,
+      originalPrice: 37900,
+      rating: 4.9,
+      reviewCount: 39,
+      image: "assets/images/products/eikon-ek8nf-angle.jpg",
+      images: [
+        "assets/images/products/eikon-ek8nf-angle.jpg",
+        "assets/images/products/eikon-ek8nf-front.jpg",
+        "assets/images/products/eikon-ek8nf-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Class AB 120W",
+      inStock: true,
+      stock: 9,
+      sku: "EIKON-EK8NF",
+      description: `
+      <h3>Eikon EK8NF - Flagship 8" Bi-Amplified Near-Field Studio Monitor</h3>
+      <p>The Eikon EK8NF is the flagship model of the EK NF series, designed to serve as the definitive nearfield reference monitor for recording studios, post-production suites, and demanding mixing environments. From its custom-engineered Italian transducers to the proprietary elliptical waveguide and heavy-duty, low-resonance cabinet architecture, every element offers superlative acoustic accuracy across the complete 45 Hz \u2013 20 kHz spectrum.</p>
+
+      <h3>High-Headroom Class AB Bi-Amplification (120W Continuous)</h3>
+      <p>The optimized analog electronics integrate dual separate Class AB amplifiers outputting 75W to the 8" low-frequency driver and 45W to the 1" soft-dome tweeter (120W continuous total / 240W peak). Independent high-precision clip limiter networks guard against acoustic distortion, ensuring expansive dynamic resolution and fatigue-free monitoring during marathon tracking and mastering sessions.</p>
+
+      <h3>Proprietary Elliptical Waveguide & 8" Lightweight Fiberglass Cone</h3>
+      <p>Featuring a 1\u201D soft-dome tweeter integrated into an optimized elliptical waveguide, the EK8NF provides uniform high-frequency dispersion and a wide stereo soundstage. The long-excursion 8\u201D lightweight fiberglass composite woofer, paired with an aerodynamically calculated front bass-reflex slot, delivers deep, punchy low-end extension down to 45 Hz without chuffing or boundary coloration.</p>
+
+      <h3>Triple Multi-Format Inputs & 4-Way HF Acoustic Calibration</h3>
+      <p>Equipped with balanced XLR, balanced 1/4" (6.35mm) TRS, and unbalanced RCA connectors, the EK8NF interfaces effortlessly with any audio interface, mixing console, or monitor controller. A rear-panel 4-position HF adjustment switch (-2dB, -1dB, 0dB, +1dB) provides exact room calibration for acoustically reflective or highly treated studios.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "2-Way Active Bass Reflex Nearfield Loudspeaker" },
+        { label: "Woofer Size", value: '8" Long-Excursion Fiberglass Woofer' },
+        { label: "Tweeter Type", value: '1" Soft-Dome Tweeter in Elliptical Waveguide' },
+        { label: "Frequency Response", value: "45 Hz \u2013 20 kHz (\xB13 dB)" },
+        { label: "Amplification Power", value: "120 W Continuous (75 W LF + 45 W HF Class-AB)" },
+        { label: "Max SPL", value: "109 dB SPL (Peak at 1m)" },
+        { label: "Inputs", value: '1x Balanced XLR, 1x Balanced 1/4" TRS, 1x Unbalanced RCA' },
+        { label: "Room EQ Filters", value: "HF Level Switch (-2dB, -1dB, 0dB, +1dB)" }
+      ],
+      deepSpecs: [
+        ["Type", "Active 2-Way Near-Field Reference Studio Monitor"],
+        ["Configuration", "Single Bi-Amplified Active Loudspeaker"],
+        ["Low Frequency Transducer", '8" (200 mm) Long-excursion lightweight fiberglass composite cone'],
+        ["High Frequency Transducer", '1" (25 mm) Soft-dome tweeter in elliptical waveguide'],
+        ["Amplification Architecture", "Bi-Amplified Analog Class-AB"],
+        ["LF Amplifier Power", "75 W Continuous (Class AB)"],
+        ["HF Amplifier Power", "45 W Continuous (Class AB)"],
+        ["Total System Power", "120 W Continuous / 240 W Peak"],
+        ["Frequency Response", "45 Hz \u2013 20 kHz (\xB13 dB)"],
+        ["Crossover Frequency", "2.0 kHz (active 4th order Linkwitz-Riley)"],
+        ["Maximum Peak SPL", "109 dB SPL (peak @ 1 m)"],
+        ["Input Connectors", '1x XLR (Balanced 10 k\u03A9), 1x 1/4" TRS (Balanced 10 k\u03A9), 1x RCA (Unbalanced 10 k\u03A9)'],
+        ["Input Sensitivity", "-10 dBV / +4 dBu switchable / continuous level trim"],
+        ["High Frequency Adjustment", "-2 dB, -1 dB, 0 dB, +1 dB (above 5 kHz)"],
+        ["Protection Circuits", "Dual independent optical limiter / clip protection, thermal & subsonic filters"],
+        ["Port Tuning", "Front-firing aerodynamically calculated bass-reflex slot"],
+        ["Cabinet Construction", "High-density MDF vinyl-laminated cabinet with low-resonance baffle"],
+        ["Dimensions (H x W x D)", '380 x 265 x 305 mm (15.0" x 10.4" x 12.0")'],
+        ["Weight", "10.0 kg (22.0 lbs)"],
+        ["Power Requirements", "230 V AC / 115 V AC switchable, 50/60 Hz"],
+        ["Warranty", "4 Years Proel / Eikon Official Warranty (Efficient Standard + 2 Years Extended)"]
+      ]
+    },
+    // ─── PRODUCT: Eikon EK10SW - 10” 150 W Studio Subwoofer ───────────────────────
+    {
+      id: "eikon-ek10sw-subwoofer",
+      name: "Eikon EK10SW - 10\u201D 150 W Studio Subwoofer",
+      shortName: 'Eikon EK10SW 10" 150W Active Studio Subwoofer',
+      brand: "Eikon",
+      category: "Studio Monitors",
+      subcategory: "Active Studio Monitors",
+      price: 44476,
+      originalPrice: 49900,
+      rating: 4.9,
+      reviewCount: 22,
+      badge: '10" Woofer \xB7 150W Class AB \xB7 Dual Limiter',
+      isFeatured: true,
+      image: "assets/images/products/eikon-ek10sw-subwoofer-angle.jpg",
+      images: [
+        "assets/images/products/eikon-ek10sw-subwoofer-angle.jpg",
+        "assets/images/products/eikon-ek10sw-subwoofer-front.jpg"
+      ],
+      inStock: true,
+      stock: 6,
+      stockCount: 6,
+      sku: "EIKON-EK10SW",
+      keyFeatures: [
+        'Active vented studio subwoofer with 10" long-excursion polypropylene cone woofer',
+        "High-headroom 150W RMS Class AB power amplifier with accurate optical clip limiter",
+        "Precisely calculated aerodynamically tuned front bass-reflex slot for extended low frequencies down to 36 Hz",
+        "Optimized crossover network with adjustable HI-CUT (50 Hz \u2013 150 Hz) and switchable LO-CUT (100 Hz high-pass satellite filter)",
+        "Phase reversal switch (0\xB0 / 180\xB0) for seamless acoustic integration with nearfield satellites",
+        'Stereo balanced inputs and outputs: XLR, 1/4" TRS, and RCA connectors for mono and stereo operation',
+        "Ideal matching subwoofer companion for Eikon EK5NF, EK6NF, and EK8NF studio monitors",
+        "4-Year official warranty coverage (standard + extended)"
+      ],
+      description: `
+      <p>The <strong>Eikon EK10SW</strong> is the ideal active subwoofer solution for any professional or project music production setup. From carefully selected Italian transducers to the low-resonance cabinet design, every aspect has been tailored to deliver maximum accuracy and extended low-end punch over the audio spectrum.</p>
+
+      <p>Optimized analog electronics, including a high-headroom 150W Class AB amplifier and separate limiter circuits, provide maximum resolution with minimum listening fatigue.</p>
+
+      <h3>10" Long-Excursion Woofer & Front Tuning Port</h3>
+      <p>Equipped with a long-excursion 10\u201D polypropylene cone woofer, the EK10SW delivers deep, tight, and articulate low frequencies down to 36 Hz. A precisely calculated front-firing laminar bass reflex port optimizes airflow and eliminates port turbulence even at extreme sound pressure levels.</p>
+
+      <h3>Flexible Stereo I/O & High-Precision Crossover</h3>
+      <p>The EK10SW features stereo balanced XLR, 1/4" TRS, and unbalanced RCA inputs, along with stereo satellite pass-through outputs. An optimized active crossover provides an adjustable <strong>HI-CUT frequency control (50 Hz \u2013 150 Hz)</strong> for the subwoofer and a switchable <strong>LO-CUT filter (100 Hz)</strong> on the satellite outputs, plus a 0\xB0 / 180\xB0 phase inversion switch.</p>
+
+      <h3>High-Headroom 150W Class AB Amplification & Optical Limiter</h3>
+      <p>Powered by a robust 150W RMS Class AB power amplifier and guarded by a dedicated optical CLIP LIMITER, the EK10SW guarantees clean, distortion-free sub-bass reproduction across demanding mixing, electronic music, and film scoring workflows.</p>
+
+      <h3>Key Technical Specifications:</h3>
+      <ul>
+        <li><strong>System Type:</strong> Active vented studio subwoofer</li>
+        <li><strong>Woofer:</strong> 10" long-excursion polypropylene cone</li>
+        <li><strong>Amplification:</strong> 150 W RMS Class AB (300 W Peak)</li>
+        <li><strong>Frequency Response:</strong> 36 Hz \u2013 150 Hz</li>
+        <li><strong>Max SPL:</strong> 110 dB SPL (peak @ 1 m)</li>
+        <li><strong>Crossover Controls:</strong> Subwoofer Low-Pass (50 Hz \u2013 150 Hz variable); Satellite High-Pass (100 Hz switchable)</li>
+        <li><strong>Phase Switch:</strong> 0\xB0 / 180\xB0 selectable</li>
+        <li><strong>Inputs:</strong> 2x XLR balanced, 2x 1/4" TRS balanced, 2x RCA unbalanced</li>
+        <li><strong>Outputs:</strong> 2x XLR balanced, 2x 1/4" TRS balanced, 2x RCA unbalanced (link / filtered)</li>
+        <li><strong>Dimensions (H x W x D):</strong> 380 x 330 x 365 mm (15.0 x 13.0 x 14.4")</li>
+        <li><strong>Weight:</strong> 15.0 kg (33.0 lbs)</li>
+      </ul>
+    `,
+      specs: [
+        { label: "System Type", value: "Active Vented Bass-Reflex Studio Subwoofer" },
+        { label: "Woofer Size", value: '10" Long-Excursion Polypropylene Cone' },
+        { label: "Amplification Power", value: "150 W RMS Class-AB (300 W Peak)" },
+        { label: "Frequency Response", value: "36 Hz \u2013 150 Hz" },
+        { label: "Max SPL", value: "110 dB SPL (Peak at 1m)" },
+        { label: "Crossover Controls", value: "Variable HI-CUT (50\u2013150 Hz) & Switchable LO-CUT (100 Hz)" },
+        { label: "Phase Switch", value: "0\xB0 / 180\xB0 Inversion Switch" },
+        { label: "Inputs & Outputs", value: 'Stereo XLR, 1/4" TRS, and RCA (Balanced / Unbalanced)' },
+        { label: "Dimensions (H x W x D)", value: '380 x 330 x 365 mm (15.0" x 13.0" x 14.4")' },
+        { label: "Weight", value: "15.0 kg (33.0 lbs)" },
+        { label: "Warranty", value: "4 Years Proel / Eikon Official Warranty" }
+      ],
+      deepSpecs: [
+        ["Type", "Active Vented Studio Reference Subwoofer"],
+        ["Configuration", "Single Active Powered Subwoofer"],
+        ["Low Frequency Transducer", '10" (260 mm) Long-excursion polypropylene cone woofer'],
+        ["Enclosure Design", "Front-firing aerodynamically calculated laminar bass-reflex slot"],
+        ["Amplification Architecture", "Analog Class-AB with optical clip limiter"],
+        ["Amplifier Power RMS", "150 W Continuous / 300 W Peak"],
+        ["Frequency Response", "36 Hz \u2013 150 Hz (-3 dB)"],
+        ["Maximum Peak SPL", "110 dB SPL (peak @ 1 m)"],
+        ["Low-Pass Filter (HI-CUT)", "Continuously variable 50 Hz to 150 Hz (24 dB/oct Linkwitz-Riley)"],
+        ["High-Pass Satellite Filter (LO-CUT)", "Switchable Flat / 100 Hz high-pass for satellite monitors"],
+        ["Phase Reversal", "0\xB0 / 180\xB0 selectable phase switch"],
+        ["Input Connectors", '2x XLR (Balanced 10 k\u03A9), 2x 1/4" TRS (Balanced 10 k\u03A9), 2x RCA (Unbalanced 10 k\u03A9)'],
+        ["Output Connectors", '2x XLR (Balanced), 2x 1/4" TRS (Balanced), 2x RCA (Unbalanced) Link / Satellite Out'],
+        ["Cabinet Construction", "High-density 18 mm MDF vinyl-laminated cabinet with low-resonance internal bracing"],
+        ["Protection Circuits", "Dual independent optical clip limiter, DC thermal overload, and subsonic filter"],
+        ["Dimensions (H x W x D)", '380 x 330 x 365 mm (15.0" x 13.0" x 14.4")'],
+        ["Weight", "15.0 kg (33.0 lbs)"],
+        ["Power Requirements", "230 V AC / 115 V AC switchable, 50/60 Hz"],
+        ["Warranty", "4 Years Proel / Eikon Official Warranty"]
+      ]
+    },
+    // ─── PRODUCT 62 ── Synergy B-MAN Preamp Module ───────────────────────────────
+    {
+      id: "synergy-bman-preamp",
+      name: "Synergy B-MAN",
+      shortName: "Synergy B-MAN Preamp Module",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 36,
+      image: "assets/images/products/synergy-bman-angle.jpg",
+      images: [
+        "assets/images/products/synergy-bman-angle.jpg",
+        "assets/images/products/synergy-bman-front.jpg",
+        "assets/images/products/synergy-bman-rear.jpg",
+        "assets/images/products/synergy-bman-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "12AX7 Dual Channel",
+      inStock: true,
+      stock: 7,
+      sku: "SYN-BMAN-MOD",
+      description: `
+      <h3>Synergy B-MAN - Dual-Channel Interchangeable All-Tube Preamp Module</h3>
+      <p>If you crave the authentic tone, feel, and harmonic richness of a legendary 1959 tweed Bassman, the Synergy B-MAN module delivers genuine all-tube American vintage character. Built around two premium 12AX7 preamp tubes, the B-MAN captures the warm low-end thump, bell-like high-frequency shimmer, and saturated tweed crunch that defined rock 'n' roll and blues history.</p>
+
+      <h3>Two Independent 12AX7 Channels with Dedicated Tone Stacks</h3>
+      <p>The B-MAN features two completely discrete channels, allowing you to instantly switch between authentic pristine cleans and pushed, aggressive vintage overdrive. Each channel provides dedicated Gain, Volume, 3-band EQ (Bass, Mid, Treble), along with 3-position Bright and Tight voicing switches to sculpt your response and tame loose low-end frequencies.</p>
+
+      <h3>Patent-Pending 3-Position Cathode Select Switch</h3>
+      <p>The B-MAN includes a 3-position cathode select switch that lets you configure the input tube bias and bass response to match original vintage topologies. Position 1 perfectly matches the original Fender 5F6-A Bassman circuit (1.5K resistor and 22uF capacitor) for true vintage sag and organic playing touch.</p>
+
+      <h3>Universal Modular Compatibility (Dual & Single Mode)</h3>
+      <p>Equipped with a Dual/Single slide switch, the B-MAN module drops seamlessly into any Synergy preamp dock, SYN-1, SYN-2, or SYN-50 head, while retaining backwards compatibility with legacy single-channel modular systems (such as Egnater and Randall modular gear).</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected Vacuum Tubes" },
+        { label: "Channels", value: "2 Discrete Channels with Independent EQ" },
+        { label: "Controls per Channel", value: "Gain, Volume, Bass, Mid, Treble" },
+        { label: "Voicing Switches", value: "3-Way Bright & 3-Way Tight per Channel" },
+        { label: "Input Circuit", value: "3-Position Cathode Select (1.5k/22uF Bassman Preset)" },
+        { label: "Hardware Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater" },
+        { label: "Module Mode", value: "Dual / Single Channel Mode Selector" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Signal Path (Inspired by 1959 5F6-A Tweed Bassman)"],
+        ["Tube Complement", "2x 12AX7 Preamp Vacuum Tubes"],
+        ["Number of Channels", "2 Fully Independent Channels (Clean / Tweed Crunch to Lead Overdrive)"],
+        ["Controls Channel 1", "Gain, Volume, Bass, Middle, Treble, 3-Way Bright Switch, 3-Way Tight Switch"],
+        ["Controls Channel 2", "Gain, Volume, Bass, Middle, Treble, 3-Way Bright Switch, 3-Way Tight Switch"],
+        ["Cathode Bias Switch", "3-Position Switch (Position 1: 1.5K Resistor / 22uF Capacitor Fender Bassman preset)"],
+        ["Module Compatibility Switch", "Dual / Single Slide Switch for Synergy docks & legacy Randall/Egnater gear"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge black powder-coated steel with laser-etched faceplate"],
+        ["Connectors", "Multi-pin gold-plated edge connector for dock docking"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.91 kg (2.0 lbs)"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    // ─── PRODUCT 63 ── Synergy BOGNER ECSTASY PRE-AMP ────────────────────────────
+    {
+      id: "synergy-bogner-ecstasy-preamp",
+      name: "Synergy BOGNER ECSTASY PRE-AMP",
+      shortName: "Synergy Bogner Ecstasy Preamp Module",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 41,
+      image: "assets/images/products/synergy-bogner-ecstasy-angle.jpg",
+      images: [
+        "assets/images/products/synergy-bogner-ecstasy-angle.jpg",
+        "assets/images/products/synergy-bogner-ecstasy-front.jpg",
+        "assets/images/products/synergy-bogner-ecstasy-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Reinhold Bogner Design",
+      inStock: true,
+      stock: 6,
+      sku: "SYN-BOGNER-XTC",
+      description: `
+      <h3>Synergy Bogner Ecstasy - Dual-Channel All-Tube Preamp Module</h3>
+      <p>Reinhold Bogner is legendary in the world of boutique high-gain guitar amplification. His 100-watt Ecstasy head is revered by guitar icons including Alice In Chains\u2019 Jerry Cantrell, Steve Lukather, Mark Tremonti, George Lynch, and Eric Johnson. Over two years in development, Synergy and Reinhold Bogner collaborated to distill the iconic Ecstasy preamp circuitry into a modular all-tube format.</p>
+
+      <h3>Blue & Red Channels with Pre-EQ and Schizo Switches</h3>
+      <p>The Blue Channel captures the Ecstasy\u2019s rock 'n' roll second channel, delivering shades of gain from gritty vintage blues to assertive hard rock punch. The Red Channel unleashes cascading layers of harmonically rich distortion with singing lead sustain, plexi-style tightness, and razor-sharp note separation. Both channels feature dedicated 3-position Pre-EQ switches (B1, N, B2) and 3-position Schizo voicing switches.</p>
+
+      <h3>Dual 12AX7 Tubes & 3-Position Cathode Select</h3>
+      <p>Loaded with two hand-selected 12AX7 tubes, the Ecstasy module operates on full analog high voltage. The onboard 3-position cathode select switch configures input tube bias and bass response to mirror legendary circuits, preset from the factory to Position 1 (1.5K resistor and 22uF capacitor) for true Bogner feel and dynamics.</p>
+
+      <h3>Universal Modular Dock Compatibility & Single/Dual Switching</h3>
+      <p>Designed for hot-swapping into any Synergy SYN-1, SYN-2, or SYN-50 platform, the module includes a Dual/Single slide switch for complete backwards compatibility with older single-channel modular units from Egnater and Randall.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected High-Gain Tubes" },
+        { label: "Channels", value: "2 Discrete Channels (Blue & Red Channels)" },
+        { label: "Blue Channel Controls", value: "Gain, Volume, Bass, Mid, Treble, Pre-EQ, Schizo" },
+        { label: "Red Channel Controls", value: "Gain, Volume, Bass, Mid, Treble, Pre-EQ, Schizo" },
+        { label: "Voicing Switches", value: "3-Way Pre-EQ & 3-Way Schizo per Channel" },
+        { label: "Input Circuit", value: "3-Position Cathode Select (Preset: Bogner Position 1)" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Design Custom-Engineered by Reinhold Bogner"],
+        ["Tube Complement", "2x 12AX7 Preamp Vacuum Tubes"],
+        ["Channels", "2 Channels: Blue (Overdrive/Crunch) & Red (High-Gain Distortion/Lead)"],
+        ["Blue Channel Controls", "Gain, Volume, Bass, Middle, Treble, 3-Way Pre-EQ Switch, 3-Way Schizo Switch"],
+        ["Red Channel Controls", "Gain, Volume, Bass, Middle, Treble, 3-Way Pre-EQ Switch, 3-Way Schizo Switch"],
+        ["Cathode Bias Switch", "3-Position Switch on PCB (Position 1: 1.5K resistor / 22uF capacitor Bogner factory preset)"],
+        ["Compatibility Slide Switch", "Dual / Single Switch for Synergy docks and legacy single-channel Randall / Egnater amps"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge black powder-coated steel with laser-etched faceplate"],
+        ["Connectors", "Multi-pin gold-plated edge connector for dock docking"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.45 kg (1.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    // ─── PRODUCT 64 ── Synergy BOGNER UBERSCHALL PRE-AMP ─────────────────────────
+    {
+      id: "synergy-bogner-uberschall-preamp",
+      name: "Synergy BOGNER UBERSCHALL PRE-AMP",
+      shortName: "Synergy Bogner Uberschall Preamp Module",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 37,
+      image: "assets/images/products/synergy-bogner-uberschall-angle.jpg",
+      images: [
+        "assets/images/products/synergy-bogner-uberschall-angle.jpg",
+        "assets/images/products/synergy-bogner-uberschall-front.jpg",
+        "assets/images/products/synergy-bogner-uberschall-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Super Sonic High-Gain",
+      inStock: true,
+      stock: 5,
+      sku: "SYN-BOGNER-UBER",
+      description: `
+      <h3>Synergy Bogner \xDCberschall - Dual-Channel All-Tube Preamp Module</h3>
+      <p>In the world of high-end, high-gain guitar amplification, the Bogner \xDCberschall \u2014 German for "Super Sonic" \u2014 is revered as a crushing metal icon. Known for its ability to unleash wall-shaking, all-tube distortion while preserving string-to-string clarity, the \xDCberschall is the weapon of choice for bands like Slipknot, Tool, Korn, and Rammstein. Reinhold Bogner worked directly with Synergy to distill this legendary amplifier into a modular 2-channel all-tube preamp format.</p>
+
+      <h3>Twin Jet & Super High Gain Dual Channels with Pre-EQ, Boost, and Cut</h3>
+      <p>The Blue Channel captures the \xDCberschall Twin Jet voicing, delivering bone-crunching overdrive with a dedicated Pre-EQ and Cut toggle switch. The Red Channel delivers unhinged Super High Gain distortion, featuring an aggressive Pre-EQ switch and Boost toggle that pushes low-end authority and saturation for extended-range 7-string, 8-string, and drop-tuned guitars.</p>
+
+      <h3>100% All-Tube Analog Signal Path (2x 12AX7 Tubes)</h3>
+      <p>Loaded with two hand-selected 12AX7 vacuum tubes running on true high-voltage rails, the module delivers instantaneous touch response, thick tube bloom, and monstrous harmonic overtones. The 3-position cathode select switch lets you customize input tube bias and bass response, preset to Bogner's factory spec (Position 1: 1.5K resistor / 22uF capacitor).</p>
+
+      <h3>Modular Hot-Swap Architecture & Backward Compatibility</h3>
+      <p>Compatible with all Synergy hardware docks (SYN-1, SYN-2, SYN-50), the module also features an integrated Dual/Single slide switch, enabling seamless operation with vintage single-channel modular units from Egnater and Randall.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Preamp Tubes", value: "2x 12AX7 High-Gain Vacuum Tubes" },
+        { label: "Channels", value: "2 Channels: Twin Jet (Blue) & Super High Gain (Red)" },
+        { label: "Blue Channel Controls", value: "Gain, Volume, Bass, Mid, Treble, Pre-EQ, Cut Switch" },
+        { label: "Red Channel Controls", value: "Gain, Volume, Bass, Mid, Treble, Pre-EQ, Boost Switch" },
+        { label: "Voicing Switches", value: "Pre-EQ, Cut (Blue), Boost (Red)" },
+        { label: "Input Circuit", value: "3-Position Cathode Select (Bogner Position 1 Preset)" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Design Custom-Engineered by Reinhold Bogner"],
+        ["Tube Complement", "2x 12AX7 Preamp Vacuum Tubes"],
+        ["Channels", "2 Channels: Blue (Twin Jet Overdrive/Crunch) & Red (Super High-Gain Metal Distortion)"],
+        ["Blue Channel Controls", "Gain, Volume, Bass, Middle, Treble, 3-Way Pre-EQ Switch, Cut Toggle Switch"],
+        ["Red Channel Controls", "Gain, Volume, Bass, Middle, Treble, 3-Way Pre-EQ Switch, Boost Toggle Switch"],
+        ["Cathode Bias Switch", "3-Position Switch on PCB (Position 1: 1.5K resistor / 22uF capacitor Bogner factory preset)"],
+        ["Compatibility Slide Switch", "Dual / Single Switch for Synergy docks and legacy single-channel Randall / Egnater amps"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge black powder-coated steel with laser-etched faceplate"],
+        ["Connectors", "Multi-pin gold-plated edge connector for dock docking"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.45 kg (1.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    // ─── PRODUCT 65 ── Synergy FRIEDMAN BE Preamp Module ─────────────────────────
+    {
+      id: "synergy-friedman-be-preamp",
+      name: "Synergy FRIEDMAN BE",
+      shortName: "Synergy Friedman BE Preamp Module",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 44,
+      image: "assets/images/products/synergy-friedman-be-angle.jpg",
+      images: [
+        "assets/images/products/synergy-friedman-be-angle.jpg",
+        "assets/images/products/synergy-friedman-be-front.jpg",
+        "assets/images/products/synergy-friedman-be-rear.jpg",
+        "assets/images/products/synergy-friedman-be-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "Dave Friedman BE-100",
+      inStock: true,
+      stock: 8,
+      sku: "SYN-FRIEDMAN-BE",
+      description: `
+      <h3>Synergy Friedman BE - Dual-Channel All-Tube Preamp Module</h3>
+      <p>The Synergy Friedman BE module captures the legendary "Brown Eye" British-style high-gain tone of Dave Friedman's world-renowned BE-100 amplifier. Designed in direct collaboration with Dave Friedman, this all-tube preamp module delivers the punchy midrange bark, singing lead sustain, and rich harmonic overtones that make Friedman amplifiers the premier choice of arena-touring rock and metal guitarists worldwide.</p>
+
+      <h3>Dual Channels: British Crunch to Saturated High-Gain Lead</h3>
+      <p>Featuring two distinct channels driven by two 12AX7 vacuum tubes, the Friedman BE module allows you to switch effortlessly between dynamic British crunch and molten lead saturation. Each channel offers dedicated Gain and Volume controls sharing an organic, responsive 3-band passive EQ (Bass, Middle, Treble) engineered for tight low-end tracking and liquid soloing sustain.</p>
+
+      <h3>100% All-Tube Analog Signal Path & 3-Position Cathode Select</h3>
+      <p>Operating on genuine high-voltage plate circuitry, the Friedman BE provides the natural sag, compression, and harmonic bloom of an authentic tube amplifier head. The onboard 3-position cathode select switch configures input tube bass response, preset to Position 2 (2.7K resistor and 0.68uF capacitor) to accurately match the classic British EL34 amplifier circuit topology.</p>
+
+      <h3>Modular Hot-Swap Architecture & Universal Compatibility</h3>
+      <p>The Friedman BE slides directly into any Synergy preamp dock (SYN-1, SYN-2, SYN-50), delivering authentic Friedman boutique performance for direct-to-PA recording, silent stage monitoring, or integration into a multi-amp rack. Features a Dual/Single slide switch for complete compatibility with older single-channel modular units.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected High-Gain Tubes" },
+        { label: "Channels", value: "2 Discrete Channels (Crunch / High-Gain Lead)" },
+        { label: "Controls", value: "Dual Gain, Dual Volume, Shared Bass, Middle, Treble EQ" },
+        { label: "Circuit Design", value: "All-Tube Analog Co-Designed with Dave Friedman" },
+        { label: "Input Circuit", value: "3-Position Cathode Select Switch (Preset: British Position 2)" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater" },
+        { label: "Module Mode", value: "Dual / Single Channel Mode Selector" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Signal Path Co-Engineered by Dave Friedman"],
+        ["Tube Complement", "2x 12AX7 Preamp Vacuum Tubes"],
+        ["Channels", "2 Channels: Channel 1 (Plexi Crunch / Overdrive) & Channel 2 (BE High-Gain Distortion / Lead)"],
+        ["Front Panel Controls", "Dual Gain Controls, Dual Volume Controls, Shared Bass, Middle, Treble EQ"],
+        ["Cathode Bias Switch", "3-Position Switch on PCB (Position 2: 2.7K resistor / 0.68uF capacitor British spec preset)"],
+        ["Compatibility Slide Switch", "Dual / Single Switch for Synergy docks and legacy single-channel Randall / Egnater amps"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge black powder-coated steel with laser-etched faceplate"],
+        ["Connectors", "Multi-pin gold-plated edge connector for dock docking"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.45 kg (1.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    // ─── PRODUCT 66 ── Synergy FRIEDMAN HBE Preamp Module ────────────────────────
+    {
+      id: "synergy-friedman-hbe-preamp",
+      name: "Synergy FRIEDMAN HBE",
+      shortName: "Synergy Friedman HBE Preamp Module",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 47,
+      image: "assets/images/products/synergy-friedman-hbe-angle.jpg",
+      images: [
+        "assets/images/products/synergy-friedman-hbe-angle.jpg",
+        "assets/images/products/synergy-friedman-hbe-front.jpg",
+        "assets/images/products/synergy-friedman-hbe-rear.jpg",
+        "assets/images/products/synergy-friedman-hbe-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "HBE Boost Circuit",
+      inStock: true,
+      stock: 6,
+      sku: "SYN-FRIEDMAN-HBE",
+      description: `
+      <h3>Synergy Friedman HBE - Dual-Channel All-Tube Preamp Module</h3>
+      <p>The Synergy Friedman HBE module captures the explosive high-gain aggression of Dave Friedman's coveted HBE ("Hairy Brown Eye") boost circuit from the legendary BE-100 amplifier head. Designed in direct collaboration with Dave Friedman, this 100% all-tube module delivers the searing saturation, harmonic bloom, and punchy midrange projection that define top-tier modern arena rock and metal.</p>
+
+      <h3>Twin High-Gain Channels with Shared Passive Tone Stack</h3>
+      <p>Featuring two distinct channels powered by two 12AX7 vacuum tubes, the Friedman HBE provides two voices of high-gain fury. Set one channel for punchy, aggressive rhythm crunch and the second channel for boosted, saturated lead destruction with singing sustain. Each channel features independent Gain and Volume knobs sharing an organic, highly responsive 3-band EQ (Bass, Middle, Treble).</p>
+
+      <h3>100% All-Tube Analog Signal Path & 3-Position Cathode Select</h3>
+      <p>Operating on genuine high-voltage plate rails, the Friedman HBE reacts dynamically to pick attack and guitar volume roll-off. The 3-position cathode select switch configures input tube bias and low-end tightness, factory preset to Position 2 (2.7K resistor and 0.68uF capacitor) to capture Dave Friedman's exact British high-gain voicing.</p>
+
+      <h3>Modular Hot-Swap Architecture & Universal Dock Compatibility</h3>
+      <p>Seamlessly hot-swappable into any Synergy dock (SYN-1, SYN-2, SYN-50), the module features an integrated Dual/Single slide switch that allows backwards compatibility with vintage single-channel modular units from Egnater and Randall.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected High-Gain Tubes" },
+        { label: "Channels", value: "2 Discrete Channels (HBE Rhythm & HBE Boosted Lead)" },
+        { label: "Controls", value: "Dual Gain, Dual Volume, Shared Bass, Middle, Treble EQ" },
+        { label: "Circuit Design", value: "All-Tube Analog Co-Designed with Dave Friedman" },
+        { label: "Input Circuit", value: "3-Position Cathode Select Switch (Preset: British Position 2)" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater" },
+        { label: "Module Mode", value: "Dual / Single Channel Mode Selector" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Design Custom-Engineered by Dave Friedman"],
+        ["Tube Complement", "2x 12AX7 Preamp Vacuum Tubes"],
+        ["Channels", "2 Channels: Channel 1 (HBE Aggressive Rhythm) & Channel 2 (HBE Boosted High-Gain Lead)"],
+        ["Front Panel Controls", "Dual Gain Controls, Dual Volume Controls, Shared Bass, Middle, Treble EQ"],
+        ["Cathode Bias Switch", "3-Position Switch on PCB (Position 2: 2.7K resistor / 0.68uF capacitor British spec preset)"],
+        ["Compatibility Slide Switch", "Dual / Single Switch for Synergy docks and legacy single-channel Randall / Egnater amps"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge black powder-coated steel with laser-etched faceplate"],
+        ["Connectors", "Multi-pin gold-plated edge connector for dock docking"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.45 kg (1.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    {
+      id: "synergy-fryette-deliverance-preamp",
+      name: "Synergy Fryette Deliverance Preamp Module",
+      shortName: "Synergy Fryette Deliverance Preamp Module",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 38,
+      image: "assets/images/products/synergy-fryette-deliverance-angle.jpg",
+      images: [
+        "assets/images/products/synergy-fryette-deliverance-angle.jpg",
+        "assets/images/products/synergy-fryette-deliverance-front.jpg",
+        "assets/images/products/synergy-fryette-deliverance-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Steven Fryette Design",
+      inStock: true,
+      stock: 7,
+      sku: "SYN-FRYETTE-DELIV",
+      description: `
+      <h3>Synergy Fryette Deliverance - Dual-Channel All-Tube Preamp Module</h3>
+      <p>The Fryette Deliverance (formerly branded VHT) is the embodiment of Steven Fryette's purist amplifier DNA stripped down to its most raw and responsive form. Renowned among plug-and-play guitarists worldwide for its unforgiving touch dynamics and articulate note separation, the Deliverance delivers everything from chimey, chime-laden cleans to full-blown modern high-gain shred.</p>
+
+      <h3>Twin Identical Channels with GAIN I & GAIN II Voicing Architecture</h3>
+      <p>The Synergy Deliverance module features two fully independent channels (Green and Red). Each channel incorporates Fryette's signature dual gain stage topology: <strong>Gain I</strong> governs the input voicing and initial harmonic overdrive, while <strong>Gain II</strong> adjusts high-frequency response, saturation, and compression. Dial them in tandem to sculpt any era of rock and metal tone.</p>
+
+      <h3>Assignable Depth & Presence Controls with More/Less Gain Switching</h3>
+      <p>Taking modular versatility to new heights, the Deliverance module includes proprietary assignable <strong>Depth</strong> and <strong>Presence</strong> controls that can be active on Channel 2 (Red) or across both channels, directly tuning the low-end resonant thump and top-end cut. Independent <strong>More/Less</strong> switches select between 3 or 4 tube gain stages per channel, paired with dedicated Bright switches and Master Volumes.</p>
+
+      <h3>100% All-Tube Path with Automatic Cathode Select</h3>
+      <p>Powered by two hand-selected 12AX7 preamp tubes operating on high plate voltages, the module features an internal automated cathode select circuit that dynamically configures optimal cathode resistor and capacitor values for authentic feel and response across both channels.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected High-Voltage Vacuum Tubes" },
+        { label: "Channels", value: "2 Identical Voiced Channels (Green & Red)" },
+        { label: "Gain Controls", value: "Gain I (Voicing/Overdrive) & Gain II (Saturation)" },
+        { label: "Voicing Switches", value: "Independent More/Less (3/4 Gain Stages) & Bright" },
+        { label: "Assignable Controls", value: "Precision Depth & Presence (Red Channel or Both)" },
+        { label: "Cathode Circuit", value: "Automatic Dynamic Cathode Resistor & Capacitor Selection" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Design Custom-Engineered by Steven Fryette"],
+        ["Tube Complement", "2x Selected 12AX7 Preamp Vacuum Tubes"],
+        ["Channels", "2 Identical Full-Featured Channels (Green & Red)"],
+        ["Gain Architecture", "Dual Gain Controls per Channel: Gain I (Initial Overdrive) & Gain II (Harmonic Saturation)"],
+        ["Front Panel Controls", "Dual Gain I, Dual Gain II, Dual Master Volume, Shared Bass, Middle, Treble EQ"],
+        ["Assignable Controls", "Depth and Presence Knobs with 2-way Assign Switch (Red Channel Only or Both Channels)"],
+        ["Voicing Switches", "Independent More/Less Switches (3-Stage or 4-Stage Tube Gain) and Bright Switches per Channel"],
+        ["Cathode Circuitry", "Automatic Internal Cathode Resistor/Capacitor Optimization"],
+        ["Compatibility Slide Switch", "Dual / Single Switch for Synergy docks and legacy single-channel Randall / Egnater platforms"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel button, or MIDI"],
+        ["Chassis Construction", "Heavy-duty powder-coated steel chassis with laser-etched Deliverance II faceplate"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.45 kg (1.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    {
+      id: "synergy-marshall-jmp-preamp",
+      name: "Synergy Marshall JMP Preamp Module",
+      shortName: "Synergy Marshall JMP",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 44,
+      image: "assets/images/products/synergy-marshall-jmp-angle.jpg",
+      images: [
+        "assets/images/products/synergy-marshall-jmp-angle.jpg",
+        "assets/images/products/synergy-marshall-jmp-front.jpg",
+        "assets/images/products/synergy-marshall-jmp-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Marshall Collaboration",
+      inStock: true,
+      stock: 6,
+      sku: "SYN-MARSHALL-JMP",
+      description: `
+      <h3>Synergy Marshall JMP - Dual-Channel All-Tube Guitar Preamp Module</h3>
+      <p>From the moment rock 'n' roll exploded onto the scene, one name has been at the heart of its most electrifying moments \u2013 Marshall. At the core of this legacy stands the Marshall Plexi, an amplifier benchmark since the 1960s. Now, Synergy and Marshall have officially collaborated to bring the ultimate tribute to this iconic amplifier. Combining Synergy's cutting-edge patented modular technology with Marshall's historic circuit design, the Synergy Marshall JMP module delivers the unmistakable growl, touch sensitivity, and dynamic response of a cranked Plexi at any volume.</p>
+
+      <h3>Innovative On-Board Phase Inverter \u2013 0-Watt Poweramp</h3>
+      <p>Think of this as fitting an entire guitar amplifier into a modular preamp. To authentically recreate the harmonic bloom and compression of a pushed power section, the JMP module incorporates a "0-watt poweramp" circuit complete with a phase inverter and an onboard miniature transformer. This captures the true dynamic sag, chime, and harmonic complexity of a cranked Marshall tube power section directly within the module.</p>
+
+      <h3>Dual Channels with '60s / '70s Vintage-Era Voicing Switches</h3>
+      <p>The JMP module features two discrete, identical channels equipped with independent 3-band EQ (Bass, Middle, Treble) and dedicated Master Volumes. Each channel features an era-defining voicing switch: <strong>'60s Mode</strong> provides a rounder, smoother JMP tone with fatter low end, while <strong>'70s Mode</strong> delivers a tighter, more aggressive bite for searing classic rock and hard rock riffs.</p>
+
+      <h3>Input Blending (Vol 1 & Vol 2) & 4 Bright Switches</h3>
+      <p>Channel controls include Volume 1 (bright Plexi high-treble channel) and Volume 2 (warmer normal channel), mimicking the iconic "jumper cable" patching technique used on classic four-input Marshall Plexis. Four onboard Bright switches allow guitarists to customize the treble pass cap across each volume control, dialling in the perfect balance between glassy bite and thick warmth.</p>
+
+      <h3>3-Position Cathode Select Function</h3>
+      <p>A 3-position onboard PCB switch lets players tune the input tube cathode resistor and capacitor values to match classic circuit variations: Position 1 (1.5K / 22uF USA vintage), Position 2 (2.7K / 0.68uF Marshall Plexi default), or Position 3 (1.8K / 1uF modern high-gain).</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Circuit Collaboration", value: "Official Synergy & Marshall Amplification Design" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected Vacuum Tubes" },
+        { label: "Poweramp Circuit", value: "0-Watt Poweramp with Phase Inverter & Transformer" },
+        { label: "Channels", value: "2 Identical Channels with Independent Tone Stacks" },
+        { label: "Volume Architecture", value: "Volume 1 (Bright) & Volume 2 (Normal) Input Blending" },
+        { label: "Era Voicing Switches", value: "60's Mode (Fat/Smooth) & 70's Mode (Tight/Aggressive)" },
+        { label: "Bright Switching", value: "4 Discrete Bright Switches (Vol 1 & Vol 2 per Channel)" },
+        { label: "Cathode Circuit", value: "3-Position Select (Preset: Position 2 - 2.7K / 0.68uF)" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater Docks" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube Analog Signal Path Designed in Direct Collaboration with Marshall"],
+        ["Tube Complement", "2x 12AX7 Selected Preamp Vacuum Tubes"],
+        ["Poweramp Emulation", "Onboard 0-Watt Poweramp Circuit with Phase Inverter & Miniature Output Transformer"],
+        ["Channels", "2 Identical Full-Featured Channels (Clean, Vintage Crunch to Searing Plexi Lead)"],
+        ["Controls Channel 1", "Volume 1 (Bright), Volume 2 (Normal), Master Volume, Bass, Middle, Treble, 60's/70's Switch, 2x Bright Switches"],
+        ["Controls Channel 2", "Volume 1 (Bright), Volume 2 (Normal), Master Volume, Bass, Middle, Treble, 60's/70's Switch, 2x Bright Switches"],
+        ["Input Jumping Blending", "Interactive Vol 1 and Vol 2 blending mimics jumped 4-input Plexi tone shaping"],
+        ["Cathode Bias Switch", "3-Position Switch (Position 1: 1.5K/22uF, Position 2: 2.7K/0.68uF Marshall preset, Position 3: 1.8K/1uF)"],
+        ["Module Compatibility Switch", "Dual / Single Slide Switch for Synergy docks and legacy modular hardware"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel button, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge steel enclosure with authentic Marshall brushed-gold faceplate and knurled knobs"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.91 kg (2.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    {
+      id: "synergy-peavey-6505-preamp",
+      name: "Synergy Peavey 6505 Preamp Module",
+      shortName: "Synergy Peavey 6505",
+      brand: "Synergy",
+      category: "Guitar Amplifiers",
+      subcategory: "Preamp Modules",
+      price: 62980,
+      originalPrice: 72900,
+      rating: 4.9,
+      reviewCount: 41,
+      image: "assets/images/products/synergy-peavey-6505-angle.jpg",
+      images: [
+        "assets/images/products/synergy-peavey-6505-angle.jpg",
+        "assets/images/products/synergy-peavey-6505-rear.jpg"
+      ],
+      isFeatured: true,
+      badge: "Peavey High-Gain",
+      inStock: true,
+      stock: 8,
+      sku: "SYN-PEAVEY-6505",
+      description: `
+      <h3>Synergy Peavey 6505 - Dual-Channel All-Tube Preamp Module</h3>
+      <p>The Peavey 6505 \u2013 and its numerically named predecessors \u2013 are among history's most recorded, gigged, and revered high-gain amplifier heads. From defining the sound of Machine Head's <em>Burn My Eyes</em> to powering legendary metal productions by Andy Sneap and Colin Richardson, the 6505 sits perfectly in any heavy guitar mix. The Synergy engineering team spent over two years working in close collaboration with Peavey to faithfully capture the 6505's legendary punch, midrange articulation, and aggressive high-gain bite.</p>
+
+      <h3>Dual Channels with Crunch and Red Lead Voicings</h3>
+      <p>The Peavey 6505 module features two identical channels, each capable of delivering the full spectrum of iconic Peavey grind. Both channels feature switchable <strong>Crunch</strong> (modeled after the punchy crunch mode of the original Rhythm channel for bluesy breakup to hard rock authority) and <strong>Lead</strong> (based on the legendary red Lead channel, renowned for searing gain, low-end punch, and razor-sharp cut).</p>
+
+      <h3>Discrete 3-Band EQ and Gain Stacks</h3>
+      <p>Each channel includes dedicated Gain and Volume controls alongside interactive Bass, Middle, and Treble controls, allowing guitarists to dial in distinct rhythm crunch and boosted solo voices or run two alternative gain structures switchable instantly via MIDI or dock footswitch.</p>
+
+      <h3>3-Position Cathode Select Function</h3>
+      <p>Like all premium Synergy modules, the Peavey 6505 incorporates a 3-position onboard PCB cathode switch. It comes factory preset to Position 3 (1.8K resistor and 1uF capacitor) to accurately match the original high-gain Peavey 6505 / Soldano topology, giving you the authentic tight low-end tracking and fluid playing feel.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Dual-Channel All-Tube Preamp Module" },
+        { label: "Collaboration", value: "Official Synergy & Peavey 2-Year Co-Development" },
+        { label: "Preamp Tubes", value: "2x 12AX7 Selected High-Gain Vacuum Tubes" },
+        { label: "Channels", value: "2 Identical High-Gain Channels (Crunch & Lead Modes)" },
+        { label: "Channel Modes", value: "Rhythm Crunch (Blues to Hard Rock) & Red Lead (Ultra High-Gain)" },
+        { label: "Controls per Channel", value: "Gain, Volume, Bass, Middle, Treble, Crunch/Lead Switch" },
+        { label: "Cathode Circuit", value: "3-Position Cathode Select (Preset: Position 3 - 1.8K / 1uF)" },
+        { label: "Compatibility", value: "Synergy SYN-1, SYN-2, SYN-50, Randall, Egnater Docks" },
+        { label: "Module Mode", value: "Dual / Single Channel Mode Selector" }
+      ],
+      deepSpecs: [
+        ["Type", "Interchangeable Dual-Channel All-Tube Guitar Preamp Module"],
+        ["Circuit Topology", "100% All-Tube High-Gain Analog Circuit Designed in Direct Collaboration with Peavey"],
+        ["Tube Complement", "2x 12AX7 Selected Preamp Vacuum Tubes"],
+        ["Channels", "2 Identical Full-Featured Channels (Crunch and Lead Voicings)"],
+        ["Channel 1 Controls", "Gain, Volume, Bass, Middle, Treble, Crunch/Lead Voicing Switch"],
+        ["Channel 2 Controls", "Gain, Volume, Bass, Middle, Treble, Crunch/Lead Voicing Switch"],
+        ["Cathode Bias Switch", "3-Position Switch (Position 1: USA 1.5K/22uF, Position 2: British 2.7K/0.68uF, Position 3: Peavey 6505 Preset 1.8K/1uF)"],
+        ["Module Compatibility Switch", "Dual / Single Slide Switch for Synergy docks and legacy modular heads"],
+        ["Channel Switching", "Instant silent electronic switching via dock footswitch, front panel button, or MIDI"],
+        ["Chassis Construction", "Heavy-gauge black powder-coated steel with classic Peavey 6505 logo faceplate"],
+        ["Dimensions (W x D x H)", '178 x 140 x 38 mm (7.0" x 5.5" x 1.5")'],
+        ["Weight", "0.91 kg (2.0 lbs)"],
+        ["Origin", "Handcrafted in the USA"],
+        ["Warranty", "Synergy Amplification 3-Year Limited Warranty (90-Day Tube Warranty)"]
+      ]
+    },
+    {
+      id: "two-notes-revolt-guitar",
+      name: "Two Notes ReVolt Guitar",
+      shortName: "Two Notes ReVolt Guitar 3-Channel Preamp",
+      brand: "Two Notes",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 41703,
+      originalPrice: 48900,
+      rating: 4.9,
+      reviewCount: 34,
+      image: "assets/images/products/two-notes-revolt-guitar-hero.jpg",
+      images: [
+        "assets/images/products/two-notes-revolt-guitar-hero.jpg",
+        "assets/images/products/two-notes-revolt-guitar-angle.jpg",
+        "assets/images/products/two-notes-revolt-guitar-rear.jpg",
+        "assets/images/products/two-notes-revolt-guitar-front.jpg"
+      ],
+      isFeatured: true,
+      badge: "12AX7 High-Voltage Tube",
+      inStock: true,
+      stock: 8,
+      sku: "TNREVOLTG-US",
+      description: `
+      <h3>Two Notes ReVolt Guitar - 3-Channel All-Analog Tube Amp Simulator</h3>
+      <p>The Two Notes ReVolt Guitar is an innovative 3-channel amplifier simulator engineered with an all-analog signal path driven by a genuine 12AX7 preamp tube operating at an authentic high-voltage plate potential of 200V. Delivering unmatched warmth, compression, and dynamic pick response, the ReVolt Guitar bridges vintage valve tone and modern pedalboard flexibility for fly rigs, studio sessions, and live performances.</p>
+
+      <h3>Three Tonally Distinct Iconic Channel Voicings</h3>
+      <p>Covering the entire spectrum of legendary guitar amplification, the ReVolt Guitar delivers three distinct channel architectures: <strong>American Clean</strong> delivers crystalline, high-headroom cleans with touch-sensitive harmonic warmth; <strong>British Crunch</strong> channels a valve-inflected vintage hard-rock growl with biting upper midrange; and <strong>Modern Lead</strong> delivers searing, high-gain saturation inspired by legendary SLO-style heads.</p>
+
+      <h3>Integrated OD-Boost Circuit & Analog Speaker Simulation</h3>
+      <p>Equipped with a dedicated footswitchable <strong>OD-Boost</strong> circuit with variable level control, the ReVolt pushes any channel into singing lead sustain and cutting presence. An onboard analog speaker simulation ensures a natural, polished, miked-cabinet acoustic response when plugging directly into stage monitors, audio interfaces, or front-of-house PAs.</p>
+
+      <h3>Pro Rig Integration: 4-Cable Method, FX Loop, MIDI & DynIRs</h3>
+      <p>Designed as the ultimate command center for modern guitarists, the ReVolt includes full <strong>4-Cable Method</strong> support to seamlessly bypass or insert into your favorite tube amplifier's preamp section. Complete with an onboard FX loop, MIDI I/O for remote automation, balanced XLR DI output with ground lift, headphone out with aux input, and 10 included Two Notes DynIR cabinet captures for Torpedo Wall of Sound.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "3-Channel All-Analog Tube Preamp & Simulator" },
+        { label: "Preamp Tube", value: "1x Selected 12AX7 Vacuum Tube (Running at 200V)" },
+        { label: "Channels", value: "3 Channels: American Clean, British Crunch, Modern Lead" },
+        { label: "Boost Circuit", value: "Integrated Analog OD-Boost with Level Control" },
+        { label: "Speaker Simulation", value: "Built-in Analog Cab Sim + 10x Series-G DynIRs" },
+        { label: "Routing & Method", value: "4-Cable Method, Effects Loop, MIDI In/Out" },
+        { label: "Direct Outputs", value: 'Balanced XLR DI Out with Ground Lift, 1/8" Headphone' },
+        { label: "Power Supply", value: "12V DC 600mA Power Adapter (Included)" }
+      ],
+      deepSpecs: [
+        ["Type", "Tube Preamp, Amp Simulator, and Direct Box (DI) Pedal"],
+        ["Form Factor", "Pedalboard Preamp Pedal with Heavy-Duty Steel Chassis"],
+        ["Preamp Tube", "1x Selected 12AX7 High-Voltage Vacuum Tube (Operating at 200V)"],
+        ["Channels", "3 Independent Channels: American Clean, British Crunch, Modern Lead"],
+        ["Channel Controls", "Clean: Gain, Volume, Bass, Treble; Crunch & Lead: Gain, Volume, Shared Bass, Middle, Treble"],
+        ["Boost Circuit", "Integrated All-Analog OD-Boost with Dedicated Footswitch and Level Control"],
+        ["Cabinet Simulation", "Integrated Analog Speaker Simulation with On/Off Switch"],
+        ["Included Virtual Cabinets", "10x ReVolt Series-G DynIR Cabinet Captures for Torpedo Software"],
+        ["Routing Modes", "Standard In/Out, 4-Cable Method (Amp Preamp Bypass), and FX Loop"],
+        ["Inputs", '1x 1/4" Instrument In (1M Ohm), 1x 1/8" Stereo Aux In'],
+        ["Outputs", '1x 1/4" Unbalanced Output, 1x Balanced XLR DI Out with Ground Lift'],
+        ["Effects Loop", '1x 1/4" Send, 1x 1/4" Return (Buffered Series FX Loop)'],
+        ["MIDI Integration", '2x 1/8" TRS Type-A (MIDI In and MIDI Out/Thru)'],
+        ["Headphones", '1x 1/8" Stereo Headphone Output with Dedicated Volume'],
+        ["Power Source", "12V DC, 600mA Center-Negative (Universal Adapter Included)"],
+        ["Dimensions (H x W x D)", '71 x 193 x 117 mm (2.8" x 7.6" x 4.6")'],
+        ["Weight", "0.75 kg (1.65 lbs)"],
+        ["Part Number", "TNREVOLTG-US"],
+        ["Warranty", "Two Notes Efficient Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-dream-65-reverb-amplifier",
+      name: "Universal Audio UAFX Dream '65 Reverb Amplifier",
+      shortName: "UAFX Dream '65 Reverb Amplifier",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 4.9,
+      reviewCount: 42,
+      image: "assets/images/products/ua-uafx-dream-65.png",
+      images: [
+        "assets/images/products/ua-uafx-dream-65.png"
+      ],
+      isFeatured: true,
+      badge: "Dual-Engine UAD Modeling",
+      inStock: true,
+      stock: 9,
+      sku: "GPM-DREAM65",
+      description: `
+      <h3>Universal Audio UAFX Dream '65 Reverb Amplifier</h3>
+      <p>The UAFX Dream '65 Reverb Amplifier pedal gives you the essential American tube amp used by artists and producers for 60 years, from Muddy Waters to The Beatles to Elvis Costello. Built on powerful dual-engine processing and world-class UAD audio modeling expertise, the Dream '65 effects pedal delivers bold cleans, sweet valve breakup, and divine spring reverb and vibrato.</p>
+
+      <h3>Authentic American Tube Amp Emulation</h3>
+      <p>Capture the unmistakable sound of a golden-unit 1965 American 1x12 tube combo amplifier directly from your pedalboard. From sparkling glassy cleans with tight low-end to touch-sensitive harmonic breakup as you crank the volume, every nuance of the classic dual-6V6 circuit has been faithfully modeled in high-resolution detail.</p>
+
+      <h3>Classic Spring Reverb & True Optical Vibrato</h3>
+      <p>Immerse yourself in authentic tube-driven spring reverb and lush optical vibrato (tremolo) identical to the original amplifier. With independent dedicated controls and custom cabinet, mic, and speaker modeling derived from UA's award-winning OX Amp Top Box, you can sculpt pristine studio guitar tones in seconds.</p>
+
+      <h3>Custom Boost Mods & UAFX Control Mobile App</h3>
+      <p>Unleash coveted custom amplifier modifications favored by Stevie Ray Vaughan and modern studio pros, including iconic lead boosts and speaker pairings. With Bluetooth integration and the UAFX Control app, download custom artist tones, recall presets, customize footswitches, and access MIDI control mapping.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo Amp & Reverb Simulator Pedal" },
+        { label: "Amp Emulation", value: "1965 American 1x12 Tube Combo Amp" },
+        { label: "Engine", value: "Dual-Engine UAD Real-Time DSP Processing" },
+        { label: "Effects", value: "Tube Spring Reverb, Optical Vibrato, Lead Boost Mods" },
+        { label: "Speaker Cabs", value: "6 Classic Speaker / Cab / Mic Setups (OX Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Stereo Inputs & Dual 1/4" TS Stereo Outputs' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo Guitar Amplifier & Reverb Simulator Effects Pedal"],
+        ["Circuit Emulation", "Component-level UAD Modeling of 1965 American 1x12 Tube Combo"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Effects", "Tube-Driven Spring Reverb, Optical Vibrato (Tremolo), Custom Clean/Lead Boosts"],
+        ["Speaker & Cab Models", "6 Legendary Cabinet/Speaker/Mic Setups Derived from OX Amp Top Box"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with MIDI Clock & Parameter Mapping"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Editor"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Pedal Enclosure"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-ruby-63-top-boost-amplifier",
+      name: "Universal Audio UAFX Ruby '63 Top Boost Amplifier",
+      shortName: "UAFX Ruby '63 Top Boost Amplifier",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 4.9,
+      reviewCount: 38,
+      image: "assets/images/products/ua-uafx-ruby-63-front.png",
+      images: [
+        "assets/images/products/ua-uafx-ruby-63-front.png"
+      ],
+      isFeatured: true,
+      badge: "British Valve Classic",
+      inStock: true,
+      stock: 7,
+      sku: "GPM-RUBY63",
+      description: `
+      <h3>Universal Audio UAFX Ruby '63 Top Boost Amplifier</h3>
+      <p>Get the British Invasion tones that inspired generations. The UAFX Ruby '63 Top Boost Amplifier pedal gives you the quintessential British 2x12 valve amplifier beloved by artists and producers for over 60 years, from Queen and U2 to Radiohead and The Beatles. Built on powerful dual-engine UAD processing architecture, Ruby '63 delivers chimey choirboy cleans, complex harmonic overdrive, and authentic tube-driven vibrato directly to your rig.</p>
+
+      <h3>Three Legendary British Valve Amp Voicings</h3>
+      <p>Explore three authentic channel circuits from a golden-unit 1963 30-watt combo: <strong>Normal</strong> (round, sparkling clean tone), <strong>Brilliant</strong> (the coveted Top Boost channel with razor-sharp bite and aggressive cut), and <strong>Vibrato</strong> (authentic tube tremolo/vibrato circuit that adds lush movement and vintage space).</p>
+
+      <h3>Famous Treble Booster & Preamp Boosts Built In</h3>
+      <p>Ruby '63 features classic boosts right at your feet: push the Normal channel with a faithful emulation of the legendary Dallas Rangemaster germanium treble booster (famous for Brian May's singing leads), or engage the Maestro EP-III solid-state tape delay preamp boost for thickness and sustain.</p>
+
+      <h3>6 Authentic 2x12 Speaker & Cabinet Setups (OX Modeling)</h3>
+      <p>Derived from Universal Audio's award-winning OX Amp Top Box, play through six perfectly miked 2x12 speaker setups featuring vintage Silver Celestion speakers, Celestion Blue Bulldogs, and modern Gold drivers with studio-grade dynamic room modeling.</p>
+
+      <h3>UAFX Control Mobile App & MIDI 2.0 Integration</h3>
+      <p>With Bluetooth connectivity and MIDI 2.0 control, the UAFX Control mobile app lets you save and recall custom presets, customize footswitches, tweak the noise gate, and download exclusive artist sounds.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo Amp & Effects Simulator Pedal" },
+        { label: "Amp Emulation", value: "1963 British 2x12 30W Valve Combo (Normal, Brilliant, Vibrato)" },
+        { label: "DSP Engine", value: "Dual-Engine UAD Real-Time Processing" },
+        { label: "Onboard Boosts", value: "Dallas Rangemaster Treble Booster & Maestro EP-III Preamp" },
+        { label: "Speaker Cabs", value: "6 Miked 2x12 Speaker Cabinet Setups (OX Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Inputs & Outputs (Stereo & 4-Cable Mode)' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo Guitar Amplifier & Vibrato Simulator Effects Pedal"],
+        ["Circuit Emulation", "Component-Level UAD Modeling of 1963 British 2x12 Top Boost Combo"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Channels / Voicings", "Normal, Brilliant (Top Boost), and Vibrato Channels"],
+        ["Boost Circuits", "Germanium Treble Booster (Rangemaster) & Tape Delay Preamp Boost (EP-III)"],
+        ["Speaker & Cab Models", "6 Legendary 2x12 Cabinet/Speaker/Mic Setups Derived from OX Amp Top Box"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono / 4-Cable Method)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with MIDI Clock & Preset Recall"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Management"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Pedal Enclosure with Vintage Crimson Faceplate"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-woodrow-55-instrument-amplifier",
+      name: "Universal Audio UAFX Woodrow '55 Instrument Amplifier",
+      shortName: "UAFX Woodrow '55 Instrument Amplifier",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 4.9,
+      reviewCount: 35,
+      image: "assets/images/products/ua-uafx-woodrow-55-front.png",
+      images: [
+        "assets/images/products/ua-uafx-woodrow-55-front.png"
+      ],
+      isFeatured: true,
+      badge: "Vintage American Tweed",
+      inStock: true,
+      stock: 8,
+      sku: "GPM-WOODROW55",
+      description: `
+      <h3>Universal Audio UAFX Woodrow '55 Instrument Amplifier</h3>
+      <p>Experience raw tube tones from the dawn of electric guitar. The UAFX Woodrow '55 Instrument Amplifier pedal gives you the legendary American tweed tube amp sounds used by artists and producers for decades, from The Eagles and Chuck Berry to Neil Young. Built on powerful dual-engine UAD processing architecture, Woodrow '55 packs sweet cleans, rich harmonic overdrive, and grungy, saturated distortion into a road-worthy stompbox.</p>
+
+      <h3>Authentic 1955 American Tweed Tube Tone</h3>
+      <p>Capture every nuance of the classic 1x12 tweed combo amplifier circuit: separate Instrument and Mic input volume controls let you jumper and blend gain structures for interactive tone shaping, while the Tone control smoothly shifts from warm jazz cleans to biting rockabilly lead punch.</p>
+
+      <h3>Iconic Preamp Boosts Included</h3>
+      <p>Woodrow '55 lets you push your tweed sound into soaring overdrive with legendary hot-rod boost circuits built right in: kick in a British SDD-3000 rack preamp boost (famous for edge-of-breakup chime) or engage an EP-III tape echo preamp boost for thick midrange saturation and singing sustain.</p>
+
+      <h3>6 Hand-Picked 1x12 Speaker & Cabinet Setups (OX Modeling)</h3>
+      <p>Derived from Universal Audio's award-winning OX Amp Top Box, experience the authentic acoustic behavior and physical resonance of six classic speaker configurations including vintage Jensen P12R, Celestion Blue, and JBL D-120F speaker setups with perfectly placed studio microphones.</p>
+
+      <h3>UAFX Control Mobile App & MIDI Integration</h3>
+      <p>Dial in custom presets, adjust the noise gate, customize footswitch modes, and download exclusive artist presets via Bluetooth and the UAFX Control mobile app.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo Amp & Overdrive Simulator Pedal" },
+        { label: "Amp Emulation", value: "1955 American 1x12 Tweed Deluxe Tube Combo Amp" },
+        { label: "DSP Engine", value: "Dual-Engine UAD Real-Time Processing" },
+        { label: "Onboard Boosts", value: "Korg SDD-3000 Preamp & Maestro EP-III Tape Preamp Boost" },
+        { label: "Speaker Cabs", value: "6 Vintage 1x12 Speaker & Mic Setups (OX Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Inputs & Outputs (Stereo & 4-Cable Mode)' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo Guitar Amplifier & Tweed Overdrive Effects Pedal"],
+        ["Circuit Emulation", "Component-Level UAD Modeling of 1955 American 1x12 Tweed Deluxe Combo"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Channels / Inputs", "Blended Instrument & Mic Volume Controls (Authentic 4-Input Jumper Tone)"],
+        ["Boost Circuits", "SDD-3000 Rack Preamp Boost & Maestro EP-III Tape Delay Preamp Boost"],
+        ["Speaker & Cab Models", "6 Legendary 1x12 Cabinet/Speaker/Mic Setups Derived from OX Amp Top Box"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono / 4-Cable Method)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with MIDI Clock & Preset Recall"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Management"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Pedal Enclosure with Vintage Tweed Gold Faceplate"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-lion-68-super-lead-amp",
+      name: "Universal Audio UAFX Lion 68 Super Lead Amp Pedal",
+      shortName: "UAFX Lion '68 Super Lead Amp",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 5,
+      reviewCount: 52,
+      image: "assets/images/products/ua-uafx-lion-68-main.png",
+      images: [
+        "assets/images/products/ua-uafx-lion-68-main.png",
+        "assets/images/products/ua-uafx-lion-68-front.jpg",
+        "assets/images/products/ua-uafx-lion-68-side.jpg"
+      ],
+      isFeatured: true,
+      badge: "Triple 100W Plexi Emulation",
+      inStock: true,
+      stock: 6,
+      sku: "GPM-LION68",
+      description: `
+      <h3>Universal Audio UAFX Lion '68 Super Lead Amp Pedal</h3>
+      <p>Get the iconic Plexi tones that powered rock. The UAFX Lion '68 Super Lead Amp pedal gives you the classic British amp sounds made famous by decades of legendary artists including Jimi Hendrix, Van Halen, Led Zeppelin, and AC/DC. Built on powerful dual-engine processing and world-class UAD modeling, Lion '68 is the only pedal that delivers the dead-on tones of three distinct 100-watt Plexi amplifiers \u2014 for gorgeous cleans, aggressive breakup, and hot-rodded roar.</p>
+
+      <h3>Three 100-Watt Plexi Tube Amps in One Pedal</h3>
+      <p>Lion '68 captures three distinct golden-unit 100-watt Plexi heads: <strong>Super Lead</strong> (bell-like cleans, aggressive kerrang, and soaring distortion), <strong>Super Bass</strong> (spongier attack, immense clean headroom, perfect pedal platform), and <strong>"Brown"</strong> (voltage-starved Variac sag with split Celestion 25W Greenback / JBL D-120F cab for the legendary Pasadena hard rock tone).</p>
+
+      <h3>Authentic Studio Boosts Built In</h3>
+      <p>Push your crunch and lead tones further with tried-and-true boost circuits: a Maestro EP-III preamp, Boss GE-10 ten-band graphic EQ, and classic Variac power-supply voltage sag adjustments, all accessible at the flick of a switch.</p>
+
+      <h3>6 Award-Winning Speaker Cabinet Setups (OX Modeling)</h3>
+      <p>Using the same Dynamic Speaker Modeling technology as the OX Amp Top Box, Lion '68 provides the authentic thump and acoustic behavior of six legendary cabinet setups: GB25 (late '60s Marshall w/ Celestion 25W Greenbacks), GB30 (Marshall birch cab w/ 30W Greenbacks), JB|GB (two Greenbacks / two JBL D-120Fs), plus bonus 1x12 EVM12, 2x12 Two-Rock, and 4x12 Marshall 1960 TV cabs.</p>
+
+      <h3>UAFX Control Mobile App & MIDI Integration</h3>
+      <p>Customize footswitches, fine-tune the built-in noise gate, recall and archive your presets, and access downloadable artist presets via Bluetooth and USB-C.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo Amp & Cabinet Emulation Pedal" },
+        { label: "Amp Emulations", value: "3 Distinct 100W Plexi Heads (Super Lead, Super Bass, Brown)" },
+        { label: "DSP Engine", value: "Dual-Engine UAD Real-Time Processing" },
+        { label: "Onboard Boosts", value: "Maestro EP-III Preamp, Boss GE-10 10-Band EQ, Variac Voltage Sag" },
+        { label: "Speaker Cabs", value: "6 Classic Speaker Cabinet Setups (OX Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Inputs & Outputs (Stereo & 4-Cable Mode)' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo Guitar Amplifier & Cabinet Simulator Effects Pedal"],
+        ["Circuit Emulation", "Component-Level UAD Modeling of Three 100-Watt Plexi Heads"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Amp Models", "Super Lead (Aggressive Kerrang), Super Bass (Spongy Headroom), Brown (Variac Hot-Rod)"],
+        ["Boost Circuits", "Maestro EP-III Preamp, Boss GE-10 10-Band EQ, Variac Voltage Sag"],
+        ["Speaker & Cab Models", "6 Legendary Cabinet/Speaker/Mic Setups Derived from OX Amp Top Box"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono / 4-Cable Method)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with MIDI Clock & Preset Recall"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Management"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Enclosure with Deep Burgundy Plexi Faceplate"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-anti-1992-high-gain-amp",
+      name: "Universal Audio UAFX ANTI 1992 High Gain Amp",
+      shortName: "UAFX ANTI 1992 High Gain Amp",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 5,
+      reviewCount: 48,
+      image: "assets/images/products/ua-uafx-anti-1992-main.png",
+      images: [
+        "assets/images/products/ua-uafx-anti-1992-main.png",
+        "assets/images/products/ua-uafx-anti-1992-top.png",
+        "assets/images/products/ua-uafx-anti-1992-bottom.png",
+        "assets/images/products/ua-uafx-anti-1992-side.png"
+      ],
+      isFeatured: true,
+      badge: "120W Modern High-Gain",
+      inStock: true,
+      stock: 7,
+      sku: "GPM-ANTI1992",
+      description: `
+      <h3>Universal Audio UAFX ANTI 1992 High Gain Amp</h3>
+      <p>Experience the insane tones that define modern metal. The UAFX ANTI 1992 High Gain Amp delivers the savage guitar tones of Slipknot, In Flames, Machine Head, and countless Scandinavian metal bands right at your feet. With ANTI, you get the authentic sound of the 120-watt tube behemoth that gave rise to aggressive "scooped" guitar tones, combined with perfectly-miked cabinets to unleash bone-crushing riffs, searing leads, crystalline cleans, and everything in between.</p>
+
+      <h3>Unleash Beastly 120-Watt High-Gain Tones</h3>
+      <p>In punishing detail, ANTI 1992 High Gain Amp captures the sound of the 120-watt amplifier that gave rise to notorious metal subgenres throughout the '90s. From Thrash and Death Metal to Grunge, Black Metal, and Modern Metalcore, ANTI delivers the rich, saturated, scooped tones that have fueled iconic bands for decades.</p>
+
+      <h3>Built-In Noise Gate, TS-Style Overdrive & Preamp Boosts</h3>
+      <p>ANTI's built-in intelligent noise gate keeps your signal razor-sharp and silent between notes, even at extreme gain levels. An integrated TS-style overdrive adds classic mid-hump saturation for tight low-end tracking and articulate palm muting, while an integrated preamp boost delivers classic Scandinavian death metal cut.</p>
+
+      <h3>Six Famous Mic & Speaker Pairings (OX Modeling)</h3>
+      <p>ANTI's perfectly modeled mic and speaker combinations conjure legendary sounds used on decades of metal recordings: <strong>UK V30</strong> (4x12 Marshall cab with Celestion Vintage 30s), <strong>CA V30</strong> (4x12 oversized cab with V30s), <strong>White 75</strong> (4x12 Marshall cab with Celestion 75s), plus three bonus cabs via the UAFX mobile app (2x12 D65, 4x12 Celestion 80, 4x12 Brown).</p>
+
+      <h3>UAFX Control Mobile App Customization</h3>
+      <p>Connect over Bluetooth or USB-C to tweak hidden parameters, adjust noise gate thresholds, modify boost routing, and even experiment with output tube biasing, as well as saving and recalling artist presets.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo High-Gain Amp & Cab Emulation Pedal" },
+        { label: "Amp Emulation", value: "1992 American 120W High-Gain Tube Behemoth" },
+        { label: "DSP Engine", value: "Dual-Engine UAD Real-Time Processing" },
+        { label: "Onboard Boosts", value: "Integrated TS-Style Overdrive, Preamp Boost & Noise Gate" },
+        { label: "Speaker Cabs", value: "6 Classic High-Gain Speaker & Mic Setups (OX Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Inputs & Outputs (Stereo & 4-Cable Mode)' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo High-Gain Guitar Amplifier & Cabinet Simulator Effects Pedal"],
+        ["Circuit Emulation", "Component-Level UAD Modeling of 1992 120-Watt High-Gain Metal Head"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Channels / Modes", "Rhythm & Lead Channels with Pre-Gain, Post-Gain & Resonance"],
+        ["Boost Circuits", "Integrated TS-Style Mid-Boost Overdrive & Scandinavian Preamp Boost"],
+        ["Noise Gate", "Built-In Fast-Response Dynamic Noise Gate"],
+        ["Speaker & Cab Models", "6 Legendary Metal 4x12 and 2x12 Cabs with Studio Dynamic Room Modeling"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono / 4-Cable Method)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with Deep Bias Tuning & Preset Recall"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Management"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Pedal Enclosure with Modern Metal Crimson/Red Faceplate"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-enigmatic-82-ods-amp",
+      name: "Universal Audio UAFX Enigmatic '82 Overdrive Special Amp",
+      shortName: "UAFX Enigmatic '82 ODS Amp",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 5,
+      reviewCount: 56,
+      image: "assets/images/products/ua-uafx-enigmatic-82-main.png",
+      images: [
+        "assets/images/products/ua-uafx-enigmatic-82-main.png",
+        "assets/images/products/ua-uafx-enigmatic-82-side.png",
+        "assets/images/products/ua-uafx-enigmatic-82-bottom.png",
+        "assets/images/products/ua-uafx-enigmatic-82-top.png"
+      ],
+      isFeatured: true,
+      badge: "Mythical ODS Tone",
+      inStock: true,
+      stock: 6,
+      sku: "GPM-ENIGMATIC82",
+      description: `
+      <h3>Universal Audio UAFX Enigmatic '82 Overdrive Special Amp</h3>
+      <p>Get the mythical tones that enchanted legends. The Enigmatic '82 Overdrive Special Amp lets you experience the heavenly tube amp sound that captivated legends like John Mayer, Stevie Ray Vaughan, Robben Ford, Larry Carlton, Joe Bonamassa, and Carlos Santana. Perfectly capturing numerous custom Overdrive Special amplifiers spanning 30 years \u2014 with their fabled touch-sensitivity, colorful preamp choices, tone stack mods, plus carefully curated mic and speaker cabinets \u2014 Enigmatic '82 is like having a handmade boutique amplifier built just for you.</p>
+
+      <h3>Three Decades of Super-Rare Boutique ODS Tone</h3>
+      <p>Universal Audio gained exclusive access to original Overdrive Special amplifiers spanning three essential eras: from the 1970s Santa Cruz models that brought the ODS into the light, to later LA iterations in the '80s and '90s used on countless legendary sessions. Enigmatic '82 puts the authentic response, complex harmonics, and blooming sustain of these fabled amps under your fingertips.</p>
+
+      <h3>Build Your Own Boutique Voice in Custom Mode</h3>
+      <p>Flip into Custom mode to design your own bespoke ODS voice inside the UAFX mobile app. Mix and match classic modifications including the FET preamp, HRM (Hot Rubber Monkey) post-overdrive tone stack, the late '80s Skyliner tone stack option, output tube bias, and power supply stiffness.</p>
+
+      <h3>Essential Rock and Jazz Modes</h3>
+      <p>A hallmark of the original amps, Enigmatic '82's Jazz and Rock modes let you transition seamlessly from shimmery cloud-like cleans to creamy, expressive overdrive that blooms with your playing dynamics and preserves extraordinary note-to-note clarity.</p>
+
+      <h3>Nine Handpicked Mic and Speaker Combinations (OX Modeling)</h3>
+      <p>Play through three stock cabinets: 1x12 Black GB25, 2x12 Boutique D65, and 2x12 Brute, plus six bonus cabinets available via the UAFX app (4x12 UK V30, 2x12 JBF120, 1x12 Black EV12, 4x12 Stripped GB, 1x12 JBG125, 2x12 D-EV12), all captured with UA's proprietary Dynamic Speaker Modeling.</p>
+
+      <h3>UAFX Control Mobile App Customization</h3>
+      <p>Fine-tune essential controls, customize footswitches, adjust live/preset modes, and explore artist presets crafted by the world's top session guitarists over Bluetooth and USB-C.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo Boutique Amp & Cab Emulation Pedal" },
+        { label: "Amp Emulation", value: "1970s\u20131990s Overdrive Special (ODS) Tube Amps" },
+        { label: "DSP Engine", value: "Dual-Engine UAD Real-Time Processing" },
+        { label: "Voicing Modes", value: "Jazz, Rock & Deeply Configurable Custom Mode" },
+        { label: "Tone Stacks & Preamp Mods", value: "FET Preamp, HRM Overdrive & Late-'80s Skyliner" },
+        { label: "Speaker Cabs", value: "9 Classic Mic/Speaker Pairs (OX Dynamic Speaker Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Inputs & Outputs (Stereo & 4-Cable Mode)' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo Guitar Amplifier & Cabinet Simulator Effects Pedal"],
+        ["Circuit Emulation", "Component-Level UAD Modeling of 1970s\u20131990s Custom Overdrive Special Amps"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Voicing Modes", "Rock Mode (Creamy Blooming Overdrive), Jazz Mode (Spacious Articulate Clean), Custom Mode"],
+        ["Preamp & Tone Stack Mods", "FET Preamp, HRM (Hot Rubber Monkey) Post-OD EQ, Late-'80s Skyliner Tone Stack"],
+        ["Speaker & Cab Models", "9 Handpicked Cabinets (3 Stock: 1x12 GB25, 2x12 D65, 2x12 Brute; 6 Bonus Cabs via App)"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono / 4-Cable Method)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with Power Supply Stiffness & Bias Tuning"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Management"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Pedal Enclosure with Boutique Tan/Sand ODS Faceplate"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "ua-uafx-knuckles-92-rev-f-dual-rec",
+      name: "Universal Audio UAFX Knuckles '92 Rev F Dual Rec Amplifier",
+      shortName: "UAFX Knuckles '92 Dual Rec Amp",
+      brand: "Universal Audio",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Amp Simulators & Preamp Pedals",
+      price: 49425,
+      originalPrice: 57900,
+      rating: 5,
+      reviewCount: 51,
+      image: "assets/images/products/ua-uafx-knuckles-92-main.png",
+      images: [
+        "assets/images/products/ua-uafx-knuckles-92-main.png",
+        "assets/images/products/ua-uafx-knuckles-92-top.png",
+        "assets/images/products/ua-uafx-knuckles-92-bottom.png",
+        "assets/images/products/ua-uafx-knuckles-92-side.png"
+      ],
+      isFeatured: true,
+      badge: "California Dual Rec Tone",
+      inStock: true,
+      stock: 7,
+      sku: "GPM-KNUCKLES92",
+      description: `
+      <h3>Universal Audio UAFX Knuckles '92 Rev F Dual Rec Amplifier</h3>
+      <p>The California King of High Gain has arrived. Knuckles '92 Rev F Dual Rec Amplifier delivers the searing high-gain tone that powered legendary punk, alternative rock, and modern metal bands from Foo Fighters and Incubus to Nevermore and Dream Theater. Built on powerful dual-engine processing and world-class UAD modeling, Knuckles puts the authentic, genre-defining sound of one of the world's most ferocious multi-channel amplifiers directly under your boots.</p>
+
+      <h3>Explore a Full Range of Rectifier Tones</h3>
+      <p>Seamlessly toggle through the famed Green, Orange, and Red channels to explore everything from sparkling cleans and punchy rhythm crunch to smoldering, liquid lead tones. Experiment with switchable EL-34 or 6L6 power tube voicings, and alternate between solid-state or vacuum tube rectification for ultimate compression and dynamic feel.</p>
+
+      <h3>Integrated TS-Style Overdrive & Preamp Boost</h3>
+      <p>Equipped with a classic TS-style overdrive for tight, articulate low-end tracking and razor-sharp palm mutes, alongside an integrated Scandinavian preamp boost for modern aggressive cut. A built-in intelligent fast-acting noise gate keeps your sound crystal-clear even at maximum gain settings.</p>
+
+      <h3>Six Epic Mic & Speaker Pairings (OX Modeling)</h3>
+      <p>Captured with Universal Audio's groundbreaking Dynamic Room Modeling derived from the award-winning OX Amp Top Box, explore six legendary cabinet setups: <strong>UK V30</strong> (4x12 British cab with V30s), <strong>CA V30</strong> (4x12 oversized American cab with V30s), <strong>White 75</strong> (4x12 British cab with Celestion 75s), plus three bonus cabs via the UAFX app (1x12 EV12, 4x12 Celestion 80s, 4x12 Brown).</p>
+
+      <h3>Deep Customization with the UAFX Mobile App</h3>
+      <p>Connect over Bluetooth or USB-C to tweak hidden controls, save boost and noise gate presets, adjust output tube bias, switch rectifier modes, and recall artist presets crafted by top metal guitarists.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Stereo High-Gain Amp & Cab Emulation Pedal" },
+        { label: "Amp Emulation", value: "1992 Revision F Dual Rectifier Tube Amplifier" },
+        { label: "DSP Engine", value: "Dual-Engine UAD Real-Time Processing" },
+        { label: "Channels", value: "3 Channels: Green (Clean), Orange (Crunch), Red (Lead)" },
+        { label: "Tube & Rectifier Voicing", value: "Selectable EL-34 / 6L6 Tubes & Solid-State / Tube Rectification" },
+        { label: "Onboard Boosts & Gate", value: "TS-Style Overdrive, Preamp Boost & Fast Dynamic Noise Gate" },
+        { label: "Speaker Cabs", value: "6 Classic High-Gain Speaker & Mic Setups (OX Modeling)" },
+        { label: "I/O", value: 'Dual 1/4" TS Inputs & Outputs (Stereo & 4-Cable Mode)' },
+        { label: "Connectivity", value: "Bluetooth & USB-C for UAFX App & MIDI Control" },
+        { label: "Power Requirements", value: "Isolated 9V DC 400mA Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Stereo Guitar Amplifier & Cabinet Simulator Effects Pedal"],
+        ["Circuit Emulation", "Component-Level UAD Modeling of 1992 Revision F Dual Rectifier"],
+        ["DSP Engine", "Powerful Dual-Engine UAD Processing Architecture"],
+        ["Channels", "Green (Clean/Rhythm), Orange (Crunch/Vintage High-Gain), Red (Modern High-Gain Lead)"],
+        ["Power Section Emulation", "Selectable 6L6 or EL-34 Power Tubes & Silicon Diode or Tube Rectifier Tracking"],
+        ["Boost Circuits", "Integrated TS-Style Overdrive Mid-Boost & Scandinavian High-Gain Preamp Boost"],
+        ["Noise Gate", "Integrated Fast-Response Studio Noise Gate"],
+        ["Speaker & Cab Models", "6 Legendary Metal 4x12 and 1x12 Cabs with Dynamic Room Modeling (OX Technology)"],
+        ["Inputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono / 4-Cable Method)'],
+        ["Outputs", '2x 1/4" TS Unbalanced (Stereo / Dual Mono)'],
+        ["Bypass Switching", "Silent True Bypass or Buffered Bypass with Spillover via UAFX App"],
+        ["App & MIDI Control", "UAFX Control Mobile App (iOS / Android) with Bias Tuning & Preset Recall"],
+        ["USB Port", "USB-C for Firmware Updates and Computer Management"],
+        ["Chassis", "Heavy-Duty Cast Aluminum Pedal Enclosure with Diamond Plate-Inspired Silver Faceplate"],
+        ["Dimensions (W x D x H)", '92 x 141 x 65 mm (3.62" x 5.55" x 2.56")'],
+        ["Weight", "0.567 kg (1.24 lbs)"],
+        ["Power Supply", "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"],
+        ["Warranty", "Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+        "id": "ua-uafx-1176-studio-compressor",
+        "name": "Universal Audio UAFX 1176 Studio Compressor Pedal",
+        "shortName": "Universal Audio UAFX 1176 Compressor",
+        "brand": "Universal Audio",
+        "category": "Guitar Pedals & Effects",
+        "subcategory": "Compressor & Limiter Pedals",
+        "price": 19110,
+        "originalPrice": 22500,
+        "rating": 4.9,
+        "reviewCount": 42,
+        "image": "assets/images/products/ua-uafx-1176-top.png",
+        "images": [
+            "assets/images/products/ua-uafx-1176-top.png",
+            "assets/images/products/ua-uafx-1176-side.png",
+            "assets/images/products/ua-uafx-1176-front.png",
+            "assets/images/products/ua-uafx-1176-back.png"
+        ],
+        "isFeatured": true,
+        "badge": "Iconic 1176LN Limiter",
+        "inStock": true,
+        "stock": 9,
+        "sku": "GPM-1176-COMP",
+        "description": "\n    <h3>Universal Audio UAFX 1176 Studio Compressor - The King of Limiting on Your Pedalboard</h3>\n    <p>Introduced in 1967, the <strong>Universal Audio 1176</strong> remains the undisputed king of studio audio limiting, heard on more legendary recordings than any other compressor in history. Built on powerful UAFX digital modeling, the <strong>1176 Studio Compressor</strong> delivers the exact punchy, ultra-fast, and expressive tone of the world-renowned hardware limiting amplifier in a compact stompbox format.</p>\n\n    <h3>Three World-Famous 1176 Configurations in a Single Pedal</h3>\n    <p>From subtle leveling to squashed harmonic drive, the 1176 Studio Compressor provides 3 distinct operational modes:</p>\n    <ul>\n      <li><strong>Single Mode:</strong> Authentic single 1176 compression for classic punch and transparent peak control.</li>\n      <li><strong>Dual Mode:</strong> Cascades two 1176 circuits in series for legendary Lowell George-style infinite clean sustain and slide guitar sweetness.</li>\n      <li><strong>Sustain Mode:</strong> Delivers hyper-compressed crunch, grit, and massive sustain heard on rock masterpieces like <em>Led Zeppelin IV</em>.</li>\n    </ul>\n\n    <h3>Authentic Vintage Controls & Famous \"All Buttons In\"</h3>\n    <p>Dial in iconic compression in seconds with vintage-style Input, Output, Attack, and Release controls. The Ratio knob features standard compression ratios plus the infamous “All Buttons In” setting for smashed, aggressive overdriven textures.</p>\n\n    <h3>Parallel Compression & Switchable Bypass</h3>\n    <p>Features a dedicated <strong>Parallel Compression</strong> mode switch to blend pristine uncompressed dry guitar dynamics with heavy studio limiting, along with switchable true or buffered bypass for seamless pedalboard integration.</p>\n  ",
+        "specs": [
+            {
+                "label": "Emulation Type",
+                "value": "Authentic UA 1176LN Limiting Amplifier Emulation"
+            },
+            {
+                "label": "Compression Modes",
+                "value": "3 Modes: Single, Dual (Cascaded), Sustain"
+            },
+            {
+                "label": "Controls",
+                "value": "Input, Output, Attack, Release, Ratio (includes All-Buttons-In)"
+            },
+            {
+                "label": "Parallel Mode",
+                "value": "Dedicated Parallel Compression Dry/Wet Blend"
+            },
+            {
+                "label": "Bypass Modes",
+                "value": "Switchable True Bypass / Buffered Bypass"
+            },
+            {
+                "label": "Connectivity",
+                "value": "1/4\" TS In, 1/4\" TS Out, USB Type-C for Firmware"
+            },
+            {
+                "label": "Power Requirements",
+                "value": "Isolated 9V DC Center-Negative (250 mA minimum)"
+            },
+            {
+                "label": "Chassis",
+                "value": "Heavy-Duty Tour-Grade Brushed Aluminum Enclosure"
+            }
+        ],
+        "deepSpecs": [
+            [
+                "Type",
+                "Studio Solid-State Limiting Amplifier Compressor Pedal"
+            ],
+            [
+                "Series",
+                "UAFX Compact Pedal Series"
+            ],
+            [
+                "DSP Engine",
+                "Universal Audio Dual-Engine Digital Modeling"
+            ],
+            [
+                "Compression Modes",
+                "Single (1 Unit), Dual (2 Cascaded Units), Sustain (High Compression Crunch)"
+            ],
+            [
+                "Ratio Settings",
+                "4:1, 8:1, 12:1, 20:1, and \"All Buttons In\" Mode"
+            ],
+            [
+                "Controls",
+                "Input, Output, Attack, Release, Ratio, Mode Switch, Bypass Switch, Parallel Switch"
+            ],
+            [
+                "Bypass Options",
+                "Switchable True Bypass / Buffered Bypass"
+            ],
+            [
+                "Input",
+                "1 x 1/4\" Unbalanced TS Phone Jack"
+            ],
+            [
+                "Output",
+                "1 x 1/4\" Unbalanced TS Phone Jack"
+            ],
+            [
+                "USB Port",
+                "USB Type-C for Firmware Updates via Computer"
+            ],
+            [
+                "Dimensions (H x W x D)",
+                "58.1 x 65.5 x 120.7 mm (2.29\" x 2.58\" x 4.75\")"
+            ],
+            [
+                "Weight",
+                "299 g (0.65 lbs)"
+            ],
+            [
+                "Power Consumption",
+                "Isolated 9V DC Center-Negative, 250 mA Minimum (Adapter Sold Separately)"
+            ],
+            [
+                "Warranty",
+                "Universal Audio 1-Year Limited Manufacturer Warranty"
+            ]
+        ]
+    },
+    {
+        "id": "ua-uafx-astra-modulation-machine",
+        "name": "Universal Audio UAFX Astra Modulation Machine Stereo Effects Pedal",
+        "shortName": "Universal Audio UAFX Astra Modulation Machine",
+        "brand": "Universal Audio",
+        "category": "Guitar Pedals & Effects",
+        "subcategory": "Chorus & Flanger Pedals",
+        "price": 54275,
+        "originalPrice": 63900,
+        "rating": 5,
+        "reviewCount": 34,
+        "image": "assets/images/products/ua-uafx-astra-modulation-machine.png",
+        "images": [
+            "assets/images/products/ua-uafx-astra-modulation-machine.png"
+        ],
+        "isFeatured": true,
+        "badge": "Flagship Dual-DSP Modulation",
+        "inStock": true,
+        "stock": 6,
+        "sku": "GPM-ASTRA-MOD",
+        "description": "\n    <h3>Universal Audio UAFX Astra Modulation Machine - Flagship Stereo Modulation Pedal</h3>\n    <p>Three of history’s most mind-expanding modulators, perfectly captured in a stompbox. Engineered and developed by the acclaimed team at Universal Audio, the <strong>UAFX Astra Modulation Machine</strong> boasts a powerful dual-processor architecture for the most sonically authentic classic Chorus, Vibrato, Flanger, and Tremolo effects ever available in a guitar pedal.</p>\n\n    <h3>Three Timeless Modulation Effects</h3>\n    <p>From spacey studio flanger textures of the 1970s to gritty analog bucket-brigade choruses and luscious opto tube tremolos, Astra puts three iconic vintage effects at your feet:</p>\n    <ul>\n      <li><strong>Chorus Brigade:</strong> Classic 1976 Japanese analog bucket-brigade (BBD) stereo chorus with secondary pitch Vibrato mode and warm preamp emulation.</li>\n      <li><strong>Flanger/DBLR:</strong> Studio flanger and doubler tones modeling legendary late-'70s rackmount bucket-brigade units for deep whooshing jet sweeps and stereo widening.</li>\n      <li><strong>Trem 65:</strong> Perfectly emulated opto tube tremolo with authentic sine and square modulation derived from iconic American blackface combo amps of 1965.</li>\n      <li><strong>Bonus Effects:</strong> Free vintage Phaser X90 and Dharma Trem 61 downloadable via UAFX Control software upon pedal registration.</li>\n    </ul>\n\n    <h3>Dual-Engine Processing & True Stereo Operation</h3>\n    <p>Powered by Universal Audio's cutting-edge dual-engine processing, Astra runs separate stereo instances of each effect for ultra-wide, immersive spatial imaging without compromising dynamic headroom or tonal nuance.</p>\n\n    <h3>Live / Preset Modes & Spillover Bypass</h3>\n    <p>Seamlessly switch between your real-time knob settings in Live mode and your favorite custom patch in Preset mode with dedicated silent footswitches. Features switchable true or buffered bypass with analog dry-through.</p>\n  ",
+        "specs": [
+            {
+                "label": "Effect Type",
+                "value": "Flagship Stereo Modulation Effects Pedal"
+            },
+            {
+                "label": "DSP Architecture",
+                "value": "Dual-Processor Real-Time UAFX Engine"
+            },
+            {
+                "label": "Included Effects",
+                "value": "Chorus Brigade (Chorus/Vibrato), Flanger/DBLR, Trem 65 (Opto Tremolo)"
+            },
+            {
+                "label": "Bonus Algorithms",
+                "value": "Phaser X90 & Dharma Trem 61 (via UAFX Control App)"
+            },
+            {
+                "label": "Operating Modes",
+                "value": "Dual Footswitches for Instant Live / Preset Switching"
+            },
+            {
+                "label": "Audio I/O",
+                "value": "Dual 1/4\" TS Unbalanced Inputs & Outputs (True Stereo)"
+            },
+            {
+                "label": "Bypass Modes",
+                "value": "Switchable True Bypass / Buffered Bypass (Analog Dry-Through)"
+            },
+            {
+                "label": "Connectivity",
+                "value": "USB Type-C for Firmware & Computer Preset Management"
+            },
+            {
+                "label": "Power Requirements",
+                "value": "Isolated 9V DC 400mA Center-Negative"
+            }
+        ],
+        "deepSpecs": [
+            [
+                "Type",
+                "Stereo Dual-Engine Modulation Effects Pedal"
+            ],
+            [
+                "Series",
+                "UAFX Flagship Modulation Series"
+            ],
+            [
+                "DSP Engine",
+                "Dual-Processor Real-Time UAD Architecture"
+            ],
+            [
+                "Core Algorithms",
+                "Chorus Brigade (BBD), Flanger/DBLR (Studio Rack), Trem 65 (Blackface Opto)"
+            ],
+            [
+                "Bonus Downloads",
+                "Phaser X90, Dharma Trem 61"
+            ],
+            [
+                "Controls",
+                "Speed, Depth, Intensity, Tone, Shade, Shape, Effect Select, Mode Switch"
+            ],
+            [
+                "Presets",
+                "1 Storable Onboard Preset + Live Mode"
+            ],
+            [
+                "Inputs",
+                "2 x 1/4\" TS Unbalanced (Stereo / Dual Mono)"
+            ],
+            [
+                "Outputs",
+                "2 x 1/4\" TS Unbalanced (Stereo / Dual Mono)"
+            ],
+            [
+                "Bypass System",
+                "Switchable Silent True Bypass or Buffered Bypass"
+            ],
+            [
+                "Analog Dry Path",
+                "Pure Analog Dry-Through Signal"
+            ],
+            [
+                "USB Port",
+                "USB Type-C for Firmware Updates via Computer"
+            ],
+            [
+                "Chassis",
+                "Premium Heavy-Duty Cast Aluminum Pedal Enclosure"
+            ],
+            [
+                "Dimensions (W x D x H)",
+                "92 x 141 x 65 mm (3.62\" x 5.55\" x 2.56\")"
+            ],
+            [
+                "Weight",
+                "0.567 kg (1.24 lbs)"
+            ],
+            [
+                "Power Consumption",
+                "Isolated 9V DC Center-Negative, 400 mA Minimum (Adapter Sold Separately)"
+            ],
+            [
+                "Warranty",
+                "Universal Audio 1-Year Limited Manufacturer Warranty"
+            ]
+        ]
+    },
+    {
+        "id": "ua-uafx-brigade-chorus-vibrato",
+        "name": "Universal Audio UAFX Brigade Chorus & Vibrato Pedal",
+        "shortName": "Universal Audio UAFX Brigade Chorus & Vibrato",
+        "brand": "Universal Audio",
+        "category": "Guitar Pedals & Effects",
+        "subcategory": "Chorus & Flanger Pedals",
+        "price": 22990,
+        "originalPrice": 26990,
+        "rating": 4.9,
+        "reviewCount": 31,
+        "image": "assets/images/products/ua-uafx-brigade-top.jpg",
+        "images": [
+            "assets/images/products/ua-uafx-brigade-top.jpg",
+            "assets/images/products/ua-uafx-brigade-side.jpg",
+            "assets/images/products/ua-uafx-brigade-front.jpg",
+            "assets/images/products/ua-uafx-brigade-back.jpg"
+        ],
+        "isFeatured": false,
+        "badge": "1976 Boss CE-1 Emulation",
+        "inStock": true,
+        "stock": 11,
+        "sku": "GPM-BRIGADE-MOD",
+        "description": "\n    <h3>Universal Audio UAFX Brigade Chorus & Vibrato - Vintage Analog Modulation from 1976</h3>\n    <p>Conceived from Universal Audio’s award-winning Astra Modulation Machine, the <strong>UAFX Brigade Chorus & Vibrato</strong> delivers the iconic, warm analog modulation effects of the legendary 1976 <strong>Boss CE-1 Chorus Ensemble</strong>, along with the coveted fat saturation of its vintage analog preamp, all packed into a compact stompbox.</p>\n\n    <h3>Rich Bucket-Brigade Chorus & Expressive Pitch Vibrato</h3>\n    <p>Gently enhance cleans or paint rich sonic landscapes with milkshake-thick analog chorus, modeled component-by-component on the original bucket-brigade (BBD) circuit made famous by Rush, The Cure, Herbie Hancock, and the Red Hot Chili Peppers. Flip to <strong>Vibrato</strong> mode for warm, sea-sick detuning and faux rotating speaker flutter that transforms guitar chords into ear-catching textures.</p>\n\n    <h3>Coveted Vintage Analog Preamp & Fat Boost</h3>\n    <p>The original CE-1’s input preamp is world-famous for fattening guitar signals even when chorus is bypassed. Brigade faithfully captures this legendary discrete analog preamp with a dedicated <strong>Preamp Off/On</strong> switch and Volume control to add punch, harmonic body, and singing sustain to your entire rig.</p>\n\n    <h3>Tour-Ready Compact Enclosure & Switchable Bypass</h3>\n    <p>Built for decades of dependable pedalboard use, Brigade offers switchable true or buffered bypass for pristine tone over long cable runs, silent footswitching, and a USB-C port for firmware updates.</p>\n  ",
+        "specs": [
+            {
+                "label": "Emulation Type",
+                "value": "1976 Boss CE-1 Chorus Ensemble & Discrete Preamp"
+            },
+            {
+                "label": "Modulation Modes",
+                "value": "Bucket-Brigade Chorus & Pitch Vibrato"
+            },
+            {
+                "label": "Controls",
+                "value": "Rate, Depth, Volume, Chorus/Vibrato Switch, Preamp Switch"
+            },
+            {
+                "label": "Preamp Circuit",
+                "value": "Authentic Discrete Analog Preamp Emulation"
+            },
+            {
+                "label": "Bypass Modes",
+                "value": "Switchable True Bypass / Buffered Bypass"
+            },
+            {
+                "label": "Connectivity",
+                "value": "1/4\" TS In, 1/4\" TS Out, USB Type-C for Firmware"
+            },
+            {
+                "label": "Power Requirements",
+                "value": "Isolated 9V DC Center-Negative (250 mA minimum)"
+            },
+            {
+                "label": "Chassis",
+                "value": "Tour-Grade Heavy-Duty Cast Aluminum Shell"
+            }
+        ],
+        "deepSpecs": [
+            [
+                "Type",
+                "Compact Analog Bucket-Brigade Chorus & Vibrato Effects Pedal"
+            ],
+            [
+                "Series",
+                "UAFX Compact Pedal Series"
+            ],
+            [
+                "Target Hardware",
+                "1976 Boss CE-1 Chorus Ensemble"
+            ],
+            [
+                "DSP Engine",
+                "Universal Audio Real-Time Digital Modeling Engine"
+            ],
+            [
+                "Modulation Modes",
+                "Chorus (Stereo Shimmer) and Vibrato (True Pitch Detuning)"
+            ],
+            [
+                "Analog Preamp",
+                "Switchable Vintage Discrete Analog Preamp Coloration & Boost"
+            ],
+            [
+                "Controls",
+                "Rate, Depth, Volume, Mode Toggle, Preamp Toggle, True/Buffer Switch"
+            ],
+            [
+                "Bypass System",
+                "Switchable True Bypass or Buffered Bypass"
+            ],
+            [
+                "Input",
+                "1 x 1/4\" Unbalanced TS Phone Jack"
+            ],
+            [
+                "Output",
+                "1 x 1/4\" Unbalanced TS Phone Jack"
+            ],
+            [
+                "USB Port",
+                "USB Type-C for Computer Firmware Updates"
+            ],
+            [
+                "Dimensions (H x W x D)",
+                "58.1 x 65.5 x 120.7 mm (2.29\" x 2.58\" x 4.75\")"
+            ],
+            [
+                "Weight",
+                "299 g (0.659 lbs)"
+            ],
+            [
+                "Power Consumption",
+                "Isolated 9V DC Center-Negative, 250 mA Minimum (Adapter Sold Separately)"
+            ],
+            [
+                "Warranty",
+                "Universal Audio 1-Year Limited Manufacturer Warranty"
+            ]
+        ]
+    },
+    {
+        "id": "ua-uafx-del-verb-ambience-companion",
+        "name": "Universal Audio UAFX Del-Verb Ambience Companion Pedal",
+        "shortName": "Universal Audio UAFX Del-Verb Ambience Companion",
+        "brand": "Universal Audio",
+        "category": "Guitar Pedals & Effects",
+        "subcategory": "Reverb & Delay Pedals",
+        "price": 49425,
+        "originalPrice": 57900,
+        "rating": 5,
+        "reviewCount": 39,
+        "image": "assets/images/products/ua-uafx-del-verb-front.png",
+        "images": [
+            "assets/images/products/ua-uafx-del-verb-front.png",
+            "assets/images/products/ua-uafx-del-verb-angles.png"
+        ],
+        "isFeatured": true,
+        "badge": "Dual-DSP Reverb & Delay",
+        "inStock": true,
+        "stock": 8,
+        "sku": "GPM-DELVERB-AMB",
+        "description": "\n    <h3>Universal Audio UAFX Del-Verb Ambience Companion - Ready-to-Wear Reverb & Delay Rig</h3>\n    <p>Pack your bags and embark on a delay and reverb fantasy. Built upon award-winning <strong>UAFX dual-engine processing</strong> and stunning sonic authenticity, the <strong>Del-Verb Ambience Companion</strong> packs ready-to-wear emulations of classic reverb and delay effects into a single pedal designed for immediate creative inspiration.</p>\n\n    <h3>Three Desert-Island Golden Reverbs</h3>\n    <p>Del-Verb puts the exact reverb algorithms from UA's TEC Award-winning Golden Reverberator directly at your feet:</p>\n    <ul>\n      <li><strong>Spring 65:</strong> Golden-unit tube spring tank pulled straight from a classic mid-’60s American combo amp.</li>\n      <li><strong>Plate 140:</strong> Silky German studio plate reverb sourced from The Plant studio in Sausalito, California.</li>\n      <li><strong>Hall 224:</strong> Bit-for-bit recreation of the lush late-’70s/’80s vintage digital studio algorithmic hall.</li>\n    </ul>\n\n    <h3>Legendary Vintage Delay Textures</h3>\n    <p>Explore the definitive delay engines from UA’s Starlight Echo Station:</p>\n    <ul>\n      <li><strong>Tape EP-III:</strong> Warm, saturated repeats and tape wow/flutter of a legendary 1970s Maestro Echoplex EP-3 with vintage preamp emulation.</li>\n      <li><strong>Analog DMM:</strong> Bucket-brigade warmth, vintage grain, and vibrant modulation modeled from the classic Electro-Harmonix Deluxe Memory Man.</li>\n      <li><strong>Precision:</strong> Pristine studio-grade digital delay with dynamic modulation textures.</li>\n    </ul>\n\n    <h3>Dual Stereo Engines & Mobile Customization</h3>\n    <p>Del-Verb runs completely independent stereo instances of each reverb and delay engine simultaneously for deep three-dimensional stereo depth. Use the UAFX Control mobile app to add tap-tempo synchronization, unlock spillover trails, and customize effect voicings.</p>\n  ",
+        "specs": [
+            {
+                "label": "Effect Architecture",
+                "value": "Dual-Engine Stereo Reverb & Delay Processor"
+            },
+            {
+                "label": "Reverb Algorithms",
+                "value": "Spring 65 (Tube Spring), Plate 140, Hall 224"
+            },
+            {
+                "label": "Delay Algorithms",
+                "value": "Tape EP-III (Tape Echo), Analog DMM, Precision Digital"
+            },
+            {
+                "label": "Controls",
+                "value": "Delay Time, Feedback, Mix, Color, Mod, Reverb, Delay/Reverb Toggles"
+            },
+            {
+                "label": "Bypass Modes",
+                "value": "Silent Switching, Buffered Bypass with Optional Spillover Trails"
+            },
+            {
+                "label": "Audio I/O",
+                "value": "Dual 1/4\" TS Unbalanced Inputs & Outputs (True Stereo / Dual Mono)"
+            },
+            {
+                "label": "Mobile App",
+                "value": "UAFX Control Mobile App for Tap Tempo & Custom Voicings"
+            },
+            {
+                "label": "Power Requirements",
+                "value": "Isolated 9V DC 400mA Center-Negative"
+            }
+        ],
+        "deepSpecs": [
+            [
+                "Type",
+                "Dual-Engine Stereo Delay & Reverb Effects Pedal"
+            ],
+            [
+                "Series",
+                "UAFX Flagship Ambience Series"
+            ],
+            [
+                "DSP Architecture",
+                "Powerful Dual-Processor Real-Time UAD Engine"
+            ],
+            [
+                "Reverb Types",
+                "Spring 65 (60s American Tube Amp), Plate 140 (German Studio Plate), Hall 224 (80s Digital Hall)"
+            ],
+            [
+                "Delay Types",
+                "Tape EP-III (Echoplex EP-3), Analog DMM (Deluxe Memory Man), Precision Digital"
+            ],
+            [
+                "Stereo Engine",
+                "Independent Stereo Processing for Both Delay and Reverb Simultaneously"
+            ],
+            [
+                "Controls",
+                "Delay Time, Feedback, Mix, Color, Mod, Reverb, Delay Selector, Reverb Selector"
+            ],
+            [
+                "Footswitches",
+                "Left (Delay On/Off), Right (Reverb On/Off / Tap Tempo via App)"
+            ],
+            [
+                "Bypass & Trails",
+                "Buffered Bypass with Analog Dry-Through and Selectable Spillover / Trails"
+            ],
+            [
+                "Inputs",
+                "2 x 1/4\" TS Unbalanced (Stereo / Dual Mono)"
+            ],
+            [
+                "Outputs",
+                "2 x 1/4\" TS Unbalanced (Stereo / Dual Mono)"
+            ],
+            [
+                "App Connectivity",
+                "Bluetooth & USB-C for UAFX Control App"
+            ],
+            [
+                "Dimensions (W x D x H)",
+                "92 x 141 x 65 mm (3.62\" x 5.55\" x 2.56\")"
+            ],
+            [
+                "Weight",
+                "0.567 kg (1.24 lbs)"
+            ],
+            [
+                "Power Supply",
+                "9V DC Center-Negative (400mA Minimum, Isolated Supply Sold Separately)"
+            ],
+            [
+                "Warranty",
+                "Universal Audio 1-Year Limited Manufacturer Warranty"
+            ]
+        ]
+    },
+    {
+      id: "mooer-a7-ambience-reverb",
+      name: "Mooer A7 Ambience Reverb",
+      shortName: "Mooer A7 Ambience Reverb Pedal",
+      brand: "Mooer",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Reverb & Delay Pedals",
+      price: 10074,
+      originalPrice: 11900,
+      rating: 4.8,
+      reviewCount: 29,
+      image: "assets/images/products/mooer-a7-ambience-reverb-front.jpg",
+      images: [
+        "assets/images/products/mooer-a7-ambience-reverb-front.jpg",
+        "assets/images/products/mooer-a7-ambience-reverb-angle1.jpg",
+        "assets/images/products/mooer-a7-ambience-reverb-angle2.jpg"
+      ],
+      isFeatured: true,
+      badge: "7 Ambient Reverbs",
+      inStock: true,
+      stock: 12,
+      sku: "MOOER-A7-AMB",
+      description: `
+      <h3>Mooer A7 Ambience Reverb - Micro Series Reverb Pedal</h3>
+      <p>MOOER\u2019s reverb effects have been substantially upgraded in the first reverb pedal from The New Micro Series. This sparkling gem features seven different reverb effects catering to the far-out guitar astronauts and psychedelic space cadets. Go to infinity and beyond with the \u201CInfinite Trail\u201D fade out or keep things brief with the traditional \u201CTrail On\u201D feature. The shimmering blue finish also adds a bit of sparkly flare to any pedal setup.</p>
+
+      <h3>Seven Distinct Reverb Algorithms</h3>
+      <p>Explore an inspiring palette of ambient textures including Plate, Hall, Warp, Shake, Crush, Shimmer, and Dream. From spacious concert halls and classic lush studio plates to pitch-shifting modulated shimmer and bit-crushed lo-fi soundscapes, the A7 covers traditional to experimental territory with ease.</p>
+
+      <h3>Infinite Trail & Trail On Functions</h3>
+      <p>Hold down the footswitch to engage the <strong>Infinite Trail</strong> function, capturing your reverberated decay into an endless drone or pad for soloing over. The selectable <strong>Trail On</strong> mode allows reverb tails to decay naturally when bypassing the pedal, avoiding abrupt audio dropouts.</p>
+
+      <h3>Storable Presets & USB Connectivity</h3>
+      <p>Each of the seven reverb algorithms features its own storable preset, allowing guitarists to save customized parameter combinations and recall them on the fly. A built-in USB port allows quick firmware updates and management.</p>
+    `,
+      specs: [
+        { label: "Effect Type", value: "Ambient Digital Reverb Pedal" },
+        { label: "Algorithms", value: "7 Reverb Modes (Plate, Hall, Warp, Shake, Crush, Shimmer, Dream)" },
+        { label: "Trail Modes", value: "Infinite Trail Sustained Fade & Natural Trail On" },
+        { label: "Presets", value: "7 Storable User Presets (1 per Effect)" },
+        { label: "Bypass Modes", value: "Switchable Buffer Bypass / True Bypass" },
+        { label: "Connectivity", value: '1/4" Mono In, 1/4" Mono Out, Micro-USB' },
+        { label: "Current Draw", value: "200 mA" },
+        { label: "Power Requirements", value: "Standard 9V DC Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "Compact Ambient Digital Reverb Effects Pedal"],
+        ["Series", "The New Micro Series"],
+        ["Reverb Modes", "7 Modes: Plate, Hall, Warp, Shake, Crush, Shimmer, Dream"],
+        ["Controls", "X, Mix, Chaos, Decay, Tone, Save Button, Footswitch"],
+        ["Infinite Function", "Footswitch Hold Engages Infinite Reverb Trail Oscillation"],
+        ["Trail Modes", "Selectable Trail On (Natural Decay on Bypass) or Hard Cut"],
+        ["Presets", "7 Storable Preset Slots with LED Indicator"],
+        ["Bypass System", "Switchable Buffered Bypass or True Bypass"],
+        ["Input", '1/4" Monaural Audio Jack (Impedance: 2.2M Ohms)'],
+        ["Output", '1/4" Monaural Audio Jack (Impedance: 100 Ohms)'],
+        ["USB Port", "Micro-USB Port for Firmware Updates"],
+        ["Chassis", "Ultra-Compact Metal Shell with Shimmering Sparkle Blue Finish"],
+        ["Dimensions (D x W x H)", "93.5 x 42 x 52 mm"],
+        ["Weight", "155 g (0.34 lbs)"],
+        ["Power Requirements", "9V DC Center-Negative (Power Supply Not Included)"],
+        ["Warranty", "Mooer 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "mooer-acoustikar-acoustic-simulator",
+      name: "Mooer Acoustikar Acoustic Guitar Simulator",
+      shortName: "Mooer Acoustikar Guitar Simulator",
+      brand: "Mooer",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Acoustic Simulators",
+      price: 5996,
+      originalPrice: 6990,
+      rating: 4.7,
+      reviewCount: 31,
+      image: "assets/images/products/mooer-acoustikar-acoustic-simulator.jpg",
+      images: [
+        "assets/images/products/mooer-acoustikar-acoustic-simulator.jpg"
+      ],
+      isFeatured: true,
+      badge: "3 Acoustic Modes",
+      inStock: true,
+      stock: 15,
+      sku: "MOOER-ACOUSTIKAR",
+      description: `
+      <h3>Mooer Acoustikar Acoustic Guitar Simulation Effects Pedal</h3>
+      <p>The Mooer Acoustikar Acoustic Guitar Simulator transforms the output of an electric guitar into convincing, full-bodied acoustic guitar tones without requiring an acoustic guitar on stage. Housed in Mooer's ultra-compact, pedalboard-friendly micro enclosure, the Acoustikar offers fast, high-definition acoustic modeling with minimal footprint and zero latency.</p>
+
+      <h3>Three Dedicated Acoustic Voicing Modes</h3>
+      <p>Featuring a 3-way toggle switch, the Acoustikar provides three versatile acoustic profiles: <strong>Piezo</strong> emulates the bright, snappy attack of a piezo-equipped acoustic guitar; <strong>Standard</strong> reproduces the balanced, resonant projection of a traditional dreadnought; and <strong>Jumbo</strong> delivers deep, booming low-end and wide dynamic headroom for rhythm strumming.</p>
+
+      <h3>Intuitive Tone Shaping & True Bypass</h3>
+      <p>Dial in your simulated acoustic tone with precision using the large central <strong>Top</strong> knob (controlling high-end clarity and fingerpick sparkle), <strong>Body</strong> control (shaping low-end warmth and acoustic chamber resonance), and <strong>Level</strong> knob for seamless output gain matching. Full True Bypass switching guarantees zero tone coloration when bypassed.</p>
+    `,
+      specs: [
+        { label: "Effect Type", value: "Acoustic Guitar Simulator Pedal" },
+        { label: "Working Modes", value: "3 Modes: Piezo, Standard, Jumbo" },
+        { label: "Controls", value: "Top (Highs), Body (Resonance), Level (Volume)" },
+        { label: "Bypass", value: "True Bypass Switching" },
+        { label: "Input Impedance", value: '1M Ohms (1/4" Mono Jack)' },
+        { label: "Output Impedance", value: '1k Ohms (1/4" Mono Jack)' },
+        { label: "Current Draw", value: "17 mA (Low Power Consumption)" },
+        { label: "Dimensions", value: "93.5mm (D) \xD7 42mm (W) \xD7 52mm (H)" }
+      ],
+      deepSpecs: [
+        ["Type", "Electric-to-Acoustic Guitar Simulation Effects Pedal"],
+        ["Enclosure", "Full Heavy-Duty Metal Shell with Compact Micro Form Factor"],
+        ["Modes", "3 Selectable Modes: Piezo (Snappy Bright), Standard (Dreadnought), Jumbo (Deep Body)"],
+        ["Controls", "3-Way Mode Switch, Level, Body Resonance, Top High-End Clarity"],
+        ["Bypass System", "True Bypass Hardware Switching with Red Status LED Indicator"],
+        ["Input", '1/4" Monaural Jack (Input Impedance: 1M Ohms)'],
+        ["Output", '1/4" Monaural Jack (Output Impedance: 1k Ohms)'],
+        ["Power Requirements", "AC Adapter 9V DC (Center-Negative Plug)"],
+        ["Current Draw", "17 mA"],
+        ["Dimensions (D x W x H)", '93.5 x 42 x 52 mm (3.68" x 1.65" x 2.05")'],
+        ["Weight", "160 g (0.35 lbs)"],
+        ["Warranty", "Mooer 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      "id": "mooer-autuner",
+      "name": "Mooer MVP1 Autuner Vocal Processor & Guitar Multi-Effect",
+      "shortName": "Mooer MVP1 Autuner Vocal & Guitar Processor",
+      "brand": "Mooer",
+      "category": "Guitar Pedals & Effects",
+      "subcategory": "Vocal Processors & Multi-Effects",
+      "price": 16827,
+      "originalPrice": 19900,
+      "rating": 4.8,
+      "reviewCount": 19,
+      "image": "assets/images/products/mooer-autuner-angle.jpg",
+      "images": [
+        "assets/images/products/mooer-autuner-angle.jpg",
+        "assets/images/products/mooer-autuner-top.jpg"
+      ],
+      "isFeatured": true,
+      "badge": "Pitch Correction & FX",
+      "inStock": true,
+      "stock": 8,
+      "sku": "MOOER-MVP1-AUTUNER",
+      "description": `
+      <h3>Mooer MVP1 Autuner - Vocal Processor & Guitar Multi-Effect Pedal</h3>
+      <p>MOOER has unveiled its latest effect pedal innovation, the <strong>MVP1 AUTUNER</strong> vocal processor. Unlike most of MOOER\u2019s products, this pedal is designed primarily for use with vocals, offering precise pitch correction and exceptional vocal enhancement features. However, MOOER hasn\u2019t forgotten about its primary audience, so AUTUNER still provides features that will interest guitarists.</p>
+
+      <h3>Versatile Vocal Pitch Correction & Synthesizer Mode</h3>
+      <p>Due to the pedal\u2019s primary focus on vocals, the device includes several features specifically designed for microphone usage. This includes balanced XLR input and output, in addition to support for 48V phantom power, ensuring that the pedal supports both dynamic and condenser microphones. However, AUTUNER also includes standard 1/4" guitar inputs and outputs, along with convenient footswitch control to switch between mixed or individual signals.</p>
+      <p>The pitch correction features behind AUTUNER are highly versatile. With an LED button, users can choose between <em>flat</em>, <em>warm</em>, and <em>bright</em> vocal tones, each indicated by a different color. Once a tone has been chosen, the dedicated 'Correction' dial defines the sensitivity and intensity of pitch correction. Users can also press and hold the left footswitch to trigger the pitch correction\u2019s robotic vocal synthesizer mode.</p>
+
+      <h3>Built-in Delay & Reverb Modules with Tap Tempo</h3>
+      <p>AUTUNER\u2019s versatility shines particularly brightly thanks to its built-in studio effects modules. The first of these is delay: controllable via a dedicated dial with options to choose between <strong>Tape Delay</strong>, <strong>Digital Delay</strong>, <strong>Slapback Delay</strong>, or bypass. The pedal\u2019s left footswitch serves as a tap switch, allowing quick tempo adjustment in real-time.</p>
+      <p>A lush reverb module is also featured within AUTUNER with its own dedicated dial to morph seamlessly between <strong>Room</strong>, <strong>Hall</strong>, and <strong>Plate</strong> reverbs. While vocal pitch correction is vocal-focused, these delay and reverb modules ensure that the pedal provides rich atmospheric depth for acoustic and electric guitarists alike.</p>
+
+      <h3>Dual Footswitches, Routing Flexibility & Pro I/O</h3>
+      <p>In addition to the left footswitch\u2019s dual functionality, the right footswitch acts as a bypass for the pitch correction and effects, whilst ensuring tone processing remains active. In addition to core features, the MVP1 AUTUNER includes a master Gain dial, 48V Phantom Power toggle switch for condenser microphones, Line In/Mic toggle switch, Ground/Lift toggle switch, and DC 9V 500mA power input.</p>
+    `,
+      "specs": [
+        {
+          "label": "Effect Type",
+          "value": "Vocal Pitch Corrector & Multi-Effects Processor"
+        },
+        {
+          "label": "Vocal Tone Modes",
+          "value": "3 Modes (Flat, Warm, Bright)"
+        },
+        {
+          "label": "Delay Algorithms",
+          "value": "4 Modes (Tape Delay, Digital Delay, Slapback Delay, OFF)"
+        },
+        {
+          "label": "Reverb Algorithms",
+          "value": "4 Modes (Room Reverb, Hall Reverb, Plate Reverb, OFF)"
+        },
+        {
+          "label": "Pitch Synthesizer",
+          "value": "Hold Footswitch Vocal Synth Engine"
+        },
+        {
+          "label": "Audio Routing",
+          "value": "Mixed Output or Individual Separate Vocal/Guitar Out"
+        },
+        {
+          "label": "Microphone Preamp",
+          "value": "XLR In/Out with Switchable 48V Phantom Power"
+        },
+        {
+          "label": "Instrument I/O",
+          "value": '1/4" Hi-Z Guitar Input & 1/4" Output'
+        },
+        {
+          "label": "Power Requirements",
+          "value": "9V DC 500mA Center-Negative"
+        }
+      ],
+      "deepSpecs": [
+        [
+          "Type",
+          "Vocal Pitch Correction & Multi-Effects Pedal"
+        ],
+        [
+          "Series",
+          "MVP Vocal Series"
+        ],
+        [
+          "Pitch Correction",
+          "Controllable Sensitivity Dial with Vocal Synth Mode"
+        ],
+        [
+          "Vocal Tone Modes",
+          "Flat (LED off), Warm (Yellow LED), Bright (Green LED)"
+        ],
+        [
+          "Delay Modes",
+          "Tape, Digital, Slapback, Bypass"
+        ],
+        [
+          "Reverb Modes",
+          "Room, Hall, Plate, Bypass"
+        ],
+        [
+          "Footswitch Controls",
+          "Dual Multifunction Switches (Tap Tempo, Synth, Bypass, Hidden Mode)"
+        ],
+        [
+          "Audio Routing",
+          "Selectable Mixed Output or Discrete Vocal / Guitar Out"
+        ],
+        [
+          "Microphone Input",
+          "Balanced XLR Female with Gain Control & Ground/Lift"
+        ],
+        [
+          "Microphone Output",
+          "Balanced XLR Male"
+        ],
+        [
+          "Instrument Input",
+          '1/4" Unbalanced TS Phone Jack'
+        ],
+        [
+          "Instrument Output",
+          '1/4" Unbalanced TS Phone Jack'
+        ],
+        [
+          "Phantom Power",
+          "+48V Switchable with Status Indicator"
+        ],
+        [
+          "Chassis",
+          "Durable Tour-Grade Metal Enclosure"
+        ],
+        [
+          "Power Consumption",
+          "9V DC Center-Negative, 500 mA"
+        ],
+        [
+          "Dimensions",
+          "125 x 86.6 x 60 mm"
+        ],
+        [
+          "Weight",
+          "370 g"
+        ],
+        [
+          "Warranty",
+          "Mooer 1-Year Limited Manufacturer Warranty"
+        ]
+      ]
+    },
+    {
+      "id": "mooer-baby-tuner",
+      "name": "Mooer Baby Tuner High Precision Chromatic Tuner Pedal",
+      "shortName": "Mooer Baby Tuner Chromatic Pedal",
+      "brand": "Mooer",
+      "category": "Guitar Pedals & Effects",
+      "subcategory": "Tuner Pedals",
+      "price": 5996,
+      "originalPrice": 6990,
+      "rating": 4.7,
+      "reviewCount": 24,
+      "image": "assets/images/products/mooer-baby-tuner-front.jpg",
+      "images": [
+        "assets/images/products/mooer-baby-tuner-front.jpg",
+        "assets/images/products/mooer-baby-tuner-angle.png"
+      ],
+      "isFeatured": false,
+      "badge": "108 High-Bright LEDs",
+      "inStock": true,
+      "stock": 15,
+      "sku": "MOOER-BABY-TUNER",
+      "description": "\n      <h3>Mooer Baby Tuner - High Precision Micro Chromatic Tuner Pedal</h3>\n      <p>The <strong>Mooer Baby Tuner</strong> is a high-precision chromatic micro pedal engineered to deliver accurate tuning down to 1 point (+/- 1 cent) in an ultra-compact footprint that fits seamlessly onto any pedalboard setup.</p>\n\n      <h3>Ultra-Bright 108-LED Display</h3>\n      <p>Equipped with an advanced matrix of 108 high-brightness LEDs, the Baby Tuner ensures effortless readability in any performance setting, from dark nightclub stages to direct outdoor midday sunlight.</p>\n\n      <h3>Broad Frequency Range & Extended Instrument Compatibility</h3>\n      <p>The Baby Tuner is engineered for broad compatibility across electric and electro-acoustic instruments. With ultra-fast pitch detection spanning A0 (27.5Hz) to C8 (4186Hz), it effortlessly handles down-tuned 7-string guitars and extended-range 5-string and 6-string bass guitars with absolute pitch lock.</p>\n\n      <h3>True Bypass & Rugged Metal Micro Shell</h3>\n      <p>Featuring a genuine <strong>True Bypass</strong> switching design, the Baby Tuner leaves your instrument's raw audio signal completely untouched and uncolored when inactive, while cleanly muting output during tuning for silent stage adjustments.</p>\n    ",
+      "specs": [
+        {
+          "label": "Tuning Type",
+          "value": "High Precision Chromatic Tuner"
+        },
+        {
+          "label": "Display System",
+          "value": "108 High-Brightness LED Matrix Display"
+        },
+        {
+          "label": "Tuning Accuracy",
+          "value": "+/- 1 Cent (1 Point)"
+        },
+        {
+          "label": "Tuning Range",
+          "value": "A0 (27.5Hz) \u2013 C8 (4186Hz)"
+        },
+        {
+          "label": "Instrument Support",
+          "value": "6 & 7-String Electric/Acoustic Guitars, 4 & 5-String Basses"
+        },
+        {
+          "label": "Bypass Type",
+          "value": "True Hardwire Bypass (Mutes on engage)"
+        },
+        {
+          "label": "Chassis",
+          "value": "Ultra-Compact Tour-Grade Metal Enclosure"
+        },
+        {
+          "label": "Power Requirements",
+          "value": "9V DC Center-Negative (90 mA)"
+        }
+      ],
+      "deepSpecs": [
+        [
+          "Type",
+          "Micro High-Precision Chromatic Tuner Pedal"
+        ],
+        [
+          "Series",
+          "Mooer Micro Series"
+        ],
+        [
+          "Display",
+          "108 High-Brightness Curved LED Matrix"
+        ],
+        [
+          "Tuning Range",
+          "A0 (27.5Hz) to C8 (4186Hz)"
+        ],
+        [
+          "Accuracy",
+          "\xB11 Point / Cent"
+        ],
+        [
+          "Compatibility",
+          "Electric Guitar, Acoustic-Electric Guitar, 7-String Guitar, 4/5-String Bass"
+        ],
+        [
+          "Bypass System",
+          "True Bypass (Silent Mute During Tuning)"
+        ],
+        [
+          "Input",
+          '1/4" Monaural Audio Jack (Impedance: 470k Ohms)'
+        ],
+        [
+          "Output",
+          '1/4" Monaural Audio Jack (Impedance: 100 Ohms)'
+        ],
+        [
+          "Chassis",
+          "Heavy-Duty Full Metal Die-Cast Shell"
+        ],
+        [
+          "Dimensions (D x W x H)",
+          "93.5 x 42 x 52 mm"
+        ],
+        [
+          "Weight",
+          "140 g"
+        ],
+        [
+          "Current Draw",
+          "90 mA"
+        ],
+        [
+          "Power Requirements",
+          "Standard 9V DC Center-Negative (Power Supply Not Included)"
+        ],
+        [
+          "Warranty",
+          "Mooer 1-Year Limited Manufacturer Warranty"
+        ]
+      ]
+    },
+    {
+      "id": "mooer-black-secret",
+      "name": "Mooer Black Secret Distortion Pedal",
+      "shortName": "Mooer Black Secret Distortion",
+      "brand": "Mooer",
+      "category": "Guitar Pedals & Effects",
+      "subcategory": "Distortion & Overdrive Pedals",
+      "price": 4796,
+      "originalPrice": 5600,
+      "rating": 4.8,
+      "reviewCount": 36,
+      "image": "assets/images/products/mooer-black-secret-front.png",
+      "images": [
+        "assets/images/products/mooer-black-secret-front.png"
+      ],
+      "isFeatured": true,
+      "badge": "Vintage & Turbo Dual Rat Modes",
+      "inStock": true,
+      "stock": 14,
+      "sku": "MOOER-BLACK-SECRET",
+      "description": "\n      <h3>Mooer Black Secret - Classic Dual-Mode Distortion Pedal</h3>\n      <p>The <strong>Mooer Black Secret</strong> packs the legendary, raw bite of the world's most iconic rodent-style distortion circuits into an exquisite, pedalboard-friendly micro chassis. Featuring two distinct tonal voicings, the Black Secret covers everything from creamy, touch-sensitive crunch to punishing, harmonically rich saturation.</p>\n\n      <h3>2 Versatile Working Modes: Vintage & Turbo</h3>\n      <p>Switch between two distinct clipping modes on the fly using the heavy-duty toggle switch:</p>\n      <ul>\n        <li><strong>Vintage Mode:</strong> Delivers a warm, smooth, classic vintage distortion sound with rich midrange bloom and sweet compression reminiscent of legendary late-'70s and '80s rock recordings.</li>\n        <li><strong>Turbo Mode:</strong> Provides more than twice the maximum output headroom of Vintage mode, utilizing LED clipping to produce a punchier, louder, and more aggressive distortion voice with ferocious low-end authority.</li>\n      </ul>\n\n      <h3>Intuitive Dynamic Controls & True Bypass</h3>\n      <p>With an oversized, smooth-action <strong>Distortion</strong> gain knob and precise micro dials for <strong>Level</strong> and <strong>Filter</strong>, sculpting your ideal frequency response is instantaneous. True hardwire bypass guarantees that your raw guitar tone retains absolute pristine clarity when the pedal is disengaged.</p>\n    ",
+      "specs": [
+        {
+          "label": "Effect Type",
+          "value": "Classic High-Gain Distortion Pedal"
+        },
+        {
+          "label": "Voicing Modes",
+          "value": "2 Working Modes: Vintage & Turbo"
+        },
+        {
+          "label": "Vintage Mode",
+          "value": "Warm, Smooth, Classic Vintage Distortion"
+        },
+        {
+          "label": "Turbo Mode",
+          "value": "High-Headroom, 2x Output, Aggressive Modern Bite"
+        },
+        {
+          "label": "Controls",
+          "value": "Distortion, Level, Filter, Vintage/Turbo Toggle Switch"
+        },
+        {
+          "label": "Bypass Type",
+          "value": "True Hardwire Bypass"
+        },
+        {
+          "label": "Chassis",
+          "value": "Full Metal Die-Cast Shell"
+        },
+        {
+          "label": "Power Requirements",
+          "value": "9V DC Center-Negative (3 mA)"
+        }
+      ],
+      "deepSpecs": [
+        [
+          "Type",
+          "Micro Analog Distortion Pedal"
+        ],
+        [
+          "Circuit Design",
+          "Classic Rodent-Style High-Gain Distortion"
+        ],
+        [
+          "Operating Modes",
+          "Vintage (Symmetrical Diode Clipping) / Turbo (LED Clipping, +6dB Boost)"
+        ],
+        [
+          "Controls",
+          "Distortion (Master Gain), Level (Output Volume), Filter (High-Cut EQ), 2-Way Toggle"
+        ],
+        [
+          "Bypass System",
+          "True Hardwire Mechanical Bypass"
+        ],
+        [
+          "Input",
+          '1/4" Monaural Audio Jack (Impedance: 1M Ohms)'
+        ],
+        [
+          "Output",
+          '1/4" Monaural Audio Jack (Impedance: 1k Ohms)'
+        ],
+        [
+          "Chassis",
+          "Durable Full Metal Enclosure with Classic Black Finish"
+        ],
+        [
+          "Dimensions (D x W x H)",
+          "93.5 x 42 x 52 mm"
+        ],
+        [
+          "Weight",
+          "160 g"
+        ],
+        [
+          "Current Draw",
+          "Ultra-Low 3 mA"
+        ],
+        [
+          "Power Requirements",
+          "9V DC Center-Negative (Power Supply Not Included)"
+        ],
+        [
+          "Warranty",
+          "Mooer 1-Year Limited Manufacturer Warranty"
+        ]
+      ]
+    },
+    {
+      "id": "mooer-black-truck",
+      "name": "Mooer Black Truck Combined Effects Multi-Pedal Unit",
+      "shortName": "Mooer Black Truck Multi-Effects Unit",
+      "brand": "Mooer",
+      "category": "Guitar Pedals & Effects",
+      "subcategory": "Multi-Effects Processors",
+      "price": 27822,
+      "originalPrice": 32900,
+      "rating": 4.9,
+      "reviewCount": 38,
+      "image": "assets/images/products/mooer-black-truck-top.png",
+      "images": [
+        "assets/images/products/mooer-black-truck-top.png",
+        "assets/images/products/mooer-black-truck-rear.png",
+        "assets/images/products/mooer-black-truck-angle.png",
+        "assets/images/products/mooer-black-truck-case.png"
+      ],
+      "isFeatured": true,
+      "badge": "6-in-1 Analog & Digital Rig",
+      "inStock": true,
+      "stock": 7,
+      "sku": "MOOER-BLACK-TRUCK",
+      "description": `
+      <h3>Mooer Black Truck - All-in-One Professional Floor Multi-Effects Unit</h3>
+      <p>The <strong>MOOER Black Truck</strong> is an all-in-one performance rig engineered for the professional guitarist on the go. Following diligent research, MOOER integrated a powerhouse combination of the most commonly used and desirable effects pedals into a single, intuitive, road-ready floor unit.</p>
+
+      <h3>6 Essential Effects Modules in One Rugged Unit</h3>
+      <p>Black Truck unites 6 dedicated effects sections with hands-on, analog-style controls:</p>
+      <ul>
+        <li><strong>Compressor (COMP):</strong> Transparent dynamic leveling with volume, EQ, and compression threshold controls.</li>
+        <li><strong>Overdrive (OD):</strong> Warm, natural tube-style drive based on Mooer's famed Green Mile circuit.</li>
+        <li><strong>Hi-Gain Distortion:</strong> Aggressive, modern high-gain distortion circuit designed specifically for hard rock and heavy metal with dedicated tone sculpting.</li>
+        <li><strong>EQ:</strong> 5-band graphic equalizer with pre/post routing toggle for surgical sonic shaping.</li>
+        <li><strong>Modulation (MOD):</strong> Multi-mode modulation engine offering lush Chorus, Flanger, and Tremolo effects.</li>
+        <li><strong>Space (Delay/Reverb):</strong> Combination digital delay and cavernous ambient reverb module with independent level and decay controls.</li>
+      </ul>
+
+      <h3>Integrated Effects Loop, Stereo Outs & Speaker Emulation</h3>
+      <p>The built-in buffered effects loop allows seamless 4-cable method routing with external amplifiers or custom pedalboards. A dedicated 1/4" and 1/8" direct output with switchable analog speaker cabinet simulation and independent headphone volume control enables direct recording to audio interfaces, mixing consoles, or silent headphone rehearsal.</p>
+
+      <h3>One-Step Programmable Presets & Built-in Tuner</h3>
+      <p>Black Truck operates in both live stompbox mode and preset mode, providing instant one-tap recall of complete multi-effect patches. It also features tap-tempo synchronization for delay/modulation, and a high-precision digital chromatic tuner.</p>
+    `,
+      "specs": [
+        {
+          "label": "Effects Sections",
+          "value": "6 Modules: Compressor, Overdrive, Hi-Gain Distortion, EQ, Modulation, Space (Delay/Reverb)"
+        },
+        {
+          "label": "Operation Modes",
+          "value": "Live Stompbox Mode & Programmable Preset Mode"
+        },
+        {
+          "label": "Tuner",
+          "value": "Built-in High Precision Chromatic Guitar Tuner"
+        },
+        {
+          "label": "Tap Tempo",
+          "value": "Synchronized Tap Tempo for Modulation and Delay Modules"
+        },
+        {
+          "label": "Effects Loop",
+          "value": "Integrated Buffered FX Loop (Supports 4-Cable Method)"
+        },
+        {
+          "label": "Outputs",
+          "value": 'Dual 1/4" Stereo Outputs + Dedicated Headphone/Cab Sim Out with Independent Volume'
+        },
+        {
+          "label": "Cabinet Emulation",
+          "value": "Analog Direct Speaker Cabinet Simulation"
+        },
+        {
+          "label": "Included Accessories",
+          "value": "Heavy-Duty Padded Protective Carry Case & Power Supply Included"
+        },
+        {
+          "label": "Power Requirements",
+          "value": "9V DC 1A (1000mA) Center-Negative"
+        }
+      ],
+      "deepSpecs": [
+        [
+          "Type",
+          "Multi-Effects Analog/Digital Floorboard Unit"
+        ],
+        [
+          "Effects Modules",
+          "6 Dedicated Blocks (Comp, OD, Hi-Gain Distortion, 5-Band EQ, Mod, Space)"
+        ],
+        [
+          "Modulation Algorithms",
+          "Flanger, Chorus, Tremolo"
+        ],
+        [
+          "Space Algorithms",
+          "Echo Delay & Lush Reverb"
+        ],
+        [
+          "Presets",
+          "5 Programmable Patch Slots with 1-Tap Switching"
+        ],
+        [
+          "Tuning Range",
+          "Chromatic (Mutes Output on Engagement)"
+        ],
+        [
+          "Input Impedance",
+          '1/4" Audio Jack (2M Ohms)'
+        ],
+        [
+          "Output Impedance",
+          'Dual 1/4" Audio Jacks (100 Ohms)'
+        ],
+        [
+          "Headphone Output",
+          '1/8" Stereo Mini-Jack (50 Ohms) with Volume Control'
+        ],
+        [
+          "Effects Loop",
+          'Send/Return 1/4" TS Jacks'
+        ],
+        [
+          "Chassis",
+          "Heavy-Duty Full Metal Tour-Grade Enclosure with LED Indicator Rings"
+        ],
+        [
+          "Dimensions (D x W x H)",
+          "370 x 96 x 51 mm"
+        ],
+        [
+          "Weight",
+          "1.23 kg (2.71 lbs)"
+        ],
+        [
+          "Power Consumption",
+          "9V DC 1A (1000mA) Center-Negative"
+        ],
+        [
+          "Included in Box",
+          "Mooer Black Truck Unit, Padded Carry Case, Power Adapter, User Manual"
+        ],
+        [
+          "Warranty",
+          "Mooer 1-Year Limited Manufacturer Warranty"
+        ]
+      ]
+    },
+    {
+      "id": "mooer-blacknight",
+      "name": "Mooer 010 Blacknight Micro Preamp Pedal",
+      "shortName": "Mooer 010 Blacknight Preamp",
+      "brand": "Mooer",
+      "category": "Guitar Pedals & Effects",
+      "subcategory": "Amp Simulators & Preamp Pedals",
+      "price": 9315,
+      "originalPrice": 10990,
+      "rating": 4.8,
+      "reviewCount": 22,
+      "image": "assets/images/products/mooer-blacknight-front.png",
+      "images": [
+        "assets/images/products/mooer-blacknight-front.png",
+        "assets/images/products/mooer-blacknight-side.png"
+      ],
+      "isFeatured": false,
+      "badge": "Blackmore 100W Head Tone",
+      "inStock": true,
+      "stock": 10,
+      "sku": "MOOER-010-BLACKNIGHT",
+      "description": "\n      <h3>Mooer 010 Blacknight - Dual Channel Tube Amp Micro Preamp</h3>\n      <p>It\u2019s almost impossible to think about the origins of heavy rock and the roots of heavy metal without thinking of classic songs like <em>\u201CSmoke on the Water\u201D</em>, <em>\u201CChild in Time\u201D</em>, and <em>\u201CHighway Star\u201D</em>. The <strong>Mooer 010 Blacknight</strong> recreates the definitive sound of a modern-day 100-Watt signature tube head created for Ritchie Blackmore, one of the most legendary and influential guitarists in rock history.</p>\n\n      <h3>Vintage British Voice with Modern High-Gain Authority</h3>\n      <p>The Blacknight delivers unmistakable vintage British style, rich midrange warmth, and immediate harmonic punch, capturing the celebrated hard rock tones of the early \u201970s with uncanny accuracy. Push the gain, and the 3-band EQ roars with searing lead articulation and tight low-end punch for modern high-gain hard rock and heavy metal.</p>\n\n      <h3>Dual Channels & Operating Modes</h3>\n      <p>Mooer micro preamps are sonically accurate digital recreations of authentic tube amplifiers developed by analyzing real boutique tube heads. The 010 Blacknight features:</p>\n      <ul>\n        <li><strong>Clean Channel:</strong> Dynamic, touch-sensitive cleans with classic British warmth and blooming headroom.</li>\n        <li><strong>Lead Channel:</strong> Saturated, harmonic-rich overdrive and soaring high-gain crunch.</li>\n        <li><strong>Dual Operating Modes:</strong> Choose between standard on/off switching or channel-switching mode to toggle between clean and lead voicings on the fly.</li>\n      </ul>\n\n      <h3>Built-in Speaker Cabinet Simulation</h3>\n      <p>Engage the onboard speaker cabinet emulation to connect direct to audio interfaces, powered studio monitors, or front-of-house PA systems without needing an amplifier or heavy speaker cab. Alternatively, run directly into the effects return of any tube or solid-state amp for authentic full-rig power.</p>\n    ",
+      "specs": [
+        {
+          "label": "Preamp Modeling",
+          "value": "100W Ritchie Blackmore Signature Tube Head Emulation"
+        },
+        {
+          "label": "Channels",
+          "value": "Dual Channels (Clean & Drive / Lead) with Independent Memory"
+        },
+        {
+          "label": "Cabinet Simulation",
+          "value": "Built-in Switchable Speaker Cabinet Simulation"
+        },
+        {
+          "label": "Operating Modes",
+          "value": "Dual Modes: On/Off Stompbox or Clean/Lead Channel Toggle"
+        },
+        {
+          "label": "Controls",
+          "value": "Volume, Gain, Treble, Mid, Bass, Channel/Cab Sim Button"
+        },
+        {
+          "label": "Footswitch Operation",
+          "value": "Multifunction Soft-Touch LED Footswitch"
+        },
+        {
+          "label": "Chassis",
+          "value": "Full Metal Micro Enclosure"
+        },
+        {
+          "label": "Power Requirements",
+          "value": "9V DC Center-Negative (300 mA)"
+        }
+      ],
+      "deepSpecs": [
+        [
+          "Type",
+          "Micro Digital Tube Preamp Pedal"
+        ],
+        [
+          "Series",
+          "Mooer Micro Preamp Series (Model 010)"
+        ],
+        [
+          "Target Amp",
+          "100-Watt Signature Tube Head (Ritchie Blackmore Voicing)"
+        ],
+        [
+          "Channels",
+          "2 Independent Channels (Channel 1 Clean / Channel 2 Lead)"
+        ],
+        [
+          "Tone Controls",
+          "3-Band Passive EQ (Treble, Mid, Bass)"
+        ],
+        [
+          "Gain & Level",
+          "Dedicated Gain and Volume Knobs"
+        ],
+        [
+          "Cab Simulation",
+          "Built-in Switchable 4x12 Speaker Cabinet Emulation"
+        ],
+        [
+          "Footswitch Modes",
+          "Selectable Bypass/Active or Channel 1/Channel 2 Toggle"
+        ],
+        [
+          "Input",
+          '1/4" Monaural Audio Jack (Impedance: 1M Ohms)'
+        ],
+        [
+          "Output",
+          '1/4" Monaural Audio Jack (Impedance: 100 Ohms)'
+        ],
+        [
+          "Chassis",
+          "Durable Full Metal Die-Cast Micro Enclosure"
+        ],
+        [
+          "Dimensions (D x W x H)",
+          "93.5 x 42 x 52 mm"
+        ],
+        [
+          "Weight",
+          "160 g"
+        ],
+        [
+          "Current Draw",
+          "300 mA"
+        ],
+        [
+          "Power Requirements",
+          "9V DC Center-Negative (Power Supply Not Included)"
+        ],
+        [
+          "Warranty",
+          "Mooer 1-Year Limited Manufacturer Warranty"
+        ]
+      ]
+    },
+    {
+        "id": "mooer-blues-crab",
+        "name": "Mooer Blues Crab Classic Overdrive Pedal",
+        "shortName": "Mooer Blues Crab Overdrive",
+        "brand": "Mooer",
+        "category": "Guitar Pedals & Effects",
+        "subcategory": "Distortion & Overdrive Pedals",
+        "price": 5276,
+        "originalPrice": 6200,
+        "rating": 4.8,
+        "reviewCount": 27,
+        "image": "assets/images/products/mooer-blues-crab-front.jpg",
+        "images": [
+            "assets/images/products/mooer-blues-crab-front.jpg"
+        ],
+        "isFeatured": false,
+        "badge": "Bluesbreaker Tone",
+        "inStock": true,
+        "stock": 12,
+        "sku": "MOOER-BLUES-CRAB",
+        "description": "\n    <h3>Mooer Blues Crab - Classic Vintage Blues Overdrive Pedal</h3>\n    <p>The <strong>Mooer Blues Crab</strong> captures the legendary, smooth, and touch-sensitive drive characteristic of vintage British blues combos (famously modeled on the iconic Marshall Bluesbreaker circuit). It delivers organic warmth, blooming midrange grit, and singing sustain that responds naturally to your pick attack and guitar volume control.</p>\n\n    <h3>Transparent Dynamic Overdrive</h3>\n    <p>Engineered to preserve the fundamental tonal character of your instrument and amplifier, the Blues Crab excels as a transparent boost, edge-of-breakup sweetener, or rich standalone low-to-medium gain blues drive.</p>\n\n    <h3>True Bypass & Ultra-Compact Shell</h3>\n    <p>Housed in a rugged, tour-grade full metal micro enclosure, the pedal features genuine <strong>True Bypass</strong> switching to keep your raw tone pure when bypassed, and operates on standard 9V DC center-negative power with an ultra-low 6mA current draw.</p>\n  ",
+        "specs": [
+            {
+                "label": "Effect Type",
+                "value": "Classic Blues Overdrive Pedal"
+            },
+            {
+                "label": "Circuit Voicing",
+                "value": "Vintage British Bluesbreaker-Style Overdrive"
+            },
+            {
+                "label": "Controls",
+                "value": "Level, Tone, Gain"
+            },
+            {
+                "label": "Bypass Type",
+                "value": "True Bypass Mechanical Switching"
+            },
+            {
+                "label": "Input Impedance",
+                "value": "1M Ohms (1/4\" Mono Jack)"
+            },
+            {
+                "label": "Output Impedance",
+                "value": "1k Ohms (1/4\" Mono Jack)"
+            },
+            {
+                "label": "Current Draw",
+                "value": "6 mA (Ultra-Low Consumption)"
+            },
+            {
+                "label": "Dimensions",
+                "value": "93.5mm (D) × 42mm (W) × 52mm (H)"
+            }
+        ],
+        "deepSpecs": [
+            [
+                "Type",
+                "Micro Analog Overdrive Effects Pedal"
+            ],
+            [
+                "Series",
+                "Mooer Micro Series"
+            ],
+            [
+                "Circuit Style",
+                "Vintage Low-Gain British Overdrive / Clean Boost"
+            ],
+            [
+                "Controls",
+                "Gain (Overdrive Saturation), Tone (High-End Balance), Level (Output Volume)"
+            ],
+            [
+                "Bypass System",
+                "True Hardwire Mechanical Bypass"
+            ],
+            [
+                "Input",
+                "1/4\" Monaural Audio Jack (Impedance: 1M Ohms)"
+            ],
+            [
+                "Output",
+                "1/4\" Monaural Audio Jack (Impedance: 1k Ohms)"
+            ],
+            [
+                "Chassis",
+                "Heavy-Duty Full Metal Die-Cast Micro Enclosure"
+            ],
+            [
+                "Dimensions (D x W x H)",
+                "93.5 x 42 x 52 mm"
+            ],
+            [
+                "Weight",
+                "160 g"
+            ],
+            [
+                "Power Requirements",
+                "Standard 9V DC Center-Negative (Power Supply Not Included)"
+            ],
+            [
+                "Current Draw",
+                "6 mA"
+            ],
+            [
+                "Warranty",
+                "Mooer 1-Year Limited Manufacturer Warranty"
+            ]
+        ]
+    },
+    {
+      id: "bluguitar-amp-1-iridium-edition",
+      name: "BluGuitar AMP 1 Iridium Edition",
+      shortName: "BluGuitar AMP 1 Iridium 100W Pedal Amp",
+      brand: "BluGuitar",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Floorboard Amplifiers & Modelers",
+      price: 95373,
+      originalPrice: 109900,
+      rating: 4.9,
+      reviewCount: 27,
+      image: "assets/images/products/bluguitar-amp1-iridium-front.png",
+      images: [
+        "assets/images/products/bluguitar-amp1-iridium-front.png",
+        "assets/images/products/bluguitar-amp1-iridium-rear.png",
+        "assets/images/products/bluguitar-amp1-iridium-side.png"
+      ],
+      isFeatured: true,
+      badge: "100W Nanotube Technology",
+      inStock: true,
+      stock: 5,
+      sku: "BLU-AMP1-IRIDIUM",
+      description: `
+      <h3>BluGuitar AMP 1 Iridium Edition - 100W 4-Channel Nanotube Floorboard Amp</h3>
+      <p>The BluGuitar AMP 1 Iridium Edition is a revolutionary 100-watt, 4-channel guitar amplifier built entirely into a compact pedalboard chassis. Driven by Thomas Blug's proprietary Nanotube power stage and Current Feedback architecture, the Iridium Edition is custom-voiced specifically for modern rock and metal players demanding bone-crushing punch, ultra-fast transients, and searing harmonic saturation.</p>
+
+      <h3>Four Discrete Preamp Voicings</h3>
+      <p>Experience four independent, all-analog channels: <strong>Modern</strong> delivers extreme high-gain reserves with tight low-end cut and mid-scoop capability; <strong>Classic</strong> yields hard-hitting, percussive distortion ranging from hot-rodded British crunch to a massive German wall of sound; <strong>Vintage</strong> provides thick, woody low-mid punch that keeps drop tunings articulate; and <strong>Clean</strong> offers huge 100-watt headroom that keeps humbuckers sparkling and serves as an ideal platform for external pedals.</p>
+
+      <h3>Integrated Preamp Boost & Metal Noise Gate</h3>
+      <p>Equipped with an adjustable front-end <strong>Boost</strong> function that behaves like an onboard overdrive pedal, the AMP 1 pushes your tone into creamy sustain without flubbing out. The studio-grade <strong>Noise Gate</strong> features three selectable modes: Metal (ultra-fast gating for razor-sharp staccato riffs), Soft (sensitive nuance preservation), and Off.</p>
+
+      <h3>Metal-Voiced Analog Recording Out & Power Amp Routing</h3>
+      <p>Direct recording is effortless thanks to an analog speaker simulation voiced specifically for high-gain metal. The internal cab sim can be bypassed when pairing with external impulse responses (IRs). Complete with dual 8-Ohm and 16-Ohm speaker outputs, switchable series/parallel FX loop, and full remote switching integration.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "4-Channel 100W Nanotube Guitar Amplifier Pedal" },
+        { label: "Output Power", value: "100 Watts RMS (Nanotube Current Feedback)" },
+        { label: "Channels", value: "4 Discrete Channels: Clean, Vintage, Classic, Modern" },
+        { label: "Boost Section", value: "Custom Voiced Front-End Gain/Overdrive Boost" },
+        { label: "Noise Gate", value: "3-Way Metal Gate (Metal, Off, Soft)" },
+        { label: "Speaker Simulation", value: "Analog Metal-Voiced Cab Sim (IR Defeatable)" },
+        { label: "Speaker Outputs", value: "1x 8 Ohm & 1x 16 Ohm Dedicated Loudspeaker Jacks" },
+        { label: "Power Supply", value: "Internal 100-240V AC Universal Supply (Standard IEC)" }
+      ],
+      deepSpecs: [
+        ["Type", "100-Watt 4-Channel Floorboard Guitar Amplifier & Preamp"],
+        ["Power Amp Section", "100W RMS Current Feedback Power Amp with Genuine Nanotube 100 Technology"],
+        ["Preamps & Channels", "4 Discrete Channels: Clean, Vintage Overdrive, Classic Overdrive, Modern Overdrive"],
+        ["Equalization", "Shared 3-Band Passive EQ (Bass, Middle, Treble) with Global Tone"],
+        ["Custom Controls (Side Panel)", "Individual Tone & Volume Trim Pots for Vintage, Classic, and Modern Channels"],
+        ["Boost Circuit", "Front-End Preamp Boost with Adjustable Gain and Mid-Hump Voicing"],
+        ["Noise Gate", "3-Position Metal Gate: Metal (Ultra-Fast), Soft (High-Sensitivity Nuance), Off"],
+        ["Speaker Simulation", "Analog Current Feedback Loudspeaker Simulator (Defeatable for External IRs)"],
+        ["Speaker Outputs", "1x 8-Ohm Jack, 1x 16-Ohm Jack (100W into 8 or 16 Ohms)"],
+        ["FX Loop", "Series / Parallel Switchable Effects Loop with +4dB / -10dB Level Switch"],
+        ["Direct Out / Headphones", '1x 1/4" Recording Out / Stereo Headphone Jack with Speaker Simulation'],
+        ["Remote Control", '1x 1/4" Jack for BluGuitar REMOTE1, MIDI1 Adapter, or Standard Footswitches'],
+        ["Mains Power", "Internal Universal Power Supply 100-240V AC (Standard IEC Connector)"],
+        ["Dimensions (W x D x H)", '245 x 192 x 68 mm (9.65" x 7.56" x 2.68")'],
+        ["Weight", "1.2 kg (2.65 lbs)"],
+        ["Origin", "Engineered in Germany by Thomas Blug"],
+        ["Warranty", "BluGuitar Efficient Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "dsm-humboldt-black-clouds-distortion",
+      name: "DSM & Humboldt Black Clouds Distortion Pedal",
+      shortName: "DSM & Humboldt Black Clouds Lead Tone Machine",
+      brand: "DSM & Humboldt Electronics",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Distortion & Overdrive Pedals",
+      price: 33732,
+      originalPrice: 39500,
+      rating: 4.9,
+      reviewCount: 22,
+      image: "assets/images/products/dsm-humboldt-black-clouds-front.jpg",
+      images: [
+        "assets/images/products/dsm-humboldt-black-clouds-front.jpg",
+        "assets/images/products/dsm-humboldt-black-clouds-top.jpg",
+        "assets/images/products/dsm-humboldt-black-clouds-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: "Dual Boost & X-Gate",
+      inStock: true,
+      stock: 6,
+      sku: "DSM-BLACKCLOUDS",
+      description: `
+      <h3>DSM & Humboldt Black Clouds: The Ultimate Distortion Lead Tone Machine</h3>
+      <p>The DSM & Humboldt Black Clouds translates a clear vision of what a premier Lead Tone Machine should be into stark reality. Designed from the ground up, the Black Clouds delivers an aggressive, highly articulated sonic signature with genuine tube-amp dynamic feel, capable of producing massive chugs, singing lead sustain, and razor-sharp breakdowns while remaining whisper-quiet thanks to its integrated X-Gate feature.</p>
+
+      <h3>Not Another Clone: Original Circuit Architecture</h3>
+      <p>Free from traditional pedal topologies, Black Clouds features a powerful active 3-band EQ, immense gain on tap, and a dedicated dual-boost circuit that adapts effortlessly to any live or studio setup.</p>
+
+      <h3>Comprehensive Control Array & Dual Boost Engine</h3>
+      <p>Black Clouds puts extensive tonal command at your feet:
+      <ul>
+        <li><strong>Pre Boost:</strong> Controls 0 to +30dB of input boost with a targeted midrange lift to increase saturation and compression.</li>
+        <li><strong>Master Boost:</strong> Adds 0 to +20dB of clean output volume. Fully operational even when the main distortion is bypassed, turning the pedal into an independent clean solo booster!</li>
+        <li><strong>Pre Tone:</strong> Balances pre-drive frequency emphasis to match pickup output: turn clockwise to tighten low-end for aggressive percussive chugs, or counterclockwise to fatten up single-coil lead lines.</li>
+        <li><strong>Active 3-Band EQ:</strong> Bass (&lt;300Hz, \xB110dB), Mids (300Hz - 2kHz, \xB112dB), and Treble (&gt;2kHz, \xB115dB).</li>
+      </ul>
+      </p>
+
+      <h3>Integrated Passive X-Gate Noise Gate</h3>
+      <p>The onboard <strong>X-Gate</strong> is a specialized passive noise gate that instantly clamps down on silent passages for ultra-tight djent riffs and staccato breakdowns, while imparting subtle crossover distortion that enriches high-gain texture.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "High-Gain Lead Distortion & Dual Boost" },
+        { label: "Dual Boost Function", value: "Pre Boost (0 to +30dB) & Master Clean (0 to +20dB)" },
+        { label: "Noise Gate", value: "Passive X-Gate for Instant Breakdown Gating" },
+        { label: "Pre-Drive Tone", value: "Pre Tone Pickup Balance & Tightness Control" },
+        { label: "Equalizer", value: "Active 3-Band EQ (Bass \xB110dB, Mids \xB112dB, Treble \xB115dB)" },
+        { label: "Independent Booster", value: "Master Boost Functions When Distortion is Bypassed" },
+        { label: "Footswitches", value: "Dual Heavy-Duty Switches (Bypass & Boost)" },
+        { label: "Power Requirements", value: "Standard 9V DC Center-Negative" }
+      ],
+      deepSpecs: [
+        ["Type", "High-Gain Lead Distortion, Dual Boost & Gate Pedal"],
+        ["Circuit Architecture", "All-Analog Original High-Gain Lead Tone Machine"],
+        ["Pre Boost Range", "0 to +30dB Input Gain Boost with Targeted Midrange Emphasis"],
+        ["Master Boost Range", "0 to +20dB Output Clean Volume Boost (Operates Independently When Bypassed)"],
+        ["Pre Tone Control", "Variable Pre-Distortion High/Low EQ Balance for Pickup Compensation"],
+        ["Tone Stack", "Active 3-Band EQ: Bass (<300Hz, \xB110dB), Mids (300Hz-2kHz, \xB112dB), Treble (>2kHz, \xB115dB)"],
+        ["Noise Gate", "Passive X-Gate for Instant Transient Gating and Added Crossover Distortion"],
+        ["Controls", "Pre Boost, Master Boost, Gain, Level, Pre Tone, Bass, Mids, Treble, X-Gate Switch"],
+        ["Footswitches", "Bypass Switch (with Blue LED), Boost Switch (with Amber LED)"],
+        ["Inputs", '1x 1/4" Mono Audio Input (1M Ohm)'],
+        ["Outputs", '1x 1/4" Mono Audio Output (1k Ohm)'],
+        ["Power Requirements", "9V DC Center-Negative (Current Draw: ~50mA)"],
+        ["Chassis", "Heavy-Duty Black Powder-Coated Die-Cast Aluminum Enclosure"],
+        ["Dimensions (W x D x H)", '120 x 95 x 50 mm (4.72" x 3.74" x 1.97")'],
+        ["Weight", "0.45 kg (0.99 lbs)"],
+        ["Origin", "Designed and Handcrafted by DSM & Humboldt Electronics"],
+        ["Warranty", "DSM & Humboldt Efficient Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "dsm-humboldt-clearcomp-1078-compressor",
+      name: "DSM & Humboldt ClearComp1078 Pedal",
+      shortName: "DSM & Humboldt ClearComp Dynamic Threshold Compressor",
+      brand: "DSM & Humboldt Electronics",
+      category: "Guitar Pedals & Effects",
+      subcategory: "Compressor & Sustainer Pedals",
+      price: 33732,
+      originalPrice: 39500,
+      rating: 4.9,
+      reviewCount: 19,
+      image: "assets/images/products/dsm-humboldt-clearcomp-front.jpg",
+      images: [
+        "assets/images/products/dsm-humboldt-clearcomp-front.jpg",
+        "assets/images/products/dsm-humboldt-clearcomp-side.jpg",
+        "assets/images/products/dsm-humboldt-clearcomp-angle.jpg"
+      ],
+      isFeatured: true,
+      badge: "Dynamic Threshold Topology",
+      inStock: true,
+      stock: 7,
+      sku: "DSM-CLEARCOMP1078",
+      description: `
+      <h3>DSM & Humboldt ClearComp1078 - Dynamic Threshold Compressor</h3>
+      <p>DSM & Humboldt Electronics proudly presents the ClearComp Compressor, bringing studio-grade rackmount dynamic control straight to your pedalboard. Designed around a groundbreaking proprietary Dynamic Threshold (DT) topology, the ClearComp guarantees exceptional acoustic transparency, low noise floor, and preservation of pick transients.</p>
+
+      <h3>Proprietary Dynamic Threshold (DT) Topology</h3>
+      <p>Traditional compressors progressively reduce gain as the signal surpasses the threshold, often squeezing out dynamic life and boosting background noise. DSM & Humboldt's innovative DT Topology dynamically modifies the threshold itself with a fixed gain reduction ratio. This achieves an organic, transparent compression feel with lower noise, minimal coloration, and enhanced dynamic headroom.</p>
+
+      <h3>Multicolor 5-Stage LED Bargraph & Full Parameter Control</h3>
+      <p>A precision 5-stage multicolor LED bargraph provides real-time visual feedback of gain reduction and envelope levels. The comprehensive control set includes:
+      <ul>
+        <li><strong>Compression:</strong> Regulates input gain and overall compression depth.</li>
+        <li><strong>Ratio:</strong> Spans from gentle smoothing (1:2) to full limiting (1:20).</li>
+        <li><strong>Attack:</strong> Adjustable from 5ms (snappy percussive slap) to 100ms (transparent bloom).</li>
+        <li><strong>Release:</strong> Configurable recovery from 30ms to 3.0 seconds.</li>
+        <li><strong>Blend:</strong> Parallel clean blend to maintain uncompressed dry attack.</li>
+        <li><strong>Threshold Switch:</strong> 3-position sensitivity switch: HI (high-output humbuckers/active pickups), MID (standard guitars and basses), and LOW (vintage low-output single coils).</li>
+      </ul>
+      </p>
+
+      <h3>High-Voltage Headroom (9V to 18V Operation)</h3>
+      <p>ClearComp operates across a wide 9V to 18V DC power supply range, allowing bassists and hot-pickup guitarists to utilize 18V operation for maximum clean dynamic headroom without clipping.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "Studio-Grade Dynamic Threshold Compressor" },
+        { label: "Topology", value: "Proprietary Dynamic Threshold (Fixed Gain Reduction)" },
+        { label: "Compression Ratio", value: "1:2 (Gentle Smoothing) to 1:20 (Hard Limiting)" },
+        { label: "Attack Time", value: "5ms to 100ms Continuously Variable" },
+        { label: "Release Time", value: "30ms to 3.0 Seconds Continuously Variable" },
+        { label: "Parallel Processing", value: "Clean / Compressed Signal Blend Control" },
+        { label: "Visual Metering", value: "5-Stage Multicolor LED Envelope Bargraph" },
+        { label: "Operating Voltage", value: "9V to 18V DC Regulated (Headroom at 18V)" }
+      ],
+      deepSpecs: [
+        ["Type", "Studio-Grade Dynamic Threshold Analog Compressor / Limiter"],
+        ["Circuit Topology", "Proprietary DSM & Humboldt Dynamic Threshold (DT) Architecture"],
+        ["Threshold Selection", "3-Position Switch: HI (Active/High Output), MID (Standard), LOW (Vintage Single Coils)"],
+        ["Compression Ratio", "Continuously Variable from 1:2 (Transparent Smoothing) to 1:20 (Hard Brickwall Limiting)"],
+        ["Attack Range", "5ms to 100ms Continuously Variable"],
+        ["Release Range", "30ms to 3.0 Seconds Continuously Variable"],
+        ["Parallel Blend", "Dedicated Clean / Compressed Signal Blend Knob"],
+        ["Visual Metering", "Multicolor 5-Stage LED Bargraph for Real-Time Gain Reduction Monitoring"],
+        ["Controls", "Compression, Ratio, Attack, Release, Blend, Level, 3-Way Threshold Switch"],
+        ["Input Impedance", '1M Ohm (1/4" Mono Jack)'],
+        ["Output Impedance", '1k Ohm (1/4" Mono Jack)'],
+        ["Power Requirements", "9V to 18V DC Regulated, Center-Negative (Current Draw: ~100mA)"],
+        ["Chassis Construction", "Heavy-Duty Aluminum Enclosure with Vintage-Style Red Fluted Knobs"],
+        ["Dimensions (L x H x W)", '120 x 57 x 65 mm (4.72" x 2.24" x 2.56")'],
+        ["Weight", "380 g (0.84 lbs)"],
+        ["Origin", "Engineered and Handcrafted in Chile by DSM & Humboldt Electronics"],
+        ["Warranty", "DSM & Humboldt Efficient Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "focusrite-isa-one-analogue",
+      name: "Focusrite ISA 1 Analogue",
+      shortName: "Focusrite ISA One Classic Mic Pre & DI",
+      brand: "Focusrite",
+      category: "Preamps & Channel Strips",
+      subcategory: "Microphone Preamplifiers & DIs",
+      price: 79460,
+      originalPrice: 89900,
+      rating: 4.9,
+      reviewCount: 48,
+      badge: "Lundahl LL1538 Transformer",
+      inStock: true,
+      stock: 8,
+      sku: "FOC-ISA-ONE",
+      isFeatured: true,
+      image: "assets/images/products/focusrite-isa-one-front.jpg",
+      images: [
+        "assets/images/products/focusrite-isa-one-front.jpg",
+        "assets/images/products/focusrite-isa-one-rear.jpg"
+      ],
+      description: `
+      <h3>Classic Lundahl Transformer Preamp with Independent DI</h3>
+      <p>Featuring a rugged, portable all-metal enclosure, the <strong>Focusrite ISA 1 Analogue</strong> combines the classic Focusrite microphone preamplifier with a flexible, independent DI channel and dedicated insert points. At the heart of the ISA range is the legendary microphone preamplifier with its Lundahl LL1538 input transformer \u2014 essentially the exact same circuit, based on the historic ISA 110 console module created by Rupert Neve, that has defined world-class studio sound for over three decades.</p>
+
+      <h3>Lundahl LL1538 Transformer Topology & Variable Impedance</h3>
+      <p>The shielded Lundahl LL1538 transformer imparts a distinctive warmth, depth, and three-dimensional character to vocal and instrument tracks that cannot be truly emulated digitally. ISA One elevates this topology with switchable input impedance, providing four precision settings: Low (600\u03A9), ISA 110 (1400\u03A9), Med (2400\u03A9), and High (6800\u03A9). This enables recording engineers to perfectly match or deliberately mismatch any vintage ribbon, dynamic, or modern condenser microphone for custom tonal coloring and high-frequency damping.</p>
+
+      <h3>Dedicated Independent Instrument DI Channel</h3>
+      <p>Whether you're a tracking artist, recording engineer, or producer, you will appreciate the versatility of the ISA One's dedicated front-panel DI input. Completely independent from the microphone preamplifier, the DI features selectable High (2M\u03A9) and Low (470k\u03A9) impedance settings, dedicated gain control, an amplifier through output to feed live stage rigs, and a separate rear-panel balanced XLR output. You can simultaneously track a pristine DI bass track while recording a mic'd acoustic guitar through the microphone channel.</p>
+
+      <h3>Precision Metering & Cue Monitoring</h3>
+      <p>The front panel features a classic moving-coil analog VU meter with calibration trim alongside dual 8-segment peak LED bargraph meters. A high-power dedicated stereo headphone amplifier with an external stereo cue mix input allows tracking musicians to dial in the perfect zero-latency headphone balance directly on the desktop.</p>
+
+      <h3>Brainworx bx_console Focusrite Plugin Suite Included</h3>
+      <p>ISA One includes an exclusive license for the Brainworx bx_console Focusrite plugin, faithfully capturing the sound, feel, and analog console behavior of the original Focusrite ISA 110 Equaliser and ISA 130 Dynamics modules across your DAW workflows.</p>
+    `,
+      specs: [
+        { label: "Preamplifier Type", value: "Single-Channel Lundahl LL1538 Transformer Preamp" },
+        { label: "DI Channel", value: "Independent High-Z / Low-Z Instrument DI with Amp Thru" },
+        { label: "Gain Range", value: "Up to 80dB (0\u201360dB Stepped + 0\u201320dB Continuous Trim)" },
+        { label: "Variable Impedance", value: "4 Switchable Settings: 600\u03A9, 1400\u03A9, 2400\u03A9, 6800\u03A9" },
+        { label: "Filter", value: "18dB/octave Butterworth High-Pass Filter @ 75Hz" },
+        { label: "Insert Point", value: 'Dedicated Balanced 1/4" TRS Send & Return Loop' },
+        { label: "Metering", value: "Analog Moving-Coil VU Meter + Dual 8-Segment Peak LEDs" },
+        { label: "Monitoring", value: "Headphone Amplifier with External Stereo Cue Mix Input" }
+      ],
+      deepSpecs: [
+        ["Type", "Classic Transformer-Coupled Microphone Preamp & Independent DI Channel"],
+        ["Input Transformer", "Lundahl LL1538 Shielded Studio Input Transformer"],
+        ["Microphone Preamp Gain Range", "0 dB to +60 dB in 10 dB stepped increments, plus 0 dB to +20 dB continuous trim (+80 dB total)"],
+        ["Microphone Input Impedance", "Switchable: Low (600 \u03A9), ISA 110 (1,400 \u03A9), Med (2,400 \u03A9), High (6,800 \u03A9)"],
+        ["Line Input Impedance", "10 k\u03A9 balanced (Gain range: -20 dB to +10 dB in 10 dB steps, plus 0 dB to +20 dB trim)"],
+        ["Instrument DI Input Impedance", "Switchable: High (2 M\u03A9) / Low (470 k\u03A9)"],
+        ["Frequency Response (Mic)", "10 Hz to 125 kHz (+/- 0.5 dB) at 60 dB gain"],
+        ["THD + N", "0.0007% at 1 kHz (0 dBu input, 30 dB gain)"],
+        ["High-Pass Filter", "18 dB/octave Butterworth high-pass filter at 75 Hz"],
+        ["Insert Loop", 'Dedicated balanced 1/4" TRS send and return for external dynamic/EQ processors'],
+        ["Headphone Output", "High-current stereo headphone amplifier with independent cue mix blend"],
+        ["Metering Systems", "Calibrated analog moving-coil VU meter and dual 8-segment peak LED bargraphs"],
+        ["Digital Expansion Slot", "Rear-panel slot for optional Focusrite 2-channel 24-bit/192kHz ADC card"],
+        ["Included Software", "Brainworx bx_console Focusrite VST/AU/AAX plugin suite"],
+        ["Enclosure Build", "Heavy-duty steel chassis with brushed aluminum front panel and integrated leather handle"],
+        ["Dimensions (W x D x H)", '220 x 280 x 104 mm (8.66" x 11.02" x 4.09")'],
+        ["Weight", "3.9 kg (8.6 lbs)"],
+        ["Manufacturer Warranty", "Focusrite 3-Year Limited Warranty & 24/7/365 Expert Support"]
+      ]
+    },
+    {
+      id: "focusrite-isa-c8x-usb-interface",
+      name: "Focusrite ISA C8X",
+      shortName: "Focusrite ISA C8X 26x28 USB Audio Interface",
+      brand: "Focusrite",
+      category: "Preamps & Channel Strips",
+      subcategory: "Rackmount USB Interfaces & Preamps",
+      price: 257670,
+      originalPrice: 295e3,
+      rating: 5,
+      reviewCount: 16,
+      badge: "2x ISA + 6x Preamp 26x28 Interface",
+      inStock: true,
+      stock: 4,
+      sku: "FOC-ISA-C8X",
+      isFeatured: true,
+      image: "assets/images/products/focusrite-isa-c8x-front.jpg",
+      images: [
+        "assets/images/products/focusrite-isa-c8x-front.jpg",
+        "assets/images/products/focusrite-isa-c8x-angle.jpg",
+        "assets/images/products/focusrite-isa-c8x-rear.jpg"
+      ],
+      description: `
+      <h3>2U Rackmount 26x28 USB Audio Interface with Dual Lundahl ISA Preamps</h3>
+      <p>The <strong>Focusrite ISA C8X</strong> combines the trademark heritage ISA sound with comprehensive remote digital control and all the analog and digital I/O, routing, and recallability required to anchor a modern flagship recording studio. Featuring two remote-controllable Lundahl transformer-based ISA preamps alongside six ultra-low-noise Focusrite mic preamps, eight dedicated fixed line inputs, 12 balanced line outputs, dual Class AB headphone amps, and 18 digital channels, ISA C8X delivers uncompromising sonic authority.</p>
+
+      <h3>Classic Preamps with Precision Digital Recall</h3>
+      <p>The two primary ISA preamps feature genuine Lundahl LL1538 input transformers that impart signature warmth, harmonic richness, and depth to any vocal or acoustic performance. With up to 79dB of gain, balanced analog insert points, stepped coarse gain, continuous fine trim, switchable input impedance, and high-pass filtering, both channels are fully controllable from the physical front panel or via the Focusrite Control 2 desktop and mobile software.</p>
+
+      <h3>All-Analog Console & Inductor-Based 430 Air Modes</h3>
+      <p>ISA C8X introduces selectable all-analog coloration circuits directly into the transformer preamps:
+      <ul>
+        <li><strong>Console Mode:</strong> Introduces warm analog saturation and low-end transient punch via an analog soft-clip circuit with fully variable digital control.</li>
+        <li><strong>430 Air Mode:</strong> Lifted directly from the legendary ISA 430 MkII channel strip, adding vintage high-end breath and shimmer via an authentic inductor-based high-shelf filter.</li>
+      </ul>
+      </p>
+
+      <h3>Six Ultra-Low-Noise Remote Preamps & Front-Panel DIs</h3>
+      <p>Complementing the dual ISA preamps are six remote-controllable Focusrite mic preamps delivering 69dB of ultra-clean, transparent gain. Each features analog Air processing and DSP-driven variable Drive for warm harmonics. The two front-panel transformer-based instrument DIs feature selectable impedance to preserve guitar and bass attack, routing directly through the ISA transformers.</p>
+
+      <h3>Flagship RedNet 24-Bit/192kHz Conversion & Immersive 7.1.4 Monitoring</h3>
+      <p>Recording and monitoring run on the exact same 24-bit/192kHz AD/DA converters used in Focusrite's flagship RedNet networked systems, achieving an astonishing 125dB dynamic range with ultra-low distortion (0.00022% THD). The 12 balanced line outputs support comprehensive speaker management from stereo to 7.1.4 Dolby Atmos immersive setups, with three switchable monitor groups.</p>
+
+      <h3>Comprehensive Expansion & Software Suite</h3>
+      <p>Equipped with 16 channels of ADAT optical I/O, stereo S/PDIF, MIDI I/O, BNC Word Clock, and eight dedicated rear-panel line inputs for permanent outboard patch bays. Backed by Focusrite's 3-year warranty and bundled with Sonnox Oxford Reverb and the Focusrite Hitmaker Expansion suite.</p>
+    `,
+      specs: [
+        { label: "Form Factor", value: "2U Rackmount 26x28 USB-C Audio Interface" },
+        { label: "ISA Preamps", value: "2x Lundahl LL1538 Transformer Preamps (79dB Gain)" },
+        { label: "Remote Preamps", value: "6x Ultra-Low-Noise Focusrite Mic Preamps (69dB Gain)" },
+        { label: "Analog Coloration", value: "All-Analog Console Saturation & Inductor 430 Air" },
+        { label: "Fixed Line Inputs", value: '8x Dedicated Balanced 1/4" Line Ins for Patchbays' },
+        { label: "Surround / Immersive", value: "12 Line Outs (Stereo up to 7.1.4 Dolby Atmos)" },
+        { label: "AD/DA Conversion", value: "RedNet-Grade 24-Bit/192kHz (125dB Dynamic Range)" },
+        { label: "Software Control", value: "Focusrite Control 2 Desktop & Mobile App Recall" }
+      ],
+      deepSpecs: [
+        ["Type", "26-In / 28-Out 2U Rackmount USB 2.0/USB-C Audio Interface with Dual ISA Preamps"],
+        ["Preamplifier Configuration", "2x ISA Lundahl LL1538 Transformer Preamps + 6x Remote-Controllable Ultra-Low-Noise Preamps"],
+        ["ISA Preamp Gain Range", "Up to 79 dB (digitally controlled stepped and fine gain)"],
+        ["Standard Preamp Gain Range", "Up to 69 dB of ultra-transparent gain"],
+        ["Analog Tone Circuitry", "Analog Console Soft-Clip Saturation & Inductor-Based 430 Air High-Shelf"],
+        ["Auto Gain Feature", "Automated intelligent level detection and calibration across all mic inputs"],
+        ["AD/DA Conversion", "RedNet-grade 24-bit / 192 kHz Delta-Sigma Conversion"],
+        ["Dynamic Range (A-D / D-A)", "125 dB A-weighted dynamic range with 0.00022% THD+N"],
+        ["Instrument Inputs", '2x Front-panel 1/4" TS transformer-coupled instrument DIs with selectable impedance'],
+        ["Fixed Line Inputs", '8x Rear-panel balanced 1/4" TRS fixed-gain inputs for outboard gear patchbays'],
+        ["Analog Outputs", '12x Balanced 1/4" TRS line outputs (configurable for stereo, 5.1, 7.1, or 7.1.4 immersive)'],
+        ["Headphone Amplifiers", "2x Independent high-power Class AB headphone outputs with front-panel level pots"],
+        ["Digital Connectivity", "16-channel ADAT optical I/O (dual ports at 48kHz / 8-ch at 96kHz), Stereo S/PDIF RCA I/O"],
+        ["Clocking & Sync", "BNC Word Clock Input and Output with ultra-low jitter clocking"],
+        ["MIDI Interface", "5-pin DIN MIDI Input and Output"],
+        ["Software Control", "Focusrite Control 2 desktop and iOS/Android mobile application"],
+        ["Bundled Software", "Sonnox Oxford Reverb, Focusrite Hitmaker Expansion (Brainworx, Softube, Antares, XLN)"],
+        ["Form Factor", "Standard 19-inch 2U Rackmount All-Steel Chassis"],
+        ["Power Supply", "Internal 100-240V AC Universal Switched-Mode Power Supply with IEC Cable"],
+        ["Dimensions (W x D x H)", '482.6 x 275 x 88.1 mm (19" x 10.83" x 3.47" - 2U)'],
+        ["Weight", "5.4 kg (11.9 lbs)"],
+        ["Warranty", "Focusrite 3-Year Limited Manufacturer Warranty & 24/7/365 Global Technical Support"]
+      ]
+    },
+    {
+      id: "ua-apollo-e1x-dante-preamp",
+      name: "Universal Audio Apollo E1X Remote-controllable Unison Preamp (Dante)",
+      shortName: "Universal Audio Apollo E1X Dante Unison Preamp",
+      brand: "Universal Audio",
+      category: "Preamps & Channel Strips",
+      subcategory: "Dante Networked Preamplifiers",
+      price: 56965,
+      originalPrice: 64900,
+      rating: 4.9,
+      reviewCount: 24,
+      badge: "PoE Dante Unison Preamp",
+      inStock: true,
+      stock: 12,
+      sku: "UA-APOLLO-E1X",
+      isFeatured: true,
+      image: "assets/images/products/ua-apollo-e1x-hero.jpg",
+      images: [
+        "assets/images/products/ua-apollo-e1x-hero.jpg",
+        "assets/images/products/ua-apollo-e1x-front.jpg",
+        "assets/images/products/ua-apollo-e1x-rear.jpg",
+        "assets/images/products/ua-apollo-e1x-mount.jpg"
+      ],
+      description: `
+      <h3>PoE Dante Remote-Controllable Unison Preamp for Apollo Networks</h3>
+      <p>The <strong>Universal Audio Apollo E1X</strong> is a high-performance PoE (Power over Ethernet) Dante remote-controllable microphone preamplifier, designed to expand Dante networked studios with up to 16 assignable Unison-enabled microphone preamps when connected to an Apollo x16D system.</p>
+
+      <h3>Assistive Auto Gain & Unison Preamp Modeling</h3>
+      <p>Apollo e1x features Universal Audio's breakthrough Assistive Auto Gain, allowing recording engineers to set precise gain staging instantly across multiple channels. When integrated with an Apollo x16D interface, e1x unlocks authentic Unison preamp modeling powered by UAD-2 DSP, meticulously emulating the exact impedance, gain staging sweet spots, and component-level circuit behaviors of legendary preamps from Neve, API, SSL, Manley, and Avalon.</p>
+
+      <h3>Standalone Dante Network Versatility</h3>
+      <p>When used standalone without an Apollo x16D across any Dante network or commercial IP audio environment, Apollo e1x delivers comprehensive remote-controllable gain from 10dB to 65dB alongside complete input conditioning. Toggle 48V phantom power, input pad, polarity inversion, and low-cut filtering seamlessly directly through UAD Console software or compatible networked controllers.</p>
+
+      <h3>Ultra-Low Latency, AES67 Support & Compact PoE Deployment</h3>
+      <p>Apollo e1x operates over a single standard Cat5e/Cat6 Ethernet cable with Power over Ethernet (drawing only 3W typical), eliminating cumbersome wall-warts and long analog multicore cable runs. Analog-to-Dante output latency is customizable in Dante Controller with 1 ms, 2 ms, or 5 ms options across 44.1 kHz, 48 kHz, and 96 kHz sample rates, with full AES67 broadcast compatibility at 48 kHz.</p>
+    `,
+      specs: [
+        { label: "System Type", value: "PoE Dante Remote-Controllable Microphone Preamp" },
+        { label: "Preamp Modeling", value: "Unison Preamp Emulation via Apollo x16D" },
+        { label: "Gain Range", value: "10 dB to 65 dB Digitally Controlled" },
+        { label: "Dynamic Range", value: "120 dB Dynamic Range" },
+        { label: "THD+N", value: "-115 dB Total Harmonic Distortion + Noise" },
+        { label: "Networking", value: "Dante Gigabit PoE (Power over Ethernet) & AES67" },
+        { label: "Latency", value: "Selectable 1ms, 2ms, or 5ms Dante Latency" },
+        { label: "Sample Rates", value: "44.1 kHz, 48 kHz, 96 kHz (AES67 at 48 kHz)" }
+      ],
+      deepSpecs: [
+        ["Type", "PoE Dante Remote-Controllable Unison Microphone Preamp"],
+        ["Preamp Channel Count", '1x Analog Combo Input (XLR / 1/4" TRS Balanced)'],
+        ["Preamp Technology", "Unison Impedance & Tone Modeling (via Apollo x16D / UAD Console)"],
+        ["Gain Range", "10 dB to 65 dB in Precision 1 dB Digital Steps"],
+        ["Dynamic Range", "120 dB (A-weighted)"],
+        ["Total Harmonic Distortion (THD+N)", "-115 dB (0.00018%) @ 1 kHz"],
+        ["Input Conditioning", "Remote +48V Phantom Power, Pad, Polarity Invert, Low-Cut Filter"],
+        ["Auto Gain System", "Assistive Auto Gain Detection & Calibration via UAD Console"],
+        ["Network Protocol", "Dante Audio over IP, AES67 Compatible (48 kHz)"],
+        ["Network Connection", "1x RJ45 Gigabit Ethernet with Integrated PoE"],
+        ["Power Requirements", "PoE IEEE 802.3af Class 1 (3W Typical, 4W Maximum)"],
+        ["Supported Sample Rates", "44.1 kHz, 48 kHz, 96 kHz (24-bit PCM)"],
+        ["Network Latency", "User-Selectable: 1.0 ms, 2.0 ms, or 5.0 ms via Dante Controller"],
+        ["System Scalability", "Deploy up to 16 e1x units per Apollo x16D Dante Interface"],
+        ["Chassis Build", "Extruded Aluminum Enclosure with Laser-Etched Branding"],
+        ["Mounting", "Modular Interlocking Dual-Bracket System for Stage & Studio Truss/Rack"],
+        ["Status Indicators", "Multicolor Signal, Peak, 48V, and Dante Link LEDs"],
+        ["Dimensions (W x D x H)", '45 x 165 x 45 mm (1.77" x 6.50" x 1.77")'],
+        ["Weight", "320 g (0.71 lbs)"],
+        ["Warranty", "Universal Audio 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "universal-audio-2-610-dual-channel-tube-preamp",
+      name: "Universal Audio 2-610",
+      shortName: "Universal Audio 2-610 Dual Channel Tube Preamp",
+      brand: "Universal Audio",
+      category: "Preamps & Channel Strips",
+      subcategory: "Dual Channel Tube Preamplifiers",
+      price: 217238,
+      originalPrice: 249e3,
+      rating: 5,
+      reviewCount: 32,
+      badge: "All-Tube Putnam 610 Console Circuit",
+      inStock: true,
+      stock: 5,
+      sku: "UA-2-610-S2",
+      isFeatured: true,
+      image: "assets/images/products/ua-2-610-front.jpg",
+      images: [
+        "assets/images/products/ua-2-610-front.jpg",
+        "assets/images/products/ua-2-610-hero.jpg",
+        "assets/images/products/ua-2-610-rear.jpg",
+        "assets/images/products/ua-2-610-knobs.jpg",
+        "assets/images/products/ua-2-610-circuit.jpg"
+      ],
+      description: `
+      <h3>Dual-Channel Tube Preamp Based on the Legendary UA 610 Console</h3>
+      <p>Designed by the legendary Bill Putnam Sr., the <strong>UA 610 modular console</strong> is widely revered as the holy grail of vintage tube recording desks. From Ray Charles and Frank Sinatra to seminal rock landmarks like Van Halen I and The Beach Boys' <em>Pet Sounds</em>, the 610's tube-powered preamplification and musical EQ imparted startling three-dimensional warmth, presence, and dynamic body to countless historic sessions.</p>
+
+      <h3>Two Independent Channels of Pure Music History</h3>
+      <p>The <strong>Universal Audio 2-610 Dual Channel Tube Preamplifier</strong> delivers two pristine, discrete channels of this iconic console architecture in a rugged 2U rackmount format. Whether you track directly to analog tape or desire rich harmonic glue and dimension for modern digital workstations, the 2-610 infuses unmistakable vintage tube saturation into vocals, acoustic guitars, bass, drums, and stereo mixes.</p>
+
+      <h3>Variable Impedance, Stepped Gain & Shelving Equalization</h3>
+      <p>The 2-610 provides complete tone-shaping flexibility across each channel:
+      <ul>
+        <li><strong>Variable Input Impedance:</strong> Select between 500\u03A9 (vintage coloration) and 2k\u03A9 (modern transparency) on Mic inputs, plus 47k\u03A9 and 2.2M\u03A9 on front-panel Hi-Z instrument inputs.</li>
+        <li><strong>Musical Shelving EQ:</strong> Dedicated High (4.5k, 7k, 10kHz) and Low (70, 100, 200Hz) boost/cut shelving controls with selectable corners in precise 1.5dB steps (up to \xB19dB).</li>
+        <li><strong>Stepped Gain & Output Trim:</strong> Dial in everything from crystal-clean tube sparkle to thick, aggressive harmonic drive by driving the input gain and backing off the continuous output potentiometer.</li>
+      </ul>
+      </p>
+
+      <h3>Modern Workflow Enhancements & Hand-Built USA Quality</h3>
+      <p>The 2-610 modernizes Putnam's classic design with extended top-end frequency response, a -15 dB switchable pad, phase reverse switch, and enhanced power supply regulation for ultra-low noise floor and bulletproof roadworthy reliability. Handcrafted in Scotts Valley, California with audiophile-grade point-to-point wiring and selected vacuum tubes.</p>
+    `,
+      specs: [
+        { label: "Preamplifier Type", value: "Dual-Channel All-Tube Microphone & Instrument Preamp" },
+        { label: "Circuit Pedigree", value: "Original Bill Putnam 610 Modular Console Architecture" },
+        { label: "Tube Complement", value: "2x 12AX7A & 2x 6072A Premium Vacuum Tubes" },
+        { label: "Input Impedance", value: "Variable Mic (500\u03A9 / 2k\u03A9) & Hi-Z (47k\u03A9 / 2.2M\u03A9)" },
+        { label: "Shelving EQ", value: "High (4.5k, 7k, 10kHz) & Low (70, 100, 200Hz) @ \xB19dB" },
+        { label: "Gain Range", value: "Up to 61dB (+20dB to +60dB in stepped increments)" },
+        { label: "Pad & Polarity", value: "-15 dB Switchable Pad & Phase Inversion per Channel" },
+        { label: "Craftsmanship", value: "Handmade in the USA (Scotts Valley, California)" }
+      ],
+      deepSpecs: [
+        ["Type", "Classic 2U Dual-Channel All-Tube Microphone / Instrument Preamp with Shelving EQ"],
+        ["Circuit Design", "Discrete all-tube topology derived from Bill Putnam Sr.'s UA 610 modular console"],
+        ["Vacuum Tube Complement", "1x 12AX7 and 1x 6072A per channel (4 selected tubes total)"],
+        ["Microphone Gain Range", "+20 dB to +61 dB with continuous variable output level trim"],
+        ["Microphone Input Impedance", "Selectable: 500 \u03A9 (classic vintage) or 2.0 k\u03A9 (modern)"],
+        ["Hi-Z Instrument Input Impedance", 'Selectable: 47 k\u03A9 or 2.2 M\u03A9 (front-panel 1/4" inputs)'],
+        ["Line Input Impedance", "13.8 k\u03A9 balanced"],
+        ["High Shelving EQ", "Selectable 4.5 kHz, 7 kHz, or 10 kHz with +/- 1.5, 3, 4.5, 6, 9 dB boost/cut"],
+        ["Low Shelving EQ", "Selectable 70 Hz, 100 Hz, or 200 Hz with +/- 1.5, 3, 4.5, 6, 9 dB boost/cut"],
+        ["Pad Attenuation", "-15 dB switchable pad per channel"],
+        ["Frequency Response", "20 Hz to 20 kHz (+/- 1.0 dB)"],
+        ["Maximum Output Level", "+20 dBm into 600 \u03A9 load"],
+        ["Signal to Noise Ratio", "Greater than 82 dB"],
+        ["Front Panel I/O", '2x 1/4" TS Hi-Z instrument direct inputs'],
+        ["Rear Panel I/O", "2x XLR Female Mic In, 2x XLR Female Line In, 2x XLR Male Line Out"],
+        ["Power Supply", "Internal regulated 100-240V AC power supply with standard IEC inlet"],
+        ["Form Factor", '19" 2U Rackmount heavy-gauge steel chassis with anodized aluminum faceplate'],
+        ["Dimensions (W x D x H)", '482.6 x 311.2 x 88.9 mm (19" x 12.25" x 3.5" - 2U)'],
+        ["Weight", "5.5 kg (12.2 lbs)"],
+        ["Origin & Warranty", "Handmade in the USA; Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "universal-audio-4-710d-twin-finity-preamp",
+      name: "Universal Audio 4-710 Twin Finity",
+      shortName: "Universal Audio 4-710d Four-Channel Tone-Blending Preamp",
+      brand: "Universal Audio",
+      category: "Preamps & Channel Strips",
+      subcategory: "Multi-Channel Preamplifiers & Converters",
+      price: 236270,
+      originalPrice: 269e3,
+      rating: 5,
+      reviewCount: 28,
+      badge: "Twin-Finity Tube & Solid-State Blend",
+      inStock: true,
+      stock: 6,
+      sku: "UA-4-710D",
+      isFeatured: true,
+      image: "assets/images/products/ua-4-710d-front.jpg",
+      images: [
+        "assets/images/products/ua-4-710d-front.jpg",
+        "assets/images/products/ua-4-710d-meters.jpg",
+        "assets/images/products/ua-4-710d-rear.jpg",
+        "assets/images/products/ua-4-710d-digital-io.jpg"
+      ],
+      description: `
+      <h3>Four-Channel Tone-Blending Mic Preamp with 1176 Compression & 192kHz Conversion</h3>
+      <p>By merging the pinnacle of Universal Audio's classic analog heritage with forward-thinking digital connectivity, the <strong>Universal Audio 4-710 Twin Finity (4-710d)</strong> represents the most tonally flexible microphone preamplifier system in the UA hardware lineup. Featuring four award-winning Twin-Finity preamps, authentic 1176-style FET compression on every channel, and an onboard 8-channel 24-bit/192kHz A/D converter, the 4-710d expands any studio setup into a world-class tracking suite.</p>
+
+      <h3>Continuous Phase-Aligned Tube & Solid-State Tone Blending</h3>
+      <p>At the foundation of each channel is UA's patented dual-path topology combining a 285-volt Class-A vacuum tube circuit (12AX7) and an ultra-fast transimpedance solid-state circuit. Rather than switching between them, the continuous blend control lets you dial in any exact ratio between 100% tube and 100% solid state with zero phase cancellation. Travel smoothly from silky, creamy tube warmth to razor-sharp solid-state transient clarity, or dial in the perfect sweet spot for lead vocals, close-mic'd acoustic instruments, punchy snare drums, and bass direct injection.</p>
+
+      <h3>True-Bypass 1176-Style Compression on Every Preamp</h3>
+      <p>Each of the four mic preamps features an onboard true-bypass 1176-style compression circuit. Specially calibrated with intuitive Fast and Slow attack/release presets, you can effortlessly level dynamics, add analog punch, tame wild vocal peaks, or glue aggressive synth tracks before hitting the converters.</p>
+
+      <h3>Flagship 8-Channel 24-Bit/192kHz A/D Conversion & Digital Expansion</h3>
+      <p>The 4-710d includes eight analog inputs (four mic preamps plus four dedicated rear-panel line inputs 5\u20138) routed through pristine 24-bit/192kHz converters. Output digital audio via dual ADAT optical Lightpipe (with S/MUX support up to 192 kHz) or AES/EBU DB-25 connectors. An integrated switchable 8-channel soft limiter, ultra-low-jitter clocking subsystem, and BNC Word Clock I/O provide seamless plug-and-play digital expansion for Universal Audio Apollo interfaces and third-party DAWs.</p>
+    `,
+      specs: [
+        { label: "Preamplifier Type", value: "4-Channel Tube/Solid-State Tone-Blending Preamp" },
+        { label: "Circuit Architecture", value: "Dual-Path 285V Class-A Tube & Transimpedance Solid-State" },
+        { label: "Compression", value: "True-Bypass 1176-Style Compression per Preamp Channel" },
+        { label: "Tone Blending", value: "Phase-Aligned Continuous Dial (100% Tube to 100% Solid-State)" },
+        { label: "A/D Conversion", value: "8-Channel 24-Bit / 192kHz Premium Digital Conversion" },
+        { label: "Digital Outputs", value: "Dual ADAT Optical (S/MUX) & AES/EBU DB-25" },
+        { label: "Direct Inputs", value: "4x Front JFET 2.2M\u03A9 Ultra Hi-Z Instrument DIs" },
+        { label: "Metering", value: "4x Backlit Moving-Coil VU Meters (Drive, Level, Gain Reduction)" }
+      ],
+      deepSpecs: [
+        ["Type", "4-Channel Tone-Blending Microphone / Instrument Preamp with 1176-Style Compression & 8-Ch 192kHz A/D"],
+        ["Preamplifier Channels", "4x Discrete Twin-Finity Preamplifiers (TEC Award-Winning)"],
+        ["Vacuum Tubes", "4x Premium 12AX7 Vacuum Tubes (1 per channel operating at 285V)"],
+        ["Solid-State Topology", "Precision Transimpedance Solid-State Preamp Circuitry"],
+        ["Tone Blending Range", "Continuously Variable Phase-Aligned Sweep between 100% Tube and 100% Solid-State"],
+        ["Compression Topology", "Class-A 1176-Style FET Compressor on each mic channel (Fast, Slow, True-Bypass Off)"],
+        ["A/D Converter Resolution", "24-bit / 192 kHz across 8 analog channels (4 preamp channels + 4 line inputs)"],
+        ["Digital Output Formats", "Dual ADAT Lightpipe (8 channels @ 48kHz, 4 channels @ 96kHz, 2 channels @ 192kHz) and AES/EBU DB-25"],
+        ["Digital Limiter", "Switchable 8-Channel Analog Soft Limiter"],
+        ["Word Clock", "BNC Word Clock Input and Output with 75\u03A9 termination switch"],
+        ["Microphone Gain Range", "+10 dB to +70 dB"],
+        ["High-Pass Filter", "18 dB/octave Butterworth filter @ 75 Hz per channel"],
+        ["Analog Inserts", '4x Balanced 1/4" TRS send and return loops (half-normalled)'],
+        ["Front Panel Inputs", '4x 1/4" TS JFET Instrument Inputs (2.2 M\u03A9 with automatic override)'],
+        ["Rear Panel Inputs", '4x XLR Female Mic In, 4x XLR Female Line In, 4x 1/4" TRS Line In (Channels 5-8)'],
+        ["Rear Panel Outputs", "4x XLR Male Line Outputs (preamps 1-4)"],
+        ["Metering Displays", "4x Amber Backlit VU Meters switchable between Drive, Gain Level, and 1176 Gain Reduction"],
+        ["Chassis Build", 'Rugged 19" 2U All-Steel Rackmount Enclosure with Brushed Aluminum Faceplate'],
+        ["Power Supply", "Internal Universal 100-240V AC Switched-Mode Power Supply with IEC Cable"],
+        ["Dimensions (W x D x H)", '482.6 x 304.8 x 88.9 mm (19" x 12" x 3.5" - 2U)'],
+        ["Weight", "6.6 kg (14.5 lbs)"],
+        ["Warranty", "Universal Audio 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "universal-audio-6176-vintage-channel-strip",
+      name: "Universal Audio 6176",
+      shortName: "Universal Audio 6176 Vintage Tube Channel Strip",
+      brand: "Universal Audio",
+      category: "Preamps & Channel Strips",
+      subcategory: "Vintage Tube Channel Strips",
+      price: 386685,
+      originalPrice: 439e3,
+      rating: 5,
+      reviewCount: 34,
+      badge: "Putnam 610 Preamp + 1176LN Compressor",
+      inStock: true,
+      stock: 4,
+      sku: "UA-6176-CHANNEL-STRIP",
+      isFeatured: true,
+      image: "assets/images/products/ua-6176-front.jpg",
+      images: [
+        "assets/images/products/ua-6176-front.jpg",
+        "assets/images/products/ua-6176-preamp-detail.jpg",
+        "assets/images/products/ua-6176-rear.jpg",
+        "assets/images/products/ua-6176-internal.jpg"
+      ],
+      description: `
+      <h3>Legendary Putnam 610 Tube Preamp & 1176LN FET Compressor in a Single Unit</h3>
+      <p>The <strong>Universal Audio 6176 Vintage Channel Strip</strong> combines the alluring, all-tube sounds of the legendary Bill Putnam-designed 610 microphone preamplifier with the signature Class A FET compression of the world-renowned 1176LN. Revered by Grammy-winning producers, engineering luminaries like Vance Powell and Joe Chiccarelli, and icons including Frank Sinatra, Van Halen, Coldplay, and Norah Jones, the 6176 stands as the ultimate premier analog recording channel strip.</p>
+
+      <h3>All-Tube 610B Mic Preamp with High-Tension Power Regulation</h3>
+      <p>Derived directly from the Bill Putnam 610 modular console that defined golden-era recordings, the 6176 preamp section utilizes vacuum tube circuitry with enhanced high-tension power regulation for thunderous, tight bass response. Flexible variable input impedance on mic (500\u03A9 / 2k\u03A9) and Hi-Z instrument (47k\u03A9 / 2.2M\u03A9) inputs unlocks unmatched acoustic dimensionality, complemented by vintage high and low shelving EQ and a front-panel 15dB attenuation pad.</p>
+
+      <h3>Iconic 1176LN Class-A FET Compression Section</h3>
+      <p>The compressor section faithfully recreates the legendary 1176LN\u2014the most beloved compressor in recording history. With ultra-fast attack times (20 to 800 microseconds), Class-A discrete output circuitry, custom transformers, and standard 4:1, 8:1, 12:1, and 20:1 ratios plus the famous 'All-Buttons-In' mode, it delivers unmistakable punch, presence, and analog attitude to any track.</p>
+
+      <h3>Innovative "Join / Split" Flexibility & Handcrafted American Build</h3>
+      <p>A central "Join / Split" toggle switch offers two complete processors in one 2U chassis. In <strong>Join</strong> mode, the 610B preamp feeds directly into the 1176LN compressor for the classic vocal/instrument recording chain. In <strong>Split</strong> mode, each section operates as a completely independent discrete hardware unit with separate rear-panel I/O, allowing you to track through the preamp while simultaneously patching the compressor across a mix bus or snare track.</p>
+    `,
+      specs: [
+        { label: "Channel Strip Architecture", value: "Putnam 610 All-Tube Preamp + 1176LN Class-A FET Compressor" },
+        { label: "Operating Modes", value: "Join (Series Recording Chain) or Split (Two Independent Discrete Units)" },
+        { label: "Vacuum Tubes", value: "1x 12AX7A, 1x 12AT7A in Preamp Stage" },
+        { label: "Compressor Circuitry", value: "Discrete Class-A FET with Custom Output Transformer" },
+        { label: "Compression Attack Time", value: "Ultra-Fast 20 \xB5s to 800 \xB5s Continuously Variable" },
+        { label: "Compression Release Time", value: "50 ms to 1.1 Seconds Continuously Variable" },
+        { label: "Tone Sculpting EQ", value: "High (4.5k, 7k, 10kHz) & Low (70, 100, 200Hz) Shelving EQ" },
+        { label: "Origin & Build", value: "Handcrafted in Scotts Valley, California, USA" }
+      ],
+      deepSpecs: [
+        ["Type", "Vintage Tube Microphone/Instrument Preamp and Class-A 1176LN FET Limiting Channel Strip"],
+        ["Preamp Section Topology", "All-tube Bill Putnam 610 console preamp circuit with high-tension power supply regulation"],
+        ["Compressor Section Topology", "Authentic 1176LN Class-A FET feedback peak limiter with discrete transistors"],
+        ["Preamp Tubes", "1x 12AX7A and 1x 12AT7A precision selected vacuum tubes"],
+        ["Mode Switching", '"Join" (Preamp feeds Compressor internally) / "Split" (Separate independent Preamp and Compressor I/O)'],
+        ["Preamp Frequency Response", "20 Hz to 20 kHz \xB10.5 dB"],
+        ["Preamp Max Gain", "+65 dB (adjustable in 5 dB steps via input selector and continuous Level pot)"],
+        ["Compressor Attack Time", "20 microseconds to 800 microseconds"],
+        ["Compressor Release Time", "50 milliseconds to 1.1 seconds"],
+        ["Compression Ratios", "4:1, 8:1, 12:1, 20:1, and all-buttons-in (British Mode)"],
+        ["Equalization", "High Shelving: 4.5 kHz, 7 kHz, 10 kHz (\xB19 dB in 1.5 dB steps); Low Shelving: 70 Hz, 100 Hz, 200 Hz (\xB19 dB in 1.5 dB steps)"],
+        ["Input Impedance (Mic)", "Selectable 500 Ohms or 2.0 kOhms (balanced XLR)"],
+        ["Input Impedance (Line)", "13.8 kOhms (balanced XLR)"],
+        ["Input Impedance (Hi-Z)", 'Selectable 47 kOhms or 2.2 MOhms (unbalanced 1/4" front-panel jack)'],
+        ["Preamp Outputs", "Balanced XLR line out (600 Ohms transformer balanced)"],
+        ["Compressor Inputs & Outputs", "Balanced XLR input (600 Ohms) and balanced XLR line output (600 Ohms)"],
+        ["Stereo Interconnection", "Stereo linking capability via rear-panel 1176-SA connector"],
+        ["Metering", "Classic illuminated VU meter switchable between Preamp Output, Compressor Gain Reduction (GR), and Compressor Output"],
+        ["Chassis Build", 'Rugged 19" 2U rackmount steel chassis with classic black and brushed aluminum faceplate'],
+        ["Dimensions (W x D x H)", '482.6 x 311.2 x 88.9 mm (19.0" x 12.25" x 3.5" - 2U)'],
+        ["Weight", "5.5 kg (12.1 lbs)"],
+        ["Power Requirements", "115V / 230V selectable AC power, 50/60 Hz, standard IEC socket"],
+        ["Origin & Warranty", "Hand-built in the USA; Universal Audio 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "proel-digipad8-compact-digital-mixer",
+      name: "Proel DIGIPAD8",
+      shortName: "Proel DIGIPAD8 Compact Digital Mixing Console with Motorized Faders",
+      brand: "Proel",
+      category: "Audio Mixers",
+      subcategory: "Digital Mixing Consoles",
+      price: 36105,
+      originalPrice: 42e3,
+      rating: 4.9,
+      reviewCount: 22,
+      badge: "7 Motorized Faders \xB7 Touchscreen & Wi-Fi",
+      inStock: true,
+      stock: 8,
+      sku: "PROEL-DIGIPAD8-CONSOLE",
+      isFeatured: true,
+      image: "assets/images/products/proel-digipad8-top.jpg",
+      images: [
+        "assets/images/products/proel-digipad8-top.jpg",
+        "assets/images/products/proel-digipad8-angle.jpg",
+        "assets/images/products/proel-digipad8-faders.jpg",
+        "assets/images/products/proel-digipad8-rear.jpg"
+      ],
+      description: `
+      <h3>Power Meets Portability: Compact Digital Mixing Console with Motorized Faders</h3>
+      <p>Step into the future of mixing with the <strong>Proel DIGIPAD8</strong>, the compact digital console that redefines what\u2019s possible in its class. Designed by Italian audio pioneer Proel to deliver uncompromising professional mixing power in a sleek, portable desktop format, DIGIPAD8 combines cutting-edge digital DSP architecture with effortless physical and wireless usability. It is the ultimate companion for touring musicians, sound engineers, house-of-worship operators, podcasters, and content creators who demand speed, tactile precision, and multi-platform flexibility.</p>
+
+      <h3>7 High-Precision Motorized Faders & Responsive Touchscreen</h3>
+      <p>Take full tactile command of your live mix with <strong>7 motorized faders</strong> that respond with rapid speed and millimeter accuracy. Instantly jump between input layers, mix buses, monitor sends, and custom fader banks. With full scene memory and instantaneous motorized recall, transitions between songs, acts, or broadcast segments happen seamlessly. The large high-contrast color touchscreen display puts channel EQ, dynamics, effects parameters, routing, and meters directly under your fingertips with an intuitive modern UI.</p>
+
+      <h3>Versatile Analog, USB & Bluetooth Connectivity</h3>
+      <p>Equipped with combo XLR/TRS Mic/Line inputs with studio-grade preamps and stereo line inputs, the DIGIPAD8 easily integrates into any stage or studio setup. It provides two independent AUX sends, a dedicated FX send, and balanced XLR stereo master outputs. For hybrid performance, streaming, and studio recording, an integrated 48 kHz USB audio interface guarantees pristine multitrack computer audio connectivity, while dedicated wireless Bluetooth enables instant background track playback from mobile devices.</p>
+
+      <h3>Built-in Wi-Fi & Multi-Platform Remote Control App</h3>
+      <p>Perform untethered with the DIGIPAD8's onboard Wi-Fi interface. Seamlessly control the console from anywhere in the venue using your smartphone, tablet, or laptop via dedicated apps available for <strong>iOS, Android, macOS, and Windows</strong>. Soundcheck from front-of-house or walk the stage to adjust personal monitor mixes in real-time, saving and recalling your favorite snapshots in seconds.</p>
+    `,
+      specs: [
+        { label: "Mixer Architecture", value: "Compact Digital Mixing Console with DSP & Touchscreen" },
+        { label: "Motorized Faders", value: "7x High-Precision Motorized Faders with Instant Scene Recall" },
+        { label: "Display Interface", value: "High-Resolution Color Touchscreen with Physical Rotary Encoder" },
+        { label: "Inputs & Preamps", value: "4x Combo XLR/TRS Mic/Line Inputs + Stereo Line Channels" },
+        { label: "Auxiliary Sends", value: "2x Independent AUX Sends + 1x Dedicated FX Send" },
+        { label: "USB Audio Interface", value: "Integrated 48 kHz Stereo USB Audio Interface for PC/Mac" },
+        { label: "Wireless Control & Audio", value: "Built-in Wi-Fi for iOS/Android/Mac/PC Remote App + Bluetooth Audio Streaming" },
+        { label: "Form Factor", value: "Ultra-Portable Lightweight Desktop Chassis" }
+      ],
+      deepSpecs: [
+        ["Type", "Compact Digital Mixing Console with Motorized Faders, Touchscreen & Remote Wi-Fi App Control"],
+        ["Processing Architecture", "High-Performance 40-Bit Floating Point DSP Engine @ 48 kHz"],
+        ["Fader Configuration", "7x High-Speed Precision Motorized Faders (Channels 1-6 + Master Output)"],
+        ["Display", "Full-Color Capacitive Touchscreen Display with Context-Sensitive Navigation"],
+        ["Hardware Controls", "Illuminated Mute, Solo, Select Buttons, Layer Selectors & Parameter Encoder"],
+        ["Microphone/Line Inputs", '4x Combo XLR / 1/4" TRS balanced inputs with discrete low-noise preamps'],
+        ["Stereo Line Inputs", 'Stereo 1/4" TRS balanced line inputs (Channels 5/6 & 7/8)'],
+        ["Phantom Power", "+48V Phantom Power switchable across microphone channels"],
+        ["Master Outputs", "2x Balanced XLR Main L/R Outputs"],
+        ["Auxiliary Outputs", '2x Balanced 1/4" TRS AUX Sends for stage monitors or external routing'],
+        ["Headphone Output", '1x 1/4" Stereo TRS Headphone Jack with independent level potentiometer'],
+        ["Digital Effects Processor", "Integrated Multi-FX Engine featuring Reverbs, Delays, Chorus, Flanger, and Modulation"],
+        ["Channel Processing", "4-Band Parametric EQ, High-Pass Filter, Gate, and Compressor on all input channels"],
+        ["Output Processing", "Graphic EQ, Limiter, and Delay on Master and AUX buses"],
+        ["Scene Memory", "Full Scene & Snapshot Storage/Recall with motorized fader repositioning"],
+        ["USB Audio Interface", "2-In / 2-Out 24-bit / 48 kHz USB Audio Interface (Class-Compliant)"],
+        ["Wireless Connectivity", "Built-in Wi-Fi Access Point / Client mode for iOS, Android, macOS & Windows app control"],
+        ["Bluetooth Audio", "Dedicated Bluetooth 5.0 receiver channel for wireless music streaming and playback"],
+        ["Enclosure & Chassis", "Durable rugged composite housing with steel reinforcement and anti-slip rubber feet"],
+        ["Dimensions (W x D x H)", '260 x 205 x 65 mm (10.2" x 8.1" x 2.6")'],
+        ["Weight", "1.85 kg (4.08 lbs)"],
+        ["Power Supply", "DC 12V 2A External Power Adapter (Included)"],
+        ["Warranty", "Proel 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "proel-mq10fx-compact-mixer-with-effects",
+      name: "Proel MQ10FX",
+      shortName: "Proel MQ10FX Compact 10-Input 2-Bus Analog Mixer with 24-bit DSP FX",
+      brand: "Proel",
+      category: "Audio Mixers",
+      subcategory: "Analog & Compact DSP Mixers",
+      price: 26127,
+      originalPrice: 29900,
+      rating: 4.8,
+      reviewCount: 19,
+      badge: "10-Input 2-Bus Mixer with 24-bit FX",
+      inStock: true,
+      stock: 9,
+      sku: "PROEL-MQ10FX-MIXER",
+      isFeatured: true,
+      image: "assets/images/products/proel-mq10fx-top.jpg",
+      images: [
+        "assets/images/products/proel-mq10fx-top.jpg",
+        "assets/images/products/proel-mq10fx-angle.jpg",
+        "assets/images/products/proel-mq10fx-rear.jpg"
+      ],
+      description: `
+      <h3>Compact 10-Input 2-Bus Analog Mixer with 24-Bit Studio-Grade DSP Effects</h3>
+      <p>The <strong>Proel MQ10FX</strong> represents the perfect equilibrium between ultra-compact footprint, uncompromising audio fidelity, and versatile routing. Carefully engineered in Italy by PROEL R&D, the MQ series offers high input density and stage-proof durability in an ultra-rugged steel chassis with stylish red reinforced composite side-cheeks. Designed for live bands, multimedia installations, broadcast pods, and home production studios, the MQ10FX delivers pristine headroom and transparent sonic reproduction.</p>
+
+      <h3>High-Headroom Microphone Preamps with Intelligent One-Knob Compressors</h3>
+      <p>Featuring 4 low-noise, high-headroom microphone preamplifiers with switchable +48V phantom power, the MQ10FX accommodates dynamic and sensitive condenser studio microphones with equal poise. Mono channels 1 and 2 feature integrated <strong>intelligent 'One-Knob' dynamic compressors</strong> with LED threshold indicators, allowing sound engineers and vocalists to effortlessly tame unpredictable dynamic peaks, fatten acoustic instruments, and lock vocals firmly in the mix with a single turn of a dial.</p>
+
+      <h3>24-Bit Studio-Grade Digital Multi-FX Engine with 100 Presets</h3>
+      <p>Elevate your live performances with the onboard <strong>24-bit digital DSP multi-effects processor</strong>. Boasting 100 studio-grade algorithms\u2014including lush Hall and Room reverbs, crisp delays, rich chorus, flanger, and combined modulation effects\u2014the processor features a high-visibility 2-digit LED display for rapid preset navigation and a dedicated footswitch jack for instantaneous hands-free FX muting between songs.</p>
+
+      <h3>Comprehensive Tone Shaping & Flexible Output Routing</h3>
+      <p>Each channel is equipped with musical 3-band equalization and a 75 Hz low-cut filter on mic channels to eliminate stage rumble and handling noise. Output routing includes electronically balanced XLR and 1/4" TRS Main Mix jacks, dedicated Control Room outputs, a high-power headphone amplifier, and dual 8-segment LED VU meters for accurate peak level monitoring.</p>
+    `,
+      specs: [
+        { label: "Mixer Configuration", value: "10-Input 2-Bus Compact Analog Mixer with 24-bit DSP FX" },
+        { label: "Microphone Preamps", value: "4x Ultra-Low-Noise High-Headroom Discrete Preamps with +48V" },
+        { label: "Channel Compression", value: "One-Knob Dynamic Compressors on Channels 1 & 2 with LED Indicators" },
+        { label: "DSP Effects Engine", value: "24-bit Multi-FX Processor with 100 Presets & 2-Digit LED Display" },
+        { label: "Equalization", value: "3-Band EQ (High, Mid, Low) + 75 Hz Lo-Cut Filter per Mic Channel" },
+        { label: "Audio Buses", value: "2-Bus Architecture (Main Mix L/R + Dedicated FX Send)" },
+        { label: "Main Outputs", value: 'Balanced Stereo XLR Male & 1/4" TRS Jacks' },
+        { label: "Chassis & Origin", value: "Italian Engineering; Ultra-Rugged Steel Chassis with Composite Bumpers" }
+      ],
+      deepSpecs: [
+        ["Type", "Compact 10-Input 2-Bus Analog Mixer with 24-bit Digital FX Processor"],
+        ["Total Inputs", "10 Inputs (2 Mono Mic/Line, 2 Stereo Mic/Line, 2 Stereo Line)"],
+        ["Microphone Inputs", "4x XLR Female balanced inputs with low-noise discrete preamps"],
+        ["Line Inputs", '4x 1/4" TRS Mono Line, 4x 1/4" TRS Stereo Line (Channels 3/4, 5/6, 7/8, 9/10)'],
+        ["Phantom Power", "+48V Phantom Power switchable across all microphone channels"],
+        ["Compressors", "2x One-Knob Dynamic Compressors on Mono Channels 1 & 2 with LED status"],
+        ["Channel EQ", "3-Band Fixed: High (12 kHz \xB115 dB), Mid (2.5 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Low-Cut Filter", "18 dB/octave @ 75 Hz on all microphone input channels"],
+        ["Effects Processor", "24-bit Studio-Grade DSP with 100 algorithms (Reverbs, Delays, Chorus, Flangers, Multi-FX)"],
+        ["FX Control & Display", "2-Digit LED readout, preset selector rotary encoder, and Footswitch Mute input"],
+        ["Auxiliary Sends", "1x FX Send (Post-Fader) routing to internal DSP or external gear"],
+        ["Main Mix Outputs", 'Balanced XLR Male (+4 dBu) and 1/4" TRS balanced jacks'],
+        ["Control Room Outputs", '2x 1/4" TRS unbalanced jacks with dedicated level potentiometer'],
+        ["Headphone Output", '1x 1/4" Stereo TRS output with dedicated level control'],
+        ["Tape / 2-Track I/O", "RCA Stereo Inputs and RCA Stereo Record Outputs"],
+        ["Level Metering", "Dual 8-Segment LED VU-Meters for Master L/R and PFL/AFL monitoring"],
+        ["Chassis Construction", "Ultra-rugged folded metal chassis with impact-resistant red ABS side protection"],
+        ["Dimensions (W x D x H)", '275 x 295 x 60 mm (10.8" x 11.6" x 2.4")'],
+        ["Weight", "2.5 kg (5.5 lbs)"],
+        ["Power Supply", "External 18V AC Adapter (Included)"],
+        ["Warranty", "Proel 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "proel-mq12usb-12-input-4-bus-mixer",
+      name: "Proel MQ12USB",
+      shortName: "Proel MQ12USB 12-Input 4-Bus Analog Mixer with 24-bit DSP & USB Interface",
+      brand: "Proel",
+      category: "Audio Mixers",
+      subcategory: "Analog & USB Mixing Consoles",
+      price: 43624,
+      originalPrice: 49900,
+      rating: 5,
+      reviewCount: 26,
+      badge: "12-Input 4-Bus Mixer with USB & 24-bit FX",
+      inStock: true,
+      stock: 7,
+      sku: "PROEL-MQ12USB-MIXER",
+      isFeatured: true,
+      image: "assets/images/products/proel-mq12usb-top.jpg",
+      images: [
+        "assets/images/products/proel-mq12usb-top.jpg",
+        "assets/images/products/proel-mq12usb-angle.jpg",
+        "assets/images/products/proel-mq12usb-rear.jpg"
+      ],
+      description: `
+      <h3>12-Input 4-Bus Mixer with 24-Bit DSP Effects, USB Audio Interface & 45mm Faders</h3>
+      <p>The <strong>Proel MQ12USB</strong> is the flagship compact console in Proel's celebrated MQ lineup, expanding the series with 4-bus routing architecture, 45mm precision faders, sweepable midrange EQ, a 2x2 USB audio interface, and dual auxiliary monitor sends. Designed and engineered in Italy by PROEL R&D, this mixer is built to handle complex live stage reinforcement, theater audio, mobile recording rigs, and hybrid podcasting with effortless authority.</p>
+
+      <h3>6 High-Headroom Preamps & 4 Intelligent One-Knob Compressors</h3>
+      <p>Equipped with 6 low-noise microphone preamplifiers with switchable +48V phantom power, the MQ12USB captures clean, dynamic vocal and instrumental performances with zero coloration. Channels 1 through 4 feature dedicated <strong>intelligent 'One-Knob' dynamic compressors</strong> with LED threshold indicators, giving engineers instant control over dynamic peaks for drums, lead vocals, and bass guitars without requiring external rack processors.</p>
+
+      <h3>Sweepable Midrange EQ & Dual AUX Sends for Stage Monitoring</h3>
+      <p>Shape input sources with precision using the musical 3-band EQ featuring a <strong>semi-parametric sweepable midrange control (100 Hz to 8 kHz)</strong> on mono channels, alongside 75 Hz high-pass filters. With 2 AUX sends\u2014AUX 1 switchable pre/post-fader for foldback stage monitoring and AUX 2 routed post-fader to the internal DSP\u2014performers receive dedicated monitor mixes while the front-of-house engineer dials in studio-grade acoustics.</p>
+
+      <h3>Integrated 24-Bit DSP Engine & 2x2 USB Recording Interface</h3>
+      <p>The console features a comprehensive 24-bit DSP multi-effects unit with 100 studio presets and a dual-digit LED display. Furthermore, a plug-and-play <strong>2-In / 2-Out USB audio interface</strong> enables direct digital recording into your Mac or Windows DAW, as well as seamless stereo digital playback for backing tracks and interval music.</p>
+    `,
+      specs: [
+        { label: "Mixer Configuration", value: "12-Input 4-Bus Console with USB Audio Interface & 45mm Faders" },
+        { label: "Microphone Preamps", value: "6x Ultra-Low-Noise Discrete Preamps with +48V Phantom Power" },
+        { label: "Channel Compression", value: "4x One-Knob Dynamic Compressors on Channels 1-4 with LED Indicators" },
+        { label: "USB Audio Interface", value: "2-In / 2-Out Class-Compliant USB Audio Interface for Mac/PC" },
+        { label: "DSP Effects Engine", value: "24-bit Multi-FX Processor with 100 Presets & 2-Digit LED Display" },
+        { label: "EQ Section", value: "3-Band EQ with Sweepable Midrange (100Hz - 8kHz) & 75Hz Lo-Cut" },
+        { label: "Buses & Faders", value: "4-Bus Routing (Main Mix + Stereo Group 1-2) with 45mm Smooth Faders" },
+        { label: "Auxiliary Sends", value: "2x AUX Sends (AUX 1 Pre/Post Monitor Send + AUX 2 FX Send)" }
+      ],
+      deepSpecs: [
+        ["Type", "Compact 12-Input 4-Bus Mixing Console with 24-bit DSP FX & 2x2 USB Interface"],
+        ["Total Inputs", "12 Inputs (4 Mono Mic/Line, 2 Stereo Mic/Line, 2 Stereo Line)"],
+        ["Microphone Inputs", "6x XLR Female balanced inputs with high-headroom discrete preamplifiers"],
+        ["Line Inputs", '4x 1/4" TRS Mono Line, 4x 1/4" TRS Stereo Line (Channels 5/6, 7/8, 9/10, 11/12)'],
+        ["Phantom Power", "+48V Phantom Power switchable across all microphone channels"],
+        ["Compressors", "4x One-Knob Dynamic Compressors on Mono Channels 1 to 4 with LED status"],
+        ["Equalization (Mono)", "3-Band with Sweepable Mid: High (12 kHz \xB115 dB), Mid Sweep (100 Hz - 8 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Equalization (Stereo)", "3-Band Fixed: High (12 kHz \xB115 dB), Mid (2.5 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Low-Cut Filter", "18 dB/octave @ 75 Hz on all 6 microphone input channels"],
+        ["Faders", "9x 45mm Precision Logarithmic Control Faders (Channels 1-8, Group 1-2, Master)"],
+        ["Subgroups", "Stereo Group 1-2 Bus with dedicated fader and routing to Main Mix"],
+        ["Effects Processor", "24-bit Studio-Grade DSP with 100 presets, 2-digit display and Footswitch Mute jack"],
+        ["USB Audio Interface", "2-In / 2-Out 16/24-bit @ 48 kHz USB Audio Interface (Class-Compliant)"],
+        ["Auxiliary Sends", "2x AUX Sends: AUX 1 (Pre/Post-fader Monitor Send), AUX 2 (Post-fader FX Send)"],
+        ["Main Mix Outputs", 'Electronically balanced XLR Male (+4 dBu) and 1/4" TRS balanced jacks'],
+        ["Group Outputs", '2x 1/4" TRS balanced jacks for Groups 1-2'],
+        ["Control Room Outputs", '2x 1/4" TRS jacks with independent level potentiometer'],
+        ["Headphone Output", '1x 1/4" Stereo TRS output with dedicated level control'],
+        ["Tape / 2-Track I/O", "RCA Stereo Inputs and RCA Stereo Record Outputs"],
+        ["Level Metering", "Dual 8-Segment LED VU-Meters for Master/PFL levels"],
+        ["Power Supply", "Internal Universal 100-240V AC Switched-Mode Power Supply with IEC Cable"],
+        ["Chassis Construction", "Heavy-duty steel chassis with impact-resistant red ABS corner protection"],
+        ["Dimensions (W x D x H)", '346 x 355 x 95 mm (13.6" x 14.0" x 3.7")'],
+        ["Weight", "4.5 kg (9.9 lbs)"],
+        ["Warranty", "Proel 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "proel-mq16usb-16-input-4-bus-mixer",
+      name: "Proel MQ16USB",
+      shortName: "Proel MQ16USB 16-Input 4-Bus Analog Mixer with 24-bit DSP & USB Interface",
+      brand: "Proel",
+      category: "Audio Mixers",
+      subcategory: "Analog & USB Mixing Consoles",
+      price: 63846,
+      originalPrice: 72900,
+      rating: 5,
+      reviewCount: 31,
+      badge: "16-Input 4-Bus Flagship Console with 60mm Faders",
+      inStock: true,
+      stock: 5,
+      sku: "PROEL-MQ16USB-MIXER",
+      isFeatured: true,
+      image: "assets/images/products/proel-mq16usb-top.jpg",
+      images: [
+        "assets/images/products/proel-mq16usb-top.jpg",
+        "assets/images/products/proel-mq16usb-angle.jpg",
+        "assets/images/products/proel-mq16usb-rear.jpg"
+      ],
+      description: `
+      <h3>Top-of-the-Line 16-Input 4-Bus Analog Console with 24-Bit DSP FX & 60mm Faders</h3>
+      <p>The <strong>Proel MQ16USB</strong> stands as the flagship console in Proel's celebrated MQ lineup. Engineered by PROEL R&D in Italy, this 16-input, 4-bus workhorse brings together 12 high-headroom microphone preamplifiers, 8 intelligent one-knob compressors, musical 3-band EQ with sweepable midrange, 4 auxiliary sends, 60mm long-throw precision faders, and a studio-grade 24-bit digital DSP effects engine. Whether powering multi-instrumentalist concert stages, theaters, houses of worship, broadcast setups, or multi-track tracking sessions, the MQ16USB delivers immaculate sonic clarity, robust tactile control, and rock-solid Italian reliability.</p>
+
+      <h3>12 High-Headroom Preamps & 8 Dedicated One-Knob Compressors</h3>
+      <p>With 12 ultra-low-noise discrete microphone preamps featuring switchable +48V phantom power, the MQ16USB easily handles full drum kit mic configurations, multiple vocalists, and acoustic ensembles. Mono channels 1 through 8 incorporate PROEL's intelligent <strong>One-Knob dynamic FET compressors</strong> with bright LED threshold indicators, giving engineers instant, distortion-free control over transient peaks and dynamic consistency across vocals, snares, and bass guitars.</p>
+
+      <h3>Semi-Parametric Sweepable Mid EQ & 4 Flexible AUX Sends</h3>
+      <p>Fine-tune every channel with exceptional acoustic surgical control using musical 3-band shelving EQ with a <strong>semi-parametric sweepable midrange band (100 Hz to 8 kHz)</strong> and 75 Hz high-pass filters. The console features 4 independent AUX sends (3 pre-fader auxiliary monitor sends for personalized stage foldback and 1 post-fader send to the internal DSP or external gear), ensuring performers hear pristine, tailored monitor mixes without latency.</p>
+
+      <h3>Integrated 24-Bit DSP Multi-FX & 2x2 USB Audio Interface</h3>
+      <p>The MQ16USB incorporates a 24-bit studio-grade DSP engine offering 100 studio presets\u2014from warm halls and plates to multi-tap delays and lush modulations\u2014with a 2-digit LED display and dedicated footswitch mute jack. Its integrated <strong>2-In / 2-Out 48 kHz USB interface</strong> provides direct digital recording and playback capabilities with modern Mac and PC DAWs.</p>
+    `,
+      specs: [
+        { label: "Mixer Architecture", value: "16-Input 4-Bus Flagship Console with 60mm Precision Faders" },
+        { label: "Microphone Preamps", value: "12x Ultra-Low-Noise High-Headroom Discrete Preamps with +48V" },
+        { label: "Channel Compression", value: "8x Intelligent One-Knob Dynamic Compressors on Channels 1-8" },
+        { label: "Equalization Section", value: "3-Band EQ with Semi-Parametric Sweepable Mid (100Hz - 8kHz) & 75Hz Lo-Cut" },
+        { label: "Auxiliary Sends", value: "4x AUX Sends (3x Pre-Fader Monitor Sends + 1x Post-Fader FX Send)" },
+        { label: "Audio Buses & Faders", value: "4-Bus (Main Mix + Stereo Group 1-2) with 60mm Logarithmic Faders" },
+        { label: "Digital Multi-FX", value: "24-bit Studio DSP Engine with 100 Presets & Footswitch Mute" },
+        { label: "USB Audio Interface", value: "Built-in 2-In / 2-Out 48 kHz Class-Compliant USB Interface for PC/Mac" }
+      ],
+      deepSpecs: [
+        ["Type", "Compact 16-Input 4-Bus Mixing Console with 24-bit DSP Effects & USB Audio Interface"],
+        ["Total Inputs", "16 Inputs (8 Mono Mic/Line, 4 Stereo Mic/Line)"],
+        ["Microphone Inputs", "12x XLR Female balanced inputs with discrete low-noise preamps"],
+        ["Line Inputs", '8x 1/4" TRS Mono Line, 8x 1/4" TRS Stereo Line (Channels 9/10, 11/12, 13/14, 15/16)'],
+        ["Phantom Power", "+48V Global Phantom Power switchable across all microphone channels"],
+        ["Compressors", "8x One-Knob Dynamic Compressors on Mono Channels 1 to 8 with LED status"],
+        ["Channel EQ (Mono)", "3-Band with Sweepable Mid: High (12 kHz \xB115 dB), Mid Sweep (100 Hz - 8 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Channel EQ (Stereo)", "3-Band Fixed: High (12 kHz \xB115 dB), Mid (2.5 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Low-Cut Filter", "18 dB/octave @ 75 Hz on all 12 microphone input channels"],
+        ["Fader Specification", "16x 60mm Precision Logarithmic Control Faders (Channels, Groups 1-2, and Main Mix)"],
+        ["Audio Subgroups", "Stereo Group 1-2 Bus with dedicated 60mm faders and routing switches to Main Mix"],
+        ["Auxiliary Sends", "4x AUX Sends: AUX 1-3 (Pre-Fader Monitor Sends), AUX 4 (Post-Fader FX Send)"],
+        ["DSP Effects Engine", "24-bit Studio-Grade DSP with 100 algorithms (Reverbs, Delays, Chorus, Flangers, Multi-FX)"],
+        ["Effects Display & Control", "2-Digit LED readout, preset selector dial, PEAK LED, MUTE switch, and Footswitch jack"],
+        ["USB Audio Interface", "Stereo In/Out 16/24-bit @ 48 kHz Class-Compliant USB Audio Interface"],
+        ["Main Mix Outputs", 'Electronically balanced XLR Male (+4 dBu) and 1/4" TRS balanced jacks (+22 dBu max)'],
+        ["Group Outputs", '2x 1/4" TRS balanced jacks for Groups 1-2 (+4 dBu nominal)'],
+        ["Control Room Outputs", '2x 1/4" TRS jacks with independent level potentiometer'],
+        ["Headphone Output", '1x 1/4" Stereo TRS output (2x 193 mW into 32\u03A9) with dedicated level control'],
+        ["Tape / 2-Track I/O", "RCA Stereo Inputs and RCA Stereo Record Outputs"],
+        ["Level Metering", "Dual 12-Segment LED VU-Meters for accurate Main Mix and PFL level monitoring"],
+        ["Crosstalk & Noise", "Crosstalk > 82 dBu @ 1 kHz; Unweighted Hum & Noise < -93 dBu; THD+N < 0.008% @ +4dB"],
+        ["Power Supply", "Internal Universal Switching Power Supply 100-240V AC (50/60 Hz, 35W consumption)"],
+        ["Chassis Build", "Stage-proof folded sheet steel chassis with impact-resistant red ABS protective side-panels"],
+        ["Dimensions (W x D x H)", '481 x 432 x 104 mm (18.9" x 17.0" x 4.1") - 19" Rackmountable via optional brackets'],
+        ["Weight", "6.5 kg (14.3 lbs)"],
+        ["Warranty", "Proel 1-Year Limited Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "proel-mq6-ultra-compact-6-input-mixer",
+      name: "Proel MQ6",
+      shortName: "Proel MQ6 Ultra-Compact 6-Input 2-Bus Analog Mixer",
+      brand: "Proel",
+      category: "Audio Mixers",
+      subcategory: "Compact Desktop Analog Mixers",
+      price: 12156,
+      originalPrice: 13900,
+      rating: 4.8,
+      reviewCount: 17,
+      badge: "Ultra-Compact 6-Input 2-Bus Stage & Studio Mixer",
+      inStock: true,
+      stock: 11,
+      sku: "PROEL-MQ6-MIXER",
+      isFeatured: true,
+      image: "assets/images/products/proel-mq6-top.jpg",
+      images: [
+        "assets/images/products/proel-mq6-top.jpg",
+        "assets/images/products/proel-mq6-angle.jpg",
+        "assets/images/products/proel-mq6-rear.jpg"
+      ],
+      description: `
+      <h3>Ultra-Compact 6-Input 2-Bus Analog Mixer with Italian Audio Engineering</h3>
+      <p>The <strong>Proel MQ6</strong> is the most portable console in Proel's celebrated MQ lineup, engineered specifically to provide musicians, home recordists, podcasters, and touring performers with professional console fidelity in an ultra-compact footprint. Designed and engineered in Italy by PROEL R&D, the MQ6 is encased in an ultra-rugged folded steel chassis with iconic red reinforced composite side cheeks, delivering stage-proof durability and spotless, clean audio wherever your music takes you.</p>
+
+      <h3>High-Headroom Microphone Preamps with 2-Band Musical EQ</h3>
+      <p>Equipped with 2 low-noise, very high-headroom microphone preamplifiers and switchable +48V phantom power, the MQ6 delivers crystal-clear acoustic isolation and dynamic punch for broadcast condensers and stage dynamic microphones alike. Channels 1 and 2 feature 2-band musical shelving EQ (High @ 12 kHz, Low @ 80 Hz) alongside 75 Hz high-pass low-cut filters that effortlessly clean up stage rumble and wind buffeting.</p>
+
+      <h3>Stereo Line Inputs & Professional Balanced Outputs</h3>
+      <p>In addition to its mono microphone channels, the MQ6 accommodates stereo instruments, synthesizers, drum machines, and media players across two stereo line channels (3/4 and 5/6). For studio monitoring and PA system connection, the mixer provides electronically balanced XLR male and 1/4" TRS Main Mix outputs, a high-current stereo headphone amplifier, and dual 4-segment LED VU meters for instant visual signal monitoring.</p>
+
+      <h3>Ideal Multi-Role Audio Hub</h3>
+      <p>Whether utilized as a personal submixer for keyboardists and electronic percussionists on stage, a clean desktop interface front-end for voiceover creators, or a rehearsal mixer for acoustic duos, the Proel MQ6 packs professional European engineering into a remarkably affordable and travel-friendly package.</p>
+    `,
+      specs: [
+        { label: "Mixer Architecture", value: "Ultra-Compact 6-Input 2-Bus Desktop Analog Mixer" },
+        { label: "Microphone Preamps", value: "2x High-Headroom Discrete Low-Noise Preamps with +48V" },
+        { label: "Channel Configuration", value: "2 Mono Mic/Line Inputs + 2 Stereo Line Channels (6 Total Inputs)" },
+        { label: "Equalization", value: "2-Band Musical Shelving EQ (High 12kHz, Low 80Hz) on Mono Channels" },
+        { label: "High-Pass Filter", value: "18 dB/octave @ 75 Hz Lo-Cut Filter on Microphone Inputs" },
+        { label: "Main Outputs", value: 'Electronically Balanced XLR-M & 1/4" TRS Balanced Jacks' },
+        { label: "Headphone Output", value: '1x 1/4" Stereo TRS Jack with Dedicated Output Level Potentiometer' },
+        { label: "Chassis & Origin", value: "Italian Engineering; Heavy-Duty Steel Enclosure with Red ABS Bumpers" }
+      ],
+      deepSpecs: [
+        ["Type", "Ultra-Compact 6-Input 2-Bus Desktop Analog Audio Mixer"],
+        ["Total Inputs", "6 Inputs (2 Mono Mic/Line, 2 Stereo Line Channels)"],
+        ["Microphone Inputs", "2x XLR Female balanced inputs with high-headroom discrete preamplifiers"],
+        ["Line Inputs", '2x 1/4" TRS Mono Line, 4x 1/4" TRS Stereo Line (Channels 3/4 & 5/6)'],
+        ["Phantom Power", "+48V Phantom Power switchable across microphone channels"],
+        ["Channel Equalization", "2-Band Shelving on Mono Channels: High (12 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Low-Cut Filter", "18 dB/octave @ 75 Hz on Channels 1 & 2"],
+        ["Main Mix Outputs", 'Balanced XLR Male (+4 dBu) and 1/4" TRS balanced jacks (+22 dBu max output level)'],
+        ["Headphone Output", '1x 1/4" Stereo TRS output (2x 193 mW into 32\u03A9) with independent volume control'],
+        ["Level Metering", "Dual 4-Segment LED VU-Meters for Left/Right Master level monitoring"],
+        ["Frequency Response", "20 Hz to 20 kHz (\xB10.5 dB)"],
+        ["THD + Noise", "< 0.008% @ +4 dB, 1 kHz"],
+        ["Crosstalk", "> 82 dBu @ 1 kHz"],
+        ["Hum & Noise", "< -93 dBu (unweighted)"],
+        ["Enclosure & Build", "Ultra-rugged folded metal chassis with protective red composite impact bumpers"],
+        ["Dimensions (W x D x H)", '162 x 210 x 51 mm (6.4" x 8.3" x 2.0")'],
+        ["Weight", "1.0 kg (2.2 lbs)"],
+        ["Power Supply", "External 18V AC 500mA Power Adapter (Included)"],
+        ["Origin & Warranty", "Designed and Engineered in Italy by PROEL; 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "proel-mq6fx-compact-6-input-mixer-with-effects",
+      name: "Proel MQ6FX",
+      shortName: "Proel MQ6FX Compact 6-Input 2-Bus Analog Mixer with 24-bit DSP FX",
+      brand: "Proel",
+      category: "Audio Mixers",
+      subcategory: "Analog & Compact DSP Mixers",
+      price: 16359,
+      originalPrice: 18900,
+      rating: 4.9,
+      reviewCount: 20,
+      badge: "Ultra-Compact 6-Input 2-Bus Mixer with 24-bit FX",
+      inStock: true,
+      stock: 10,
+      sku: "PROEL-MQ6FX-MIXER",
+      isFeatured: true,
+      image: "assets/images/products/proel-mq6fx-top.jpg",
+      images: [
+        "assets/images/products/proel-mq6fx-top.jpg",
+        "assets/images/products/proel-mq6fx-angle.jpg",
+        "assets/images/products/proel-mq6fx-front.jpg",
+        "assets/images/products/proel-mq6fx-rear.jpg"
+      ],
+      description: `
+      <h3>Ultra-Compact 6-Input 2-Bus Analog Mixer with 24-Bit Studio DSP Effects</h3>
+      <p>The <strong>Proel MQ6FX</strong> brings studio-grade multi-effects processing to Proel's most compact mixing format. Carefully designed and engineered in Italy by PROEL R&D, the MQ6FX combines high input density, low-noise discrete preamplifiers, musical tone shaping, and an integrated 24-bit digital DSP multi-effects engine into a lightweight, ultra-rugged desktop enclosure with impact-resistant red side-cheeks. It is the premier choice for solo singer-songwriters, acoustic duos, mobile podcasters, and musicians requiring personal on-stage monitor mixing with lush digital reverbs and delays.</p>
+
+      <h3>High-Headroom Microphone Preamps with Switchable Phantom Power</h3>
+      <p>Equipped with 2 low-noise, very high-headroom microphone preamplifiers and switchable +48V phantom power, the MQ6FX delivers pristine gain structure for dynamic and condenser microphones alike. Channels 1 and 2 feature 2-band musical shelving equalization (High @ 12 kHz, Low @ 80 Hz) and 75 Hz high-pass low-cut filters, providing immediate clarity and eliminating unwanted low-frequency stage vibrations.</p>
+
+      <h3>24-Bit Studio-Grade Digital DSP Effects with 16 Presets</h3>
+      <p>Despite its ultra-compact size, the MQ6FX houses a dedicated <strong>24-bit studio-grade digital effects processor</strong>. With 16 hand-tuned presets\u2014including Warm Vocal Reverbs, Lush Plates, Room Acoustics, Delays, Chorus, Flanger, and combined Modulation effects\u2014the onboard DSP gives performers instant access to broadcast-ready spatial enhancement with dedicated FX Return level control.</p>
+
+      <h3>Versatile Stereo I/O & Stage-Proof Build</h3>
+      <p>Featuring two stereo line input channels (3/4 and 5/6) for keyboards, electronic drums, or media players, the MQ6FX offers electronically balanced XLR male and 1/4" TRS Main Mix outputs, an auxiliary FX send, a high-current stereo headphone amplifier, and dual 4-segment LED VU meters. Its folded metal chassis is built to withstand rigorous live tour use while fitting effortlessly into any backpack or gig bag.</p>
+    `,
+      specs: [
+        { label: "Mixer Architecture", value: "Ultra-Compact 6-Input 2-Bus Analog Mixer with 24-bit DSP FX" },
+        { label: "Microphone Preamps", value: "2x High-Headroom Low-Noise Discrete Preamps with +48V" },
+        { label: "DSP Effects Processor", value: "24-bit Studio-Grade Multi-FX Engine with 16 Presets" },
+        { label: "Channel Configuration", value: "2 Mono Mic/Line Inputs + 2 Stereo Line Channels (6 Total Inputs)" },
+        { label: "Equalization Section", value: "2-Band Shelving EQ (High 12kHz, Low 80Hz) on Mono Channels" },
+        { label: "High-Pass Filter", value: "18 dB/octave @ 75 Hz Lo-Cut Filter on Microphone Inputs" },
+        { label: "Auxiliary Send", value: "1x Dedicated FX Send (Post-Fader) routing to Internal DSP" },
+        { label: "Chassis & Origin", value: "Italian Engineering; Heavy-Duty Steel Enclosure with Red ABS Bumpers" }
+      ],
+      deepSpecs: [
+        ["Type", "Ultra-Compact 6-Input 2-Bus Desktop Analog Mixer with 24-bit DSP FX Processor"],
+        ["Total Inputs", "6 Inputs (2 Mono Mic/Line, 2 Stereo Line Channels)"],
+        ["Microphone Inputs", "2x XLR Female balanced inputs with discrete high-headroom preamps"],
+        ["Line Inputs", '2x 1/4" TRS Mono Line, 4x 1/4" TRS Stereo Line (Channels 3/4 & 5/6)'],
+        ["Phantom Power", "+48V Global Phantom Power switchable across microphone channels"],
+        ["Effects Engine", "24-bit Studio-Grade Digital DSP Multi-Effects Processor with 16 algorithms"],
+        ["Effect Presets", "Hall Reverb, Room Reverb, Vocal Plate, Delay, Chorus, Flanger, Tremolo, Multi-FX"],
+        ["Channel Equalization", "2-Band Shelving on Mono Channels: High (12 kHz \xB115 dB), Low (80 Hz \xB115 dB)"],
+        ["Low-Cut Filter", "18 dB/octave @ 75 Hz on Channels 1 & 2"],
+        ["Auxiliary Sends", "1x FX Send (Post-Fader) with dedicated level control per channel"],
+        ["Main Mix Outputs", 'Electronically balanced XLR Male (+4 dBu) and 1/4" TRS balanced jacks (+22 dBu max output level)'],
+        ["Headphone Output", '1x 1/4" Stereo TRS output (2x 193 mW into 32\u03A9) with dedicated level potentiometer'],
+        ["Level Metering", "Dual 4-Segment LED VU-Meters for Left/Right Master output monitoring"],
+        ["Frequency Response", "20 Hz to 20 kHz (\xB10.5 dB)"],
+        ["THD + Noise", "< 0.008% @ +4 dB, 1 kHz"],
+        ["Crosstalk", "> 82 dBu @ 1 kHz"],
+        ["Hum & Noise", "< -93 dBu (unweighted)"],
+        ["Enclosure & Build", "Stage-proof folded sheet steel chassis with impact-resistant red ABS corner protection"],
+        ["Dimensions (W x D x H)", '162 x 210 x 51 mm (6.4" x 8.3" x 2.0")'],
+        ["Weight", "1.0 kg (2.2 lbs)"],
+        ["Power Supply", "External 18V AC 500mA Power Adapter (Included)"],
+        ["Origin & Warranty", "Designed and Engineered in Italy by PROEL; 1-Year Limited Warranty"]
+      ]
+    },
+    {
+      id: "proel-diva12a-1000w-12-inch-active-loudspeaker",
+      name: "Proel Diva 12A",
+      shortName: 'Proel Diva 12A 1000W 12" Active Processed PA Speaker with Color LCD DSP & Bluetooth',
+      brand: "Proel",
+      category: "Speaker Systems",
+      subcategory: "Active Processed PA Loudspeakers",
+      price: 69815,
+      originalPrice: 79900,
+      rating: 5,
+      reviewCount: 4,
+      inStock: true,
+      stock: 6,
+      badge: "1000W Peak Class-D \xB7 Color LCD DSP \xB7 Bluetooth TWS",
+      sku: "PROEL-DIVA12A-1000W",
+      isFeatured: false,
+      image: "assets/images/products/proel-diva12a-angle.jpg",
+      images: [
+        "assets/images/products/proel-diva12a-angle.jpg",
+        "assets/images/products/proel-diva12a-side.jpg",
+        "assets/images/products/proel-diva12a-front.jpg",
+        "assets/images/products/proel-diva12a-nogrid.jpg"
+      ],
+      description: `
+      <h3>2-Way Active Processed Loudspeaker System with 1000W Peak Class-D Power</h3>
+      <p>The <strong>Proel Diva 12A</strong> represents a dramatic leap forward in portable sound reinforcement. Hosted in a lightweight yet ultra-durable polypropylene cabinet with ergonomic carry handles, the DIVA12A combines premium Italian acoustic transducer design with a high-efficiency <strong>1000W peak Class-D power amplifier</strong> with SMPS (Switch Mode Power Supply). Engineered with substantial dynamic headroom and precision limiting, the Diva 12A delivers effortless acoustic output up to <strong>127 dB Max SPL</strong> with absolute clarity and zero distortion even at peak volumes.</p>
+
+      <h3>High-Performance DSP with Linear-Phase FIR Filters & Color LCD Interface</h3>
+      <p>At the core of the DIVA12A's sonic superiority is an advanced <strong>high-definition 24-bit DSP engine utilizing linear-phase FIR filters</strong>. This cutting-edge digital filtering delivers an impeccably flat phase and frequency response, resulting in breathtaking stereo imaging, precise transient reproduction, and crystal-clear vocal projection. An intuitive rear-panel color LCD display paired with a single rotary push-encoder gives sound engineers and musicians instant visual control over system parameters and <strong>5 tailor-made EQ presets</strong>: <em>MUSIC</em>, <em>LIVE</em>, <em>DJ</em>, <em>MONITOR</em>, and <em>SPEECH</em>.</p>
+
+      <h3>Integrated 3-Channel Mixer with Wireless USB & Bluetooth Stereo Link (TWS)</h3>
+      <p>The DIVA12A eliminates the necessity for external outboard mixing gear in many live scenarios thanks to its versatile onboard 3-channel mixer. Channel 1 accommodates balanced MIC/LINE XLR and 1/4" inputs. Channel 2 features an impedance switch for direct connection of passive or active electric/acoustic guitars and basses (MIC/LINE/HI-Z GUITAR). Both analog channels provide dedicated High and Low shelving EQ controls. Two dedicated USB Type-A ports enable plug-and-play integration with PROEL U24 2.4GHz wireless microphone systems. Additionally, the integrated <strong>Bluetooth audio interface with Stereo Link (TWS)</strong> enables wire-free high-fidelity mono playback or synced stereo audio distribution across two DIVA series cabinets.</p>
+
+      <h3>Multi-Angle Polypropylene Enclosure with Rigging Points</h3>
+      <p>Crafted for relentless stage and touring demands, the compact injection-molded cabinet features dual symmetrical 45\xB0 monitor angles for low-profile floor wedge deployment, a standard 36mm pole socket for stand mounting, and four M10 flying points for permanent suspended installations in venues, clubs, and houses of worship.</p>
+    `,
+      specs: [
+        { label: "Amplifier Power", value: "1000 W Peak (500 W Continuous / Class-D with SMPS)" },
+        { label: "Low Frequency Driver", value: '12" High-Excursion Woofer with 2" High-Temperature Voice Coil' },
+        { label: "High Frequency Driver", value: '1" Compression Driver with 1.35" Voice Coil & Titanium Diaphragm' },
+        { label: "Maximum SPL", value: "127 dB Peak SPL Output" },
+        { label: "DSP Processing", value: "24-bit High-Definition DSP with Linear Phase FIR Filters & Color LCD" },
+        { label: "EQ Presets", value: "5 Presets: MUSIC, LIVE, DJ, MONITOR, SPEECH" },
+        { label: "Integrated Mixer", value: "3-Channel Mixer (MIC/LINE/HI-Z GUITAR) + Dual USB Wireless Ports" },
+        { label: "Wireless & Bluetooth", value: "Bluetooth Streaming with True Wireless Stereo (TWS) Linking" }
+      ],
+      deepSpecs: [
+        ["System Architecture", "2-Way Active Processed Bi-Amplified Loudspeaker System"],
+        ["Low Frequency Transducer", '12" (305 mm) custom long-excursion woofer with 2" (50 mm) voice coil'],
+        ["High Frequency Transducer", '1" (25 mm) exit compression driver with 1.35" (34 mm) voice coil and titanium diaphragm'],
+        ["Horn Directivity", "90\xB0 Horizontal x 60\xB0 Vertical Constant Directivity Horn"],
+        ["Total Amplifier Output", "1000 W Peak (LF 800 W + HF 200 W Peak) / 500 W Continuous Class-D"],
+        ["Power Supply Architecture", "High-efficiency Switch Mode Power Supply (SMPS) with universal mains voltage"],
+        ["Digital Signal Processing", "24-bit / 48 kHz High-Definition DSP with linear-phase FIR filtering"],
+        ["DSP User Interface", "Full-Color Graphic LCD Screen with single rotary push-encoder control"],
+        ["DSP EQ Presets", "5 Optimised Voicings: MUSIC (Hi-Fi response), LIVE (Vocal/Acoustic), DJ (Bass Boost), MONITOR (45\xB0 Floor wedge), SPEECH (Vocal clarity)"],
+        ["Frequency Response", "50 Hz \u2013 20 kHz (-10 dB) / 55 Hz \u2013 18 kHz (\xB13 dB)"],
+        ["Maximum Peak Sound Pressure", "127 dB Max SPL @ 1 meter"],
+        ["Built-In Mixer", "3-Channel Mixer with independent level controls and 2-band EQ (HIGH & LOW)"],
+        ["Input Channel 1", 'Combo XLR / 1/4" TRS balanced jack with MIC / LINE sensitivity selector switch'],
+        ["Input Channel 2", 'Combo XLR / 1/4" TRS balanced jack with MIC / LINE / HI-Z GUITAR instrument switch'],
+        ["Input Channel 3 / Bluetooth", "Bluetooth v5.0 audio receiver + 3.5mm stereo mini-jack AUX input"],
+        ["Wireless USB System Ports", "2x Dedicated USB Type-A inputs for PROEL U24B / U24H wireless microphone dongles"],
+        ["Mix Output Connector", "1x Balanced XLR Male output with selectable MIX OUT or CH1 LINK routing"],
+        ["Bluetooth Stereo Link (TWS)", "True Wireless Stereo audio pairing to wirelessly link two DIVA cabinets in stereo"],
+        ["Enclosure Material", "Lightweight, ultra-durable Polypropylene (PP) structural foam injection cabinet"],
+        ["Grille & Protection", "Heavy-duty 1.2 mm powder-coated steel perforated grille with acoustic foam backing"],
+        ["Handles & Portability", "2 Ergonomic recessed integrated handles (1 top handle, 1 side handle)"],
+        ["Mounting & Suspension", "Standard 36 mm pole-mount socket; 4x M10 threaded fly points (2 top, 1 rear, 1 bottom)"],
+        ["Stage Monitor Capabilities", "Dual symmetrical 45\xB0 angled sides for left or right stage wedge foldback positioning"],
+        ["Dimensions (W x H x D)", '364 x 617 x 346 mm (14.3" x 24.3" x 13.6")'],
+        ["Net Weight", "16.0 kg (35.3 lbs)"],
+        ["Operating Voltage", "220-240 V~ 50/60 Hz or 100-120 V~ 50/60 Hz (Auto-switching)"],
+        ["Warranty & Origin", "Designed & Engineered in Italy by PROEL; 1-Year Pan-India Authorized Warranty"]
+      ]
+    },
+    {
+      id: "proel-divasub18a-1500w-18-inch-active-subwoofer",
+      name: "Proel DIVASUB18A",
+      shortName: 'Proel DIVASUB18A 1500W 18" Active DSP Subwoofer with Cardioid Mode & LCD Display',
+      brand: "Proel",
+      category: "Speaker Systems",
+      subcategory: "Active PA Subwoofers",
+      price: 125075,
+      originalPrice: 143e3,
+      rating: 5,
+      reviewCount: 3,
+      inStock: true,
+      stock: 4,
+      badge: "1500W Peak \xB7 132 dB Max SPL \xB7 Cardioid Mode \xB7 On-Board Wheels",
+      sku: "PROEL-DIVASUB18A-1500W",
+      isFeatured: false,
+      image: "assets/images/products/proel-divasub18a-front.jpg",
+      images: [
+        "assets/images/products/proel-divasub18a-front.jpg",
+        "assets/images/products/proel-divasub18a-rear.jpg",
+        "assets/images/products/proel-divasub18a-rear-angle.jpg",
+        "assets/images/products/proel-divasub18a-side.jpg"
+      ],
+      description: `
+      <h3>18" Digitally Processed Active Subwoofer \u2014 Ideal Companion to the DIVA Series</h3>
+      <p>The <strong>Proel DIVASUB18A</strong> is a high-performance digitally processed active subwoofer, engineered as the ideal low-frequency complement to the entire DIVA Series loudspeaker range. More than a simple bass extension unit, the DIVASUB18A dramatically increases the overall system efficiency and performance \u2014 with a <strong>custom 18" high-efficiency woofer</strong> driven by a <strong>1500W peak Class-D power amplifier</strong> and advanced DSP control. The result is breathtaking sub-bass energy reaching down to <strong>35 Hz</strong>, with a staggering <strong>132 dB Max Peak SPL</strong> output \u2014 the kind of controlled, distortion-free low-end power that fills venues, festivals, and outdoor events with authority.</p>
+
+      <h3>Advanced DSP with LCD Display, Crossover, Phase & Delay Control</h3>
+      <p>The sophisticated preamplifier section houses a <strong>high-performance 24-bit DSP processor</strong> delivering linear phase response and high-definition sound. An intuitive rear-panel LCD display with a single rotary push-encoder provides rapid access to all processing parameters \u2014 including adjustable <strong>crossover frequency</strong>, <strong>phase alignment</strong> (0\xB0/180\xB0), and <strong>acoustic time-alignment delay</strong> (up to 10 metres / ~29 ms) for precise coupling with any satellite loudspeaker. Two onboard <strong>DSP presets (FLAT / BOOST)</strong> allow immediate voicing adjustment between natural flat response and enhanced bass lift for DJ and music reinforcement applications.</p>
+
+      <h3>Cardioid Subwoofer Mode \u2014 Double Efficiency, Eliminate Rear Radiation</h3>
+      <p>One of the DIVASUB18A's most powerful professional features is its dedicated <strong>CARDIOID mode</strong>. By coupling two DIVASUB18A units in cardioid configuration, engineers can dramatically increase frontal output efficiency while simultaneously <strong>reducing rear low-frequency radiation by up to 20 dB</strong>. This is essential in stage-front sub placement where rear-stage energy causes monitor bleed, muddiness in PA coverage, or feedback issues. The front-loaded cardioid array delivers cleaner, more focussed, more powerful bass to the audience \u2014 and a quieter stage for performers.</p>
+
+      <h3>Professional Plywood Cabinet with Standard Wheels & Dual Handles</h3>
+      <p>Unlike polypropylene entry-level cabinets, the DIVASUB18A is housed in a <strong>premium lightweight ultra-resistant plywood enclosure</strong> with a powder-coated steel protection grille. For logistical convenience in touring and installation, it ships standard with <strong>4 professional swivel casters with locking brake systems</strong> and dual ergonomic handles for two-person lifting. A rear-mounted <strong>M20 flange connection socket</strong> accepts standard speaker poles for satellite mounting directly above the subwoofer.</p>
+    `,
+      specs: [
+        { label: "Amplifier Power", value: "1500 W Peak Class-D with SMPS (750 W Continuous)" },
+        { label: "Woofer Driver", value: '18" (460 mm) High-Efficiency Custom Woofer with 3" (75 mm) Voice Coil' },
+        { label: "Maximum SPL", value: "132 dB Max Peak SPL @ 1 metre" },
+        { label: "Frequency Response", value: "35 Hz \u2013 160 Hz (-10 dB)" },
+        { label: "DSP Processing", value: "24-bit High-Definition DSP with LCD Display & Rotary Encoder" },
+        { label: "DSP Presets / Modes", value: "2 Presets (FLAT / BOOST) + 2 Modes (NORMAL / CARDIOID)" },
+        { label: "Crossover & Delay", value: "Variable Crossover Frequency, Phase 0\xB0/180\xB0, Delay up to 10 mt" },
+        { label: "Transport & Rigging", value: "4x Locking Swivel Casters (Standard), Dual Handles, M20 Pole Flange" }
+      ],
+      deepSpecs: [
+        ["System Architecture", 'Compact Active Processed Single 18" Subwoofer'],
+        ["Low Frequency Transducer", '18" (460 mm) custom high-efficiency woofer with 3" (75 mm) aluminium voice coil'],
+        ["Total Amplifier Output", "1500 W Peak / 750 W Continuous \u2014 Class-D with SMPS"],
+        ["Power Supply Architecture", "Universal Auto-Switching SMPS (100\u2013240 V~ 50/60 Hz)"],
+        ["Digital Signal Processing", "24-bit / 96 kHz High-Definition DSP processor with linear phase response"],
+        ["DSP User Interface", "Rear-panel color LCD display with single rotary push-encoder control"],
+        ["DSP Voicing Presets", "FLAT (linear studio reference response), BOOST (enhanced sub-bass lift for live use)"],
+        ["Operating Modes", "NORMAL (standalone subwoofer), CARDIOID (paired dual-sub for front-loaded cardioid array)"],
+        ["Cardioid Mode Benefit", "Up to 20 dB reduction of rear radiation while doubling frontal SPL output efficiency"],
+        ["Crossover Frequency", "Variable selectable crossover frequency for accurate satellite coupling"],
+        ["Phase Control", "Switchable 0\xB0 / 180\xB0 polarity inversion for system time-alignment"],
+        ["Acoustic Delay", "Digital time-alignment delay adjustable up to 10 metres (~29 ms) for satellite compensation"],
+        ["Maximum Peak Sound Pressure", "132 dB Max SPL @ 1 metre (peak)"],
+        ["Frequency Response", "35 Hz \u2013 160 Hz (\u201310 dB) / 40 Hz \u2013 130 Hz (\xB13 dB)"],
+        ["Audio Inputs", "2x Balanced XLR Female stereo inputs (L + R)"],
+        ["Audio Outputs", "2x Balanced XLR Male stereo link outputs (L + R) for satellite or second subwoofer"],
+        ["Input/Output Impedance", "Input: 10 k\u03A9 balanced / Output: < 100 \u03A9 balanced"],
+        ["Enclosure Material", "Lightweight ultra-resistant multi-ply birch plywood with waterproof coating"],
+        ["Grille", "Powder-coated 2 mm perforated steel protection grille with acoustic foam liner"],
+        ["Transport System", "4x Heavy-duty professional swivel casters (75 mm diameter) with individual locking brakes"],
+        ["Handles", "2x Ergonomic spring-loaded recessed side handles for safe two-person transport"],
+        ["Satellite Pole Mounting", "Rear M20 threaded flange socket for standard 35/38 mm speaker pole mounting"],
+        ["Dimensions (W x H x D)", '540 x 610 x 545 mm (21.3" x 24.0" x 21.5")'],
+        ["Net Weight (without wheels)", "42.0 kg (92.6 lbs)"],
+        ["Operating Voltage", "220\u2013240 V~ 50/60 Hz or 100\u2013120 V~ 50/60 Hz (Auto-switching SMPS)"],
+        ["Warranty & Origin", "Designed & Engineered in Italy by PROEL; 1-Year Pan-India Authorized Warranty"]
+      ]
+    },
+    {
+      id: "proel-flash12xd-1000w-12-inch-active-pa-speaker",
+      name: "Proel Flash 12XD",
+      shortName: 'Proel Flash 12XD 1000W 12" Active PA Speaker with CORE LT DSP & Dynamic EQ',
+      brand: "Proel",
+      category: "Speaker Systems",
+      subcategory: "Active Processed PA Loudspeakers",
+      price: 97280,
+      originalPrice: 111200,
+      rating: 5,
+      reviewCount: 5,
+      inStock: true,
+      stock: 7,
+      badge: "1000W Peak \xB7 CORE LT DSP \xB7 Dynamic EQ \xB7 127 dB SPL",
+      sku: "PROEL-FLASH12XD-1000W",
+      isFeatured: false,
+      image: "assets/images/products/proel-flash12xd-front.jpg",
+      images: [
+        "assets/images/products/proel-flash12xd-front.jpg",
+        "assets/images/products/proel-flash12xd-rear.jpg",
+        "assets/images/products/proel-flash12xd-wedge.jpg"
+      ],
+      description: `
+      <h3>Third Generation FLASH Series \u2014 Best-in-Class Performance in a Compact, Portable Package</h3>
+      <p>The <strong>Proel Flash 12XD</strong> marks the third generation of PROEL's legendary FLASH loudspeaker lineage \u2014 a series that has set the reference benchmark for compact, portable PA systems for years. Building on a long heritage of high-definition sound, rugged construction, and unmatched reliability, the Flash 12XD introduces <strong>significant technological advancements and a bold new design language</strong>, while retaining the accessible price point and best-in-class performance that made the FLASH series iconic. Driven by a <strong>1000W peak Class-D amplifier</strong> and powered by the <strong>PROEL CORE LT DSP engine</strong>, the Flash 12XD is the evolution of portable PA excellence.</p>
+
+      <h3>PROEL CORE LT DSP with Dynamic EQ \u2014 Professional Sound at Every Level</h3>
+      <p>At the heart of the Flash 12XD is the <strong>PROEL CORE LT DSP</strong>, a high-performance signal processing engine with <strong>24-bit high-definition converters</strong> delivering outstanding sonic definition and dynamic performance typically found only in top-end professional systems. The CORE LT's signature feature is its sophisticated <strong>Dynamic EQ</strong> \u2014 an adaptive equalisation system that continuously sculpts the system's frequency response while maintaining full dynamic range at any playback level. Additionally, the CORE LT DSP provides extensive <strong>dynamic protection</strong> that continuously monitors and limits power to both transducers, ensuring maximum undistorted output and long-term reliability under heavy use. <strong>5 EQ Presets</strong> (MUSIC, LIVE, DJ, SPEECH, MONITOR) can be selected instantly to voice the system for any application.</p>
+
+      <h3>Precision Transducers \u2014 12" Long-Excursion Woofer & 1" Titanium Compression Driver</h3>
+      <p>The Flash 12XD features a carefully selected and customised acoustic transducer complement. The <strong>12" long-excursion woofer with 2.5" voice coil</strong> delivers authoritative, punchy low-frequency output across the 55 Hz\u201320 kHz bandwidth with very low harmonic distortion. The <strong>1" high-definition compression driver with 1.35" VC and titanium diaphragm</strong>, loaded by a <strong>90\xB0 \xD7 60\xB0 constant-coverage horn</strong>, provides crisp, intelligible, wide-dispersion high-frequency projection \u2014 ensuring uniform, coherent sound coverage across the entire listening area.</p>
+
+      <h3>Instant PA System \u2014 Built-In 2-Channel Mixer with MIC & LINE Inputs</h3>
+      <p>The Flash 12XD's integrated <strong>2-channel mixer with independent MIC and LINE inputs</strong>, each with dedicated level controls, transforms any single unit into a self-contained PA system \u2014 eliminating the need for an external mixer for simple speech, acoustic, or background music applications. The compact, lightweight <strong>polypropylene cabinet with extended internal ribbing</strong>, <strong>symmetrical wedge angle</strong> for floor monitor use, <strong>3 ergonomic aluminium handles</strong>, and <strong>4 M10 flying points</strong> complete a package engineered for effortless portability and professional installation versatility.</p>
+    `,
+      specs: [
+        { label: "Amplifier Power", value: "1000 W Peak Class-D with SMPS (500 W Continuous)" },
+        { label: "Low Frequency Driver", value: '12" Long-Excursion Woofer with 2.5" High-Temperature Voice Coil' },
+        { label: "High Frequency Driver", value: '1" Compression Driver with 1.35" VC & Titanium Diaphragm, 90\xB0 \xD7 60\xB0 CD Horn' },
+        { label: "Maximum SPL", value: "127 dB Peak SPL @ 1 metre" },
+        { label: "DSP Engine", value: "PROEL CORE LT DSP with Dynamic EQ & 24-bit Converters" },
+        { label: "EQ Presets", value: "5 Presets: MUSIC, LIVE, DJ, SPEECH, MONITOR" },
+        { label: "Built-In Mixer", value: "2-Channel (MIC + LINE) with Independent Level Controls" },
+        { label: "Frequency Response", value: "55 Hz \u2013 20 kHz" }
+      ],
+      deepSpecs: [
+        ["System Architecture", "2-Way Active Processed Bi-Amplified Loudspeaker System \u2014 3rd Generation FLASH Series"],
+        ["Low Frequency Transducer", '12" (305 mm) custom long-excursion woofer with 2.5" (63 mm) high-temperature voice coil'],
+        ["High Frequency Transducer", '1" (25 mm) exit compression driver with 1.35" (34 mm) voice coil and titanium diaphragm'],
+        ["Horn Directivity", "90\xB0 Horizontal x 60\xB0 Vertical Constant Directivity Horn \u2014 uniform wide-area coverage"],
+        ["Total Amplifier Output", "1000 W Peak / 500 W Continuous \u2014 Class-D with light-weight SMPS"],
+        ["DSP Engine", "PROEL CORE LT DSP \u2014 high-performance processing with 24-bit / 48 kHz converters"],
+        ["Dynamic EQ", "Sophisticated adaptive EQ continuously shapes frequency response while maintaining full dynamic range at all levels"],
+        ["Dynamic Protection", "Extensive multi-band limiting for both LF and HF transducers ensuring maximum undistorted output"],
+        ["EQ Presets", "MUSIC (Hi-Fi flat), LIVE (vocal reinforcement), DJ (bass emphasis), SPEECH (clarity boost), MONITOR (stage wedge)"],
+        ["Frequency Response", "55 Hz \u2013 20 kHz (\u201310 dB) / 65 Hz \u2013 18 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "127 dB Max SPL @ 1 metre"],
+        ["Built-In Mixer", "2-Channel mixer with independent LINE and MIC inputs with separate level control knobs"],
+        ["MIC Input", "XLR Female balanced microphone input with dedicated gain/level potentiometer"],
+        ["LINE Input", '1/4" TRS or RCA line-level stereo input with dedicated level potentiometer'],
+        ["Signal Output", "XLR Male balanced Thru/Link output for daisy-chaining additional speakers"],
+        ["Enclosure Material", "Lightweight, ultra-durable Polypropylene (PP) with extended internal ribbing for rigidity"],
+        ["Cabinet Geometry", "Symmetrical wedge angles on both sides \u2014 use as upright PA or floor stage monitor"],
+        ["Handles", "3x Ergonomic aluminium recessed handles (1 top, 2 side) for effortless single or two-person transportation"],
+        ["Flying Points", "4x M10 threaded mounting points for fixed installation rigging"],
+        ["Pole Mounting", "Standard 35 mm bottom pole-cup socket for speaker stand mounting"],
+        ["Dimensions (W x H x D)", '340 x 570 x 310 mm (13.4" x 22.4" x 12.2")'],
+        ["Net Weight", "13.5 kg (29.8 lbs)"],
+        ["Operating Voltage", "220\u2013240 V~ 50/60 Hz or 100\u2013120 V~ 50/60 Hz (Auto-switching SMPS)"],
+        ["Warranty & Origin", "Designed & Engineered in Italy by PROEL; 1-Year Pan-India Authorized Warranty"]
+      ]
+    },
+    {
+      id: "proel-flash8xd-600w-8-inch-active-pa-speaker",
+      name: "Proel Flash 8XD",
+      shortName: 'Proel Flash 8XD 600W 8" Active PA Speaker with CORE LT DSP & Dynamic EQ',
+      brand: "Proel",
+      category: "Speaker Systems",
+      subcategory: "Compact Active PA Loudspeakers",
+      price: 64990,
+      originalPrice: 74500,
+      rating: 5,
+      reviewCount: 4,
+      inStock: true,
+      stock: 8,
+      badge: "600W Peak \xB7 CORE LT DSP \xB7 Dynamic EQ \xB7 Ultra-Compact",
+      sku: "PROEL-FLASH8XD-600W",
+      isFeatured: false,
+      image: "assets/images/products/proel-flash8xd-front.jpg",
+      images: [
+        "assets/images/products/proel-flash8xd-front.jpg",
+        "assets/images/products/proel-flash8xd-rear.jpg",
+        "assets/images/products/proel-flash8xd-wedge.jpg"
+      ],
+      description: `
+      <h3>Third Generation FLASH Series \u2014 Ultra-Compact Power & Pristine High-Definition Sound</h3>
+      <p>With the <strong>Proel Flash 8XD</strong>, PROEL expands its acclaimed third-generation FLASH X loudspeaker series into an ultra-compact format. Continuing a long legacy of class-leading sound definition, rugged reliability, and accessible pricing, the Flash 8XD packs advanced professional digital processing and punchy amplification into a lightweight enclosure that fits anywhere. Powered by a high-efficiency <strong>600W peak Class-D amplifier module</strong> with Switch Mode Power Supply (SMPS), the Flash 8XD delivers surprising acoustic authority and headroom, reaching up to <strong>122 dB Max SPL</strong> across a wide 65 Hz \u2013 20 kHz frequency range.</p>
+
+      <h3>PROEL CORE LT DSP with Adaptive Dynamic EQ</h3>
+      <p>At the center of the Flash 8XD is the advanced <strong>PROEL CORE LT DSP</strong> featuring 24-bit high-definition converters. The DSP's standout feature is its intelligent <strong>Dynamic EQ</strong>, which dynamically shapes the acoustic response in real time to preserve rich, balanced sonics and full dynamic punch whether operating at soft background levels or driving at maximum output. Built-in dynamic multi-band limiting provides robust transducer protection to eliminate clipping distortion, while <strong>5 EQ Presets</strong> (MUSIC, LIVE, DJ, SPEECH, MONITOR) ensure instant one-touch tuning for any performance context.</p>
+
+      <h3>High-Definition Transducers with Wide 90\xB0 x 60\xB0 Horn</h3>
+      <p>The acoustic section utilizes a custom <strong>8" long-excursion woofer with 1.5" high-temperature voice coil</strong>, engineered for tight, controlled bass response and articulate midrange. This is matched to a <strong>1" high-definition compression driver</strong> coupled to a 90\xB0 horizontal by 60\xB0 vertical constant-directivity horn, ensuring smooth, uniform high-frequency dispersion and coherent coverage throughout the audience space.</p>
+
+      <h3>Built-In 2-Channel Mixer & Dual-Use Stage Wedge Enclosure</h3>
+      <p>Equipped with an onboard <strong>2-channel mixer with independent MIC and LINE inputs</strong>, the Flash 8XD functions as an instant standalone PA system for acoustic performers, presentations, fitness studios, and corporate audio. Its ultra-durable polypropylene (PP) cabinet features extended internal bracing, an ergonomic aluminium top handle, four M8 flying points for suspended installations, and a symmetrical slanted profile that serves as a low-profile floor wedge stage monitor.</p>
+    `,
+      specs: [
+        { label: "Amplifier Power", value: "600 W Peak Class-D with SMPS (300 W Continuous)" },
+        { label: "Low Frequency Driver", value: '8" Long-Excursion Woofer with 1.5" High-Temperature Voice Coil' },
+        { label: "High Frequency Driver", value: '1" High-Definition Compression Driver with 90\xB0 \xD7 60\xB0 CD Horn' },
+        { label: "Maximum SPL", value: "122 dB Peak SPL @ 1 metre" },
+        { label: "DSP Engine", value: "PROEL CORE LT DSP with Dynamic EQ & 24-bit Converters" },
+        { label: "EQ Presets", value: "5 Presets: MUSIC, LIVE, DJ, MONITOR, SPEECH" },
+        { label: "Built-In Mixer", value: "2-Channel (MIC + LINE) with Independent Level Controls" },
+        { label: "Portability & Mounts", value: "7.5 kg Lightweight PP Cabinet, Aluminium Handle, 4x M8 Fly Points" }
+      ],
+      deepSpecs: [
+        ["System Architecture", "2-Way Active Processed Bi-Amplified Loudspeaker System \u2014 3rd Generation FLASH Series"],
+        ["Low Frequency Transducer", '8" (200 mm) custom long-excursion woofer with 1.5" (38 mm) high-temperature voice coil'],
+        ["High Frequency Transducer", '1" (25 mm) exit compression driver with high-definition diaphragm'],
+        ["Horn Directivity", "90\xB0 Horizontal x 60\xB0 Vertical Constant Directivity Horn \u2014 uniform coherent dispersion"],
+        ["Total Amplifier Output", "600 W Peak / 300 W Continuous \u2014 Class-D with light-weight SMPS"],
+        ["DSP Signal Processing", "PROEL CORE LT DSP \u2014 high-performance processing with 24-bit / 48 kHz converters"],
+        ["Dynamic EQ", "Sophisticated adaptive EQ continuously shapes frequency response while maintaining full dynamic range at all levels"],
+        ["Dynamic Protection", "Comprehensive multi-band limiting for both LF and HF transducers ensuring maximum undistorted output"],
+        ["EQ Voicing Presets", "5 Presets: MUSIC (Hi-Fi flat), LIVE (vocal/acoustic), DJ (bass emphasis), SPEECH (intelligibility), MONITOR (floor wedge)"],
+        ["Frequency Response", "65 Hz \u2013 20 kHz (\u201310 dB) / 75 Hz \u2013 18 kHz (\xB13 dB)"],
+        ["Maximum Peak SPL", "122 dB Max SPL @ 1 metre"],
+        ["Built-In Mixer", "2-Channel mixer with independent LINE and MIC inputs with separate level control knobs"],
+        ["MIC Input", "XLR Female balanced microphone input with dedicated gain/level potentiometer"],
+        ["LINE Input", '1/4" TRS or RCA line-level stereo input with dedicated level potentiometer'],
+        ["Signal Link/Output", "XLR Male balanced Thru/Link output for daisy-chaining additional speakers"],
+        ["Enclosure Material", "Lightweight, ultra-durable Polypropylene (PP) with extended internal ribbing for rigidity"],
+        ["Cabinet Geometry", "Symmetrical wedge angles on both sides \u2014 use as upright PA or floor stage monitor"],
+        ["Handle", "Ergonomic aluminium top handle for effortless transportation"],
+        ["Flying Points", "4x M8 threaded mounting points for fixed installation rigging"],
+        ["Pole Mounting", "Standard 35 mm bottom pole-cup socket for speaker stand mounting"],
+        ["Dimensions (W x H x D)", '270 x 420 x 260 mm (10.6" x 16.5" x 10.2")'],
+        ["Net Weight", "7.5 kg (16.5 lbs)"],
+        ["Operating Voltage", "220\u2013240 V~ 50/60 Hz or 100\u2013120 V~ 50/60 Hz (Auto-switching SMPS)"],
+        ["Warranty & Origin", "Designed & Engineered in Italy by PROEL; 1-Year Pan-India Authorized Warranty"]
+      ]
+    },
+    {
+      id: "proel-freeonex-all-in-one-battery-powered-pa-system",
+      name: "Proel FREEONEX",
+      shortName: "Proel FREEONEX All-In-One Battery-Powered Personal PA System with Bluetooth & Reverb",
+      brand: "Proel",
+      category: "Speaker Systems",
+      subcategory: "Battery-Powered Portable PA Systems",
+      price: 35665,
+      originalPrice: 41900,
+      rating: 5,
+      reviewCount: 6,
+      inStock: true,
+      stock: 9,
+      badge: "Battery-Powered \xB7 Up to 10h Runtime \xB7 Bluetooth \xB7 Multi-Position",
+      sku: "PROEL-FREEONEX-BATTERY-PA",
+      isFeatured: false,
+      image: "assets/images/products/proel-freeonex-tilt.jpg",
+      images: [
+        "assets/images/products/proel-freeonex-tilt.jpg",
+        "assets/images/products/proel-freeonex-rear.jpg",
+        "assets/images/products/proel-freeonex-upright.jpg",
+        "assets/images/products/proel-freeonex-wedge.jpg",
+        "assets/images/products/proel-freeonex-stand.jpg"
+      ],
+      description: `
+      <h3>All-In-One Battery-Powered Personal PA System with Multi-Position Aiming</h3>
+      <p>The <strong>Proel FREEONEX</strong> is a groundbreaking all-in-one battery-powered personal PA system designed for buskers, singer-songwriters, traveling musicians, mobile DJs, corporate presenters, and fitness instructors who require studio-quality amplification completely free from AC mains power. Housed in a lightweight yet rugged polypropylene enclosure with multifaceted geometry, the FREEONEX can be deployed in four distinct configurations: upright vertical tabletop, tilted-back stage monitor, horizontal floor wedge, or elevated on a standard 35mm speaker stand \u2014 adapting instantaneously to any acoustic environment.</p>
+
+      <h3>Precision Column Array Architecture with 6" LF Woofer & 3x 2" HF Drivers</h3>
+      <p>Despite its ultra-compact footprint, the FREEONEX produces an astonishingly full and articulate acoustic projection. An internal vertical array of <strong>three high-definition 2" neodymium HF drivers</strong> coupled with a high-excursion <strong>6" low-frequency woofer</strong> delivers uniform tonal balance, exceptional vocal clarity over distance, and wide horizontal coverage across audience spaces. Powered by a high-efficiency bi-amplified <strong>150W + 50W Class-D amplifier module</strong> with built-in DSP, it outputs punchy, low-distortion audio with authoritative presence up to <strong>115 dB Max SPL</strong>.</p>
+
+      <h3>Integrated 3-Channel Digital Mixer with Bluetooth & Studio-Grade Reverb</h3>
+      <p>The onboard 3-channel digital mixer provides complete audio control right from the speaker's rear panel. Channels 1 and 2 feature combination XLR / 1/4" TRS inputs switchable between microphone and instrument impedance, each equipped with <strong>2-band shelving EQ (High & Low)</strong> and a dedicated <strong>studio-grade digital Reverb</strong> level control. Channel 3 provides wireless <strong>Bluetooth 5.0 stereo audio streaming</strong> and a 3.5mm stereo AUX input for background music, playback tracks, and intermission playlists.</p>
+
+      <h3>Up to 10 Hours Continuous Mains-Free Battery Operation</h3>
+      <p>Equipped with a high-capacity rechargeable Lithium-ion battery, the FREEONEX provides <strong>up to 10 hours of uninterrupted performance</strong> on a single charge. A 4-segment LED battery meter on the control panel provides instant visibility of remaining charge, and an onboard balanced line output allows easy daisy-chaining to a second FREEONEX for expanded stereo systems.</p>
+    `,
+      specs: [
+        { label: "Amplifier Power", value: "200 W Peak Bi-Amp Class-D (150W LF + 50W HF)" },
+        { label: "Transducer Complement", value: '1x 6" High-Excursion Woofer + 3x 2" High-Definition Neodymium HF Array' },
+        { label: "Battery Runtime", value: "Rechargeable Li-ion Battery with up to 10 Hours Mains-Free Playback" },
+        { label: "Integrated Mixer", value: "3-Channel Digital Mixer (2x Mic/Inst Combo XLR/TRS + 1x Stereo/Bluetooth)" },
+        { label: "Effects & EQ", value: "2-Band EQ (High/Low) and Studio Digital Reverb on Mic/Inst Channels" },
+        { label: "Wireless Audio", value: "Built-in Bluetooth 5.0 High-Definition Audio Streaming" },
+        { label: "Multi-Position Cabinet", value: "Upright, 30\xB0 Tilt-Back, 45\xB0 Horizontal Floor Wedge, 35mm Stand-Mount" },
+        { label: "Weight & Dimensions", value: "7.5 kg Lightweight Polypropylene Enclosure with Recessed Top Handle" }
+      ],
+      deepSpecs: [
+        ["System Type", "2-Way All-In-One Battery-Powered Multi-Position Personal PA System"],
+        ["Low Frequency Transducer", '1x 6" (150 mm) long-excursion woofer with 1.5" high-temperature voice coil'],
+        ["High Frequency Transducer", '3x 2" (50 mm) high-definition neodymium micro-drivers in vertical column array'],
+        ["Amplifier Architecture", "Bi-amplified Class-D output stage with integrated digital DSP processing"],
+        ["Total Power Output", "200 W Peak (150 W LF + 50 W HF Peak)"],
+        ["Maximum Peak SPL", "115 dB Peak SPL @ 1 metre"],
+        ["Frequency Response", "60 Hz \u2013 18 kHz (\u20133 dB)"],
+        ["Battery Type", "Internal rechargeable Lithium-ion (Li-ion) battery pack"],
+        ["Battery Operating Time", "Up to 10 hours continuous operation (volume level dependent)"],
+        ["Battery Charging Time", "Approx. 4 hours to 100% capacity via internal smart charger"],
+        ["Battery Level Meter", "4-Segment LED status indicator on rear control panel"],
+        ["Built-In Mixer Section", "3-Channel digital mixer with independent rotary volume potentiometers"],
+        ["Channels 1 & 2 Inputs", '2x Combo XLR / 1/4" TRS balanced jacks (Mic / Line / Instrument switchable)'],
+        ["Channel 3 Input", "Bluetooth v5.0 audio receiver + 3.5 mm stereo AUX mini-jack input"],
+        ["Channel Tone Shaping", "2-Band Shelving Equalizer (High & Low) on Channels 1 and 2"],
+        ["Digital Reverb", "Studio-quality digital DSP Reverb with dedicated depth controls on Channels 1 & 2"],
+        ["Mix / Link Output", '1x 1/4" TRS balanced Line Output for cascading to a second unit or external PA'],
+        ["Bluetooth Audio", "Bluetooth 5.0 with A2DP profile for high-definition wireless streaming"],
+        ["Enclosure Material", "High-density injection-molded Polypropylene (PP) with structural ribbing"],
+        ["Cabinet Versatility", "4 Deployments: Flat vertical tabletop, 30\xB0 tilt-back, 45\xB0 horizontal floor wedge, stand mounted"],
+        ["Pole Mounting", "Standard 35 mm bottom pole-cup socket for standard speaker stands"],
+        ["Integrated Handle", "Ergonomic recessed top carrying handle for effortless single-hand transport"],
+        ["Dimensions (W x H x D)", '240 x 320 x 290 mm (9.5" x 12.6" x 11.4")'],
+        ["Net Weight", "7.5 kg (16.5 lbs) [Gross Packaged Weight: 9.0 kg]"],
+        ["Operating Voltage", "Universal 100\u2013240 V~ 50/60 Hz AC mains or internal Li-ion battery"],
+        ["Warranty & Support", "Designed & Engineered in Italy by PROEL; Up to 4 Years Extended Warranty Coverage"]
+      ]
+    },
+    {
+      id: "novation-49sl-mk3-cv-sequencer-keyboard-controller",
+      name: "Novation 49SL MKIII",
+      shortName: "Novation 49SL MKIII 49-Key Semi-Weighted MIDI/CV Keyboard Controller with 8-Track Sequencer",
+      brand: "Novation",
+      category: "MIDI Controllers",
+      subcategory: "Keyboard Controllers & Sequencers",
+      price: 87590,
+      originalPrice: 99990,
+      rating: 5,
+      reviewCount: 7,
+      inStock: true,
+      stock: 5,
+      badge: "8-Track Sequencer \xB7 5 Color LCDs \xB7 Dual CV/Gate Out \xB7 Semi-Weighted",
+      sku: "NOV-49SL-MK3-HUB",
+      isFeatured: false,
+      image: "assets/images/products/novation-49sl-mk3-angle.png",
+      images: [
+        "assets/images/products/novation-49sl-mk3-angle.png",
+        "assets/images/products/novation-49sl-mk3-top.jpg",
+        "assets/images/products/novation-49sl-mk3-rear.png"
+      ],
+      description: `
+      <h3>The All-Sequencing, All-Controlling Studio Centrepiece</h3>
+      <p>The <strong>Novation 49SL MKIII</strong> is far from your typical keyboard controller. It is an all-sequencing, all-controlling production powerhouse engineered to serve as the unified creative nerve-center for your entire hardware and software synthesizer ecosystem. Whether working completely computer-free in a standalone hardware synth rig or driving advanced in-the-box DAW arrangements, the 49SL MKIII pulls your session out of the box and puts complete, tactile polyphonic composition directly under your fingertips.</p>
+
+      <h3>Internal 8-Track Polyphonic Pattern Sequencer</h3>
+      <p>Compose complex, evolving arrangements effortlessly with the onboard <strong>eight-track polyphonic pattern-based sequencer</strong>. Step-record notes with surgical precision or record expressive polyphonic performances in real time directly from the keyboard bed. Record continuous parameter automation straight onto sequencer lanes to animate filter sweeps, envelopes, and modulation depth. With polyphonic sequencing, variable sync rates, pattern chaining, and real-time rhythm programming via the velocity-sensitive RGB pads, your hardware and virtual instruments remain seamlessly locked in perfect time.</p>
+
+      <h3>Premium Semi-Weighted Keybed with 10 kHz Scan Rate & On-Key RGB Feedback</h3>
+      <p>The 49SL MKIII features Novation's finest synth-style semi-weighted keybed, engineered with a sprung action meticulously calibrated for experienced keyboardists, concert pianists, and synth virtuosos. Its ultra-high <strong>10 kHz scan rate</strong> translates the subtlest nuances of touch, velocity, and assignable channel aftertouch with instantaneous transient response. Vibrant <strong>on-key RGB LEDs</strong> provide instant visual feedback for scales, modes, and up to 8 independent keyboard zones and splits.</p>
+
+      <h3>Unrivalled Analog & Digital Connectivity \u2014 Dual CV/Gate, MIDI, USB & Clock</h3>
+      <p>Bridge the gap between analog modular synthesizers and modern digital DAWs with an exhaustive I/O complement: <strong>two complete sets of CV Pitch, Gate, and Modulation 3.5mm outputs</strong>, an analogue clock output for vintage drum machines, 5-pin DIN MIDI In, Out, and Out 2/Thru, USB-B, and three assignable 1/4" pedal jacks (Sustain, Expression, Footswitch). Five full-colour TFT LCD screens provide real-time parameter feedback, complemented by 16 velocity-sensitive RGB pads with polyphonic aftertouch, 8 smooth 45mm faders, 8 endless rotary encoders, and deep integration with Ableton Live, Logic Pro, Cubase, Pro Tools, Studio One, and Reason.</p>
+    `,
+      specs: [
+        { label: "Keybed Architecture", value: "49 Semi-Weighted Synth-Action Keys with Assignable Aftertouch & 10 kHz Scan Rate" },
+        { label: "Visual Light Guide", value: "Per-Key RGB LEDs Displaying Musical Scales, Modes, Splits & Sequencer Steps" },
+        { label: "Displays", value: "5x Full-Colour High-Resolution TFT LCD Screens for Real-Time Parameter Feedback" },
+        { label: "Sequencer", value: "Internal 8-Track Polyphonic Pattern Sequencer with Real-Time Automation Recording" },
+        { label: "Performance Pads", value: "16x Velocity-Sensitive RGB Backlit Pads with Polyphonic Aftertouch" },
+        { label: "Analog CV/Gate I/O", value: "2 Pairs of CV Pitch, Gate & Mod Outputs (3.5mm) + Analogue Clock Out" },
+        { label: "MIDI & Pedals", value: "5-Pin DIN MIDI In/Out/Out2-Thru + 3 Pedal Inputs (Sustain, Expression, Footswitch)" },
+        { label: "DAW Integration", value: "Deep Ableton Live Integration + InControl & HUI Support for Logic, Cubase, Pro Tools" }
+      ],
+      deepSpecs: [
+        ["Keybed Type", "49-Note semi-weighted synth-action keybed with custom sprung mechanism"],
+        ["Keybed Dynamics", "Velocity-sensitive with 10 kHz ultra-high scan rate and assignable channel aftertouch"],
+        ["Keybed Visual Feedback", "Full-spectrum RGB LEDs above each key indicating scale notes, chord modes, and split zones"],
+        ["Displays", "5x High-resolution full-colour TFT LCD graphic displays with dynamic parameter readouts"],
+        ["Performance Pads", "16x Multi-colour velocity-sensitive RGB pads with polyphonic aftertouch for clip launch and drumming"],
+        ["Internal Sequencer", "8-Track polyphonic pattern-based sequencer with up to 16 steps per pattern, 8 patterns per track"],
+        ["Automation", "Real-time and step-input parameter automation recording across all 8 sequencer tracks"],
+        ["Arpeggiator", "Comprehensive arpeggiator with multiple direction types, sync rates, swing, and pattern length editing"],
+        ["Physical Controls", "8x Continuous rotary encoders + 8x smooth 45mm assignable faders + dedicated transport controls"],
+        ["Wheels", "Ergonomic Pitch Bend and Modulation wheels with track-coded RGB LED backlighting"],
+        ["Zones & Splits", "Up to 8 independent keyboard zones for layering internal sounds, external MIDI gear, and CV synths"],
+        ["CV / Gate Outputs", "2x Sets of 3.5mm TS mini-jack outputs for CV Pitch, Gate, and Modulation (-5V to +5V range)"],
+        ["Analogue Clock Out", "1x 3.5mm Analogue Clock output for synchronising modular synthesizers and vintage drum machines"],
+        ["MIDI Connectors", "Standard 5-Pin DIN MIDI In, MIDI Out, and MIDI Out 2 / Thru with configurable routing"],
+        ["Pedal Inputs", '3x 1/4" TRS jacks (Sustain, Expression, and Assignable Footswitch pedal inputs)'],
+        ["USB Connectivity", "USB Type-B connector for class-compliant USB-MIDI and computer communication"],
+        ["DAW Support", "Unprecedented deep integration with Ableton Live; HUI/InControl templates for Logic, Reason, Cubase, Pro Tools, Studio One, Reaper"],
+        ["Template Management", "Novation Components cloud and local software editor for custom hardware/software mappings"],
+        ["Power Requirement", "12V DC 1A external power supply (included)"],
+        ["Dimensions (W x D x H)", '817 x 300 x 100 mm (32.17" x 11.81" x 3.94")'],
+        ["Net Weight", "5.56 kg (12.25 lbs)"],
+        ["Included Software", "Ableton Live Lite, 4GB Loopmasters sample library, Sound Collective plug-in membership"],
+        ["Warranty", "3-Year Official Novation Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "novation-61sl-mk3-cv-sequencer-keyboard-controller",
+      name: "Novation 61SL MKIII",
+      shortName: "Novation 61SL MKIII 61-Key Semi-Weighted MIDI/CV Keyboard Controller with 8-Track Sequencer",
+      brand: "Novation",
+      category: "MIDI Controllers",
+      subcategory: "Keyboard Controllers & Sequencers",
+      price: 101640,
+      originalPrice: 115990,
+      rating: 5,
+      reviewCount: 8,
+      inStock: true,
+      stock: 4,
+      badge: "61-Key Semi-Weighted \xB7 8-Track Sequencer \xB7 5 Color LCDs \xB7 Dual CV/Gate",
+      sku: "NOV-61SL-MK3-HUB",
+      isFeatured: false,
+      image: "assets/images/products/novation-61sl-mk3-angle.png",
+      images: [
+        "assets/images/products/novation-61sl-mk3-angle.png",
+        "assets/images/products/novation-61sl-mk3-top.jpg",
+        "assets/images/products/novation-61sl-mk3-rear.png"
+      ],
+      description: `
+      <h3>The Flagship 61-Key All-Sequencing, All-Controlling Production Hub</h3>
+      <p>The <strong>Novation 61SL MKIII</strong> expands Novation's flagship sequencing keyboard controller to a full five-octave layout, giving keyboardists, film composers, synth players, and producers unrestricted two-handed performance freedom. Far beyond an ordinary MIDI controller, the 61SL MKIII is an all-sequencing, all-controlling command centre engineered to seamlessly unite your complete collection of analog modular synths, vintage hardware sound modules, and software DAWs into a single, cohesive, computer-free composition environment.</p>
+
+      <h3>Integrated 8-Track Polyphonic Pattern-Based Sequencer</h3>
+      <p>Compose evolving multi-part arrangements directly from the hardware without touching a mouse. The onboard <strong>8-track polyphonic pattern-based sequencer</strong> allows you to input notes step-by-step or record live polyphonic performances in real time. Record parameter automation directly onto sequencer lanes to infuse continuous life into filter sweeps, envelope decays, and modulation rates. Dedicated arpeggiator controls with adjustable sync rates, note lengths, and swing combine with 16 velocity-sensitive RGB pads to make beat programming and sequence manipulation completely intuitive.</p>
+
+      <h3>Expressive 61-Note Semi-Weighted Keybed with 10 kHz Scan Rate & On-Key RGB Guides</h3>
+      <p>At the touch of your hands is Novation's finest synth-style semi-weighted keybed, boasting a sprung action specifically voiced for the nuance of experienced players and concert pianists. With an ultra-responsive <strong>10 kHz scan rate</strong> and assignable channel aftertouch, your playing dynamics translate with instantaneous precision. <strong>Vibrant on-key RGB LED indicators</strong> illuminate across the keybed, instantly displaying musical scales, modes, chords, and up to 8 independent keyboard zones and splits.</p>
+
+      <h3>Exhaustive CV/Gate, MIDI, USB & Analog Clock Connectivity</h3>
+      <p>Seamlessly bridge the analog and digital divide: <strong>two complete pairs of CV Pitch, Gate, and Mod 3.5mm outputs</strong>, an analogue clock out, 5-pin DIN MIDI In, Out, and Out 2/Thru, USB-B, and three assignable 1/4" pedal jacks (Sustain, Expression, Footswitch). Five full-colour high-resolution TFT LCD screens provide complete parameter visibility, paired with 8 smooth 45mm assignable faders, 8 continuous rotary encoders, and deep integration with Ableton Live, Logic Pro, Reason, Cubase, Pro Tools, Studio One, and Reaper.</p>
+    `,
+      specs: [
+        { label: "Keybed Architecture", value: "61 Semi-Weighted Synth-Action Keys with Assignable Aftertouch & 10 kHz Scan Rate" },
+        { label: "Visual Light Guide", value: "Per-Key Full-Spectrum RGB LEDs Displaying Scales, Modes, Splits & Sequencer" },
+        { label: "Displays", value: "5x Full-Colour High-Resolution TFT LCD Screens with Real-Time Parameter Feedback" },
+        { label: "Sequencer", value: "Internal 8-Track Polyphonic Pattern Sequencer with Real-Time Automation Recording" },
+        { label: "Performance Pads", value: "16x Velocity-Sensitive RGB Backlit Pads with Polyphonic Aftertouch" },
+        { label: "Analog CV/Gate I/O", value: "2 Pairs of CV Pitch, Gate & Mod Outputs (3.5mm) + Analogue Clock Out" },
+        { label: "MIDI & Pedals", value: "5-Pin DIN MIDI In/Out/Out2-Thru + 3 Pedal Inputs (Sustain, Expression, Footswitch)" },
+        { label: "DAW Integration", value: "Deep Ableton Live Integration + InControl & HUI Support for Logic, Cubase, Pro Tools" }
+      ],
+      deepSpecs: [
+        ["Keybed Type", "61-Note (5 Octaves) semi-weighted synth-action keybed with custom sprung action"],
+        ["Keybed Dynamics", "Velocity-sensitive with 10 kHz ultra-high scan rate and assignable channel aftertouch"],
+        ["Keybed Visual Feedback", "Full-spectrum RGB LEDs above each of the 61 keys indicating scale notes, chord modes, and split zones"],
+        ["Displays", "5x High-resolution full-colour TFT LCD graphic displays with dynamic parameter readouts"],
+        ["Performance Pads", "16x Multi-colour velocity-sensitive RGB pads with polyphonic aftertouch for clip launch and drumming"],
+        ["Internal Sequencer", "8-Track polyphonic pattern-based sequencer with up to 16 steps per pattern, 8 patterns per track"],
+        ["Automation", "Real-time and step-input parameter automation recording across all 8 sequencer tracks"],
+        ["Arpeggiator", "Comprehensive arpeggiator with multiple direction types, sync rates, swing, and pattern length editing"],
+        ["Physical Controls", "8x Continuous rotary encoders + 8x smooth 45mm assignable faders + dedicated transport controls"],
+        ["Wheels", "Ergonomic Pitch Bend and Modulation wheels with track-coded RGB LED backlighting"],
+        ["Zones & Splits", "Up to 8 independent keyboard zones for layering internal sounds, external MIDI gear, and CV synths"],
+        ["CV / Gate Outputs", "2x Sets of 3.5mm TS mini-jack outputs for CV Pitch, Gate, and Modulation (-5V to +5V range)"],
+        ["Analogue Clock Out", "1x 3.5mm Analogue Clock output for synchronising modular synthesizers and vintage drum machines"],
+        ["MIDI Connectors", "Standard 5-Pin DIN MIDI In, MIDI Out, and MIDI Out 2 / Thru with configurable routing"],
+        ["Pedal Inputs", '3x 1/4" TRS jacks (Sustain, Expression, and Assignable Footswitch pedal inputs)'],
+        ["USB Connectivity", "USB Type-B connector for class-compliant USB-MIDI and computer communication"],
+        ["DAW Support", "Unprecedented deep integration with Ableton Live; HUI/InControl templates for Logic, Reason, Cubase, Pro Tools, Studio One, Reaper"],
+        ["Template Management", "Novation Components cloud and local software editor for custom hardware/software mappings"],
+        ["Power Requirement", "12V DC 1A external power supply (included)"],
+        ["Dimensions (W x D x H)", '981 x 300 x 100 mm (38.62" x 11.81" x 3.94")'],
+        ["Net Weight", "6.53 kg (14.4 lbs)"],
+        ["Included Software", "Ableton Live Lite, 4GB Loopmasters sample library, Sound Collective plug-in membership"],
+        ["Warranty", "3-Year Official Novation Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "novation-flkey37-mk2-fl-studio-keyboard-controller",
+      name: "Novation FLkey 2 - 37",
+      shortName: "Novation FLkey 2 - 37 Key MIDI Controller for FL Studio with OLED, Poly-AT Pads & MIDI Out",
+      brand: "Novation",
+      category: "MIDI Controllers",
+      subcategory: "DAW-Integrated Keyboard Controllers",
+      price: 26930,
+      originalPrice: 31490,
+      rating: 5,
+      reviewCount: 12,
+      inStock: true,
+      stock: 12,
+      badge: "Made for FL Studio \xB7 Polyphonic-AT Pads \xB7 OLED Display \xB7 MIDI Out",
+      sku: "NOV-FLKEY37-MK2",
+      isFeatured: false,
+      image: "assets/images/products/novation-flkey37-top.jpg",
+      images: [
+        "assets/images/products/novation-flkey37-top.jpg",
+        "assets/images/products/novation-flkey37-angle1.jpg",
+        "assets/images/products/novation-flkey37-angle2.jpg",
+        "assets/images/products/novation-flkey37-rear.jpg"
+      ],
+      description: `
+      <h3>The Only Keyboard Controller Made for FL Studio \u2014 Now Even Better</h3>
+      <p>The <strong>Novation FLkey 2 - 37</strong> is the second-generation evolution of the world's first keyboard controller purpose-built for FL Studio. Redesigned from the ground up, FLkey 37 MK2 deepens its native connection to FL Studio's most creative workflows \u2014 from the Channel Rack and Step Sequencer to Sytrus, Harmor, and FPC \u2014 giving you direct, hands-on hardware access to the tools you use to build tracks. Sketch beats fast, layer melodies intuitively, and finish your productions without breaking creative flow.</p>
+
+      <h3>Three Octaves of Expressive Synth-Action Keys with Creative Performance Tools</h3>
+      <p>Three full-size octaves of responsive <strong>synth-action keys</strong> with pitch and mod wheels deliver expressive playability for any style. The built-in creative tools make melodic composition faster and more musical than ever: <strong>Scale Mode</strong> limits notes to your chosen key so wrong notes are impossible; <strong>Fixed Chord Mode</strong> lets you play complex full chords from a single keypress; and <strong>Chord Maps</strong> let you design and trigger complete professional chord progressions from the RGB pads. The onboard <strong>arpeggiator</strong> makes it effortless to generate evolving sequences that keep inspiration flowing.</p>
+
+      <h3>Polyphonic-Aftertouch RGB Pads with Step Sequencer & Finger Drumming</h3>
+      <p>Eight backlit RGB performance pads with <strong>polyphonic aftertouch</strong> unlock nuanced per-note expression during finger drumming with FPC, SliceX, and Fruity Slicer. Trigger samples directly from the Channel Rack, sequence Patterns step by step on the pads, or use them for real-time beat creation \u2014 all directly from within FL Studio's native interface without ever reaching for a mouse.</p>
+
+      <h3>Eight Endless Encoders, OLED Display & Full-Size MIDI Out Port</h3>
+      <p>Eight smooth-turning endless rotary encoders give you tactile control over levels, filter sweeps, plugin parameters, mixer sends, and Playlist navigation. A <strong>crisp OLED display</strong> provides immediate visual feedback for every encoder tweak. A <strong>full-size MIDI Out port</strong> enables connection to external hardware synthesizers and MIDI devices. FLkey 37 also supports Mackie HUI for working with other DAWs, custom MIDI mappings through Novation Components, and seamless integration with Novation Play.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "37 Full-Size Synth-Action Keys with Pitch & Mod Wheels" },
+        { label: "Performance Pads", value: "8x RGB Backlit Pads with Polyphonic Aftertouch for Finger Drumming & Step Sequencing" },
+        { label: "Display", value: "Crisp OLED Screen with Real-Time Encoder Feedback" },
+        { label: "Controls", value: "8x Endless Rotary Encoders for Levels, Filters, FX & Plugin Control" },
+        { label: "FL Studio Integration", value: "Native Channel Rack, Step Sequencer, Mixer, Pattern & Plugin Control (Sytrus, Harmor, FPC)" },
+        { label: "Creative Tools", value: "Scale Mode, Fixed Chord Mode, Chord Maps & Arpeggiator Built-In" },
+        { label: "Hardware MIDI & DAW", value: "Full-Size MIDI Out Port + Mackie HUI Support for Any DAW" },
+        { label: "Connectivity", value: "USB Type-C Bus-Powered; No Power Adapter Required" }
+      ],
+      deepSpecs: [
+        ["Controller Generation", "FLkey MK2 \u2014 second-generation FL Studio keyboard controller"],
+        ["Keybed Layout", "37 Keys \u2014 3 Full Octaves, Full-Size Synth-Action with Velocity Sensitivity"],
+        ["Pitch & Modulation Wheels", "Dedicated spring-loaded Pitch Bend and Modulation wheels for expressive real-time playing"],
+        ["Performance Pads", "8x RGB backlit velocity-sensitive pads with per-pad polyphonic aftertouch"],
+        ["Pad Functions", "Finger drumming (FPC, SliceX, Fruity Slicer), Channel Rack triggering, Step Sequencer, Chord Maps"],
+        ["Display", "OLED graphic display providing real-time visual feedback for encoder values and FL Studio parameters"],
+        ["Rotary Encoders", "8x Endless (infinite) rotary encoders \u2014 no end-stops \u2014 assignable to volume, pan, filters, plugin parameters"],
+        ["Scale Mode", "Filters keyboard input to only notes within a selected musical scale \u2014 eliminates wrong notes"],
+        ["Fixed Chord Mode", "Assign a full chord voicing to a single key for instant one-finger chord performance"],
+        ["Chord Maps", "Design and map complete chord progressions across the 8 pads for quick professional harmonic ideas"],
+        ["Arpeggiator", "Built-in arpeggiator with direction, rate, octave range, and gate controls for evolving melodic sequences"],
+        ["FL Studio Integration", "Direct native integration with Channel Rack, Step Sequencer, Playlist, Mixer, and plugin control"],
+        ["Plugin Control", "Dedicated deep integration with Sytrus, Harmor, FPC, SliceX, and Fruity Slicer in FL Studio"],
+        ["MIDI Output", "Full-size 5-pin DIN MIDI Out port for connecting external hardware synthesizers and modules"],
+        ["DAW Compatibility", "FL Studio primary; Mackie HUI support for Logic Pro, Cubase, Pro Tools, and other HUI-compatible DAWs"],
+        ["Template Editor", "Novation Components cloud-based and local custom template editor for flexible MIDI mapping"],
+        ["USB Connection", "USB Type-C to USB-A cable (1.5m included); bus-powered \u2014 no external power supply needed"],
+        ["Included Hardware", "FLkey 2 - 37 unit + 1.5m USB Type-C to USB-A cable"],
+        ["Included Software", "6-Month FL Studio Producer Edition trial, Melodics lessons, Novation Play, GForce Bass Station, GForce Oberheim SEM, GForce Oberheim OB-EZ, GForce AXXESS, Klevgrand LUXE, Klevgrand Slammer, Orchestral Tools Parallel Orchestra, Native Instruments Komplete Select"],
+        ["Dimensions (W x D x H)", '550 x 208 x 41 mm (21.7" x 8.2" x 1.6")'],
+        ["Net Weight", "0.89 kg (1.96 lbs)"],
+        ["Operating Requirement", "USB bus-powered \u2014 no external power supply required; USB Type-C port"],
+        ["Warranty", "3-Year Official Novation Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "icon-artist25x-25-key-midi-keyboard-controller",
+      name: "Icon Pro Audio Artist 25 X",
+      shortName: "iCON Artist 25 X 25-Key MIDI Controller with Touch Fader, DAW Integration & ARM Processor",
+      brand: "Icon Pro Audio",
+      category: "MIDI Controllers",
+      subcategory: "Compact USB-C MIDI Keyboard Controllers",
+      price: 8985,
+      originalPrice: 10900,
+      rating: 5,
+      reviewCount: 9,
+      inStock: true,
+      stock: 15,
+      badge: "Mackie/HUI DAW \xB7 Touch LED Fader \xB7 ARM Processor \xB7 USB-C",
+      sku: "ICON-ARTIST25X",
+      isFeatured: false,
+      image: "assets/images/products/icon-artist25x-angle.png",
+      images: [
+        "assets/images/products/icon-artist25x-angle.png",
+        "assets/images/products/icon-artist25x-top.jpg",
+        "assets/images/products/icon-artist25x-rear.jpg"
+      ],
+      description: `
+      <h3>Professional DAW Integration in an Ultra-Compact 25-Key Format</h3>
+      <p>The <strong>iCON Pro Audio Artist 25 X</strong> is a precision-engineered MIDI keyboard controller designed for studio artists, beatmakers, composers, and music producers who demand seamless DAW integration in the most compact footprint possible. Built around Mackie Control and HUI protocol support, the Artist 25X delivers hands-on, real-time control over Pro Tools, Ableton Live, Logic Pro, Cubase, Studio One, Bitwig, Reason, Reaper, and Nuendo \u2014 without breaking creative flow. Its rugged aluminium chassis and ARM-processor-driven engine guarantee ultra-low latency and rock-solid stability across demanding production sessions.</p>
+
+      <h3>Velocity-Sensitive Keybed with Adjustable Velocity Curves</h3>
+      <p>The 25-key synth-action velocity-sensitive keybed bridges acoustic expressiveness and electronic precision. Customizable velocity curves, adjustable through the <strong>iMAP software editor</strong>, let you tailor responsiveness for delicate arpeggios, intricate chord voicings, or commanding synth bass lines \u2014 adapting the keyboard to your unique playing style and production demands.</p>
+
+      <h3>Real-Time Backlit LED Touch Fader & 18 Assignable LED Buttons</h3>
+      <p>At the heart of the Artist 25X's mixing workflow is a <strong>backlit LED touch-sensitive fader</strong> that automatically syncs with your DAW's channel fader values in real time. Adjust channel levels, sweep plugin parameters, and write automation curves with a single tactile gesture \u2014 no mouse required. Eighteen assignable illuminated LED buttons and full transport controls (Play, Stop, Record, Rewind, Fast Forward, Loop) give you immediate command over your session.</p>
+
+      <h3>Ergonomic Left-Side Control Cluster, MIDI Out & USB-C Powered</h3>
+      <p>A slim-profile left-side control cluster groups the dual-function encoder, pitch/mod wheels, and octave/transpose buttons for intuitive single-handed operation, keeping your workspace uncluttered. A full-size <strong>MIDI Out port</strong> ensures compatibility with external synthesizers and gear, while reversible pedal inputs add further flexibility. Powered entirely via <strong>USB-C</strong> \u2014 no power adapter required.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "25 Velocity-Sensitive Synth-Action Keys with iMAP Adjustable Velocity Curves" },
+        { label: "Touch Fader", value: "Backlit LED Touch-Sensitive Fader \u2014 Syncs with DAW Channel Values in Real Time" },
+        { label: "DAW Control", value: "Mackie Control & HUI Protocol \u2014 Pro Tools, Ableton, Logic, Cubase, Studio One, Bitwig" },
+        { label: "Controls", value: "18 Assignable Illuminated LED Buttons + Full Illuminated Transport Controls" },
+        { label: "Left Cluster", value: "Dual-Function Encoder, Pitch/Mod Wheels, Octave & Transpose Buttons" },
+        { label: "Processor & Latency", value: "ARM Processor \u2014 Ultra-Low Latency & Rock-Solid Session Stability" },
+        { label: "Hardware I/O", value: "Full-Size MIDI Out Port + Reversible Dual Pedal Inputs" },
+        { label: "Connectivity", value: "USB-C Bus-Powered; Kensington Lock Port on Aluminium Chassis" }
+      ],
+      deepSpecs: [
+        ["Controller Format", "25-Key Compact \u2014 suitable for portable setups and tight desktop workspaces"],
+        ["Keybed Type", "Synth-action velocity-sensitive keybed with 25 full-size keys"],
+        ["Velocity Curves", "Adjustable via iMAP software \u2014 multiple preset curves plus fully custom mapping"],
+        ["Touch Fader", "Backlit LED touch-sensitive ribbon fader \u2014 auto-syncs with DAW channel strip in Mackie/HUI mode"],
+        ["LED Buttons", "18x Assignable illuminated LED buttons with User Define mode for any DAW function"],
+        ["Transport Controls", "Illuminated Play, Stop, Record, Rewind, Fast Forward, and Loop buttons"],
+        ["DAW Protocols", "Mackie Control Universal (MCU) + HUI \u2014 compatible with all major DAWs"],
+        ["DAW Compatibility", "Pro Tools, Ableton Live, Logic Pro, Cubase, Nuendo, Studio One, Bitwig, Reason, Reaper, Samplitude"],
+        ["Left-Side Cluster", "Dual-function rotary encoder, Pitch Bend wheel, Modulation wheel, Octave +/-, Transpose +/-"],
+        ["MIDI Output", "Full-size 5-pin DIN MIDI Out port for external hardware synthesizer connectivity"],
+        ["Pedal Inputs", '2x Reversible 1/4" pedal inputs (assignable sustain / expression pedal)'],
+        ["Processor", "ARM processor for ultra-low latency MIDI processing and stable USB communication"],
+        ["USB Connectivity", "USB Type-C bus-powered; USB-C to USB-C cable included \u2014 no external power supply needed"],
+        ["Chassis", "Rugged aluminium construction with Kensington lock security slot"],
+        ["Software Editor", "iMAP MIDI mapping software for velocity curve editing and custom control assignments"],
+        ["Included Software", "Native Instruments Hybrid Keys, Bitwig 8-Track, Harrison AVA Live Channel Strip, Harrison AVA Vocal Intensity Processor, KiloHearts Essentials, Tracktion DAW Essentials, Dotec Plugins"],
+        ["In The Box", "Artist 25 X unit + USB-C to USB-C cable + Quickstart Guide"],
+        ["Dimensions (approx)", "375 x 148 x 52 mm"],
+        ["Net Weight", "0.72 kg (1.6 lbs)"],
+        ["Warranty", "1-Year iCON Pro Audio Official Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "icon-artist37x-37-key-midi-keyboard-controller",
+      name: "Icon Pro Audio Artist 37 X",
+      shortName: "iCON Artist 37 X 37-Key MIDI Controller with Touch Fader, DAW Integration & ARM Processor",
+      brand: "Icon Pro Audio",
+      category: "MIDI Controllers",
+      subcategory: "Compact USB-C MIDI Keyboard Controllers",
+      price: 10600,
+      originalPrice: 12900,
+      rating: 5,
+      reviewCount: 7,
+      inStock: true,
+      stock: 12,
+      badge: "Mackie/HUI DAW \xB7 37-Key \xB7 Touch LED Fader \xB7 ARM Processor",
+      sku: "ICON-ARTIST37X",
+      isFeatured: false,
+      image: "assets/images/products/icon-artist37x-angle.png",
+      images: [
+        "assets/images/products/icon-artist37x-angle.png",
+        "assets/images/products/icon-artist37x-top.jpg"
+      ],
+      description: `
+      <h3>Three Full Octaves of Professional DAW Control in a Slim, Portable Design</h3>
+      <p>The <strong>iCON Pro Audio Artist 37 X</strong> steps up the Artist X series to a full 37-key layout \u2014 three complete octaves of expressive, velocity-sensitive synth-action keys \u2014 without sacrificing the compact, desk-friendly profile that makes the Artist X series so attractive for modern producers. Whether you are writing complex chord arrangements, programming detailed MIDI sequences, or controlling a full DAW mix session, the Artist 37X delivers the keyboard range and professional integration tools needed to realise your vision without ever reaching for a mouse.</p>
+
+      <h3>Mackie Control & HUI Pro DAW Integration with Real-Time LED Touch Fader</h3>
+      <p>Built around <strong>Mackie Control Universal and HUI protocols</strong>, the Artist 37X gives you native, hands-on command over Pro Tools, Ableton Live, Logic Pro, Cubase, Nuendo, Studio One, Bitwig, Reason, Reaper, and Samplitude. The <strong>backlit LED touch-sensitive fader</strong> automatically syncs with your DAW's active channel strip in real time \u2014 allowing direct level adjustments, plugin parameter tweaks, and automation writing with a single tactile touch. Eighteen fully assignable illuminated LED buttons and complete illuminated transport controls (Play, Stop, Record, Rewind, Fast Forward, Loop) keep every critical function instantly reachable.</p>
+
+      <h3>ARM Processor, Aluminium Build & Complete MIDI Hardware I/O</h3>
+      <p>Driven by an <strong>ARM processor</strong>, the Artist 37X ensures ultra-low MIDI latency and unwavering stability in even the most resource-intensive sessions. The rugged aluminium chassis \u2014 reinforced with a Kensington lock port \u2014 is built to withstand rigorous daily studio and live use. A full-size <strong>MIDI Out port</strong> routes signals to external synthesizers and gear, while reversible dual pedal inputs accommodate sustain and expression pedals. The slim-profile left-side control cluster keeps the encoder, pitch/mod wheels, and octave/transpose buttons in ergonomic reach without cluttering the workspace. Powered entirely via USB-C \u2014 no adapter needed.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "37 Velocity-Sensitive Synth-Action Keys (3 Octaves) with iMAP Velocity Curves" },
+        { label: "Touch Fader", value: "Backlit LED Touch-Sensitive Fader \u2014 Syncs with DAW Channel Values in Real Time" },
+        { label: "DAW Control", value: "Mackie Control & HUI Protocol \u2014 Pro Tools, Ableton, Logic, Cubase, Studio One, Bitwig" },
+        { label: "Controls", value: "18 Assignable Illuminated LED Buttons + Full Illuminated Transport Controls" },
+        { label: "Left Cluster", value: "Dual-Function Encoder, Pitch/Mod Wheels, Octave & Transpose Buttons" },
+        { label: "Processor & Latency", value: "ARM Processor \u2014 Ultra-Low Latency & Rock-Solid Session Stability" },
+        { label: "Hardware I/O", value: "Full-Size MIDI Out Port + Reversible Dual Pedal Inputs" },
+        { label: "Connectivity", value: "USB-C Bus-Powered; Kensington Lock Port on Rugged Aluminium Chassis" }
+      ],
+      deepSpecs: [
+        ["Controller Format", "37-Key \u2014 3 Full Octaves \u2014 suitable for melody, chords, and two-handed performance"],
+        ["Keybed Type", "Synth-action velocity-sensitive keybed with 37 full-size keys"],
+        ["Velocity Curves", "Adjustable via iMAP software \u2014 multiple preset curves plus fully custom mapping"],
+        ["Touch Fader", "Backlit LED touch-sensitive ribbon fader \u2014 auto-syncs with DAW channel strip in Mackie/HUI mode"],
+        ["LED Buttons", "18x Assignable illuminated LED buttons with User Define mode for any DAW function"],
+        ["Transport Controls", "Illuminated Play, Stop, Record, Rewind, Fast Forward, and Loop buttons"],
+        ["DAW Protocols", "Mackie Control Universal (MCU) + HUI \u2014 compatible with all major DAWs"],
+        ["DAW Compatibility", "Pro Tools, Ableton Live, Logic Pro, Cubase, Nuendo, Studio One, Bitwig, Reason, Reaper, Samplitude"],
+        ["Left-Side Cluster", "Dual-function rotary encoder, Pitch Bend wheel, Modulation wheel, Octave +/-, Transpose +/-"],
+        ["MIDI Output", "Full-size 5-pin DIN MIDI Out port for external hardware synthesizer connectivity"],
+        ["Pedal Inputs", '2x Reversible 1/4" pedal inputs (assignable sustain / expression pedal)'],
+        ["Processor", "ARM processor for ultra-low latency MIDI processing and stable USB communication"],
+        ["USB Connectivity", "USB Type-C bus-powered; USB-C to USB-C cable included \u2014 no external power supply needed"],
+        ["Chassis", "Rugged aluminium construction with Kensington lock security slot"],
+        ["Software Editor", "iMAP MIDI mapping software for velocity curve editing and custom control assignments"],
+        ["Included Software", "Native Instruments Hybrid Keys, Bitwig 8-Track, Harrison AVA Live Channel Strip, Harrison AVA Vocal Intensity Processor, KiloHearts Essentials, Tracktion DAW Essentials, Dotec Plugins"],
+        ["In The Box", "Artist 37 X unit + USB-C to USB-C cable + Quickstart Guide"],
+        ["Dimensions (approx)", "493 x 148 x 52 mm"],
+        ["Net Weight", "0.88 kg (1.94 lbs)"],
+        ["Warranty", "1-Year iCON Pro Audio Official Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "icon-artist49x-49-key-midi-keyboard-controller",
+      name: "Icon Pro Audio Artist 49 X",
+      shortName: "iCON Artist 49 X 49-Key MIDI Controller with Touch Fader, Mackie/HUI DAW Integration & ARM Processor",
+      brand: "Icon Pro Audio",
+      category: "MIDI Controllers",
+      subcategory: "Compact USB-C MIDI Keyboard Controllers",
+      price: 12430,
+      originalPrice: 14990,
+      rating: 5,
+      reviewCount: 8,
+      inStock: true,
+      stock: 10,
+      badge: "Mackie/HUI DAW \xB7 49-Key \xB7 Touch LED Fader \xB7 ARM Processor",
+      sku: "ICON-ARTIST49X",
+      isFeatured: false,
+      image: "assets/images/products/icon-artist49x-angle.png",
+      images: [
+        "assets/images/products/icon-artist49x-angle.png",
+        "assets/images/products/icon-artist49x-top.jpg",
+        "assets/images/products/icon-artist49x-rear.jpg"
+      ],
+      description: `
+      <h3>Four Full Octaves of Studio-Grade DAW Control \u2014 The Artist X Sweet Spot</h3>
+      <p>The <strong>iCON Pro Audio Artist 49 X</strong> occupies the ideal middle ground of the Artist X series: four complete octaves of expressive, velocity-sensitive synth-action keys that span a full piano-style playing range, housed in a desk-friendly chassis that fits comfortably in home studios, project studios, and portable rigs alike. Built for artists, producers, and engineers who require seamless DAW integration, the Artist 49X combines professional Mackie Control and HUI protocol support with a rich hands-on control surface \u2014 delivering complete command over your favourite DAW without ever reaching for a mouse.</p>
+
+      <h3>Mackie Control & HUI DAW Integration with Real-Time LED Touch Fader</h3>
+      <p>The Artist 49X natively supports <strong>Mackie Control Universal and HUI protocols</strong> for direct, hands-on command over Pro Tools, Ableton Live, Logic Pro, Cubase, Nuendo, Studio One, Bitwig, Reason, Reaper, and Samplitude. The <strong>backlit LED touch-sensitive fader</strong> automatically syncs with your DAW's active channel strip, letting you adjust levels, automate parameters, and control mix decisions with a single tactile gesture. Eighteen fully assignable illuminated LED buttons and complete illuminated transport controls (Play, Stop, Record, Rewind, Fast Forward, Loop) keep every critical function instantly reachable.</p>
+
+      <h3>iMAP Velocity Curves, ARM Processor & Professional Hardware I/O</h3>
+      <p>The 49-key velocity-sensitive synth-action keybed delivers a responsive, expressive playing experience bridging acoustic feel and electronic precision. Customizable <strong>velocity curves via iMAP software</strong> let you tailor keyboard responsiveness to your exact playing style \u2014 from feather-light arpeggios to bold synth leads. An <strong>ARM processor</strong> ensures ultra-low MIDI latency and unwavering stability in demanding sessions. A full-size <strong>MIDI Out port</strong>, reversible dual pedal inputs, and a rugged aluminium chassis with Kensington lock complete the professional feature set. Entirely <strong>USB-C bus-powered</strong> \u2014 no power adapter required.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "49 Velocity-Sensitive Synth-Action Keys (4 Octaves) with iMAP Adjustable Velocity Curves" },
+        { label: "Touch Fader", value: "Backlit LED Touch-Sensitive Fader \u2014 Syncs with DAW Channel Values in Real Time" },
+        { label: "DAW Control", value: "Mackie Control & HUI Protocol \u2014 Pro Tools, Ableton, Logic, Cubase, Studio One, Bitwig & More" },
+        { label: "Controls", value: "18 Assignable Illuminated LED Buttons + Full Illuminated Transport Controls" },
+        { label: "Left Cluster", value: "Dual-Function Encoder, Pitch/Mod Wheels, Octave & Transpose Buttons" },
+        { label: "Processor & Latency", value: "ARM Processor \u2014 Ultra-Low Latency & Rock-Solid Session Stability" },
+        { label: "Hardware I/O", value: "Full-Size MIDI Out Port + Reversible Dual Pedal Inputs" },
+        { label: "Connectivity", value: "USB-C Bus-Powered; Kensington Lock Port on Rugged Aluminium Chassis" }
+      ],
+      deepSpecs: [
+        ["Controller Format", "49-Key \u2014 4 Full Octaves \u2014 ideal sweet spot for melody, chords, bass lines and two-handed performance"],
+        ["Keybed Type", "Synth-action velocity-sensitive keybed with 49 full-size keys"],
+        ["Velocity Curves", "Adjustable via iMAP software \u2014 multiple preset curves plus fully custom mapping"],
+        ["Touch Fader", "Backlit LED touch-sensitive ribbon fader \u2014 auto-syncs with DAW channel strip in Mackie/HUI mode"],
+        ["LED Buttons", "18x Assignable illuminated LED buttons with User Define mode for any DAW function"],
+        ["Transport Controls", "Illuminated Play, Stop, Record, Rewind, Fast Forward, and Loop buttons"],
+        ["DAW Protocols", "Mackie Control Universal (MCU) + HUI \u2014 compatible with all major DAWs"],
+        ["DAW Compatibility", "Pro Tools, Ableton Live, Logic Pro, Cubase, Nuendo, Studio One, Bitwig, Reason, Reaper, Samplitude"],
+        ["Left-Side Cluster", "Dual-function rotary encoder, Pitch Bend wheel, Modulation wheel, Octave +/-, Transpose +/-"],
+        ["MIDI Output", "Full-size 5-pin DIN MIDI Out port for external hardware synthesizer connectivity"],
+        ["Pedal Inputs", '2x Reversible 1/4" pedal inputs (assignable sustain / expression pedal)'],
+        ["Processor", "ARM processor for ultra-low latency MIDI processing and stable USB communication"],
+        ["USB Connectivity", "USB Type-C bus-powered; USB-C to USB-C cable included \u2014 no external power supply needed"],
+        ["Chassis", "Rugged aluminium construction with Kensington lock security slot"],
+        ["Software Editor", "iMAP MIDI mapping software for velocity curve editing and custom control assignments"],
+        ["Included Software", "Native Instruments Hybrid Keys, Bitwig 8-Track, Harrison AVA Live Channel Strip, Harrison AVA Vocal Intensity Processor, KiloHearts Essentials, Tracktion DAW Essentials, Dotec Plugins"],
+        ["In The Box", "Artist 49 X unit + USB-C to USB-C cable + Quickstart Guide"],
+        ["Dimensions (approx)", "610 x 150 x 55 mm"],
+        ["Net Weight", "1.1 kg (2.43 lbs)"],
+        ["Warranty", "1-Year iCON Pro Audio Official Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "native-instruments-kontrol-s49-mk3-keyboard-controller",
+      name: "Native Instruments Kontrol S49 MK3",
+      shortName: "Native Instruments Kontrol S49 MK3 49-Key Smart Controller with Poly-AT & Glass Screen",
+      brand: "Native Instruments",
+      category: "MIDI Controllers",
+      subcategory: "Smart Keyboard Controllers with Polyphonic Aftertouch",
+      price: 90650,
+      originalPrice: 104990,
+      rating: 5,
+      reviewCount: 16,
+      inStock: true,
+      stock: 8,
+      badge: "Fatar Poly-AT \xB7 1280x480 Glass Screen \xB7 Next-Gen NKS \xB7 CNC Aluminum",
+      sku: "NI-KONTROL-S49-MK3",
+      isFeatured: false,
+      image: "assets/images/products/ni-kontrol-s49-mk3-top.jpg",
+      images: [
+        "assets/images/products/ni-kontrol-s49-mk3-top.jpg",
+        "assets/images/products/ni-kontrol-s49-mk3-angle1.jpg",
+        "assets/images/products/ni-kontrol-s49-mk3-angle2.jpg",
+        "assets/images/products/ni-kontrol-s49-mk3-software.png"
+      ],
+      description: `
+      <h3>Next-Generation Centerpiece for Modern Music Production</h3>
+      <p>The <strong>Native Instruments Kontrol S49 MK3</strong> is an intelligent flagship keyboard controller engineered to serve as the expressive nucleus of your studio. Virtual instruments meet the tactile world through next-generation <strong>NKS technology</strong>, deep direct Kontakt 7 integration, and an ultra-sharp high-resolution full-color glass screen. Encased in a stunning industrial design sculpted from CNC-machined bead-blasted aluminium and glass elements, the Kontrol S49 MK3 elevates playability, session navigation, and sonic exploration to an unprecedented level.</p>
+
+      <h3>Fatar Keybed with Expressive Polyphonic Aftertouch</h3>
+      <p>Developed in close collaboration with <strong>Fatar</strong>, the 49 semi-weighted keys feature standard <strong>polyphonic aftertouch</strong>, giving you per-note pressure modulation without reaching for an extra controller. Modulate filter cutoffs, pitch variations, vibrato depth, and layered timbre dynamics instinctively with the subtlest pressure applied to each individual key. The redesigned ergonomic pitch and modulation wheels feature subtle RGB backlighting for responsive visual cues during stage and studio performance.</p>
+
+      <h3>High-Resolution Full-Color Glass Display & Redesigned Light Guide</h3>
+      <p>A panoramic <strong>1280 \xD7 480 high-resolution color screen</strong> with an edge-to-edge protective glass surface provides fluid parameter visualization, waveform feedback, and intuitive sound browsing across thousands of Kontakt instruments and NKS partner libraries. Below the keys, the reimagined <strong>Light Guide</strong> pinpoints note zones, key switches, scales, chord voicings, and drum layouts in vivid RGB color, keeping performances strictly in key and intuitively mapped.</p>
+
+      <h3>Advanced DAW Integration, MIDI 2.0 Ready & Massive Software Suite</h3>
+      <p>Beyond standard transport buttons, the Kontrol S49 MK3 deeply integrates with Apple Logic Pro, Ableton Live, Steinberg Cubase, Nuendo, Bitwig, and PreSonus Studio One. Equipped with an onboard ARM processor and <strong>MIDI 2.0 compatibility</strong>, it delivers high-resolution velocity and parameter messaging over USB-C bus power. Includes an extraordinary software collection: <strong>Kontakt 7</strong>, a free Kontakt instrument of your choice, <strong>Komplete 14 Select</strong>, Stradivari Cello, Guitar Rig 7 LE, iZotope Elements Suite, Hypha, and Ableton Live 11 Lite.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "49 Semi-Weighted Fatar Keys with Polyphonic Aftertouch" },
+        { label: "Display", value: "High-Resolution 1280 \xD7 480 Full-Color Screen with Glass Surface" },
+        { label: "Software Integration", value: "Direct Kontakt 7 & Next-Gen NKS Auto-Mapping Integration" },
+        { label: "Controls & Encoders", value: "8 CNC Anodized Aluminum Encoders + 1 4D Push Encoder + RGB Pitch/Mod Wheels" },
+        { label: "Light Guide", value: "Redesigned RGB Light Guide for Key Zones, Scales, Chords & Switches" },
+        { label: "DAW Support", value: "Deep Integration with Logic Pro, Ableton Live, Cubase, Nuendo, Bitwig & Studio One" },
+        { label: "Hardware Build", value: "CNC Machined Anodized Aluminum & Glass Chassis with Dustproof Island Buttons" },
+        { label: "Connectivity & Power", value: "USB-C Bus-Powered, MIDI In/Out, Sustain, Expression & 2 Assignable Pedal Inputs" }
+      ],
+      deepSpecs: [
+        ["Controller Series", "Native Instruments Kontrol S-Series MK3 \u2014 Flagship Smart Keyboard Controller"],
+        ["Keybed Type", "49-Key Semi-weighted Fatar keybed with velocity sensitivity and polyphonic aftertouch"],
+        ["Aftertouch Technology", "Polyphonic Aftertouch \u2014 independent per-key pressure sensing developed with Fatar"],
+        ["Screen Specification", "1280 \xD7 480 High-resolution full-color display with chemically strengthened glass surface"],
+        ["Knobs & Encoders", "8x CNC machined, bead-blasted and anodized aluminum touch-sensitive rotary encoder caps"],
+        ["Navigation Control", "1x 4D push encoder with anodized aluminum cap for rapid library and session browsing"],
+        ["Performance Wheels", "Ergonomic pitch bend and modulation wheels with customizable RGB illumination"],
+        ["Light Guide System", "Redesigned per-key RGB Light Guide displaying note zones, key switches, scales, and chords"],
+        ["Control Surface Layout", "Continuous dustproof button-islands grouped systematically by DAW and instrument functions"],
+        ["NKS Ecosystem", "Next-generation Native Kontrol Standard (NKS) supporting thousands of Kontakt instruments and partner plugins"],
+        ["DAW Integration", "Deep bi-directional control: Apple Logic Pro, Ableton Live, Steinberg Cubase, Nuendo, Bitwig Studio, Studio One"],
+        ["MIDI Protocol", "MIDI 2.0 ready architecture with full backwards compatibility with MIDI 1.0"],
+        ["Pedal Connections", '4x 1/4" TRS jacks: Sustain pedal, Expression pedal, and 2x fully assignable pedal inputs'],
+        ["Chassis Construction", "Premium CNC machined, bead-blasted anodized aluminum housing with glass top panel"],
+        ["Security", "Integrated Kensington security slot for studio and stage anti-theft protection"],
+        ["Included Instruments & FX", "Kontakt 7, Free Kontakt Instrument Voucher, Komplete 14 Select, Stradivari Cello, Guitar Rig 7 LE, iZotope Elements Suite, Hypha"],
+        ["Included DAW Software", "Ableton Live 11 Lite & Komplete Kontrol standalone/plugin host"],
+        ["Power Requirements", "USB-C bus-powered (USB 3.0 Type-C host port delivers required power); USB-C cable included"],
+        ["Dimensions (W x D x H)", '802.2 x 323.0 x 86.0 mm (31.58" x 12.72" x 3.39")'],
+        ["Net Weight", "5.5 kg (12.13 lbs)"],
+        ["System Compatibility", "macOS 13 (Ventura) or higher; Windows 10/11 (latest service pack); Intel Core i5 / Apple Silicon M1 or higher"],
+        ["Warranty", "1-Year Native Instruments Official Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "native-instruments-kontrol-s61-mk3-keyboard-controller",
+      name: "Native Instruments Kontrol S61 MK3",
+      shortName: "Native Instruments Kontrol S61 MK3 61-Key Smart Controller with Poly-AT & Glass Screen",
+      brand: "Native Instruments",
+      category: "MIDI Controllers",
+      subcategory: "Smart Keyboard Controllers with Polyphonic Aftertouch",
+      price: 118580,
+      originalPrice: 136990,
+      rating: 5,
+      reviewCount: 14,
+      inStock: true,
+      stock: 7,
+      badge: "Fatar 61 Poly-AT \xB7 1280x480 Glass Screen \xB7 Next-Gen NKS \xB7 CNC Aluminum",
+      sku: "NI-KONTROL-S61-MK3",
+      isFeatured: false,
+      image: "assets/images/products/ni-kontrol-s61-mk3-top.jpg",
+      images: [
+        "assets/images/products/ni-kontrol-s61-mk3-top.jpg",
+        "assets/images/products/ni-kontrol-s61-mk3-angle1.jpg",
+        "assets/images/products/ni-kontrol-s61-mk3-angle2.jpg",
+        "assets/images/products/ni-kontrol-s61-mk3-software.png",
+        "assets/images/products/ni-kontrol-s61-mk3-rear.jpg"
+      ],
+      description: `
+      <h3>Flagship 5-Octave Smart Controller for Stage & Studio Mastery</h3>
+      <p>The <strong>Native Instruments Kontrol S61 MK3</strong> expands the revolutionary S-Series MK3 smart keyboard architecture to 61 semi-weighted Fatar keys \u2014 delivering 5 full octaves of expressive performance capability. Engineered as the definitive centerpiece for modern music producers, composers, and performers, Kontrol S61 MK3 merges virtual instruments and hardware through next-generation <strong>NKS technology</strong>, deep direct Kontakt integration, and an ultra-sharp panoramic color glass display. Crafted from bead-blasted anodized aluminium and chemically strengthened glass, it is a masterwork of design, durability, and tactile musicality.</p>
+
+      <h3>Fatar 61-Key Keybed with Nuanced Polyphonic Aftertouch</h3>
+      <p>Each of the 61 semi-weighted keys, developed in partnership with <strong>Fatar</strong>, incorporates standard <strong>polyphonic aftertouch</strong>. Modulate individual note cutoff filters, vibrato, pitch inflections, and layered textures independently simply by altering key pressure \u2014 opening up acoustic-like expressiveness without leaving the keybed. Ergonomic pitch and modulation wheels feature subtle RGB perimeter lighting for immediate visual reassurance in dark performance settings.</p>
+
+      <h3>High-Resolution 1280 \xD7 480 Full-Color Glass Display & Per-Key Light Guide</h3>
+      <p>The widescreen <strong>1280 \xD7 480 color screen</strong> with an edge-to-edge glass surface delivers immediate graphical navigation through thousands of Kontakt instruments, sample libraries, and NKS plugins without glancing at a computer monitor. Directly beneath, the redesigned <strong>Light Guide</strong> indicates key zones, scale steps, chord fingerings, and sample triggers in high-visibility RGB lighting, preventing wrong notes and empowering complex keyboard mapping.</p>
+
+      <h3>MIDI 2.0 Ready, Comprehensive DAW Control & Software Bundle</h3>
+      <p>Driven by an onboard ARM processor and featuring <strong>MIDI 2.0 compatibility</strong>, the Kontrol S61 MK3 ensures lightning-fast response times and high-precision velocity processing. It offers seamless bi-directional control over Logic Pro, Ableton Live, Cubase, Nuendo, Bitwig, and Studio One. Complete with 4 assignable pedal inputs, full-size MIDI I/O, and USB-C bus power. Includes <strong>Komplete 15 Select</strong>, a free Kontakt instrument voucher of choice, Stradivari Cello, Guitar Rig 7 LE, iZotope Elements Suite, Hypha, and Ableton Live 11 Lite.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "61 Semi-Weighted Fatar Keys (5 Octaves) with Polyphonic Aftertouch" },
+        { label: "Display", value: "High-Resolution 1280 \xD7 480 Full-Color Screen with Glass Surface" },
+        { label: "Software Integration", value: "Direct Kontakt & Next-Gen NKS Auto-Mapping Integration" },
+        { label: "Controls & Encoders", value: "8 CNC Anodized Aluminum Encoders + 1 4D Push Encoder + RGB Pitch/Mod Wheels" },
+        { label: "Light Guide", value: "Redesigned RGB Light Guide for Key Zones, Scales, Chords & Switches" },
+        { label: "DAW Support", value: "Deep Integration with Logic Pro, Ableton Live, Cubase, Nuendo, Bitwig & Studio One" },
+        { label: "Hardware Build", value: "CNC Machined Anodized Aluminum & Glass Chassis with Dustproof Island Buttons" },
+        { label: "Connectivity & Power", value: "USB-C Bus-Powered, MIDI In/Out, Sustain, Expression & 2 Assignable Pedal Inputs" }
+      ],
+      deepSpecs: [
+        ["Controller Series", "Native Instruments Kontrol S-Series MK3 \u2014 Flagship 61-Key Smart Keyboard Controller"],
+        ["Keybed Type", "61-Key Semi-weighted Fatar keybed (5 full octaves) with velocity sensitivity and polyphonic aftertouch"],
+        ["Aftertouch Technology", "Polyphonic Aftertouch \u2014 independent per-key pressure sensing developed with Fatar"],
+        ["Screen Specification", "1280 \xD7 480 High-resolution full-color display with chemically strengthened glass surface"],
+        ["Knobs & Encoders", "8x CNC machined, bead-blasted and anodized aluminum touch-sensitive rotary encoder caps"],
+        ["Navigation Control", "1x 4D push encoder with anodized aluminum cap for rapid library and session browsing"],
+        ["Performance Wheels", "Ergonomic pitch bend and modulation wheels with customizable RGB illumination"],
+        ["Light Guide System", "Redesigned per-key RGB Light Guide displaying note zones, key switches, scales, and chords"],
+        ["Control Surface Layout", "Continuous dustproof button-islands grouped systematically by DAW and instrument functions"],
+        ["NKS Ecosystem", "Next-generation Native Kontrol Standard (NKS) supporting thousands of Kontakt instruments and partner plugins"],
+        ["DAW Integration", "Deep bi-directional control: Apple Logic Pro, Ableton Live, Steinberg Cubase, Nuendo, Bitwig Studio, Studio One"],
+        ["MIDI Protocol", "MIDI 2.0 ready architecture with full backwards compatibility with MIDI 1.0"],
+        ["Pedal Connections", '4x 1/4" TRS jacks: Sustain pedal, Expression pedal, and 2x fully assignable pedal inputs'],
+        ["Chassis Construction", "Premium CNC machined, bead-blasted anodized aluminum housing with glass top panel"],
+        ["Security", "Integrated Kensington security slot for studio and stage anti-theft protection"],
+        ["Included Instruments & FX", "Free Kontakt Instrument Voucher, Komplete 15 Select, Stradivari Cello, Guitar Rig 7 LE, iZotope Elements Suite, Hypha"],
+        ["Included DAW Software", "Ableton Live 11 Lite & Komplete Kontrol standalone/plugin host"],
+        ["Power Requirements", "USB-C bus-powered (USB 3.0 Type-C host port delivers required power); USB-C cable included"],
+        ["Dimensions (W x D x H)", '967.4 x 323.0 x 86.0 mm (38.09" x 12.72" x 3.39")'],
+        ["Net Weight", "6.0 kg (13.23 lbs)"],
+        ["System Compatibility", "macOS 13 (Ventura) or higher; Windows 10/11 (latest service pack); Intel Core i5 / Apple Silicon M1 or higher"],
+        ["Warranty", "1-Year Native Instruments Official Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "native-instruments-kontrol-s88-mk3-keyboard-controller",
+      name: "Native Instruments Kontrol S88 MK3",
+      shortName: "Native Instruments Kontrol S88 MK3 88-Key Hammer-Action Smart Controller with Poly-AT",
+      brand: "Native Instruments",
+      category: "MIDI Controllers",
+      subcategory: "Flagship Hammer-Action Smart Controllers",
+      price: 181440,
+      originalPrice: 208990,
+      rating: 5,
+      reviewCount: 19,
+      inStock: true,
+      stock: 5,
+      badge: "Fatar 88 Hammer-Action Poly-AT \xB7 1280x480 Glass Screen \xB7 Next-Gen NKS \xB7 Flagship",
+      sku: "NI-KONTROL-S88-MK3",
+      isFeatured: false,
+      image: "assets/images/products/ni-kontrol-s88-mk3-top.jpg",
+      images: [
+        "assets/images/products/ni-kontrol-s88-mk3-top.jpg",
+        "assets/images/products/ni-kontrol-s88-mk3-angle1.jpg",
+        "assets/images/products/ni-kontrol-s88-mk3-angle2.jpg",
+        "assets/images/products/ni-kontrol-s88-mk3-rear.jpg",
+        "assets/images/products/ni-kontrol-s88-mk3-software.png"
+      ],
+      description: `
+      <h3>The Crown Jewel of Intelligent Keyboard Controllers \u2014 88-Key Hammer-Action Poly-AT</h3>
+      <p>The <strong>Native Instruments Kontrol S88 MK3</strong> stands alone at the absolute pinnacle of smart keyboard controller technology. As the <strong>world's first widely available hammer-action keyboard controller with polyphonic aftertouch</strong>, the Kontrol S88 MK3 unites authentic grand piano touch with unprecedented per-note expressive electronic modulation. Designed as the definitive studio centerpiece for elite film composers, concert pianists, music producers, and sound designers, it seamlessly merges acoustic touch with the limitless virtual world of Kontakt 7 and next-generation NKS instruments.</p>
+
+      <h3>Fully Weighted Fatar Hammer-Action Keybed with Polyphonic Aftertouch</h3>
+      <p>Equipped with a custom-engineered <strong>88-key fully weighted hammer-action Fatar keybed</strong>, the Kontrol S88 delivers true grand piano inertia, graded weighting, and authentic tactile resistance. With individual per-key polyphonic aftertouch integrated directly into each hammer-action key, you can swell strings, open filter cutoffs, introduce vibrato, or crossfade synth layers through delicate per-note finger pressure \u2014 without lifting your hands from complex two-handed piano arrangements.</p>
+
+      <h3>High-Resolution 1280 \xD7 480 Full-Color Glass Display & Intelligent Light Guide</h3>
+      <p>A continuous panoramic <strong>1280 \xD7 480 high-resolution color screen</strong> encased in chemically strengthened glass provides instantaneous sound previews, visual preset browsing, and deep graphical parameter editing across thousands of Kontakt instruments. Above the keys, the redesigned <strong>RGB Light Guide</strong> illuminates note registers, articulations, key switches, scales, and chord modes directly in front of you \u2014 eliminating guesswork and accelerating orchestration workflows.</p>
+
+      <h3>CNC Aluminum Craftsmanship, MIDI 2.0 Precision & Flagship Software Suite</h3>
+      <p>The rugged chassis is precision-sculpted from bead-blasted anodized aluminium with CNC-machined encoder knobs and RGB-illuminated pitch/mod wheels. An integrated ARM processor provides <strong>MIDI 2.0 capability</strong> with ultra-high-resolution velocity curves and bi-directional DAW integration across Logic Pro, Ableton Live, Cubase, Nuendo, Bitwig, and Studio One. Features 4 pedal inputs, full-size MIDI DIN I/O, and USB-C bus power. Includes <strong>Kontakt 7</strong>, a free Kontakt instrument voucher of choice, <strong>Komplete 14 Select</strong>, Stradivari Cello, Guitar Rig LE, iZotope Elements Suite, Hypha, and Ableton Live Lite.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "88 Fully Weighted Hammer-Action Fatar Keys with Polyphonic Aftertouch" },
+        { label: "Display", value: "High-Resolution 1280 \xD7 480 Full-Color Screen with Glass Surface" },
+        { label: "Software Integration", value: "Direct Kontakt 7 & Next-Gen NKS Auto-Mapping Integration" },
+        { label: "Controls & Encoders", value: "8 CNC Anodized Aluminum Encoders + 1 4D Push Encoder + RGB Pitch/Mod Wheels" },
+        { label: "Light Guide", value: "Redesigned RGB Light Guide for Key Zones, Scales, Chords & Articulation Switches" },
+        { label: "DAW Support", value: "Deep Bi-Directional Integration with Logic Pro, Ableton Live, Cubase, Nuendo, Bitwig & Studio One" },
+        { label: "Hardware Build", value: "CNC Machined Bead-Blasted Aluminum & Glass Chassis with Dustproof Island Buttons" },
+        { label: "Connectivity & Power", value: "USB-C Bus-Powered, MIDI In/Out, Sustain, Expression & 2 Assignable Pedal Inputs" }
+      ],
+      deepSpecs: [
+        ["Controller Series", "Native Instruments Kontrol S-Series MK3 \u2014 Flagship 88-Key Hammer-Action Smart Controller"],
+        ["Keybed Type", "88-Key Fully weighted hammer-action Fatar keybed with authentic grand piano touch and feel"],
+        ["Aftertouch Technology", "Polyphonic Aftertouch \u2014 the world's first widely available hammer-action polyphonic aftertouch keybed"],
+        ["Screen Specification", "1280 \xD7 480 High-resolution full-color display with chemically strengthened glass surface"],
+        ["Knobs & Encoders", "8x CNC machined, bead-blasted and anodized aluminum touch-sensitive rotary encoder caps"],
+        ["Navigation Control", "1x 4D push encoder with anodized aluminum cap for rapid library and session browsing"],
+        ["Performance Wheels", "Ergonomic pitch bend and modulation wheels with customizable RGB illumination"],
+        ["Light Guide System", "Redesigned per-key RGB Light Guide displaying note zones, key switches, scales, and chords"],
+        ["Control Surface Layout", "Continuous dustproof button-islands grouped systematically by DAW and instrument functions"],
+        ["NKS Ecosystem", "Next-generation Native Kontrol Standard (NKS) supporting thousands of Kontakt instruments and partner plugins"],
+        ["DAW Integration", "Deep bi-directional control: Apple Logic Pro, Ableton Live, Steinberg Cubase, Nuendo, Bitwig Studio, Studio One"],
+        ["MIDI Protocol", "MIDI 2.0 ready architecture with full backwards compatibility with MIDI 1.0"],
+        ["Pedal Connections", '4x 1/4" TRS jacks: Sustain pedal, Expression pedal, and 2x fully assignable pedal inputs'],
+        ["Chassis Construction", "Premium CNC machined, bead-blasted anodized aluminum housing with glass top panel"],
+        ["Security", "Integrated Kensington security slot for studio and stage anti-theft protection"],
+        ["Included Instruments & FX", "Kontakt 7, Free Kontakt Instrument Voucher, Komplete 14 Select, Stradivari Cello, Guitar Rig 7 LE, iZotope Elements Suite, Hypha"],
+        ["Included DAW Software", "Ableton Live 11 Lite & Komplete Kontrol standalone/plugin host"],
+        ["Power Requirements", "USB-C bus-powered (USB 3.0 Type-C host port delivers required power); USB-C cable included"],
+        ["Dimensions (W x D x H)", '1353.0 x 347.0 x 120.0 mm (53.27" x 13.66" x 4.72")'],
+        ["Net Weight", "13.5 kg (29.76 lbs)"],
+        ["System Compatibility", "macOS 13 (Ventura) or higher; Windows 10/11 (latest service pack); Intel Core i5 / Apple Silicon M1 or higher"],
+        ["Warranty", "1-Year Native Instruments Official Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "efnote-3-electronic-drum-set-white-sparkle",
+      name: "EFNOTE 3 Electronic Drum Set - White Sparkle",
+      shortName: "EFNOTE 3 5-Piece Electronic Drum Kit with 2-Ply Mesh Heads, 360\xB0 Cymbals & Tru-Motion Hi-Hat",
+      brand: "Efnote",
+      category: "Electronic Drums",
+      subcategory: "Professional Electronic Drum Sets",
+      price: 216130,
+      originalPrice: 249e3,
+      rating: 5,
+      reviewCount: 11,
+      inStock: true,
+      stock: 4,
+      badge: "Monocoque FRP Shells \xB7 360\xB0 Rotating Cymbals \xB7 Tru-Motion Hi-Hat \xB7 EFD-3 Touch Module",
+      sku: "EFNOTE-3-WS",
+      isFeatured: false,
+      image: "assets/images/products/efnote-3-electronic-drum-set-kit.jpg",
+      images: [
+        "assets/images/products/efnote-3-electronic-drum-set-kit.jpg",
+        "assets/images/products/efnote-3-electronic-drum-set-front.jpg",
+        "assets/images/products/efnote-3-electronic-drum-set-top.jpg",
+        "assets/images/products/efnote-3-electronic-drum-set-stands.jpg"
+      ],
+      description: `
+      <h3>Beyond the Average \u2014 Flagship Electronic Drumming in a Compact Footprint</h3>
+      <p>The <strong>EFNOTE 3 Electronic Drum Set in White Sparkle</strong> redefines the standard for compact electronic drums, inheriting the peerless acoustic realism, dynamic sensitivity, and multi-sensor technology of EFNOTE's flagship lines. Built around gorgeous <strong>Monocoque FRP drum shells</strong> finished in sparkling white with 2-ply mesh heads, the EFNOTE 3 eliminates hot-spotting and latency to deliver pure acoustic feel. Whether for world-class studio tracking, silent practice, or live stage performance, the EFNOTE 3 is an uncompromising percussion instrument.</p>
+
+      <h3>Multi-Sensor Monocoque Drums with Independent Side-Rim Snare</h3>
+      <p>The 5-piece configuration features a <strong>12" three-zone mesh snare drum</strong> with an innovative independent side-rim arc for effortless cross-stick playing without mode-switching. Two <strong>10" dual-zone rack toms</strong> and a <strong>12" dual-zone floor tom</strong> utilize suspended tom mounts to reduce rebound vibration and eliminate crosstalk. The <strong>8" low-rebound fabric kick pad</strong> provides rock-solid multi-sensing that faithfully tracks single and double kick pedals with zero false triggers.</p>
+
+      <h3>360\xB0 Free-Swinging Cymbals with Tru-Motion Inertia Hi-Hat</h3>
+      <p>All EFNOTE 3 cymbals feature full <strong>360-degree free-swinging rotation and 360\xB0 choke capability</strong> across bow, edge, and cup zones. Includes two 14" 3-zone crashes, an expansive 16" 3-zone ride, and a 12" 3-zone hi-hat paired with the ground-breaking <strong>Tru-Motion hi-hat pedal</strong>. Using inertia weight simulation and precision optical sensing, the Tru-Motion pedal faithfully recreates the physical feel and open/closed stroke dynamics of an acoustic hi-hat stand without requiring a bulky tripod.</p>
+
+      <h3>Touchscreen EFD-3 Sound Module with Bluetooth & USB Multi-Channel Audio</h3>
+      <p>At the center of the kit is the compact <strong>EFD-3 sound module</strong>, featuring full-stereo acoustic drum and cymbal samples with pristine multi-dynamic layers. Equipped with an intuitive color touchscreen, 16 preset drum kits, 34 user kit slots, and 50 customizable instruments. Modern connectivity includes <strong>USB audio/MIDI recording</strong>, built-in Bluetooth audio streaming for play-along sessions, Bluetooth MIDI for the EFNOTE remote editing app, and traditional 5-pin DIN MIDI.</p>
+    `,
+      specs: [
+        { label: "Drum Kit Configuration", value: '5-Piece Kit: 12" Snare, 2x 10" Rack Toms, 12" Floor Tom, 8" Kick Pad' },
+        { label: "Snare Pad", value: '12" 3-Zone Mesh Snare with Independent Side-Rim Cross-Stick Arc' },
+        { label: "Cymbals", value: '12" Hi-Hat, 2x 14" 3-Zone Crashes with Choke, 16" 3-Zone Ride with Choke' },
+        { label: "Cymbal Rotation", value: "360\xB0 Free-Swinging Playable & Chokeable Surface on All Cymbals" },
+        { label: "Hi-Hat Controller", value: "Tru-Motion Hi-Hat Pedal with Inertia Weight Simulation & Optical Sensing" },
+        { label: "Drum Shells", value: "Monocoque FRP Shells in White Sparkle with 2-Ply Mesh Heads" },
+        { label: "Sound Module", value: "EFD-3 Touchscreen Module with Full-Stereo Samples, 16 Preset & 34 User Kits" },
+        { label: "Connectivity", value: "USB Audio/MIDI, Bluetooth Audio & MIDI, Line Outs, Headphone Out, 5-Pin MIDI Out" }
+      ],
+      deepSpecs: [
+        ["Product Series", "EFNOTE 3 Series \u2014 Premium Compact Electronic Drum Kit"],
+        ["Kit Finish", "White Sparkle with Chrome Hardware and Warm-Gray Cymbal Pads"],
+        ["Snare Drum Pad", '12" x 4" (3-zone: head, rim, side-rim) Monocoque FRP shell, 6 lugs, 2-ply mesh head'],
+        ["Side-Rim Feature", "Independent ergonomic side-rim arc for natural cross-stick performance without button presses"],
+        ["Rack Toms", '2x 10" x 3.5" (dual-zone: head, rim) Monocoque FRP shells with suspended tom mounts'],
+        ["Floor Tom", '1x 12" x 4" (dual-zone: head, rim) Monocoque FRP shell with 6 lugs and 2-ply mesh head'],
+        ["Kick Drum Pad", '8" single-zone kick pad with low-rebound fabric head, angle-adjustable attachment and spikes'],
+        ["Hi-Hat Cymbal", '12" 3-zone (bow, edge, cup) cymbal pad with 360\xB0 free-swinging design and choke'],
+        ["Hi-Hat Pedal", "Tru-Motion pedal with inertia weight simulation, optical sensing, spring tension & stroke gap adjust"],
+        ["Crash Cymbals", '2x 14" 3-zone (bow, edge, cup) cymbals with 360\xB0 sensing, free-swinging motion and choke'],
+        ["Ride Cymbal", '1x 16" 3-zone (bow, edge, cup) cymbal with 360\xB0 sensing, thin responsive edge and choke'],
+        ["Cymbal Pad Material", "Clean silicone rubber surface resistant to drumstick marks; engraved warm-gray finish"],
+        ["Sound Module", "EFD-3 Touchscreen sound module with full stereo acoustic sample library"],
+        ["Drum Kits & Sounds", "16 Factory Preset Kits, 34 User Kits, 50 Select Multi-Layer Instruments"],
+        ["Wireless Connectivity", "Bluetooth Audio input (for phone/tablet playback) + Bluetooth MIDI (for EFNOTE Remote app)"],
+        ["Audio Interface", "USB 2.0 multi-channel audio & MIDI recording directly to DAW (macOS / Windows / iOS)"],
+        ["Analog Audio Outputs", '2x 1/4" TS Line Outputs (L/Mono, R), 1x 1/4" Stereo Headphone Output, 3.5mm Aux In'],
+        ["Hardware Stands Included", "4x Lambda-style independent heavy-duty tripod drum/cymbal stands in black and chrome"],
+        ["Kit Hardware Notes", "Bass drum pedal, drum throne, and drum sticks sold separately"],
+        ["Power Supply", "12V DC power adapter (included)"],
+        ["Warranty", "1-Year Official EFNOTE Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "efnote-3-style-a-e-drum-kit",
+      name: "EFNOTE 3 Style-A E-Drum Kit",
+      shortName: 'EFNOTE 3 Style-A E-Drum Kit with 12" Mesh Kick, Tru-Aco Sound & ELISE Processor',
+      brand: "Efnote",
+      category: "Electronic Drums",
+      subcategory: "Professional Electronic Drum Sets",
+      price: 212510,
+      originalPrice: 244900,
+      rating: 5,
+      reviewCount: 8,
+      inStock: true,
+      stock: 4,
+      badge: 'Tru-Aco Sound \xB7 ELISE Processor \xB7 12" Mesh Kick \xB7 Lambda Stands',
+      sku: "EFNOTE-3-STYLE-A",
+      isFeatured: false,
+      image: "assets/images/products/efnote-3-style-a-kit.jpg",
+      images: [
+        "assets/images/products/efnote-3-style-a-kit.jpg",
+        "assets/images/products/efnote-3-style-a-angle.jpg",
+        "assets/images/products/efnote-3-style-a-overhead.jpg"
+      ],
+      description: `
+      <h3>Beautiful Sound, Perfect Playability & Elegant European-Style Aesthetic</h3>
+      <p>The <strong>EFNOTE 3 Style-A E-Drum Kit</strong> brings world-class acoustic realism, responsive multi-sensor pads, and refined industrial elegance to the modern electronic percussionist. Driven by proprietary <strong>Tru-Aco acoustic sound technology</strong>, the EFNOTE 3 Style-A produces full-scale, uncompressed acoustic drum audio with organic room ambience and natural decay. The heart of the instrument is the high-precision <strong>ELISE sensing processor</strong>, delivering near-zero latency, immense dynamic range, and consistent, hot-spot-free tracking across every delicate ghost note and explosive rim shot.</p>
+
+      <h3>Full 12" Mesh Kick & Triple-Zone Snare with Dedicated Stand</h3>
+      <p>Style-A upgrades the low-end performance with an expansive <strong>12" mesh head kick pad</strong> mounted on heavy-duty spurs for ultra-stable single or double-beater response. The <strong>12" triple-zone mesh snare pad</strong> mounts to its own included dedicated acoustic snare stand for realistic ergonomic positioning. The kit is rounded out by two 10" dual-zone rack toms and a 12" dual-zone floor tom, all engineered with suspended tom brackets that isolate shell resonance and eliminate crosstalk.</p>
+
+      <h3>360-Degree Free-Swinging Cymbals & Lambda Tripod Architecture</h3>
+      <p>Experience true acoustic cymbal swing with a 12" dual-zone hi-hat pad, a 14" triple-zone crash cymbal with edge choke, and a commanding 16" triple-zone ride cymbal featuring full 360-degree playable bow, edge, and bell zones. The entire setup is supported by three innovative <strong>independent Lambda tripods</strong>, delivering rock-solid stability and flexible positioning without the rigid constraints of a conventional curved drum rack.</p>
+
+      <h3>EFNOTE 3 Sound Module with Touchscreen & 8-Channel USB Audio</h3>
+      <p>The compact sound module features an intuitive color LC touchscreen, 16 factory kits, 34 user kit slots, 111 multilayer stereo acoustic samples, and 50 user instrument memory locations. Professional audio connectivity includes an <strong>integrated 8-out / 2-in USB audio interface</strong>, Bluetooth audio streaming for smartphone play-along, Bluetooth MIDI for the EFNOTE Remote app, two freely assignable 1/4" analog outputs, and standard 5-pin DIN MIDI. <em>(Delivery without hi-hat stand and bass drum pedal).</em></p>
+    `,
+      specs: [
+        { label: "Drum Kit Setup", value: '12" Kick, 12" Snare with Stand, 2x 10" Rack Toms, 12" Floor Tom' },
+        { label: "Kick Drum Pad", value: '12" Mesh Head Kick Pad for Single & Double Bass Drum Pedals' },
+        { label: "Snare Pad & Stand", value: '12" Triple-Zone Mesh Snare with Dedicated Independent Snare Stand' },
+        { label: "Cymbals", value: '12" Dual-Zone Hi-Hat, 14" Triple-Zone Crash with Choke, 16" Triple-Zone Ride' },
+        { label: "Cymbal Action", value: "360\xB0 Free-Swinging Design with Multi-Sensor Edge Choke on All Cymbals" },
+        { label: "Hardware Stands", value: "3x Independent Lambda Heavy-Duty Metal Tripods with Pad Holders" },
+        { label: "Sound Module", value: "EFNOTE 3 Color Touchscreen Module with Tru-Aco Acoustic Sound Engine" },
+        { label: "Studio Connectivity", value: "8-Out / 2-In USB Audio Interface, Bluetooth Audio & MIDI, 5-Pin DIN MIDI" }
+      ],
+      deepSpecs: [
+        ["Product Configuration", 'EFNOTE 3 Style-A Electronic Drum Set with dedicated snare stand and 12" mesh kick'],
+        ["Kick Drum Pad", '12" Mesh head kick pad with heavy-duty metal chassis and spike/rubber spurs'],
+        ["Snare Drum Pad", '12" Triple-zone (head, rim, side-rim) mesh pad with independent cross-stick sensing'],
+        ["Snare Stand Included", "Yes \u2014 dedicated chrome basket snare stand included in package"],
+        ["Rack Toms", '2x 10" Dual-zone (head, rim) mesh tom pads with suspended mounts'],
+        ["Floor Tom", '1x 12" Dual-zone (head, rim) mesh floor tom pad with suspended mount'],
+        ["Hi-Hat Cymbal", '12" Dual-zone cymbal pad (requires standard hi-hat stand, not included)'],
+        ["Crash Cymbal", '14" Triple-zone (bow, edge, cup) cymbal with 360\xB0 playable area and choke'],
+        ["Ride Cymbal", '16" Triple-zone (bow, edge, cup) cymbal with 360\xB0 playable area and choke'],
+        ["Hardware Mounting", "3x Independent Lambda tripods with cymbal booms and tom attachment holders"],
+        ["Sound Module", "EFNOTE 3 compact touchscreen sound module with ELISE sensing processor"],
+        ["Sound Engine", "Tru-Aco acoustic modeling with 111 multilayer full-stereo acoustic samples"],
+        ["Kits & Presets", "16 Factory Preset Kits, 34 User Kits, 50 User Instrument memory locations"],
+        ["USB Audio Interface", "8-Channel audio output / 2-channel audio input via USB (Mac / Windows ASIO)"],
+        ["Wireless Features", "Built-in Bluetooth receiver for wireless audio playback; Bluetooth MIDI for remote app"],
+        ["Practice Features", "Multi-function metronome, onboard recording, rhythm box with 90+ drum grooves"],
+        ["Analog Audio Outputs", '2x Assignable 1/4" (6.35 mm) TS line outputs, 1x 3.5 mm stereo headphone jack'],
+        ["Hardware Note", "Hi-hat stand, bass drum pedal, and drum throne sold separately"],
+        ["Power Supply", "12V DC power adapter (included)"],
+        ["Warranty", "1-Year Official EFNOTE Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "efnote-3-style-b-e-drum-kit",
+      name: "EFNOTE 3 Style-B E-Drum Kit",
+      shortName: 'EFNOTE 3 Style-B Acoustic Design E-Drum Kit with 2-Piece Hi-Hat & 12" Monocoque Kick',
+      brand: "Efnote",
+      category: "Electronic Drums",
+      subcategory: "Acoustic Design Electronic Drum Sets",
+      price: 236921,
+      originalPrice: 269900,
+      rating: 5,
+      reviewCount: 10,
+      inStock: true,
+      stock: 3,
+      badge: '2-Piece Optical Hi-Hat \xB7 12" Monocoque FRP Kick \xB7 ELISE Processor \xB7 8-Ch USB Audio',
+      sku: "EFNOTE-3-STYLE-B",
+      isFeatured: false,
+      image: "assets/images/products/efnote-3-style-b-kit.jpg",
+      images: [
+        "assets/images/products/efnote-3-style-b-kit.jpg",
+        "assets/images/products/efnote-3-style-b-angle.jpg",
+        "assets/images/products/efnote-3-style-b-room.jpg"
+      ],
+      description: `
+      <h3>By Far Valuable \u2014 Acoustic Design Electronic Drum Kit with 2-Piece Optical Hi-Hat</h3>
+      <p>The <strong>EFNOTE 3 Style-B Acoustic Design Electronic Drum Kit</strong> takes the critically acclaimed EFNOTE 3 platform to its absolute zenith. Featuring a commanding <strong>12" x 4" Monocoque FRP kick drum</strong> with an authentic acoustic shell profile, the Style-B delivers imposing stage presence and rock-solid beater stability that far outclasses small tower-style electronic kick pads. Finished with clean, dignified aesthetics and suspended tom mounting, it liberates drummers from obsolete electronic drum designs.</p>
+
+      <h3>World's First 2-Piece 3D Optical Sensing Hi-Hat & Side-Rim Snare</h3>
+      <p>The crown jewel of Style-B is its authentic <strong>12" two-piece top/bottom hi-hat system</strong>. Powered by proprietary <strong>Tru-Motion multi-optical 3D sensing</strong> and 360-degree free-swinging motion, it captures minute open-close pedal nuances and foot splashes with unmatched acoustic fidelity. The <strong>12" three-zone mesh snare</strong> features EFNOTE's signature ergonomic <strong>side-rim arc</strong> for intuitive cross-stick performance without switches, while two 10" rack toms and a 12" floor tom provide anti-crosstalk multi-sensing.</p>
+
+      <h3>3-Zone 360\xB0 Free-Swinging Cymbals on Independent Lambda Stands</h3>
+      <p>Includes a 14" 3-zone crash cymbal and a large 16" 3-zone ride cymbal, both featuring 360-degree playable bow, edge, and cup zones with instant edge choking. Crafted with an elegant warm-gray surface with fine engravings, the clean silicone rubber resists drumstick marks. The entire kit mounts to independent <strong>Lambda metal tripod stands</strong>, allowing flexible, customized positioning tailored to any drummer's physical reach.</p>
+
+      <h3>ELISE Sensing Processor, Stroke Analyzer & 8-Channel USB Recording</h3>
+      <p>The ultra-compact metal-chassis sound module houses the high-speed <strong>ELISE sensing processor</strong> and pristine <strong>Tru-Aco acoustic sample library</strong>. Built-in training tools include the visual <strong>Stroke Scope</strong> and <strong>Accuracy Score</strong> analyzers, 15-track onboard recorder, and over 90 rhythm box patterns. For studio recording, enjoy <strong>8 individual USB audio output channels</strong>, 4 analog audio outputs with independent kick and snare routing, Bluetooth audio streaming, and Bluetooth MIDI control via the EFNOTE Tools app.</p>
+    `,
+      specs: [
+        { label: "Drum Kit Shells", value: '12" x 4" Monocoque FRP Kick, 12" Snare with Side-Rim, 2x 10" Toms, 12" Floor Tom' },
+        { label: "Hi-Hat System", value: `12" 2-Piece Top/Bottom Hi-Hat with World's First 3D Multi-Optical Sensing` },
+        { label: "Kick Drum", value: '12" x 4" Acoustic-Profile Monocoque FRP Kick with 6 Lugs & 2-Ply Mesh Head' },
+        { label: "Cymbals", value: '14" 3-Zone Crash & 16" 3-Zone Ride with 360\xB0 Free-Swinging Action & Choke' },
+        { label: "Processor & Sensing", value: "ELISE High-Speed Sensing Processor with Ghost-Note Precision & Zero Crosstalk" },
+        { label: "Training Tools", value: "Stroke Scope Timeline Analyzer, Accuracy Score, 15-Track Recorder, Metronome" },
+        { label: "Recording & Audio", value: "8-Channel USB Audio Out, 4-Channel Analog Outputs, 10-Channel Audio Bus Routing" },
+        { label: "Wireless & Stands", value: "Bluetooth Audio & MIDI, 3x Independent Lambda Tripods (Pedals Sold Separately)" }
+      ],
+      deepSpecs: [
+        ["Product Configuration", 'EFNOTE 3 Style-B Acoustic Design Kit with 2-piece hi-hat and 12" Monocoque kick'],
+        ["Kick Drum Construction", '12" x 4" Monocoque FRP shell, 6 lugs, 2-ply mesh head, heavy-duty spurs with rubber/spike tips'],
+        ["Kick Beater Compatibility", "Multi-sensor optimized for both single and double bass drum beaters with zero hot-spots"],
+        ["Snare Drum Pad", '12" x 4" 3-zone (head, rim, side-rim) Monocoque FRP shell with ergonomic cross-stick arc'],
+        ["Hi-Hat Cymbals", '12" Top & Bottom 2-piece cymbal system with 360\xB0 free-swinging motion and choke'],
+        ["Hi-Hat Sensing Technology", "World's first 3D multi-optical sensing with Tru-Motion technology for hyper-accurate stroke tracking"],
+        ["Rack Toms", '2x 10" x 3.5" dual-zone (head, rim) Monocoque FRP shells with suspended vibration-isolation mounts'],
+        ["Floor Tom", '1x 12" x 4" dual-zone (head, rim) Monocoque FRP shell with suspended mounting'],
+        ["Crash Cymbal", '14" 3-zone (bow, edge, cup) cymbal with 360\xB0 sensor coverage and instant choke'],
+        ["Ride Cymbal", '16" 3-zone (bow, edge, cup) cymbal with 360\xB0 playable bell, edge choke, and thin responsive edge'],
+        ["Cymbal Pad Material", "Clean silicone rubber surface resistant to stick marks; warm-gray engraved finish"],
+        ["Hardware Tripods", "3x Independent Lambda metal tripods with integrated cymbal booms and tom brackets"],
+        ["Sound Module Architecture", "Ultra-compact aluminium-finish module with color LC touchscreen and ELISE processor"],
+        ["Sound Library", "Tru-Aco full-stereo acoustic drum and cymbal samples; raw sounds without resynthesis"],
+        ["Drum Kits", "16 Factory Presets, 34 User Kits, User Instrument Library with 128 customizable sounds"],
+        ["Stroke Analyzer", "Visual Stroke Scope timeline analyzer and Accuracy Score evaluation tool"],
+        ["Recording Capabilities", "8-Channel discrete USB audio outputs (ASIO/CoreAudio) + 15-track onboard recording"],
+        ["Analog Audio Outputs", "4-Channel analog outputs (freely assignable, e.g., independent Kick and Snare for FOH)"],
+        ["Wireless Connectivity", "Bluetooth Audio input for streaming backing tracks; Bluetooth MIDI for EFNOTE Tools app"],
+        ["Hardware Notice", "Bass drum pedal, hi-hat stand, and drum throne sold separately"],
+        ["Warranty", "1-Year Official EFNOTE Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "lemon-drum-b55-9-piece-electronic-drum-set",
+      name: "Lemon drum B55",
+      shortName: "Lemon Drum B55 9-Piece LED Electronic Drum Set with Mesh Heads & Hi-Hat Stand",
+      brand: "Lemon Drums",
+      category: "Electronic Drums",
+      subcategory: "LED Electronic Drum Sets",
+      price: 101950,
+      originalPrice: 119990,
+      rating: 5,
+      reviewCount: 7,
+      inStock: true,
+      stock: 5,
+      badge: "9-Piece Kit \xB7 Multi-Color LED Illumination \xB7 All-Mesh Heads \xB7 Pedal & HH Stand Included",
+      sku: "LEMON-B55",
+      isFeatured: false,
+      image: "assets/images/products/lemon-b55-electronic-drum-kit.jpg",
+      images: [
+        "assets/images/products/lemon-b55-electronic-drum-kit.jpg",
+        "assets/images/products/lemon-b55-electronic-drum-led-glow.jpg",
+        "assets/images/products/lemon-b55-electronic-drum-cymbal-led.jpg",
+        "assets/images/products/lemon-b55-electronic-drum-pads-led.jpg"
+      ],
+      description: `
+      <h3>Spectacular Visuals & Full-Mesh Performance \u2014 9-Piece LED Electronic Drum Set</h3>
+      <p>The <strong>Lemon Drum B55</strong> is a premium 9-piece electronic drum set designed to combine responsive all-mesh drumming with captivating <strong>multi-color LED illumination</strong> across pads and cymbals. Whether illuminating a darkened live stage, creating eye-catching social media drumming videos, or adding visual excitement to late-night studio practice, the B55 lights up with every stroke. Backed by responsive dual- and triple-zone triggers, realistic cymbal chokes, and a dedicated sound module loaded with 304 percussion sounds, the B55 delivers outstanding performance at an unbeatable price point.</p>
+
+      <h3>All-Mesh Pads with Bass Drum Pedal & Acoustic Hi-Hat Stand Included</h3>
+      <p>Unlike many electronic drum sets that require purchasing separate hardware, the Lemon B55 is a complete, performance-ready package. It includes an authentic acoustic-style <strong>hi-hat stand with pedal</strong> for its 12" dual-zone hi-hat pad and optical sensor, as well as a dedicated <strong>bass drum pedal</strong> matched to its commanding 10" mesh head bass drum tower. The playing surface features an expressive <strong>10" dual-zone mesh snare</strong> and three <strong>8" mesh head toms</strong>, offering natural acoustic stick rebound with minimal acoustic noise.</p>
+
+      <h3>Complete 4-Cymbal Setup with 360\xB0 Choke & LED Rings</h3>
+      <p>The cymbal arrangement is exceptionally generous: two <strong>12" dual-zone crash cymbals with choke</strong>, one <strong>12" triple-zone ride cymbal (bell, bow, edge) with choke</strong>, and a <strong>12" dual-zone hi-hat</strong>. All cymbals feature integrated illuminated LED arc accents that react dynamically to your playing. A rugged heavy-duty black drum rack with four posts holds the entire kit firmly in place even under vigorous double-bass drumming.</p>
+
+      <h3>Feature-Rich B55 Module with USB-MIDI & Onboard Recording</h3>
+      <p>The intuitive drum module comes loaded with <strong>304 high-definition drum, percussion, and cymbal sounds</strong> organized across 17 factory preset kits and 5 fully customizable user kit memory slots. Practice features include an onboard recorder for tracking progress and 10 built-in metronome training songs with adjustable tempo. Comprehensive I/O features <strong>USB-B MIDI</strong> for direct recording into your favourite DAW, 1/4" stereo headphone out, 1/4" L/Mono + R master audio outputs, a 1/4" aux input for play-along tracks, and a 6-pin trigger expansion input.</p>
+    `,
+      specs: [
+        { label: "Drum Kit Configuration", value: '9-Piece Kit: 10" Snare, 3x 8" Toms, 10" Kick, 12" HH, 2x 12" Crashes, 12" Ride' },
+        { label: "Lighting System", value: "Dynamic Multi-Color LED Illumination on Mesh Drum Rims & Cymbal Arcs" },
+        { label: "Head Type", value: "All-Mesh Dual-Ply Drum Heads for Realistic Rebound & Quiet Response" },
+        { label: "Cymbals with Choke", value: '2x 12" Dual-Zone Crashes + 1x 12" Triple-Zone Ride (Bell, Bow, Edge) + 12" Hi-Hat' },
+        { label: "Hardware Included", value: "Acoustic-Style Hi-Hat Stand & Bass Drum Pedal Included with B-55 Edition" },
+        { label: "Sound Module", value: "B55 Module with 304 Sounds, 17 Preset Kits & 5 User Customizable Kits" },
+        { label: "Practice Tools", value: "Onboard Quick Recorder + 10 Metronome Training Songs with Adjustable Tempo" },
+        { label: "Connectivity", value: 'USB-B MIDI, 1/4" L/Mono R Outs, 1/4" Phones Out, 1/4" Aux In, 6-Pin Trigger In' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Lemon Drum B55 Series \u2014 9-Piece LED Electronic Drum Set"],
+        ["Drum Head Technology", "High-tension 2-ply mesh heads on snare, toms, and bass drum for natural stick response"],
+        ["Visual Features", "Integrated multi-color LED lighting rings on drum pad rims and LED perimeter arcs on cymbals"],
+        ["Snare Drum Pad", '10" Dual-zone (head, rim) mesh snare with independent rim shot triggering'],
+        ["Tom Pads", '3x 8" Mesh head tom pads with responsive triggering and LED illumination'],
+        ["Bass Drum Tower", '10" Mesh head bass drum pad compatible with single and double kick beaters'],
+        ["Bass Drum Pedal", "Heavy-duty single bass drum pedal with reversible felt/plastic beater included"],
+        ["Hi-Hat System", '12" Dual-zone cymbal pad with optical sensor and dedicated chrome hi-hat stand included'],
+        ["Crash Cymbals", '2x 12" Dual-zone (bow, edge) crash cymbals with quick hand-choke sensors'],
+        ["Ride Cymbal", '1x 12" Triple-zone (bell, bow, edge) ride cymbal with quick hand-choke sensor'],
+        ["Sound Library", "304 High-definition drum, percussion, electronic, and cymbal sound samples"],
+        ["Preset Drum Kits", "17 Factory preset drum kits spanning rock, metal, pop, jazz, EDM, and acoustic styles"],
+        ["User Kits", "5 Fully customizable user drum kit memory slots for user-tailored kits"],
+        ["Metronome & Training", "10 Metronome practice songs with variable time signatures and tempo adjustment"],
+        ["Onboard Recording", "Real-time performance recording and playback for practice evaluation"],
+        ["USB Connectivity", "USB Type-B MIDI port for direct connection to PC/Mac DAW software and virtual drum plugins"],
+        ["Audio Outputs", '1/4" TS Left/Mono and Right line audio outputs + 1/4" TRS stereo headphone output'],
+        ["Auxiliary Input", '1/4" Stereo Aux input for jamming along to external audio players or smartphones'],
+        ["Rack System", "Sturdy 4-post black metal drum rack with integrated cymbal arms and pad clamps"],
+        ["Shipping & Packaging", "2 Boxes per set (Box 1: 71x14x82 cm, 13 kg; Box 2: 62x45x53 cm, 20.3 kg)"],
+        ["Warranty", "1-Year Official Lemon Drums Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "lemon-drums-t300se-pro-8-piece-electronic-drum-set",
+      name: "Lemon Drums T-300SE Pro 8-piece electronic drum set",
+      shortName: "Lemon Drums T-300SE Pro 8-Piece All-Mesh E-Drum Kit with Kick Pedal & 282 Sounds",
+      brand: "Lemon Drums",
+      category: "Electronic Drums",
+      subcategory: "Entry & Studio Electronic Drum Sets",
+      price: 52800,
+      originalPrice: 62990,
+      rating: 5,
+      reviewCount: 6,
+      inStock: true,
+      stock: 7,
+      badge: '8-Piece Kit \xB7 10" Mesh Snare \xB7 Kick Pedal Included \xB7 282 Sounds',
+      sku: "LEMON-T300SE-PRO",
+      isFeatured: false,
+      image: "assets/images/products/lemon-t300se-pro-kit.jpg",
+      images: [
+        "assets/images/products/lemon-t300se-pro-kit.jpg",
+        "assets/images/products/lemon-t300se-pro-module.jpg",
+        "assets/images/products/lemon-t300se-pro-pads.jpg"
+      ],
+      description: `
+      <h3>Exceptional Playing Experience & Natural Rebound in a Compact Package</h3>
+      <p>The <strong>Lemon Drums T-300SE Pro 8-Piece Electronic Drum Kit</strong> is meticulously engineered for drummers seeking responsive performance, organic stick rebound, and comprehensive connectivity at an accessible price point. Built on an adjustable black rack with sturdy mounting hardware, the T-300SE Pro delivers a stable drumming foundation for home studios, bedrooms, and practice spaces. Featuring an expressive <strong>10" dual-zone mesh head snare</strong> and three 8" mesh toms, it reproduces authentic dynamic variation from quiet ghost notes to sharp rim accents.</p>
+
+      <h3>Complete Hardware Foundation with Included Bass Drum Pedal</h3>
+      <p>The T-300SE Pro comes equipped with an upright <strong>10" mesh bass drum tower</strong> and includes a dedicated <strong>heavy-duty bass drum pedal</strong> out of the box. Footwork control is seamless with the accompanying responsive hi-hat control pedal, controlling the nuanced open, closed, and splash articulations of the 10" semi-covered hi-hat cymbal. Two <strong>12" dual-zone semi-covered cymbals with quick hand choke</strong> serve as crash and ride, mounted on three flexible cymbal arms.</p>
+
+      <h3>Versatile T-300 Sound Module with USB-MIDI & Onboard Recorder</h3>
+      <p>The brain of the T-300SE Pro contains <strong>282 high-quality percussion and cymbal sounds</strong>, organized into 20 factory preset kits and 10 customizable user kits to match any musical genre. Practice tools include 10 built-in accompaniment songs with adjustable tempo, a precision metronome, and a real-time performance recorder. Connect to computers and recording software via <strong>USB-B MIDI</strong>, jam with music via the 1/4" stereo aux input, or monitor through 1/4" headphone and stereo line outputs.</p>
+    `,
+      specs: [
+        { label: "Kit Configuration", value: '8-Piece Kit: 10" Dual-Zone Snare, 3x 8" Toms, 10" Kick, 10" Hi-Hat, 2x 12" Cymbals' },
+        { label: "Snare & Toms", value: '10" 2-Zone Mesh Head Snare (Head & Rim) + 3x 8" Mesh Head Toms' },
+        { label: "Kick & Hardware", value: '10" Mesh Head Bass Drum with Bass Drum Pedal & Hi-Hat Control Pedal Included' },
+        { label: "Cymbals", value: '10" Semi-Covered Hi-Hat, 12" 2-Zone Crash with Choke, 12" 2-Zone Ride with Choke' },
+        { label: "Sound Module", value: "282 Percussion Sounds, 20 Preset Kits, 10 User Customizable Kits" },
+        { label: "Practice Features", value: "10 Practice Songs with Adjustable Tempo, Precision Metronome, Real-Time Recorder" },
+        { label: "Connectivity", value: 'USB-B MIDI, 1/4" Headphone Out, 1/4" L/Mono R Line Outs, 1/4" Aux In, 2x Trigger Inputs' },
+        { label: "Rack System", value: "Heavy-Duty Adjustable Black Metal Rack with 3 Cymbal Arms & Mounting Hardware" }
+      ],
+      deepSpecs: [
+        ["Product Series", "Lemon Drums T-300SE Pro Series \u2014 8-Piece All-Mesh Electronic Drum Kit"],
+        ["Drum Head Technology", "Responsive dual-ply mesh heads on snare and all tom pads for quiet, authentic acoustic rebound"],
+        ["Snare Drum Pad", '10" Dual-zone (head, rim) mesh snare drum pad with independent rim-shot response'],
+        ["Tom Pads", '3x 8" Mesh head tom pads with responsive dynamics and durable rubber rims'],
+        ["Bass Drum Pad", '10" Mesh head upright bass drum tower compatible with single and double kick pedals'],
+        ["Bass Drum Pedal Included", "Yes \u2014 heavy-duty single bass drum pedal with reversible beater included in package"],
+        ["Hi-Hat Controller", "Included ergonomic electronic hi-hat control pedal for smooth open/half/closed transitions"],
+        ["Hi-Hat Cymbal", '10" Semi-covered cymbal pad with responsive foot-tracking'],
+        ["Crash Cymbal", '12" Dual-zone (bow, edge) semi-covered crash cymbal with instant hand-choke sensor'],
+        ["Ride Cymbal", '12" Dual-zone (bow, edge) semi-covered ride cymbal with instant hand-choke sensor'],
+        ["Sound Library", "282 High-definition acoustic, electronic, and percussion drum samples"],
+        ["Kit Presets", "20 Factory preset drum kits + 10 User-programmable custom kit slots"],
+        ["Training & Metronome", "10 Training accompaniment songs with variable tempo + onboard metronome"],
+        ["Performance Recorder", "Built-in real-time song recording and playback for performance evaluation"],
+        ["Computer Connection", "USB Type-B MIDI for controlling virtual drum instruments and DAW recording"],
+        ["Analog Audio Outputs", '1/4" Left/Mono and Right line outputs + 1/4" TRS stereo headphone jack'],
+        ["Auxiliary Input", '1/4" Stereo Aux input for jamming along with smartphone or external music player'],
+        ["Trigger Expansion", '2x Additional 1/4" trigger input jacks for future pad expansion'],
+        ["Packaging Dimensions", "2 Boxes / set (Box 1: 81x66x14 cm, 15 kg; Box 2: 65x33x44 cm, 15 kg)"],
+        ["Warranty", "1-Year Official Lemon Drums Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "lemon-drums-t505-9-piece-electronic-drum-kit",
+      name: "Lemon Drums T-505 9-Piece Electronic Drum Kit",
+      shortName: "Lemon Drums T-505 9-Piece Mesh Electronic Drum Kit with Dual Crashes & Kick Pedal",
+      brand: "Lemon Drums",
+      category: "Electronic Drums",
+      subcategory: "Mid-Range Electronic Drum Sets",
+      price: 62640,
+      originalPrice: 74900,
+      rating: 5,
+      reviewCount: 9,
+      inStock: true,
+      stock: 6,
+      badge: '9-Piece Kit \xB7 Dual 12" Crashes \xB7 10" Floor Tom \xB7 Kick Pedal Included',
+      sku: "LEMON-T505",
+      isFeatured: false,
+      image: "assets/images/products/lemon-t505-kit.png",
+      images: [
+        "assets/images/products/lemon-t505-kit.png"
+      ],
+      description: `
+      <h3>Upgraded 9-Piece Configuration with Dedicated 10" Floor Tom & Dual Crashes</h3>
+      <p>The <strong>Lemon Drums T-505 9-Piece Electronic Drum Kit</strong> steps up your drumming capabilities with an expanded configuration designed for intermediate players, home recording enthusiasts, and aspiring performers. Building on Lemon's responsive all-mesh architecture, the T-505 expands the tom array to include two 8" rack toms plus an authentic <strong>10" mesh head floor tom</strong>, delivering a more realistic drumkit physical spread and deeper low-end response.</p>
+
+      <h3>Generous 4-Cymbal Setup with Dual Crashes & Triple-Zone Ride</h3>
+      <p>The cymbal complement is significantly enhanced with <strong>two 12" dual-zone semi-covered crash cymbals with choke</strong>, a dedicated <strong>12" triple-zone ride cymbal with bell, bow, and edge zones with choke</strong>, and a 10" semi-covered hi-hat paired with an included hi-hat control pedal. The upright 10" mesh bass drum tower comes complete with a dedicated <strong>bass drum pedal</strong> included in the box.</p>
+
+      <h3>High-Performance T-505 Module with 282 Sounds & USB-MIDI</h3>
+      <p>The versatile sound module delivers <strong>282 studio-grade drum and percussion sounds</strong> across 20 factory kits and 10 user kit slots. Features include 10 play-along practice songs with adjustable tempo, a metronome, onboard performance recording, and <strong>USB-B MIDI</strong> for direct integration with computer DAWs, Superior Drummer, EZdrummer, and other virtual instruments. Supported by a robust 4-post black rack with secure clamps.</p>
+    `,
+      specs: [
+        { label: "Kit Configuration", value: '9-Piece Kit: 10" Snare, 2x 8" Toms, 10" Floor Tom, 10" Kick, 10" HH, 2x 12" Crashes, 12" Ride' },
+        { label: "Tom Setup", value: '2x 8" Mesh Rack Toms + 1x Upgraded 10" Mesh Floor Tom' },
+        { label: "Snare Pad", value: '10" 2-Zone Mesh Head Snare (Independent Head & Rim Triggering)' },
+        { label: "Cymbals with Choke", value: '2x 12" 2-Zone Crashes with Choke + 1x 12" 3-Zone Ride with Choke + 10" Hi-Hat' },
+        { label: "Hardware Included", value: "Bass Drum Pedal & Electronic Hi-Hat Control Pedal Included" },
+        { label: "Sound Module", value: "282 Percussion Sounds, 20 Preset Kits, 10 User Customizable Kits" },
+        { label: "Practice Tools", value: "10 Accompaniment Songs, Adjustable Tempo, Metronome, Real-Time Recorder" },
+        { label: "Connectivity", value: 'USB-B MIDI, 1/4" Phones Out, 1/4" L/Mono R Outs, 1/4" Aux In, 1/4" Trigger In' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Lemon Drums T-505 Series \u2014 9-Piece Upgraded Mesh Electronic Drum Kit"],
+        ["Drum Head Technology", "Dual-ply mesh heads across snare, toms, floor tom, and bass drum for natural stick response"],
+        ["Snare Drum Pad", '10" Dual-zone (head, rim) mesh snare with dual-triggering for distinct head and rim-shot tones'],
+        ["Rack Tom Pads", '2x 8" Mesh head tom pads with responsive multi-sensing'],
+        ["Floor Tom Pad", '1x 10" Mesh head floor tom pad providing authentic acoustic kit sizing and feel'],
+        ["Bass Drum Pad", '10" Mesh head bass drum tower compatible with single and double kick pedals'],
+        ["Bass Drum Pedal Included", "Yes \u2014 heavy-duty single bass drum pedal included in package"],
+        ["Hi-Hat System", '10" Semi-covered cymbal pad with included continuous electronic hi-hat control pedal'],
+        ["Crash Cymbals", '2x 12" Dual-zone (bow, edge) semi-covered crash cymbals with quick hand-choke sensors'],
+        ["Ride Cymbal", '1x 12" Triple-zone (bell, bow, edge) ride cymbal with quick hand-choke sensor'],
+        ["Sound Library", "282 High-definition acoustic, electronic, and ethnic drum and percussion samples"],
+        ["Kit Presets", "20 Factory preset drum kits + 10 User-programmable custom kit slots"],
+        ["Training Features", "10 Play-along songs with variable tempo + precision metronome with adjustable meter"],
+        ["Onboard Recorder", "Real-time performance recording and playback for practice evaluation"],
+        ["USB Connectivity", "USB Type-B MIDI port for computer DAW recording and virtual drum instrument triggering"],
+        ["Analog Audio Outputs", '1/4" TS Left/Mono and Right line outputs + 1/4" TRS stereo headphone output'],
+        ["Auxiliary Input", '1/4" Stereo Aux input for jamming along with smartphone, tablet, or audio player'],
+        ["Trigger Expansion", '1/4" Trigger input jack for connecting additional pad or cymbal'],
+        ["Packaging Dimensions", "2 Boxes / set (Box 1: 81x66x14 cm, 15 kg; Box 2: 65x33x44 cm, 15 kg)"],
+        ["Warranty", "1-Year Official Lemon Drums Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "lemon-drums-t580-9-piece-electronic-drum-set",
+      name: "Lemon Drums T-580 9-piece Electronic Drum Set",
+      shortName: 'Lemon Drums T-580 9-Piece Acoustic-Style E-Drum Kit with 16" Kick & Hi-Hat Stand',
+      brand: "Lemon Drums",
+      category: "Electronic Drums",
+      subcategory: "Acoustic Design Electronic Drum Sets",
+      price: 85295,
+      originalPrice: 99990,
+      rating: 5,
+      reviewCount: 11,
+      inStock: true,
+      stock: 4,
+      badge: '16" Acoustic-Size Kick \xB7 12" Snare \xB7 Acoustic Hi-Hat Stand \xB7 13" 3-Zone Ride',
+      sku: "LEMON-T580",
+      isFeatured: false,
+      image: "assets/images/products/lemon-t580-kit.jpg",
+      images: [
+        "assets/images/products/lemon-t580-kit.jpg"
+      ],
+      description: `
+      <h3>Authentic Acoustic Shell Dimensions & Imposing 16" Bass Drum Presence</h3>
+      <p>The <strong>Lemon Drums T-580 9-Piece Electronic Drum Set</strong> bridges the boundary between acoustic presence and electronic versatility. Featuring full-depth acoustic drum shell dimensions including an impressive <strong>16" x 8" mesh head bass drum</strong>, the T-580 looks and feels like a genuine acoustic drum kit on stage and in the studio. Gone are the flimsy pad towers: the 16" bass drum provides unyielding beater resistance, authentic visual impact, and rock-solid stability under the fastest double-kick footwork.</p>
+
+      <h3>Full-Size 12" Snare, 10" & 12" Toms, and Stand-Mounted Hi-Hat</h3>
+      <p>The pad configuration features generous acoustic-matched sizes: a <strong>12" x 4" dual-zone mesh snare</strong>, two <strong>10" x 4" dual-zone rack toms</strong>, and a commanding <strong>12" x 4" dual-zone floor tom</strong>. The hi-hat setup is upgraded to a <strong>12" hi-hat cymbal and optical motion sensor mounted on a real chrome acoustic-style hi-hat stand</strong>, providing genuine foot resistance and nuanced open/closed acoustic action.</p>
+
+      <h3>Dual 12" Crashes & 13" Triple-Zone Ride on Heavy-Duty Rack</h3>
+      <p>The cymbal array includes two <strong>12" dual-zone crashes with choke</strong> and an expanded <strong>13" triple-zone ride cymbal with bell, bow, and edge zones with choke</strong>. Powered by the T-580 module with <strong>282 percussion sounds</strong>, 20 preset kits, 10 user kits, metronome, onboard recorder, and <strong>USB-B MIDI</strong> connectivity. Shipped in 3 protective boxes for complete component safety.</p>
+    `,
+      specs: [
+        { label: "Bass Drum", value: '16" x 8" Full-Size Acoustic-Profile Mesh Head Bass Drum with Spurs' },
+        { label: "Snare Drum Pad", value: '12" x 4" 2-Zone Mesh Head Snare with Acoustic Shell Profile' },
+        { label: "Tom Setup", value: '2x 10" x 4" 2-Zone Rack Toms + 1x 12" x 4" 2-Zone Floor Tom' },
+        { label: "Hi-Hat System", value: '12" Hi-Hat Cymbal with Optical Sensor on Acoustic-Style Hi-Hat Stand Included' },
+        { label: "Cymbals with Choke", value: '2x 12" 2-Zone Crashes with Choke + 1x 13" 3-Zone Ride with Choke' },
+        { label: "Sound Module", value: "282 Drum Sounds, 20 Factory Kits, 10 User Customizable Kits" },
+        { label: "Practice Features", value: "10 Songs with Adjustable Tempo, Metronome, Real-Time Recorder" },
+        { label: "Connectivity", value: 'USB-B MIDI, 1/4" Phones Out, 1/4" L/Mono R Outs, 1/4" Aux In, 1/4" Trigger In' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Lemon Drums T-580 Series \u2014 9-Piece Acoustic Design Electronic Drum Set"],
+        ["Bass Drum Construction", '16" x 8" Full acoustic-dimension wood shell with 2-ply mesh head and heavy-duty spurs'],
+        ["Kick Beater Stability", "Rock-solid acoustic stability supporting single and high-speed double kick pedals"],
+        ["Snare Drum Pad", '12" x 4" Dual-zone (head, rim) acoustic-profile mesh snare drum'],
+        ["Rack Tom Pads", '2x 10" x 4" Dual-zone (head, rim) acoustic-profile mesh toms with metal hoops'],
+        ["Floor Tom Pad", '1x 12" x 4" Dual-zone (head, rim) acoustic-profile mesh floor tom'],
+        ["Hi-Hat System", '12" Cymbal pad with optical motion sensor mounted on included chrome hi-hat stand'],
+        ["Hi-Hat Stand Included", "Yes \u2014 dedicated heavy-duty chrome double-braced hi-hat stand included with T-580"],
+        ["Crash Cymbals", '2x 12" Dual-zone (bow, edge) crash cymbals with quick hand-choke sensors'],
+        ["Ride Cymbal", '1x 13" Triple-zone (bell, bow, edge) ride cymbal with quick hand-choke sensor'],
+        ["Sound Library", "282 Studio-grade acoustic, electronic, and percussion drum sound samples"],
+        ["Kit Presets", "20 Factory preset drum kits + 10 User-programmable custom kit slots"],
+        ["Training Features", "10 Practice accompaniment songs with adjustable tempo + precision metronome"],
+        ["Onboard Recording", "Real-time performance recorder and playback for skill development"],
+        ["USB Connectivity", "USB Type-B MIDI port for computer recording and virtual drum instrument plugins"],
+        ["Analog Audio Outputs", '1/4" TS Left/Mono and Right line outputs + 1/4" TRS stereo headphone output'],
+        ["Auxiliary Input", '1/4" Stereo Aux input for jamming along with smartphone, tablet, or playback device'],
+        ["Trigger Expansion", '1/4" Trigger input jack for connecting additional drum pad or cymbal'],
+        ["Packaging & Weight", "3 Boxes / set (Box 1: 45x45x30 cm 7.5 kg; Box 2: 70x14x81 cm 19.4 kg; Box 3: 60x39x52 cm 12.5 kg)"],
+        ["Warranty", "1-Year Official Lemon Drums Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "artesia-fun1-61-key-childrens-digital-piano",
+      name: "Artesia FUN-1 61-Key Children's Digital Piano",
+      shortName: "Artesia FUN-1 61-Key Children's Digital Piano with Matching Bench, Headphones & Apps",
+      brand: "Artesia",
+      category: "Digital Pianos",
+      subcategory: "Children & Beginner Digital Pianos",
+      price: 25e3,
+      originalPrice: 29990,
+      rating: 5,
+      reviewCount: 8,
+      inStock: true,
+      stock: 6,
+      badge: "61 Touch-Sensitive Keys \xB7 Matching Bench Included \xB7 iOS App Ready \xB7 Stereo Headphones",
+      sku: "ARTESIA-FUN1",
+      isFeatured: false,
+      image: "assets/images/products/artesia-fun1-pink-front.jpg",
+      images: [
+        "assets/images/products/artesia-fun1-pink-front.jpg",
+        "assets/images/products/artesia-fun1-pink-angle.jpg"
+      ],
+      description: `
+      <h3>A Real Digital Piano Redesigned for Children \u2014 Not a Toy</h3>
+      <p>The teacher-recommended <strong>Artesia FUN-1 Children's Digital Piano</strong> provides young musicians (ages 3 to 10) with the perfect, joyful introduction to music and piano performance. Far from a plastic toy, the FUN-1 is a genuine digital piano custom-engineered to the child's perspective: featuring <strong>61 standard-size touch-sensitive keys</strong> with weighted spring action that replicate the tactile feel of an acoustic piano, fostering proper playing technique and finger strength right from day one.</p>
+
+      <h3>Complete Learning Suite: Matching Wooden Bench, Headphones & Pedal Included</h3>
+      <p>The FUN-1 comes as a complete, self-contained educational package. It includes a custom-matched sturdy <strong>wooden piano bench</strong>, comfortable over-ear stereo headphones for quiet practice at any time of day, a responsive sustain pedal, and a power supply. The unit features <strong>8 vibrant instrument voices</strong> \u2014 including Piano, Electric Piano, Organ, and Strings \u2014 plus playful animal sounds (Dog, Sheep, Bird) and an Applause effect that rewards successful practice sessions.</p>
+
+      <h3>Interactive iPad Learning Games & Aux Audio Connectivity</h3>
+      <p>Equipped with a built-in <strong>USB to Host port</strong>, the FUN-1 transforms piano practice into engaging gameplay. Connect to an iPad or computer to play game-based teaching apps like <em>Dust Busters</em> and <em>Piano Maestro</em>, which guide children note-by-note through chart-topping songs and classical favorites. An 1/8" stereo aux input allows children to plug in smartphones or tablets and play along directly through the piano's built-in dual-speaker system.</p>
+    `,
+      specs: [
+        { label: "Keyboard", value: "61 Standard-Size Touch-Sensitive Piano Keys with 3 Velocity Levels" },
+        { label: "Target Age Group", value: "Designed from Child's Perspective for Ages 3 to 10" },
+        { label: "Furniture & Hardware", value: "Matching Wooden Piano Bench, Headphones & Sustain Pedal Included" },
+        { label: "Voices & Sounds", value: "8 Voices (Grand Piano, Electric Piano, Organ, Strings + Animal Sounds & Applause)" },
+        { label: "Polyphony", value: "32-Note Simultaneous Polyphony" },
+        { label: "Interactive Learning", value: "USB to Host for iPad Teaching Apps (Piano Maestro & Dust Busters Compatible)" },
+        { label: "Sound System", value: "Built-in Dual Stereo Speakers (2x 3W / 4 Ohm)" },
+        { label: "Rear Panel I/O", value: 'USB-to-Host, 1/8" Aux In, 1/4" Headphone Out, Pedal Jack, DC Power In' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Artesia FUN-1 Children's Educational Digital Piano Series"],
+        ["Keybed Design", "61 Standard-size touch-sensitive keys with spring-tension action replicating full-size digital piano feel"],
+        ["Velocity Sensitivity", "3 Selectable velocity curve levels for developing proper finger dynamics"],
+        ["Polyphony", "32-Voice simultaneous polyphony"],
+        ["Sound Engine", "PCM stereo acoustic and fun sound generator"],
+        ["Preset Voices", "8 Voices: Concert Grand Piano, Electric Piano, Organ, Strings, Dog, Sheep, Bird, Applause"],
+        ["Interactive Learning Support", "Compatible with iOS and macOS learning apps including Piano Maestro and Dust Busters"],
+        ["Computer Interface", "Class-compliant USB to Host port (no drivers required for iOS, iPadOS, macOS, Windows)"],
+        ["Auxiliary Audio Input", '1/8" (3.5 mm) stereo Aux input for smartphone and tablet audio playback'],
+        ["Headphone Output", '1/4" TRS stereo headphone output with automatic speaker mute for silent practice'],
+        ["Sound Delivery", "Built-in stereo speaker system: 2x 3W amplifiers with 4-ohm speakers"],
+        ["Furniture Stand", "Integrated wood-grain upright furniture stand with matching child-sized wooden bench"],
+        ["Included Accessories", "Matching wooden bench, stereo headphones, sustain pedal, DC 10V power adapter"],
+        ["Dimensions (W x D x H)", '930 x 315 x 610 mm (36.6" x 12.4" x 24.0")'],
+        ["Weight", "Approximately 13.5 kg (including bench)"],
+        ["Warranty", "1-Year Official Artesia Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "artesia-performer-sleek-88-key-digital-piano-black",
+      name: "Artesia Performer Sleek 88 Key Digital Piano - Black",
+      shortName: "Artesia Performer Sleek 88-Key Digital Piano with Supra Sound 3-Layer Samples & 4-Speaker System",
+      brand: "Artesia",
+      category: "Digital Pianos",
+      subcategory: "Portable Stage & Home Digital Pianos",
+      price: 25e3,
+      originalPrice: 29990,
+      rating: 5,
+      reviewCount: 12,
+      inStock: true,
+      stock: 8,
+      badge: "88 Semi-Weighted Keys \xB7 3-Layer Grand Piano Sample \xB7 4-Speaker 15W System \xB7 Battery / AC Powered",
+      sku: "ARTESIA-PERFORMER-BK",
+      isFeatured: false,
+      image: "assets/images/products/artesia-performer-black-top.jpg",
+      images: [
+        "assets/images/products/artesia-performer-black-top.jpg",
+        "assets/images/products/artesia-performer-black-keys.jpg",
+        "assets/images/products/artesia-performer-black-angle.jpg"
+      ],
+      description: `
+      <h3>Full 88-Key Performance & Rich Supra Sound in an Ultra-Slim Mobile Chassis</h3>
+      <p>The <strong>Artesia Performer Sleek 88-Key Digital Piano in Black</strong> delivers an authentic concert grand piano experience in a modern, ultra-portable footprint weighing under 19 lbs. Powered by Artesia's acoustic <strong>Supra Sound engine featuring 3-layer concert grand piano sampling</strong>, the Performer captures the rich depth, harmonic resonance, and dynamic expression of an acoustic instrument. Ideal for beginning students, gigging performers, classroom instruction, and home practice, it offers professional features at an extraordinary value.</p>
+
+      <h3>Soft-Touch Spring-Tension Action & 4-Speaker Stereo Delivery</h3>
+      <p>The 88 full-size keys feature <strong>soft-touch spring-tension action</strong> \u2014 heavier than a synthesizer but lighter than fully weighted hammer keys \u2014 providing dynamic response, fast repetition, and comfortable playability with 5 adjustable velocity touch levels. Sound delivery is driven by an impressive <strong>dynamic stereo 4-speaker sound system with 15W of amplification</strong>, filling the room with warm bass and crystal-clear treble without needing external speakers.</p>
+
+      <h3>Dual Voice Layering, DSP Effects & Dual AC/Battery Power</h3>
+      <p>Explore 12 studio-quality instrument voices including concert grand, bright piano, electric pianos, harpsichord, vibes, church organ, rock organ, guitar, and bass. Layer two sounds together \u2014 like Grand Piano and Strings \u2014 for lush orchestral textures, and refine your tone with built-in <strong>DSP Reverb, Chorus, and EQ</strong>. The Performer offers unparalleled portability: run it with the included 12V DC power supply, or insert <strong>six D-cell batteries</strong> to play anywhere outdoors, in classrooms, or on stage.</p>
+
+      <h3>USB-MIDI Studio Recording & Versatile Audio Connectivity</h3>
+      <p>Featuring class-compliant <strong>USB to Host / USB MIDI</strong>, the Performer connects seamlessly to laptops, iPads, smartphones, and DAWs for multitrack recording and music learning software. Connect directly to PA systems, keyboard amplifiers, or studio monitors via <strong>stereo 1/4" Line Outs (L/R)</strong>, or practice silently using the 1/4" stereo headphone output. Includes sustain pedal, music rack, and power supply.</p>
+    `,
+      specs: [
+        { label: "Keyboard", value: "88 Full-Size Keys with Soft-Touch Spring-Tension Action (5 Touch Levels + Fixed)" },
+        { label: "Sound Engine", value: "Supra Sound Engine with 3-Layer Acoustic Grand Piano Sampling" },
+        { label: "Built-in Voices", value: "12 Voices (Concert Grand, E-Pianos, Harpsichord, Vibes, Organs, Guitar, Bass, Strings)" },
+        { label: "Sound Delivery", value: "Dynamic Stereo 4-Speaker Sound Delivery System with 15W Amplification" },
+        { label: "DSP Effects & Layering", value: "Adjustable Reverb, Chorus & EQ + Dual-Voice Layering Function" },
+        { label: "Connectivity", value: 'USB-to-Host (MIDI/Audio), 1/4" Stereo Line Outs (L/R), 1/4" Headphone Out, Sustain In' },
+        { label: "Dual Power Options", value: "AC 12V Adapter Included OR 6x D-Cell Batteries for Ultimate Mobility" },
+        { label: "Dimensions & Weight", value: '50.25" L x 10.75" W x 3.25" H; Ultra-Lightweight 19 lbs (8.6 kg)' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Artesia Performer Mobile Digital Piano Series"],
+        ["Keybed Technology", "88 Full-size keys with Soft Touch spring-tension action offering balanced natural acoustic response"],
+        ["Touch Sensitivity", "5 Selectable velocity response curves plus fixed velocity mode"],
+        ["Sound Technology", "Acoustic Supra Sound engine with 3-layer stereo grand piano samples and 3D stereo imaging"],
+        ["Instrument Voices", "12 Built-in voices: Concert Grand, Bright Grand, E-Piano 1 & 2, Vibes, Harpsichord, Church Organ, Rock Organ, Strings, Acoustic Guitar, Acoustic Bass"],
+        ["Voice Functions", "Dual-layering (layer any two voices together), split, and octave transposition"],
+        ["DSP Effects", "Digital Reverb (Room, Hall), Chorus modulation, and master tone EQ"],
+        ["Practice Tools", "Built-in metronome (2/2, 2/4, 3/4, 4/4, 5/4, 6/4, 6/8, 12/8 time signatures), 50+ preset practice songs"],
+        ["Sound Delivery System", "Dynamic stereo 4-speaker array with dual high-frequency and dual full-range drivers"],
+        ["Amplifier Output", "15 Watts total stereo audio power"],
+        ["USB Interface", "USB to Host supporting USB MIDI transmission and USB digital audio streaming"],
+        ["Analog Audio Outputs", 'Stereo 1/4" TS Line Outputs (L/Mono, R) for direct connection to keyboard amplifiers and PA systems'],
+        ["Headphone Connection", '1/4" TRS stereo headphone output with speaker bypass for private practice'],
+        ["Pedal Connection", '1/4" Sustain pedal input jack (sustain pedal included)'],
+        ["Power Requirements", "DC 12V power supply (included) or 6x D-cell alkaline batteries for cord-free performance"],
+        ["Dimensions", '1276 x 273 x 83 mm (50.25" L x 10.75" W x 3.25" H)'],
+        ["Net Weight", "8.6 kg (19 lbs) \u2014 ultra-lightweight for easy one-arm carry"],
+        ["Included in Box", "12V DC power adapter, sustain pedal, clip-on music rack, user manual"],
+        ["Warranty", "1-Year Official Artesia Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "artesia-performer-sleek-88-key-digital-piano-white",
+      name: "Artesia Performer Sleek 88 Key Digital Piano - White",
+      shortName: "Artesia Performer Sleek 88-Key Digital Piano White with Supra Sound 3-Layer Samples & 4-Speaker System",
+      brand: "Artesia",
+      category: "Digital Pianos",
+      subcategory: "Portable Stage & Home Digital Pianos",
+      price: 25e3,
+      originalPrice: 29990,
+      rating: 5,
+      reviewCount: 10,
+      inStock: true,
+      stock: 7,
+      badge: "88 Semi-Weighted Keys \xB7 3-Layer Grand Piano Sample \xB7 4-Speaker 15W System \xB7 Elegant White Finish",
+      sku: "ARTESIA-PERFORMER-WH",
+      isFeatured: false,
+      image: "assets/images/products/artesia-performer-white-front.jpg",
+      images: [
+        "assets/images/products/artesia-performer-white-front.jpg",
+        "assets/images/products/artesia-performer-white-angle.jpg"
+      ],
+      description: `
+      <h3>Full 88-Key Performance & Rich Supra Sound in a Modern Elegant White Chassis</h3>
+      <p>The <strong>Artesia Performer Sleek 88-Key Digital Piano in White</strong> brings contemporary aesthetics and concert grand authenticity to an ultra-portable stage instrument weighing under 19 lbs. Driven by Artesia's acclaimed <strong>Supra Sound engine featuring 3-layer grand piano sampling</strong>, the Performer captures the depth, overtone resonance, and dynamic touch of an acoustic concert grand. Accompanied by supplementary 3D stereo samples for electric pianos, harp, vibes, nylon guitar, organ, and strings, it offers an expansive palette for practice, teaching, and live performance.</p>
+
+      <h3>Soft-Touch Spring-Tension Keybed & Dynamic 4-Speaker Audio Delivery</h3>
+      <p>The Performer features an 88-key <strong>soft-touch spring-tension action</strong> keyboard, engineered to deliver a responsive touch lighter than a heavy acoustic hammer mechanism yet substantially firmer than a synthesizer keyboard. With 5 selectable velocity curve settings plus a fixed velocity option, performers can tailor key response to match their playing technique. Sound reproduction is powered by an onboard <strong>dynamic stereo 4-speaker sound delivery system with 15W of amplification</strong>, producing crisp highs and balanced room-filling acoustic resonance without requiring outboard PA gear.</p>
+
+      <h3>Layering, DSP Effects & Dual AC/Battery Performance Freedom</h3>
+      <p>Select from 12 expressive onboard instrument voices, with the flexibility to <strong>layer two voices simultaneously</strong> (such as Grand Piano and Orchestral Strings) for rich symphonic textures. Enhance your spatial realism with adjustable <strong>DSP Reverb, Chorus, and master EQ</strong>, and utilize the built-in metronome and transposition functions for seamless rehearsal in challenging keys. For untethered busking, outdoor gatherings, or mobile performances without access to AC power, the Performer can operate on <strong>six D-cell batteries</strong> or via the included 12V DC power adapter.</p>
+
+      <h3>USB MIDI Studio Integration & Full Stage Connectivity</h3>
+      <p>With plug-and-play <strong>USB to Host and USB MIDI connectivity</strong>, the Performer connects effortlessly to laptops, iPad tablets, and smartphones, integrating with interactive learning apps and professional DAWs for multitrack recording straight from the keybed. Stage connectivity includes dual <strong>1/4" Stereo Line Outputs (L/Mono, R)</strong> for connection to keyboard amplifiers and mixing consoles, a 1/4" headphone jack for silent rehearsal, and a dedicated sustain pedal input. Complete bundle includes sustain pedal, music rest, and DC power supply.</p>
+    `,
+      specs: [
+        { label: "Keyboard", value: "88 Full-Size Keys with Soft-Touch Spring-Tension Action (5 Touch Levels + Fixed)" },
+        { label: "Finish", value: "Contemporary Satin White Finish with Minimalist Profile" },
+        { label: "Sound Engine", value: "Supra Sound Engine with 3-Layer Acoustic Grand Piano Sampling" },
+        { label: "Built-in Voices", value: "12 Voices (Concert Grand, E-Pianos, Harp, Vibes, Organs, Guitar, Strings, Bass)" },
+        { label: "Sound Delivery", value: "Dynamic Stereo 4-Speaker Sound Delivery System with 15W Amplification" },
+        { label: "DSP Effects & Layering", value: "Adjustable Reverb, Chorus & EQ + Dual-Voice Layering Function" },
+        { label: "Connectivity", value: 'USB-to-Host (MIDI/Audio), 1/4" Stereo Line Outs (L/R), 1/4" Headphone Out, Sustain In' },
+        { label: "Dual Power Options", value: "AC 12V Adapter Included OR 6x D-Cell Batteries for Ultimate Mobility (19 lbs)" }
+      ],
+      deepSpecs: [
+        ["Product Series", "Artesia Performer Mobile Digital Piano Series"],
+        ["Finish & Colorway", "Elegant Contemporary Satin White Chassis with Matching White Music Rest"],
+        ["Keybed Technology", "88 Full-size keys with Soft Touch spring-tension action offering natural balanced touch"],
+        ["Touch Sensitivity", "5 Selectable velocity response curves plus fixed velocity mode"],
+        ["Sound Technology", "Acoustic Supra Sound engine with 3-layer stereo grand piano samples and 3D stereo imaging"],
+        ["Instrument Voices", "12 Built-in voices: Concert Grand, Bright Grand, E-Piano 1 & 2, Vibes, Harpsichord, Church Organ, Rock Organ, Strings, Acoustic Guitar, Acoustic Bass"],
+        ["Voice Functions", "Dual-layering (layer any two voices together), split, and octave transposition"],
+        ["DSP Effects", "Digital Reverb (Room, Hall), Chorus modulation, and master tone EQ"],
+        ["Practice Tools", "Built-in metronome (2/2, 2/4, 3/4, 4/4, 5/4, 6/4, 6/8, 12/8 time signatures), 50+ preset practice songs"],
+        ["Sound Delivery System", "Dynamic stereo 4-speaker array with dual high-frequency and dual full-range drivers"],
+        ["Amplifier Output", "15 Watts total stereo audio power"],
+        ["USB Interface", "USB to Host supporting USB MIDI transmission and USB digital audio streaming"],
+        ["Analog Audio Outputs", 'Stereo 1/4" TS Line Outputs (L/Mono, R) for direct connection to keyboard amplifiers and PA systems'],
+        ["Headphone Connection", '1/4" TRS stereo headphone output with speaker bypass for private practice'],
+        ["Pedal Connection", '1/4" Sustain pedal input jack (sustain pedal included)'],
+        ["Power Requirements", "DC 12V power supply (included) or 6x D-cell alkaline batteries for cord-free performance"],
+        ["Dimensions", '1276 x 273 x 83 mm (50.25" L x 10.75" W x 3.25" H)'],
+        ["Net Weight", "8.6 kg (19 lbs) \u2014 ultra-lightweight for easy one-arm carry"],
+        ["Included in Box", "12V DC power adapter, sustain pedal, clip-on music rack, user manual"],
+        ["Warranty", "1-Year Official Artesia Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "nord-grand-88-key-stage-piano",
+      name: "Nord Grand",
+      shortName: "Nord Grand 88-Key Stage Piano with Kawai Responsive Hammer Action & Triple Sensors",
+      brand: "Nord",
+      category: "Digital Pianos",
+      subcategory: "Professional Stage Pianos",
+      price: 351494,
+      originalPrice: 389900,
+      rating: 5,
+      reviewCount: 15,
+      inStock: true,
+      stock: 3,
+      badge: "Kawai Hammer Action \xB7 Triple Sensors \xB7 Ivory Touch \xB7 2GB Piano Memory \xB7 Nord Triple Pedal Included",
+      sku: "NORD-GRAND-STAGE",
+      isFeatured: false,
+      image: "assets/images/products/nord-grand-top.png",
+      images: [
+        "assets/images/products/nord-grand-top.png",
+        "assets/images/products/nord-grand-panel.png",
+        "assets/images/products/nord-grand-rear.png"
+      ],
+      description: `
+      <h3>Premium Stage Piano with Kawai Responsive Hammer Action & Triple Sensors</h3>
+      <p>The <strong>Nord Grand</strong> represents an extraordinary milestone in stage piano craftsmanship, combining Nord's world-renowned sound engine with an authentic <strong>Kawai Hammer Action keybed featuring advanced triple sensors and Ivory Touch keys</strong>. Developed in close partnership with Kawai, this premium weighted mechanism captures every nuance of hammer movement with microscopic precision, delivering the smooth, responsive, and dynamic sensation of an acoustic concert grand in an elegant, tour-ready Swedish wooden-console chassis.</p>
+
+      <h3>Dedicated 2 GB Piano Section with Advanced Acoustic Modeling</h3>
+      <p>The factory sound bank is loaded with a curated selection of breathtaking Grands, Uprights, Electric Pianos, and Digital Pianos from the acclaimed <strong>Nord Piano Library (2 GB memory)</strong>, all fully replaceable via the free Nord Sound Manager. Experience <strong>120-voice polyphony</strong>, dedicated acoustic/electric piano filters, 3 selectable dynamic response curves, and state-of-the-art <strong>Advanced String Resonance</strong> that reproduces the intricate sympathetic vibration of acoustic strings. With the included <strong>Nord Triple Pedal</strong>, dynamic pedal noise authentically replicates the mechanical movement of piano dampers.</p>
+
+      <h3>512 MB Sample Synth Section with Hands-on Controls</h3>
+      <p>The secondary <strong>Sample Synth section</strong> provides 512 MB of dedicated memory for the comprehensive <strong>Nord Sample Library 3.0</strong>, featuring an expansive range of high-fidelity solo and ensemble strings, brass, synths, choirs, and exclusive licensed sounds from legendary Mellotron and Chamberlin tape instruments. Dedicated front-panel controls for Attack, Decay/Release, and dynamic velocity filtering ensure effortless real-time tone customization on stage.</p>
+
+      <h3>Master Effects Section, OLED Display & Stage Integration</h3>
+      <p>Sculpt your sound with a comprehensive suite of high-grade stereo effects modeled after classic analog stompboxes: Pan, Tremolo, Wah, Ring Modulator, Chorus, Flanger, Phaser, and Vibe. Includes a 3-band EQ with sweepable midrange, stereo delay with tap tempo, and an independent master Reverb offering Room, Stage, and Hall algorithms with switchable Bright mode. With <strong>Seamless Transitions</strong> when switching programs, Layer and Split with Split Point crossfades, a crystal-clear OLED display, and dedicated brackets for direct mounting of <strong>Nord Piano Monitors</strong>, the Nord Grand is the definitive instrument for discerning concert pianists and stage performers.</p>
+    `,
+      specs: [
+        { label: "Keybed Mechanism", value: "88-Note Kawai Responsive Hammer Action with Advanced Triple Sensors & Ivory Touch" },
+        { label: "Piano Section Memory", value: "2 GB Memory for Nord Piano Library with 120-Voice Polyphony" },
+        { label: "Sample Synth Memory", value: "512 MB Dedicated Memory for Nord Sample Library 3.0" },
+        { label: "Acoustic Modeling", value: "Advanced String Resonance, Soft Release & Dynamic Pedal Noise" },
+        { label: "Included Pedal", value: "Nord Triple Pedal Included (Sustain, Soft/Una Corda, Sostenuto + Pedal Noise)" },
+        { label: "Performance Features", value: "Seamless Program Transitions, Layer & Split with Split Point Crossfades, OLED Display" },
+        { label: "Master Effects Suite", value: "Modulation (Chorus, Flanger, Phaser, Vibe), Delay, 3-Band EQ, 3 Reverbs (Room/Stage/Hall)" },
+        { label: "Monitor Integration", value: "Direct Rear-Panel Brackets for Optional Nord Piano Monitor Speakers" }
+      ],
+      deepSpecs: [
+        ["Product Series", "Nord Stage & Grand Professional Piano Series"],
+        ["Craftsmanship & Origin", "Handmade in Stockholm, Sweden by Clavia DMI AB"],
+        ["Keybed Type", "88-Key Kawai Hammer Action with advanced triple physical sensors and textured Ivory Touch key surfaces"],
+        ["Polyphony", "120 Voices for Piano Section; Full polyphony for Sample Synth section"],
+        ["Nord Piano Library Memory", "2 GB dedicated flash memory (expandable and customizable via Nord Sound Manager)"],
+        ["Piano Section Features", "Advanced String Resonance (Gen 2), Soft Release, 3 Dynamic Touch Curves, Dedicated Piano Timbre Filters (Soft, Mid, Bright, Dyno 1/2)"],
+        ["Pedal System", "Nord Triple Pedal included: Dynamic Sustain, Sostenuto, and Soft (Una Corda) pedals with mechanical Pedal Noise simulation"],
+        ["Nord Sample Synth Memory", "512 MB dedicated memory for Nord Sample Library 3.0 (Strings, Brass, Synths, Mellotron, Chamberlin)"],
+        ["Sample Synth Controls", "Dedicated Attack, Decay/Release, and Velocity Dynamic filter envelope controls"],
+        ["Split & Layer Capabilities", "Split and Layer with 7 Split Points and selectable LED Split Point Crossfades (Off, Small, Large)"],
+        ["Display", "High-contrast OLED display for instant program, parameter, and sound library overview"],
+        ["Stompbox Effects (FX 1 & 2)", "Pan, Tremolo, Wah-Wah, Ring Modulator, 2x Chorus, 2x Flanger, 2x Phaser, Vibe with adjustable depth and rate"],
+        ["Delay & Equalizer", "Stereo Delay with Tap Tempo and Ping-Pong mode; 3-Band EQ with sweepable midrange (100 Hz \u2013 8 kHz)"],
+        ["Reverb Processor", "Independent Master Reverb with 3 room models (Room, Stage, Hall) and Bright tone enhancement option"],
+        ["Audio Outputs", '2x 1/4" Unbalanced TS line outputs (L/Mono, R) for PA and amplifier connection'],
+        ["Headphone Output", '1x 1/4" Stereo TRS headphone output on front edge'],
+        ["Monitor Input", '1x 1/8" (3.5 mm) Stereo monitor input for playing along with phone/tablet without external mixer'],
+        ["Pedal Inputs", '1x Triple Pedal jack (for included Nord Triple Pedal), 1x 1/4" Expression/Volume pedal input jack'],
+        ["MIDI & Computer I/O", "MIDI In & Out 5-pin DIN ports + USB Type-B port for MIDI transmission and sound library transfer"],
+        ["Dimensions & Weight", '1286 x 168 x 387 mm (50.7" x 6.6" x 15.2"); 20.9 kg (46.0 lbs)'],
+        ["Included Accessories", "Nord Triple Pedal, dust cover, power cord, user manual"],
+        ["Warranty", "Official 1-Year Clavia Nord Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    },
+    {
+      id: "nord-electro-6-hp-73-key-stage-keyboard",
+      name: "Nord Electro 6 HP",
+      shortName: "Nord Electro 6 HP 73-Key Hammer Action Stage Keyboard with Digital LED Drawbars",
+      brand: "Nord",
+      category: "Keyboards",
+      subcategory: "Stage Keyboards & Performance Synthesizers",
+      price: 279585,
+      originalPrice: 309900,
+      rating: 5,
+      reviewCount: 14,
+      inStock: true,
+      stock: 4,
+      badge: "73-Key Hammer Action Portable \xB7 Digital LED Drawbars \xB7 1GB Piano Memory \xB7 3 Independent Sections",
+      sku: "NORD-ELECTRO-6HP",
+      isFeatured: false,
+      image: "assets/images/products/nord-electro-6-hp-top.png",
+      images: [
+        "assets/images/products/nord-electro-6-hp-top.png",
+        "assets/images/products/nord-electro-6-hp-rear.png"
+      ],
+      description: `
+      <h3>Professional 73-Key Stage Keyboard with Hammer Action Portability</h3>
+      <p>The <strong>Nord Electro 6 HP</strong> combines classic electro-mechanical and acoustic instrument realism into an ultra-portable stage instrument featuring a <strong>73-key (E-E) velocity-sensitive Hammer Action Portable keybed</strong>. Weighing only 11.4 kg (25.13 lbs), it provides gigging pianists with the authentic physical resistance of weighted acoustic hammer keys alongside the legendary sonic versatility of three independent, simultaneously active sound engines: <strong>Organ, Piano, and Sample Synth</strong>.</p>
+
+      <h3>Three Simultaneous Independent Sound Engines with Seamless Transitions</h3>
+      <p>Seamlessly layer or split Organ, Piano, and Sample Synth across <strong>6 flexible Keyboard Split points</strong> with innovative Split Point Crossfades for smooth transitions between zones. With <strong>Seamless Transitions</strong> when switching programs during a live set, notes and reverb tails decay naturally without abruptly dropping out. The dedicated <em>Organize/Page mode</em> allows rapid grouping of programs into pages of four for instant setlist management on stage.</p>
+
+      <h3>Physical Control: Digital LED Drawbars & Award-Winning Organ Section</h3>
+      <p>The Electro 6 HP is equipped with responsive <strong>Digital LED Drawbars</strong>, providing clear visual status of drawbar registrations in dark stage environments. The organ engine faithfully recreates the iconic B3 Tonewheel, B3 Bass, classic transistor Vox and Farfisa organs, and two rich acoustic Pipe organ models. Complete with user-adjustable key click, percussion decays, vintage tonewheel modes, and authentic rotary speaker simulation.</p>
+
+      <h3>1 GB Piano Memory & 512 MB Sample Synth with Comprehensive FX</h3>
+      <p>The Piano section features <strong>1 GB of dedicated flash memory</strong> for the world-renowned Nord Piano Library, offering 120-voice polyphony, Gen-2 Advanced String Resonance, Soft Release, and dedicated EQ/filters. The Sample Synth section delivers <strong>512 MB of memory</strong> for the Nord Sample Library 3.0, with dynamic controls for Attack, Decay/Release, and velocity filtering. Top it off with a studio-grade master stereo effects section featuring Tremolo, Pan, Wah, Phaser, Flanger, Chorus, 122 Rotary Speaker with Tube Overdrive, 3-band sweepable EQ, delay with tap tempo, and reverb with Bright mode.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "73-Key (E-E) Velocity-Sensitive Hammer Action Portable (HP) Mechanism" },
+        { label: "Sound Engines", value: "3 Independent Sections (Organ, Piano, Sample Synth) Usable Simultaneously" },
+        { label: "Drawbars", value: "Digital LED Drawbars with Instant Preset Visual Registration" },
+        { label: "Piano Memory", value: "1 GB Dedicated Flash Memory for Nord Piano Library (120-Voice Polyphony)" },
+        { label: "Sample Synth Memory", value: "512 MB Flash Memory for Nord Sample Library 3.0 (46-Voice Polyphony)" },
+        { label: "Performance Features", value: "Seamless Program Transitions, 6 Split Points with Crossfades, Organize Mode" },
+        { label: "Effects & Amp Sim", value: "Modulation FX, 122 Rotary Speaker Sim, Tube Overdrive, Sweepable 3-Band EQ, Delay, Reverb" },
+        { label: "Weight & Dimensions", value: '1074 x 121 x 344 mm (42.3" x 4.8" x 13.5"); 11.4 kg (25.13 lbs)' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Nord Electro 6 Stage Performance Keyboard Series"],
+        ["Craftsmanship & Origin", "Handmade in Stockholm, Sweden by Clavia DMI AB"],
+        ["Keybed Mechanism", "73-Key (6 octaves, E to E) velocity-sensitive Hammer Action Portable (HP) keybed"],
+        ["Sound Engines", "3 Independent sound sections: Organ, Piano, Sample Synth (all active simultaneously as split or layer)"],
+        ["Split & Layering", "6 Keyboard split points (C3-F5) with LED Split Point Crossfade functionality; 4 Live slots"],
+        ["Program Management", "Organize/Page mode: group sets of up to 4 programs into pages with seamless program changes"],
+        ["Organ Engine Models", "C2D B3 Tonewheel, B3 Bass, Vox Continental, Farfisa Compact, and 2 Pipe Organ models"],
+        ["Drawbar System", "Digital LED drawbars with instant preset switching and visual recall"],
+        ["Vintage Organ Controls", "Adjustable percussion levels, percussion decay, key click, and 3 selectable vintage tonewheel modes"],
+        ["Piano Section Memory", "1 GB dedicated memory for Nord Piano Library (Grands, Uprights, E-Pianos, Clavinets, Harpsichords)"],
+        ["Piano Acoustic Modeling", "120-Voice polyphony, Advanced String Resonance (Gen 2), Soft Release, 4 dynamic touch response curves"],
+        ["Sample Synth Memory", "512 MB dedicated memory for Nord Sample Library 3.0 with 46-voice polyphony and velocity filtering"],
+        ["Sample Controls", "Dedicated front-panel Attack and Decay/Release controls with 4 dynamic velocity response curves"],
+        ["Modulation Effects (FX1 & FX2)", "Pan, Tremolo, Wah, Ring Modulator, 2x Phaser, 2x Flanger, 2x Chorus, and Vibe"],
+        ["Amp & Rotary Simulation", "3 Amp models, Compressor, C2D 122 Rotary Speaker simulation, and adjustable Tube Overdrive"],
+        ["EQ & Delay", "3-Band master EQ with sweepable mid (\xB115 dB); Stereo delay with tap tempo and ping-pong modes"],
+        ["Master Reverb", "Dedicated Reverb with 3 room algorithms (Room, Stage, Hall) and Bright tone enhancement"],
+        ["Audio Connections", '2x 1/4" TS line outputs (L/R unbalanced), 1x 1/8" stereo monitor input, 1x 1/4" headphone output'],
+        ["Pedal Inputs", '1x 1/4" Sustain pedal input, 1x 1/4" Control/Expression pedal input, 1x 1/4" Rotary Speaker switch pedal input'],
+        ["MIDI & Computer Connectivity", "MIDI In & Out 5-pin DIN ports + USB Type-B port for sound transfer and USB MIDI"],
+        ["Dimensions & Weight", '1074 x 121 x 344 mm (42.3" x 4.8" x 13.5"); 11.4 kg (25.13 lbs)'],
+        ["Included Accessories", "User manual, power cord; 1-Year Official Clavia Nord Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "nord-electro-6d-61-key-stage-keyboard",
+      name: "Nord Electro 6D 61",
+      shortName: "Nord Electro 6D 61-Key Semi-Weighted Waterfall Stage Keyboard with Physical Drawbars",
+      brand: "Nord",
+      category: "Keyboards",
+      subcategory: "Semi-Weighted Stage Keyboards & Organs",
+      price: 218805,
+      originalPrice: 245e3,
+      rating: 5,
+      reviewCount: 18,
+      inStock: true,
+      stock: 5,
+      badge: "61 Semi-Weighted Waterfall Keys \xB7 9 Physical Drawbars \xB7 1GB Piano Memory \xB7 Ultra-Compact 8.1 kg",
+      sku: "NORD-ELECTRO-6D-61",
+      isFeatured: false,
+      image: "assets/images/products/nord-electro-6d-61-top.png",
+      images: [
+        "assets/images/products/nord-electro-6d-61-top.png",
+        "assets/images/products/nord-electro-6d-61-rear.png"
+      ],
+      description: `
+      <h3>The Essential Touring Keyboard: 61 Semi-Weighted Waterfall Keys with Physical Drawbars</h3>
+      <p>The <strong>Nord Electro 6D 61</strong> is the definitive gigging keyboard for organists, session keyboardists, and touring performers seeking unmatched physical drawbar expressiveness in an ultra-compact 8.1 kg footprint. Featuring a <strong>61-key (5 octaves, C-C) velocity-sensitive Semi-Weighted Waterfall keybed</strong> with rounded key fronts, it is custom-tailored for rapid Hammond palm smears, organ licks, and expressive acoustic/electric piano playability.</p>
+
+      <h3>9 Tactile Physical Drawbars & Authentic C2D Organ Simulation</h3>
+      <p>Equipped with <strong>9 physical drawbars</strong> and mounting support for the optional Nord Half-Moon Switch, the Electro 6D 61 gives organists immediate tactile control over harmonic registrations. Powered by Nord's acclaimed C2D organ modeling engine, it features award-winning B3 Tonewheel, B3 Bass, vintage Vox Continental, Farfisa Compact, and two pure pipe organ models, complemented by customizable percussion decay, key click, vibrato/chorus, and authentic 122 rotary speaker simulation with tube drive.</p>
+
+      <h3>Three Independent Sound Sections with Seamless Transitions</h3>
+      <p>Simultaneously access <strong>Organ, Piano, and Sample Synth</strong> sections as a layer or across 6 split points with split point crossfade functionality. Switch between complex stage presets effortlessly with <strong>Seamless Transitions</strong> that prevent audio cutoffs. External keyboard feature allows assigning sound engines to be controlled by a second external keyboard controller while playing other sounds directly on the Electro 6D 61.</p>
+
+      <h3>1 GB Piano Library, 512 MB Sample Synth & Master Stereo Effects</h3>
+      <p>Loaded with <strong>1 GB of dedicated flash memory</strong> for the Nord Piano Library (120-voice polyphony, Gen-2 Advanced String Resonance, Soft Release, and dedicated piano filters) and <strong>512 MB</strong> for the Nord Sample Library 3.0. A complete suite of studio-grade stereo effects includes Pan, Tremolo, Wah, Ring Modulator, Chorus, Flanger, Phaser, Vibe, 3-band sweepable EQ, stereo delay with tap tempo, and reverb with Bright mode.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "61-Key (C-C) Velocity-Sensitive Semi-Weighted Waterfall Keybed" },
+        { label: "Sound Engines", value: "3 Independent Sections (Organ, Piano, Sample Synth) Active Simultaneously" },
+        { label: "Drawbars", value: "9 Physical Drawbars with Mount for Optional Half-Moon Switch" },
+        { label: "Piano Memory", value: "1 GB Dedicated Flash Memory for Nord Piano Library (120-Voice Polyphony)" },
+        { label: "Sample Synth Memory", value: "512 MB Flash Memory for Nord Sample Library 3.0 (46-Voice Polyphony)" },
+        { label: "Performance Features", value: "Seamless Program Transitions, 6 Split Points with Crossfades, External Keyboard Mode" },
+        { label: "Effects & Amp Sim", value: "Modulation FX, 122 Rotary Speaker Sim, Tube Overdrive, Sweepable 3-Band EQ, Delay, Reverb" },
+        { label: "Weight & Dimensions", value: '900 x 97 x 296 mm (35.4" x 3.8" x 11.7"); Ultra-Lightweight 8.1 kg (17.85 lbs)' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Nord Electro 6 Stage Performance Keyboard Series"],
+        ["Craftsmanship & Origin", "Handmade in Stockholm, Sweden by Clavia DMI AB"],
+        ["Keybed Mechanism", "61-Key (5 octaves, C to C) velocity-sensitive Semi-Weighted Waterfall keybed with rounded edges"],
+        ["Sound Engines", "3 Independent sound sections: Organ, Piano, Sample Synth (layer or split simultaneously)"],
+        ["Split & Layering", "6 Keyboard split points (C3-F5) with LED Split Point Crossfade functionality; 4 Live slots"],
+        ["Drawbar System", "9 Physical mechanical drawbars with mount for optional Half-Moon switch"],
+        ["Organ Engine Models", "C2D B3 Tonewheel, B3 Bass, Vox Continental, Farfisa Compact, and 2 Pipe Organ models"],
+        ["Vintage Organ Controls", "Adjustable percussion levels, percussion decay, key click, vibrato/chorus, and 3 tonewheel vintage modes"],
+        ["Piano Section Memory", "1 GB dedicated memory for Nord Piano Library (Grands, Uprights, E-Pianos, Clavinets, Harpsichords)"],
+        ["Piano Acoustic Modeling", "120-Voice polyphony, Advanced String Resonance (Gen 2), Soft Release, 4 dynamic touch response curves"],
+        ["Sample Synth Memory", "512 MB dedicated memory for Nord Sample Library 3.0 with 46-voice polyphony and velocity filtering"],
+        ["Sample Controls", "Dedicated front-panel Attack and Decay/Release controls with 4 dynamic velocity response curves"],
+        ["Modulation Effects (FX1 & FX2)", "Pan, Tremolo, Wah, Ring Modulator, 2x Phaser, 2x Flanger, 2x Chorus, and Vibe"],
+        ["Amp & Rotary Simulation", "3 Amp models, Compressor, C2D 122 Rotary Speaker simulation, and adjustable Tube Overdrive"],
+        ["EQ & Delay", "3-Band master EQ with sweepable mid (\xB115 dB); Stereo delay with tap tempo and ping-pong modes"],
+        ["Master Reverb", "Dedicated Reverb with 3 room algorithms (Room, Stage, Hall) and Bright tone enhancement"],
+        ["Audio Connections", '2x 1/4" TS line outputs (L/R unbalanced), 1x 1/8" stereo monitor input, 1x 1/4" headphone output'],
+        ["Pedal Inputs", '1x 1/4" Sustain pedal input, 1x 1/4" Control/Expression pedal input, 1x 1/4" Rotary Speaker switch pedal input'],
+        ["MIDI & Computer Connectivity", "MIDI In & Out 5-pin DIN ports + USB Type-B port for sound transfer and USB MIDI"],
+        ["Dimensions & Weight", '900 x 97 x 296 mm (35.4" x 3.8" x 11.7"); 8.1 kg (17.85 lbs)'],
+        ["Included Accessories", "User manual, power cord; 1-Year Official Clavia Nord Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "nord-electro-6d-73-key-stage-keyboard",
+      name: "Nord Electro 6D 73",
+      shortName: "Nord Electro 6D 73-Key Semi-Weighted Waterfall Stage Keyboard with Physical Drawbars",
+      brand: "Nord",
+      category: "Keyboards",
+      subcategory: "Semi-Weighted Stage Keyboards & Organs",
+      price: 243120,
+      originalPrice: 269900,
+      rating: 5,
+      reviewCount: 16,
+      inStock: true,
+      stock: 4,
+      badge: "73 Semi-Weighted Waterfall Keys \xB7 9 Physical Drawbars \xB7 1GB Piano Memory \xB7 9.2 kg",
+      sku: "NORD-ELECTRO-6D-73",
+      isFeatured: false,
+      image: "assets/images/products/nord-electro-6d-73-top.png",
+      images: [
+        "assets/images/products/nord-electro-6d-73-top.png",
+        "assets/images/products/nord-electro-6d-73-rear.png"
+      ],
+      description: `
+      <h3>Expanded 73-Key Semi-Weighted Waterfall Stage Keyboard with Physical Drawbars</h3>
+      <p>The <strong>Nord Electro 6D 73</strong> extends the classic organist's playground with an expanded <strong>73-key (6 octaves, E-E) velocity-sensitive Semi-Weighted Waterfall keybed</strong>. Featuring smooth, rounded key fronts optimized for rapid Hammond organ smears and lightning-fast palm glissandos, the 73-key range provides the extra octave essential for two-handed acoustic and electric piano repertoire while preserving an ultra-portable weight of just 9.2 kg (20.28 lbs).</p>
+
+      <h3>9 Tactile Physical Drawbars & Authentic C2D Organ Simulation</h3>
+      <p>Equipped with <strong>9 physical mechanical drawbars</strong> and mounting support for the optional Nord Half-Moon Switch, the Electro 6D 73 delivers instantaneous hands-on control over vintage tonewheel registrations. The onboard C2D organ modeling engine accurately emulates the iconic B3 Tonewheel, B3 Bass, Vox Continental, Farfisa Compact, and two pristine acoustic pipe organs, complete with adjustable key click, percussion decays, vintage tonewheel modes, and authentic 122 rotary speaker simulation with tube overdrive.</p>
+
+      <h3>Three Simultaneous Independent Sound Engines with Seamless Transitions</h3>
+      <p>Run <strong>Organ, Piano, and Sample Synth</strong> sections simultaneously as complex multi-layered textures or across <strong>6 flexible keyboard split points</strong> with LED Split Point Crossfades. Switch programs effortlessly during live performances without audio dropouts using <strong>Seamless Transitions</strong>. The external keyboard feature allows assigning sound engines to an external MIDI controller while playing other sounds directly from the Electro 6D 73.</p>
+
+      <h3>1 GB Piano Memory, 512 MB Sample Synth & Master Stereo FX</h3>
+      <p>The Piano section features <strong>1 GB of dedicated flash memory</strong> for the Nord Piano Library with 120-voice polyphony, Gen-2 Advanced String Resonance, Soft Release, and dedicated piano filters. The Sample Synth section offers <strong>512 MB of memory</strong> for the Nord Sample Library 3.0 with dynamic envelope controls. The stereo effects section includes Tremolo, Pan, Wah, Ring Modulator, Phasers, Flangers, Chorus, Vibe, 3-band sweepable EQ, stereo delay with tap tempo, and reverb with Bright mode.</p>
+    `,
+      specs: [
+        { label: "Keybed", value: "73-Key (E-E) Velocity-Sensitive Semi-Weighted Waterfall Keybed" },
+        { label: "Sound Engines", value: "3 Independent Sections (Organ, Piano, Sample Synth) Active Simultaneously" },
+        { label: "Drawbars", value: "9 Physical Mechanical Drawbars with Mount for Optional Half-Moon Switch" },
+        { label: "Piano Memory", value: "1 GB Dedicated Flash Memory for Nord Piano Library (120-Voice Polyphony)" },
+        { label: "Sample Synth Memory", value: "512 MB Flash Memory for Nord Sample Library 3.0 (46-Voice Polyphony)" },
+        { label: "Performance Features", value: "Seamless Program Transitions, 6 Split Points with Crossfades, External Keyboard Mode" },
+        { label: "Effects & Amp Sim", value: "Modulation FX, 122 Rotary Speaker Sim, Tube Overdrive, Sweepable 3-Band EQ, Delay, Reverb" },
+        { label: "Weight & Dimensions", value: '1066 x 97 x 296 mm (42.0" x 3.8" x 11.7"); Lightweight 9.2 kg (20.28 lbs)' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Nord Electro 6 Stage Performance Keyboard Series"],
+        ["Craftsmanship & Origin", "Handmade in Stockholm, Sweden by Clavia DMI AB"],
+        ["Keybed Mechanism", "73-Key (6 octaves, E to E) velocity-sensitive Semi-Weighted Waterfall keybed with rounded edges"],
+        ["Sound Engines", "3 Independent sound sections: Organ, Piano, Sample Synth (layer or split simultaneously)"],
+        ["Split & Layering", "6 Keyboard split points (C3-F5) with LED Split Point Crossfade functionality; 4 Live slots"],
+        ["Drawbar System", "9 Physical mechanical drawbars with mount for optional Half-Moon switch"],
+        ["Organ Engine Models", "C2D B3 Tonewheel, B3 Bass, Vox Continental, Farfisa Compact, and 2 Pipe Organ models"],
+        ["Vintage Organ Controls", "Adjustable percussion levels, percussion decay, key click, vibrato/chorus, and 3 tonewheel vintage modes"],
+        ["Piano Section Memory", "1 GB dedicated memory for Nord Piano Library (Grands, Uprights, E-Pianos, Clavinets, Harpsichords)"],
+        ["Piano Acoustic Modeling", "120-Voice polyphony, Advanced String Resonance (Gen 2), Soft Release, 4 dynamic touch response curves"],
+        ["Sample Synth Memory", "512 MB dedicated memory for Nord Sample Library 3.0 with 46-voice polyphony and velocity filtering"],
+        ["Sample Controls", "Dedicated front-panel Attack and Decay/Release controls with 4 dynamic velocity response curves"],
+        ["Modulation Effects (FX1 & FX2)", "Pan, Tremolo, Wah, Ring Modulator, 2x Phaser, 2x Flanger, 2x Chorus, and Vibe"],
+        ["Amp & Rotary Simulation", "3 Amp models, Compressor, C2D 122 Rotary Speaker simulation, and adjustable Tube Overdrive"],
+        ["EQ & Delay", "3-Band master EQ with sweepable mid (\xB115 dB); Stereo delay with tap tempo and ping-pong modes"],
+        ["Master Reverb", "Dedicated Reverb with 3 room algorithms (Room, Stage, Hall) and Bright tone enhancement"],
+        ["Audio Connections", '2x 1/4" TS line outputs (L/R unbalanced), 1x 1/8" stereo monitor input, 1x 1/4" headphone output'],
+        ["Pedal Inputs", '1x 1/4" Sustain pedal input, 1x 1/4" Control/Expression pedal input, 1x 1/4" Rotary Speaker switch pedal input'],
+        ["MIDI & Computer Connectivity", "MIDI In & Out 5-pin DIN ports + USB Type-B port for sound transfer and USB MIDI"],
+        ["Dimensions & Weight", '1066 x 97 x 296 mm (42.0" x 3.8" x 11.7"); 9.2 kg (20.28 lbs)'],
+        ["Included Accessories", "User manual, power cord; 1-Year Official Clavia Nord Manufacturer Warranty"]
+      ]
+    },
+    {
+      id: "native-instruments-traktor-mx2-dj-controller",
+      name: "Native Instruments Traktor MX2",
+      shortName: "Native Instruments Traktor MX2 2-Channel DJ Controller with Traktor Pro 4 & Stem Separation",
+      brand: "Native Instruments",
+      category: "DJ Consoles",
+      subcategory: "2-Channel DJ Controllers",
+      price: 243120,
+      originalPrice: 269900,
+      rating: 5,
+      reviewCount: 21,
+      inStock: true,
+      stock: 5,
+      badge: "Traktor Pro 4 Full Version Included \xB7 Live Stem Separation \xB7 16 RGB Pads \xB7 24-bit/96 kHz Audio",
+      sku: "NI-TRAKTOR-MX2",
+      isFeatured: false,
+      image: "assets/images/products/ni-traktor-mx2-top.jpg",
+      images: [
+        "assets/images/products/ni-traktor-mx2-top.jpg",
+        "assets/images/products/ni-traktor-mx2-front.jpg",
+        "assets/images/products/ni-traktor-mx2-angle.jpg"
+      ],
+      description: `
+      <h3>Next-Generation 2-Channel DJ Controller with Traktor Pro 4 & Real-Time Stems</h3>
+      <p>The <strong>Native Instruments Traktor MX2</strong> is a next-generation 2-channel DJ performance controller engineered for emerging and professional DJs who demand club-grade creative firepower in an ultra-portable footprint. It comes packaged with the <strong>full version of Traktor Pro 4</strong>, unlocking instantaneous hands-on mastery over beatmatching, looping, multi-effect chains, and groundbreaking <strong>real-time stem separation</strong> that isolates drums, bass, instruments, and vocals on the fly.</p>
+
+      <h3>High-Resolution Touch Jog Wheels & Instinctive Mixing Architecture</h3>
+      <p>Navigate and sculpt your tracks effortlessly with dual touch-sensitive jog wheels featuring both Turntable and Jog modes for scratching, nudging, and backspins. The mixer section features dedicated 2-channel faders with precision <strong>LED VU meters</strong> for immediate visual headroom feedback, smooth crossfader, tactile 3-band channel EQs, and dedicated browse controls for pre-listening, favorites, prep lists, and full-screen library view.</p>
+
+      <h3>16 RGB Performance Pads with 4 Dynamic Modes & Pattern Player</h3>
+      <p>The 16 color-customizable RGB performance pads unlock 4 expressive physical modes: <strong>Hotcue Mode</strong> for cue-point dropping and jump-backs, <strong>Stem Mode</strong> for live muting, filtering, and volume sculpting of track stems, <strong>Step Sequencer Mode</strong> for programming live rhythmic beats using Traktor's 16 drum kits, and <strong>Flux Loops Mode</strong> for seamless continuous loop building. Directly trigger rhythmic percussion patterns with the onboard <strong>Pattern Player drum machine</strong> to inject unique grooves and fills.</p>
+
+      <h3>Studio Effects, Mixer FX & Built-In 24-Bit/96 kHz Audio Interface</h3>
+      <p>Shape tracks with dedicated Mixer FX knobs on each channel and two complete Deck FX units featuring over <strong>40 studio-grade algorithms</strong> across four assignable effect processors. Sonic output is powered by an audiophile <strong>24-bit/96 kHz USB audio interface</strong> enhanced by iZotope's award-winning Ozone Maximizer for maximum loudness without clipping. Complete with RCA and 1/8" Master outputs, 1/4" and 1/8" headphone outs, 1/4" microphone input, RGB backlit bottom shell, USB-C connectivity, and an included 2-month Beatport/Beatsource streaming subscription.</p>
+    `,
+      specs: [
+        { label: "Channels & Software", value: "2-Channel DJ Controller with Full Version Traktor Pro 4 Software Included" },
+        { label: "Jog Wheels", value: "2x Touch-Sensitive High-Resolution Jog Wheels with Turntable & Jog Modes" },
+        { label: "Stem Separation", value: "Real-Time Hardware Stem Control (Isolate Drums, Bass, Instruments, Vocals)" },
+        { label: "Performance Pads", value: "16 RGB Backlit Pads with Hotcue, Stem, Step Sequencer & Flux Modes" },
+        { label: "Drum Sequencer", value: "Onboard Pattern Player Drum Machine with Synced Rhythmic Kits" },
+        { label: "Effects Engine", value: "Dedicated Mixer FX Dials + 2 Deck FX Units with 40+ Studio Algorithms" },
+        { label: "Audio Interface", value: "Built-in 24-bit/96 kHz Interface with iZotope Ozone Maximizer Processing" },
+        { label: "I/O Connectivity", value: 'Master Out (RCA + 1/8"), Dual Headphone (1/4" + 1/8"), 1/4" Mic In, USB-C' }
+      ],
+      deepSpecs: [
+        ["Product Series", "Native Instruments Traktor Performance DJ Hardware Series"],
+        ["Controller Architecture", "2-Channel USB DJ Controller with integrated mixing console and audio interface"],
+        ["Software Included", "Traktor Pro 4 full license included (complete feature set, beatmatching, stems, FX)"],
+        ["Jog Wheels", "2x Touch-sensitive high-resolution jog wheels with Turntable vinyl mode and Jog nudge mode"],
+        ["Stem Separation", "Live hardware stem isolation and remixing: mute, unmute, filter, and level sculpt track stems"],
+        ["Performance Pads", "16 Color-customizable RGB backlit pads with 4 selectable performance modes"],
+        ["Pad Modes", "Hotcue Mode, Stem Mode, Step Sequencer Mode (16 drum kits), Flux Loops Mode"],
+        ["Onboard Drum Machine", "Pattern Player for triggering tempo-synced rhythmic percussion patterns and fills"],
+        ["Channel Controls", "2 Channel volume faders, crossfader, 2 pitch faders, and 3-band channel equalizers"],
+        ["Level Metering", "Dual hardware LED VU meters on mixer channels for visual headroom monitoring"],
+        ["Mixer FX", "Dedicated instant Mixer FX dials on each channel for quick sweeps, filters, delays, and reverbs"],
+        ["Deck FX Units", "2 Full Deck FX units with 4 assignable effect processors and over 40 studio effects"],
+        ["Audio Interface", "Professional 24-bit / 96 kHz low-latency USB audio interface"],
+        ["Mastering Processor", "Built-in iZotope Ozone Maximizer processing for club-ready, distortion-free output"],
+        ["Master Outputs", 'Stereo RCA master outputs + 1/8" (3.5 mm) mini-jack master output'],
+        ["Headphone Outputs", 'Dual headphone jacks: 1/4" (6.35 mm) TRS and 1/8" (3.5 mm) TRS stereo outs'],
+        ["Microphone Input", '1x 1/4" TS microphone input with dedicated input gain control'],
+        ["Lighting & Aesthetic", "58 Backlit buttons, customizable RGB pads, and ambient RGB backlit bottom shell"],
+        ["Connectivity & Power", "USB Type-C port for computer connectivity and bus-powering"],
+        ["Streaming Services", "Includes 2-Month Beatport or Beatsource Pro streaming subscription for new users"],
+        ["Dimensions & Build", "High-durability compact chassis; lightweight and easily portable in DJ backpacks"],
+        ["Warranty", "1-Year Official Native Instruments Manufacturer Warranty; Authorized Pan-India Dispatch"]
+      ]
+    }
+];
+
+export const FEATURED_PRODUCTS = AUDIOKING_PRODUCTS.filter(p => p.isFeatured);

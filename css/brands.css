@@ -1,0 +1,115 @@
+/**
+ * AudioKing Shop Top Brands Row
+ * Balanced, spacious 5-column grid across 2 rows eliminating clutter.
+ */
+
+.ak-brands-section {
+  margin: 56px 0 46px;
+}
+
+.ak-brands-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px; /* Noticeably increased gap between title and list of brands */
+}
+
+.ak-brands-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ak-orange);
+  text-decoration: none;
+  padding: 6px 14px;
+  background-color: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  border-radius: var(--ak-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.ak-brands-view-all:hover {
+  background-color: #FFEDD5;
+  color: #C2410C;
+  transform: translateX(3px);
+}
+
+.ak-brands-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 960px) and (min-width: 769px) {
+  .ak-brands-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ak-brands-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  /* Strictly 3 horizontal lines of 2 cards (6 cards total) on mobile */
+  .ak-brand-card:nth-child(n+7) {
+    display: none !important;
+  }
+  .ak-brand-card {
+    height: 54px;
+    padding: 0 8px;
+    border-radius: 8px;
+  }
+  .ak-brand-name {
+    font-size: 12px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 480px) {
+  .ak-brands-grid {
+    gap: 8px;
+  }
+  .ak-brand-card {
+    height: 50px;
+    padding: 0 6px;
+  }
+  .ak-brand-name {
+    font-size: 11px;
+  }
+}
+
+.ak-brand-card {
+  height: 64px;
+  background-color: #FFFFFF;
+  border: 1px solid var(--ak-border);
+  border-radius: var(--ak-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+  text-decoration: none;
+  color: #0F172A;
+}
+
+.ak-brand-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--ak-orange);
+  color: var(--ak-orange);
+  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.12);
+}
+
+.ak-brand-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-align: center;
+  white-space: nowrap;
+}
+

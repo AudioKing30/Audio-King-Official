@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <radialGradient id="bassSunburst" cx="50%" cy="65%" r="60%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="45%" stop-color="#EA580C"/>
+      <stop offset="80%" stop-color="#7C2D12"/>
+      <stop offset="100%" stop-color="#18181B"/>
+    </radialGradient>
+    <filter id="bassShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <g filter="url(#bassShadow)" transform="translate(0, -2)">
+    <!-- Long Bass Neck -->
+    <rect x="75.5" y="20" width="9" height="66" fill="#E2B755"/>
+    <!-- Frets -->
+    <line x1="75.5" y1="28" x2="84.5" y2="28" stroke="#451A03" stroke-width="0.9"/>
+    <line x1="75.5" y1="38" x2="84.5" y2="38" stroke="#451A03" stroke-width="0.9"/>
+    <line x1="75.5" y1="50" x2="84.5" y2="50" stroke="#451A03" stroke-width="0.9"/>
+    <line x1="75.5" y1="64" x2="84.5" y2="64" stroke="#451A03" stroke-width="0.9"/>
+    <!-- Headstock with 4 In-line Big Clover Pegs -->
+    <path d="M74,20 L73,8 C73,5 77,4 80,4 C84,4 87,6 87,10 L85.5,20 Z" fill="#27272A"/>
+    <circle cx="70" cy="7" r="3" fill="#E2E8F0"/>
+    <circle cx="70" cy="13" r="3" fill="#E2E8F0"/>
+    <circle cx="70" cy="19" r="3" fill="#E2E8F0"/>
+    <circle cx="90" cy="10" r="3" fill="#E2E8F0"/>
+    <!-- Bass Body (Offset P-Bass Cutaway) -->
+    <path d="M80,75 C72,75 62,80 60,88 C57,98 63,103 61,110 C56,118 48,126 52,137 C56,147 70,149 80,149 C91,149 105,145 108,135 C111,123 102,116 98,107 C95,100 101,94 98,85 C95,77 87,75 80,75 Z" fill="url(#bassSunburst)" stroke="#18181B" stroke-width="1.5"/>
+    <!-- White Pickguard -->
+    <path d="M73,86 C67,88 66,98 67,107 C70,116 78,118 80,118 C82,118 86,113 86,104 C86,96 82,88 73,86 Z" fill="#F8FAFC" opacity="0.95"/>
+    <!-- Split Coil Pickups -->
+    <rect x="74" y="94" width="6" height="5" rx="1" fill="#09090B"/>
+    <rect x="79" y="98" width="6" height="5" rx="1" fill="#09090B"/>
+    <!-- Chrome Bridge -->
+    <rect x="75" y="122" width="10" height="6" rx="1" fill="#94A3B8"/>
+    <!-- Volume / Tone Knobs -->
+    <circle cx="92" cy="120" r="2.8" fill="#E2E8F0" stroke="#475569" stroke-width="0.8"/>
+    <circle cx="96" cy="128" r="2.8" fill="#E2E8F0" stroke="#475569" stroke-width="0.8"/>
+    <!-- 4 Thick Bass Strings -->
+    <line x1="77.5" y1="7" x2="77.5" y2="125" stroke="#FFFFFF" stroke-width="1.1" opacity="0.9"/>
+    <line x1="79" y1="7" x2="79" y2="125" stroke="#FFFFFF" stroke-width="1.0" opacity="0.9"/>
+    <line x1="80.5" y1="7" x2="80.5" y2="125" stroke="#FFFFFF" stroke-width="0.8" opacity="0.9"/>
+    <line x1="82" y1="7" x2="82" y2="125" stroke="#FFFFFF" stroke-width="0.7" opacity="0.9"/>
+  </g>
+</svg>

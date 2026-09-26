@@ -1,0 +1,331 @@
+/**
+ * AudioKing Persistent Database Engine (SQLite via node:sqlite)
+ * Provides ACID-compliant schema, prepared statements, and transactional models.
+ */
+
+const { DatabaseSync } = require('node:sqlite');
+const path = require('path');
+const fs = require('fs');
+require('dotenv').config();
+
+// Ensure data directory exists
+const dbPath = process.env.DATABASE_PATH || path.join(__dirname, 'data', 'audioking.db');
+const dataDir = path.dirname(path.resolve(dbPath));
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const db = new DatabaseSync(path.resolve(dbPath));
+
+// Enable Foreign Keys & Write-Ahead Logging (WAL) for performance and consistency
+db.exec('PRAGMA foreign_keys = ON;');
+
+/**
+ * Initialize Database Tables
+ */
+function initDatabase() {
+  db.exec(`
+    -- USERS TABLE
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      full_name TEXT NOT NULL,
+      display_name TEXT,
+      title TEXT,
+      email TEXT UNIQUE NOT NULL COLLATE NOCASE,
+      phone_number TEXT,
+      profile_image TEXT,
+      auth_provider TEXT NOT NULL DEFAULT 'email',
+      email_verified INTEGER NOT NULL DEFAULT 0,
+      phone_verified INTEGER NOT NULL DEFAULT 0,
+      password_hash TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      last_login_at TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+    -- VERIFICATION CODES (For Signup OTP & Password Reset)
+    CREATE TABLE IF NOT EXISTS verification_codes (
+      id TEXT PRIMARY KEY,
+      user_id TEXT,
+      email TEXT NOT NULL COLLATE NOCASE,
+      otp_hash TEXT NOT NULL,
+      purpose TEXT NOT NULL,
+      metadata TEXT,
+      expires_at INTEGER NOT NULL,
+      attempts INTEGER NOT NULL DEFAULT 0,
+      verified INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_verification_lookup ON verification_codes(email, purpose, verified);
+
+    -- SESSIONS TABLE (For Stateful Secure Session Tracking)
+    CREATE TABLE IF NOT EXISTS sessions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token_hash TEXT UNIQUE NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at TEXT NOT NULL,
+      last_active_at TEXT NOT NULL,
+      user_agent TEXT,
+      ip_address TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token_hash);
+    CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+
+    -- USER SAVED ADDRESSES TABLE
+    CREATE TABLE IF NOT EXISTS addresses (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      tag TEXT DEFAULT 'Studio',
+      recipient_name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      street TEXT NOT NULL,
+      city TEXT NOT NULL,
+      state TEXT NOT NULL,
+      pin TEXT NOT NULL,
+      is_default INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_addresses_user ON addresses(user_id);
+
+    -- AUTH IDENTITIES TABLE (For Multi-Provider Linking & Duplicate Account Prevention)
+    CREATE TABLE IF NOT EXISTS auth_identities (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      provider TEXT NOT NULL,
+      provider_user_id TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      UNIQUE(provider, provider_user_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_auth_identities_user ON auth_identities(user_id);
+    CREATE INDEX IF NOT EXISTS idx_auth_identities_lookup ON auth_identities(provider, provider_user_id);
+
+    -- ORDERS TABLE (Backed by Real SQLite Database)
+    CREATE TABLE IF NOT EXISTS orders (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      order_number TEXT UNIQUE NOT NULL,
+      total_amount REAL NOT NULL,
+      status TEXT NOT NULL DEFAULT 'Confirmed',
+      shipping_address TEXT NOT NULL,
+      payment_method TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
+    CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(created_at DESC);
+
+    -- ORDER ITEMS TABLE (Normalized Line Items Per Order)
+    CREATE TABLE IF NOT EXISTS order_items (
+      id TEXT PRIMARY KEY,
+      order_id TEXT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+      product_id TEXT,
+      product_name TEXT NOT NULL,
+      product_image TEXT,
+      quantity INTEGER NOT NULL DEFAULT 1,
+      unit_price REAL NOT NULL,
+      subtotal REAL NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+
+    -- PERSISTENT CART ITEMS (Database-backed ecommerce cart per customer)
+    CREATE TABLE IF NOT EXISTS cart_items (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      product_id TEXT NOT NULL,
+      quantity INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      UNIQUE(user_id, product_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_cart_items_user ON cart_items(user_id);
+
+    -- PERSISTENT WISHLIST ITEMS (Database-backed wishlist per customer)
+    CREATE TABLE IF NOT EXISTS wishlist_items (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      product_id TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      UNIQUE(user_id, product_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_wishlist_items_user ON wishlist_items(user_id);
+
+    -- PRODUCTS TABLE (Live SQLite Catalog)
+    CREATE TABLE IF NOT EXISTS products (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      short_name TEXT,
+      brand TEXT NOT NULL,
+      category TEXT NOT NULL,
+      subcategory TEXT,
+      price REAL NOT NULL,
+      original_price REAL NOT NULL,
+      stock INTEGER NOT NULL DEFAULT 10,
+      in_stock INTEGER NOT NULL DEFAULT 1,
+      rating REAL DEFAULT 5.0,
+      review_count INTEGER DEFAULT 0,
+      badge TEXT,
+      sku TEXT,
+      description TEXT,
+      image TEXT,
+      images_json TEXT NOT NULL DEFAULT '[]',
+      video_type TEXT,
+      video_url TEXT,
+      youtube_video_id TEXT,
+      specs_json TEXT DEFAULT '[]',
+      deep_specs_json TEXT DEFAULT '[]',
+      is_featured INTEGER DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
+    CREATE INDEX IF NOT EXISTS idx_products_brand ON products(brand);
+    CREATE INDEX IF NOT EXISTS idx_products_price ON products(price);
+
+    -- CATEGORIES TABLE
+    CREATE TABLE IF NOT EXISTS categories (
+      id TEXT PRIMARY KEY,
+      name TEXT UNIQUE NOT NULL,
+      slug TEXT,
+      created_at TEXT NOT NULL
+    );
+
+    -- BRANDS TABLE
+    CREATE TABLE IF NOT EXISTS brands (
+      id TEXT PRIMARY KEY,
+      name TEXT UNIQUE NOT NULL,
+      slug TEXT,
+      created_at TEXT NOT NULL
+    );
+
+    -- OFFERS / BLANKET DISCOUNTS TABLE
+    CREATE TABLE IF NOT EXISTS offers (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      target_type TEXT NOT NULL, -- 'category' | 'product'
+      target_id TEXT NOT NULL,
+      discount_percent REAL NOT NULL,
+      start_date TEXT,
+      end_date TEXT,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL
+    );
+
+    -- COUPONS TABLE
+    CREATE TABLE IF NOT EXISTS coupons (
+      id TEXT PRIMARY KEY,
+      code TEXT UNIQUE NOT NULL COLLATE NOCASE,
+      discount_type TEXT NOT NULL, -- 'flat' | 'percentage'
+      discount_value REAL NOT NULL,
+      min_cart_value REAL NOT NULL DEFAULT 0,
+      usage_limit INTEGER,
+      used_count INTEGER NOT NULL DEFAULT 0,
+      expires_at TEXT,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL
+    );
+
+    -- PAGE VIEWS TABLE (Lightweight Analytics Tracker)
+    CREATE TABLE IF NOT EXISTS page_views (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      path TEXT NOT NULL,
+      product_id TEXT,
+      referrer TEXT,
+      user_agent TEXT,
+      ip_hash TEXT,
+      session_id TEXT,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_page_views_path ON page_views(path);
+    CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_views(created_at);
+    CREATE INDEX IF NOT EXISTS idx_page_views_product ON page_views(product_id);
+
+    -- PRODUCT VARIANT GROUPS (Color, Size, Custom)
+    CREATE TABLE IF NOT EXISTS product_variant_groups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      group_name TEXT NOT NULL,
+      group_type TEXT NOT NULL DEFAULT 'text',
+      sort_order INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_variant_groups_product ON product_variant_groups(product_id);
+
+    -- PRODUCT VARIANT OPTIONS (Individual values within a group)
+    CREATE TABLE IF NOT EXISTS product_variant_options (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      group_id INTEGER NOT NULL REFERENCES product_variant_groups(id) ON DELETE CASCADE,
+      label TEXT NOT NULL,
+      color_hex TEXT,
+      variant_image TEXT,
+      sort_order INTEGER DEFAULT 0
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_variant_options_group ON product_variant_options(group_id);
+
+    -- PRODUCT VARIANTS (Combination matrix with per-variant stock)
+    CREATE TABLE IF NOT EXISTS product_variants (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+      sku_suffix TEXT,
+      option_ids TEXT NOT NULL DEFAULT '[]',
+      option_labels TEXT NOT NULL DEFAULT '',
+      price_override REAL,
+      stock INTEGER NOT NULL DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
+      created_at TEXT DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_variants_product ON product_variants(product_id);
+  `);
+
+  // Safe schema migrations for existing database columns
+  try {
+    const userColumns = db.prepare("PRAGMA table_info(users)").all();
+    const userColNames = userColumns.map(c => c.name);
+    if (!userColNames.includes('role')) {
+      db.exec("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'customer';");
+    }
+    if (!userColNames.includes('custom_profile_image')) {
+      db.exec('ALTER TABLE users ADD COLUMN custom_profile_image TEXT;');
+    }
+    if (!userColNames.includes('provider_profile_image')) {
+      db.exec('ALTER TABLE users ADD COLUMN provider_profile_image TEXT;');
+    }
+
+    const orderColumns = db.prepare("PRAGMA table_info(orders)").all();
+    const orderColNames = orderColumns.map(c => c.name);
+    if (!orderColNames.includes('coupon_code')) {
+      db.exec('ALTER TABLE orders ADD COLUMN coupon_code TEXT;');
+    }
+    if (!orderColNames.includes('discount_amount')) {
+      db.exec('ALTER TABLE orders ADD COLUMN discount_amount REAL DEFAULT 0;');
+    }
+  } catch (e) {
+    console.warn('[DB Migration Warning]', e.message);
+  }
+
+  console.log(`[DB] Database initialized successfully at: ${path.resolve(dbPath)}`);
+}
+
+// Run schema initialization
+initDatabase();
+
+module.exports = {
+  db,
+  initDatabase
+};

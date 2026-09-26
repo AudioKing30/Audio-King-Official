@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment Variables & Secrets (CRITICAL: NEVER COMMIT)
+.env
+.env.local
+.env.*.local
+
+# SQLite Database & Session Logs (Created dynamically on startup)
+server/data/*.db
+server/data/*.db-journal
+server/data/*.db-wal
+server/data/*.db-shm
+server/data/email_log.json
+
+# Scratch Files, Automation Profiles & Test Artifacts
+scratch/
+scratch_*
+test_*.js
+test-*.js
+*.log
+
+# System & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

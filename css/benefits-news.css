@@ -1,0 +1,209 @@
+/* AudioKing Benefits & Newsletter Sections */
+
+/* 1. BENEFITS SECTION */
+.ak-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+  margin-bottom: 24px;
+}
+
+.ak-benefit-card {
+  background-color: #F5F7FA;
+  border: 1px solid var(--ak-border);
+  border-radius: var(--ak-radius);
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ak-benefit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ak-shadow-card);
+  border-color: #CBD5E0;
+}
+
+.ak-benefit-icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  border: 1px solid var(--ak-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ak-navy);
+  flex-shrink: 0;
+  box-shadow: var(--ak-shadow-subtle);
+  transition: background-color var(--ak-transition-fast), color var(--ak-transition-fast);
+}
+
+.ak-benefit-card:hover .ak-benefit-icon-circle {
+  background-color: var(--ak-orange-light);
+  color: var(--ak-orange);
+}
+
+.ak-benefit-info h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ak-text-primary);
+  margin-bottom: 3px;
+}
+
+.ak-benefit-info p {
+  font-size: 12px;
+  color: var(--ak-text-muted);
+  margin-bottom: 4px;
+}
+
+.ak-benefit-action {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ak-orange);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 2. NEWSLETTER STRIP */
+.ak-newsletter-strip {
+  background-color: var(--ak-navy);
+  color: #FFFFFF;
+  padding: 30px 0;
+  margin-top: 24px;
+}
+
+.ak-newsletter-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.ak-newsletter-text h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.ak-newsletter-text p {
+  font-size: 13px;
+  color: #CBD5E1;
+}
+
+.ak-newsletter-form {
+  display: flex;
+  max-width: 440px;
+  width: 100%;
+  border-radius: var(--ak-radius-sm);
+  overflow: hidden;
+}
+
+.ak-newsletter-input {
+  flex: 1;
+  height: 42px;
+  padding: 0 16px;
+  font-size: 13px;
+  border: none;
+  background-color: #FFFFFF;
+  color: var(--ak-text-primary);
+}
+
+.ak-newsletter-input::placeholder {
+  color: #8C9BAE;
+}
+
+.ak-newsletter-btn {
+  background-color: var(--ak-orange);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 0 20px;
+  height: 42px;
+  border: none;
+  transition: background-color var(--ak-transition-fast);
+}
+
+.ak-newsletter-btn:hover {
+  background-color: var(--ak-orange-hover);
+}
+
+.ak-newsletter-social {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #E2E8F0;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ak-social-link {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  transition: background-color var(--ak-transition-fast), transform var(--ak-transition-fast);
+}
+
+.ak-social-link:hover {
+  background-color: var(--ak-orange);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .ak-benefits-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 24px;
+    margin-bottom: 20px;
+  }
+  .ak-benefit-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 10px;
+    gap: 8px;
+    border-radius: 10px;
+  }
+  .ak-benefit-icon-circle {
+    width: 36px;
+    height: 36px;
+  }
+  .ak-benefit-icon-circle svg {
+    width: 18px;
+    height: 18px;
+  }
+  .ak-benefit-info h3 {
+    font-size: 11.5px;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+  .ak-benefit-info p {
+    font-size: 10px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ak-benefit-action {
+    font-size: 10.5px;
+  }
+  .ak-newsletter-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .ak-newsletter-form {
+    max-width: 100%;
+  }
+}

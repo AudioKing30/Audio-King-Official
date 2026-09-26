@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <radialGradient id="vinyl" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#DC2626"/>
+      <stop offset="25%" stop-color="#DC2626"/>
+      <stop offset="28%" stop-color="#18181B"/>
+      <stop offset="70%" stop-color="#09090B"/>
+      <stop offset="90%" stop-color="#27272A"/>
+      <stop offset="100%" stop-color="#09090B"/>
+    </radialGradient>
+    <filter id="djShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <g filter="url(#djShadow)">
+    <!-- Turntable Base Chassis -->
+    <rect x="25" y="32" width="110" height="96" rx="8" fill="#E2E8F0" stroke="#94A3B8" stroke-width="2"/>
+    <!-- Cast Platter Ring -->
+    <circle cx="70" cy="80" r="38" fill="#CBD5E1" stroke="#64748B" stroke-width="1.5"/>
+    <!-- Vinyl Record -->
+    <circle cx="70" cy="80" r="34" fill="url(#vinyl)"/>
+    <!-- Vinyl Grooves -->
+    <circle cx="70" cy="80" r="28" fill="none" stroke="#27272A" stroke-width="0.8" opacity="0.8"/>
+    <circle cx="70" cy="80" r="22" fill="none" stroke="#27272A" stroke-width="0.8" opacity="0.8"/>
+    <circle cx="70" cy="80" r="16" fill="none" stroke="#27272A" stroke-width="0.8" opacity="0.8"/>
+    <!-- Center Spindle -->
+    <circle cx="70" cy="80" r="8" fill="#DC2626"/>
+    <circle cx="70" cy="80" r="2" fill="#F8FAFC"/>
+    <!-- Pitch Slider on Right -->
+    <rect x="120" y="52" width="6" height="42" rx="2" fill="#0F172A"/>
+    <line x1="123" y1="56" x2="123" y2="90" stroke="#475569" stroke-width="1.5"/>
+    <rect x="119" y="70" width="8" height="5" rx="1" fill="#FFFFFF" stroke="#000" stroke-width="0.8"/>
+    <!-- Tonearm Assembly -->
+    <circle cx="114" cy="46" r="6" fill="#475569"/>
+    <path d="M114,46 Q108,60 102,74 L94,84" fill="none" stroke="#94A3B8" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="90" y="82" width="6" height="4" rx="1" fill="#DC2626" transform="rotate(-30 90 82)"/>
+    <!-- Start / Stop Button -->
+    <rect x="32" y="106" width="14" height="12" rx="2" fill="#0F172A" stroke="#475569" stroke-width="1"/>
+    <polygon points="37,110 37,118 43,114" fill="#FFFFFF"/>
+  </g>
+</svg>

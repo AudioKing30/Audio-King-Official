@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="leatherStrap" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9A3412"/>
+      <stop offset="50%" stop-color="#C2410C"/>
+      <stop offset="100%" stop-color="#7C2D12"/>
+    </linearGradient>
+    <filter id="cablesShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <g filter="url(#cablesShadow)">
+    <!-- Looped Leather Strap -->
+    <path d="M42,122 C36,96 52,56 78,44 C104,32 124,54 118,84 C112,112 116,134 116,134" fill="none" stroke="url(#leatherStrap)" stroke-width="15" stroke-linecap="round"/>
+    <!-- Strap Stitching -->
+    <path d="M42,122 C36,96 52,56 78,44 C104,32 124,54 118,84 C112,112 116,134 116,134" fill="none" stroke="#FEF08A" stroke-width="1" stroke-dasharray="3 3" opacity="0.75"/>
+    <!-- Strap Adjustment Slots -->
+    <ellipse cx="64" cy="54" rx="2.5" ry="1.5" fill="#431407" transform="rotate(-30 64 54)"/>
+    <ellipse cx="76" cy="46" rx="2.5" ry="1.5" fill="#431407" transform="rotate(-15 76 46)"/>
+    <ellipse cx="88" cy="46" rx="2.5" ry="1.5" fill="#431407" transform="rotate(15 88 46)"/>
+    <!-- Gold Audio Jack Plug on Left -->
+    <rect x="36" y="112" width="10" height="24" rx="2" fill="#1E293B"/>
+    <rect x="39" y="136" width="4" height="12" fill="#EAB308" stroke="#CA8A04" stroke-width="0.6"/>
+    <line x1="39" y1="142" x2="43" y2="142" stroke="#000" stroke-width="1"/>
+  </g>
+</svg>

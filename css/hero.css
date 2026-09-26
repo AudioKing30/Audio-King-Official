@@ -1,0 +1,304 @@
+/**
+ * AudioKing 3-Slide Hero Carousel & Left-Aligned Overlays
+ * Matches user's exact briefing for:
+ * - Slide 1: Professional Audio ("Sound. Built Better.")
+ * - Slide 2: Community / Musical Experience ("Your Sound. Your People. Your Moment.")
+ * - Slide 3: Creative Productivity ("Turn Ideas Into Sound.")
+ */
+
+.ak-hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+  background-color: #0A0F18;
+}
+
+.ak-hero-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.ak-hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.65s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.65s;
+  display: flex;
+  align-items: center;
+}
+
+.ak-hero-slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+/* Subtle dark gradient behind text for crisp contrast without obscuring subjects */
+.ak-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(8, 12, 18, 0.85) 0%,
+    rgba(8, 12, 18, 0.68) 32%,
+    rgba(8, 12, 18, 0.32) 58%,
+    rgba(8, 12, 18, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+/* Left-aligned content block: 7-9% offset, vertically centered, max 500px */
+.ak-hero-content {
+  position: relative;
+  z-index: 3;
+  margin-left: 8%;
+  max-width: 500px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Slide Typography & Elements */
+.ak-hero-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2.8px;
+  text-transform: uppercase;
+  color: var(--ak-orange);
+  margin-bottom: 14px;
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+}
+
+.ak-hero-title {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1.02;
+  color: #FFFFFF;
+  margin-bottom: 18px;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease-out 0.06s, transform 0.45s ease-out 0.06s;
+}
+
+.ak-hero-accent {
+  color: var(--ak-orange);
+}
+
+.ak-hero-subtitle {
+  font-size: 16.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.80);
+  max-width: 440px;
+  margin-bottom: 26px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease-out 0.12s, transform 0.45s ease-out 0.12s;
+}
+
+/* Staggered entrance animation when slide is active (finishes within 500-650ms) */
+.ak-hero-slide.active .ak-hero-eyebrow {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ak-hero-slide.active .ak-hero-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ak-hero-slide.active .ak-hero-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ak-hero-slide.active .ak-hero-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero CTA Button */
+.ak-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--ak-orange);
+  color: #FFFFFF;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 13px 24px;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(242, 112, 33, 0.28);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease-out 0.18s, transform 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.ak-hero-cta .ak-cta-arrow {
+  display: inline-block;
+  transition: transform 0.22s ease;
+}
+
+.ak-hero-cta:hover {
+  background-color: #D95F13;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(217, 95, 19, 0.4);
+}
+
+.ak-hero-cta:hover .ak-cta-arrow {
+  transform: translateX(4px);
+}
+
+/* Navigation Chevrons */
+.ak-hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  box-sizing: border-box;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.ak-hero-arrow svg {
+  display: block;
+  margin: auto;
+  flex-shrink: 0;
+}
+
+.ak-hero-arrow.prev { left: 24px; }
+.ak-hero-arrow.next { right: 24px; }
+
+.ak-hero-arrow:hover {
+  background-color: var(--ak-orange);
+  border-color: var(--ak-orange);
+  transform: translateY(-50%) scale(1.06);
+}
+
+/* Pagination Dots */
+.ak-hero-dots {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+.ak-hero-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.ak-hero-dot.active {
+  width: 28px;
+  border-radius: 6px;
+  background-color: var(--ak-orange);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .ak-hero-carousel {
+    height: 460px;
+  }
+  .ak-hero-title {
+    font-size: 42px;
+  }
+  .ak-hero-content {
+    max-width: 420px;
+    margin-left: 6%;
+  }
+}
+
+@media (max-width: 768px) {
+  .ak-hero-carousel {
+    height: auto;
+    aspect-ratio: 16 / 10.8;
+    min-height: 255px;
+    max-height: 360px;
+  }
+  .ak-hero-content {
+    max-width: 85%;
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  .ak-hero-eyebrow {
+    font-size: 10.5px;
+    margin-bottom: 4px;
+    letter-spacing: 0.08em;
+  }
+  .ak-hero-title {
+    font-size: 22px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .ak-hero-subtitle {
+    font-size: 12px;
+    line-height: 1.35;
+    margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ak-hero-cta {
+    padding: 8px 16px;
+    font-size: 12px;
+    min-height: 34px;
+    border-radius: 6px;
+  }
+  button.ak-hero-arrow,
+  .ak-hero-arrow {
+    display: none !important;
+  }
+  .ak-hero-dots {
+    bottom: 8px;
+    gap: 6px;
+  }
+  .ak-hero-dot {
+    width: 6px;
+    height: 6px;
+  }
+  .ak-hero-dot.active {
+    width: 18px;
+  }
+}

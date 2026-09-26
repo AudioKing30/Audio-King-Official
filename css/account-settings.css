@@ -1,0 +1,964 @@
+/**
+ * AudioKing Account Settings & Profile Styles
+ * Matches the reference design layout with Display Info, Personal Info, Profile Image Upload,
+ * Show/Hide Password, Multi-Address Cards, and Unsaved Changes Modal.
+ */
+
+.ak-account-settings-page-view {
+  background: #F9FAFB;
+  min-height: 80vh;
+  padding: 40px 0 80px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #111827;
+}
+
+.ak-acc-container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Page Title & Main Tabs */
+.ak-acc-page-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111827;
+  margin: 0 0 20px 0;
+}
+
+.ak-acc-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #E5E7EB;
+  margin-bottom: 32px;
+}
+
+.ak-acc-tab-btn {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6B7280;
+  padding: 12px 20px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  outline: none;
+}
+
+.ak-acc-tab-btn:hover {
+  color: #111827;
+}
+
+.ak-acc-tab-btn.active {
+  color: #111827;
+  font-weight: 700;
+}
+
+.ak-acc-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #111827;
+  border-radius: 3px 3px 0 0;
+}
+
+/* Tab Panels */
+.ak-acc-tab-panel {
+  display: none;
+}
+
+.ak-acc-tab-panel.active {
+  display: block;
+  animation: akAccFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes akAccFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Account Main Card */
+.ak-acc-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 36px 40px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Section Header & Top Actions */
+.ak-acc-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.ak-acc-section-main-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.01em;
+}
+
+.ak-acc-subtitle {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.ak-acc-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ak-acc-btn-discard {
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ak-acc-btn-discard:hover {
+  background: #F3F4F6;
+  border-color: #9CA3AF;
+  color: #111827;
+}
+
+.ak-acc-btn-save {
+  background: #111827;
+  border: 1px solid #111827;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ak-acc-btn-save:hover {
+  background: #F97316;
+  border-color: #F97316;
+}
+
+/* Horizontal Dividers */
+.ak-acc-divider {
+  border: 0;
+  border-top: 1px solid #E5E7EB;
+  margin: 28px 0;
+}
+
+/* Section Headings */
+.ak-acc-sub-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.ak-acc-sub-desc {
+  font-size: 13.5px;
+  color: #6B7280;
+  margin: 0 0 20px 0;
+}
+
+/* Display Info Layout */
+.ak-acc-display-grid {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 40px;
+  align-items: start;
+}
+
+.ak-acc-inputs-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ak-acc-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ak-acc-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ak-acc-info-icon {
+  color: #9CA3AF;
+  font-size: 13px;
+  cursor: help;
+}
+
+.ak-acc-input {
+  width: 100%;
+  max-width: 440px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #111827;
+  background: #FFFFFF;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.ak-acc-input:focus {
+  outline: none;
+  border-color: #F97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+/* Personal Info Grid */
+.ak-acc-personal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+  max-width: 680px;
+}
+
+.ak-acc-personal-grid .ak-acc-field-group.full {
+  grid-column: 1 / -1;
+}
+
+.ak-acc-personal-grid .ak-acc-input {
+  max-width: 100%;
+}
+
+/* Password Input with Show/Hide Toggle */
+.ak-acc-password-box {
+  position: relative;
+  max-width: 100%;
+}
+
+.ak-acc-password-box .ak-acc-input {
+  padding-right: 44px;
+}
+
+.ak-acc-pass-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 6px;
+  color: #6B7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+}
+
+.ak-acc-pass-toggle-btn:hover {
+  color: #111827;
+}
+
+/* Bottom Action Bar */
+.ak-acc-bottom-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* Unsaved Changes Banner Indicator */
+.ak-acc-dirty-banner {
+  display: none;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  color: #92400E;
+  font-size: 13.5px;
+  font-weight: 500;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ak-acc-dirty-banner.active {
+  display: flex;
+}
+
+/* ==================== MY ADDRESSES TAB ==================== */
+.ak-acc-addresses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.ak-acc-btn-add-addr {
+  background: #F97316;
+  border: 1px solid #EA580C;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.ak-acc-btn-add-addr:hover {
+  background: #EA580C;
+  transform: translateY(-1px);
+}
+
+.ak-acc-addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.ak-addr-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 22px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.ak-addr-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #D1D5DB;
+}
+
+.ak-addr-card.is-default {
+  border: 2px solid #F97316;
+  background: #FFFDFB;
+}
+
+.ak-addr-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ak-addr-type-tag {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #F3F4F6;
+  color: #4B5563;
+}
+
+.ak-addr-card.is-default .ak-addr-type-tag {
+  background: #FED7AA;
+  color: #9A3412;
+}
+
+.ak-addr-default-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #16A34A;
+  background: #DCFCE7;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ak-addr-recipient {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.ak-addr-phone {
+  font-size: 13.5px;
+  color: #6B7280;
+  margin: 0 0 10px 0;
+}
+
+.ak-addr-text {
+  font-size: 14px;
+  color: #4B5563;
+  line-height: 1.5;
+  margin: 0 0 18px 0;
+  flex-grow: 1;
+}
+
+.ak-addr-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.ak-addr-btn-edit,
+.ak-addr-btn-del,
+.ak-addr-btn-default {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.15s ease;
+}
+
+.ak-addr-btn-edit {
+  color: #2563EB;
+}
+.ak-addr-btn-edit:hover {
+  color: #1D4ED8;
+  text-decoration: underline;
+}
+
+.ak-addr-btn-del {
+  color: #DC2626;
+}
+.ak-addr-btn-del:hover {
+  color: #B91C1C;
+  text-decoration: underline;
+}
+
+.ak-addr-btn-default {
+  color: #F97316;
+  margin-left: auto;
+}
+.ak-addr-btn-default:hover {
+  color: #EA580C;
+  text-decoration: underline;
+}
+
+/* Empty Addresses State */
+.ak-addr-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background: #FFFFFF;
+  border: 1px dashed #D1D5DB;
+  border-radius: 8px;
+}
+
+.ak-addr-empty-icon {
+  margin-bottom: 12px;
+  color: #9CA3AF;
+}
+
+.ak-addr-empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 6px 0;
+}
+
+.ak-addr-empty-desc {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0 0 20px 0;
+}
+
+/* ==================== ADDRESS MODAL ==================== */
+.ak-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.ak-modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ak-acc-dialog {
+  background: #FFFFFF;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  transform: scale(0.96);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ak-modal-backdrop.open .ak-acc-dialog {
+  transform: scale(1);
+}
+
+.ak-acc-dialog-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.ak-acc-dialog-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.ak-acc-dialog-close {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: #6B7280;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.ak-acc-dialog-close:hover {
+  color: #111827;
+}
+
+.ak-acc-dialog-body {
+  padding: 24px;
+  max-height: calc(85vh - 140px);
+  overflow-y: auto;
+}
+
+.ak-acc-dialog-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #E5E7EB;
+  background: #F9FAFB;
+}
+
+/* ==================== UNSAVED CHANGES MODAL ==================== */
+.ak-unsaved-dialog {
+  max-width: 440px;
+  padding: 28px;
+  text-align: center;
+}
+
+.ak-unsaved-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #FEF3C7;
+  color: #D97706;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.ak-unsaved-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.ak-unsaved-desc {
+  font-size: 14.5px;
+  color: #4B5563;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+
+.ak-unsaved-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ak-unsaved-btn-save {
+  background: #F97316;
+  border: 1px solid #EA580C;
+  color: #FFFFFF;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 11px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ak-unsaved-btn-save:hover {
+  background: #EA580C;
+}
+
+.ak-unsaved-btn-discard {
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  color: #DC2626;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 11px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ak-unsaved-btn-discard:hover {
+  background: #FEF2F2;
+  border-color: #F87171;
+}
+
+.ak-unsaved-btn-stay {
+  background: none;
+  border: none;
+  color: #6B7280;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px;
+  margin-top: 4px;
+}
+
+.ak-unsaved-btn-stay:hover {
+  color: #111827;
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ak-acc-card {
+    padding: 24px 20px;
+  }
+  .ak-acc-display-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .ak-acc-avatar-col {
+    order: -1;
+  }
+  .ak-acc-personal-grid {
+    grid-template-columns: 1fr;
+  }
+  .ak-acc-header-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ak-acc-actions-group {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .ak-acc-addresses-grid {
+    grid-template-columns: 1fr;
+  }
+  .ak-acc-addresses-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .ak-acc-btn-add-addr {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   My Orders Panel & Order Cards
+   ========================================================================== */
+.ak-acc-orders-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Empty State */
+.ak-orders-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background: #FFFFFF;
+  border: 1.5px dashed #CBD5E1;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+
+.ak-orders-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #FFF7ED;
+  color: var(--ak-orange, #EA580C);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.ak-orders-empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px 0;
+}
+
+.ak-orders-empty-desc {
+  font-size: 14.5px;
+  color: #64748B;
+  max-width: 420px;
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.ak-orders-shop-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ak-orange, #EA580C);
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 13px 28px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+  text-decoration: none;
+}
+
+.ak-orders-shop-btn:hover {
+  background: #C2410C;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+}
+
+/* Populated Order Cards */
+.ak-order-history-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  margin-bottom: 20px;
+}
+
+.ak-order-history-card:hover {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  border-color: #CBD5E1;
+}
+
+.ak-order-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ak-order-meta-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ak-order-number {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+  letter-spacing: 0.5px;
+}
+
+.ak-order-date {
+  font-size: 12.5px;
+  color: #64748B;
+}
+
+.ak-order-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: #ECFDF5;
+  color: #065F46;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.ak-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.ak-order-card-items {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ak-order-card-item-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border-bottom: 1px solid #F1F5F9;
+  transition: background-color 0.18s ease;
+}
+
+.ak-order-card-item-row:hover {
+  background-color: #F8FAFC;
+}
+
+.ak-order-card-item-row:hover .ak-order-item-name {
+  color: var(--ak-orange) !important;
+}
+
+.ak-order-card-item-row:last-child {
+  border-bottom: none;
+}
+
+.ak-order-item-img-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ak-order-item-img-box img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.ak-order-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ak-order-item-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ak-order-item-pricing {
+  font-size: 13px;
+  color: #64748B;
+}
+
+.ak-order-item-subtotal {
+  font-family: var(--ak-font-price);
+  font-size: 15px;
+  font-weight: 400;
+  color: #0F172A;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.ak-order-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #FAFAFA;
+  border-top: 1px solid #E2E8F0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.ak-order-footer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #64748B;
+}
+
+.ak-order-footer-details strong {
+  color: #1E293B;
+}
+
+.ak-order-footer-total {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.ak-total-label {
+  font-size: 13px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+.ak-total-value {
+  font-family: var(--ak-font-price);
+  font-size: 18px;
+  font-weight: 400;
+  color: #0F172A;
+  letter-spacing: -0.01em;
+}

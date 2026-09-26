@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="silverBrass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="35%" stop-color="#FFFFFF"/>
+      <stop offset="60%" stop-color="#CBD5E1"/>
+      <stop offset="100%" stop-color="#94A3B8"/>
+    </linearGradient>
+    <filter id="trumpetShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <g filter="url(#trumpetShadow)" transform="translate(10, 10)">
+    <!-- Mouthpiece -->
+    <rect x="18" y="70" width="12" height="4" rx="1" fill="url(#silverBrass)"/>
+    <polygon points="18,68 18,76 24,73 24,71" fill="url(#silverBrass)"/>
+    <!-- Leadpipe / Upper Tubing -->
+    <path d="M26,72 L85,72" stroke="url(#silverBrass)" stroke-width="4.5" stroke-linecap="round"/>
+    <!-- Valve Casing Assembly -->
+    <g fill="url(#silverBrass)" stroke="#64748B" stroke-width="0.8">
+      <rect x="58" y="56" width="6" height="34" rx="1"/>
+      <rect x="66" y="56" width="6" height="34" rx="1"/>
+      <rect x="74" y="56" width="6" height="34" rx="1"/>
+      <!-- Valve Buttons -->
+      <circle cx="61" cy="52" r="2.5" fill="#F8FAFC"/>
+      <circle cx="69" cy="52" r="2.5" fill="#F8FAFC"/>
+      <circle cx="77" cy="52" r="2.5" fill="#F8FAFC"/>
+    </g>
+    <!-- Valve Slides / Lower Loop -->
+    <path d="M58,82 Q46,82 46,74 Q46,66 58,66" fill="none" stroke="url(#silverBrass)" stroke-width="3.5"/>
+    <path d="M80,82 Q92,82 92,74 Q92,66 80,66" fill="none" stroke="url(#silverBrass)" stroke-width="3.5"/>
+    <!-- Bell Flare -->
+    <path d="M80,66 L112,66 Q118,66 126,52 L126,88 Q118,74 112,74 L80,74 Z" fill="url(#silverBrass)" stroke="#64748B" stroke-width="1"/>
+    <ellipse cx="126" cy="70" rx="3.5" ry="18" fill="#F1F5F9" stroke="#475569" stroke-width="1.2"/>
+    <ellipse cx="126" cy="70" rx="1.5" ry="12" fill="#64748B"/>
+  </g>
+</svg>

@@ -1,0 +1,53 @@
+/* AudioKing Global Design Tokens */
+:root {
+  /* Brand Palette */
+  --ak-bg: #FAFAFA;
+  --ak-card-bg: #FFFFFF;
+  --ak-orange: #F27021;
+  --ak-orange-hover: #D95F13;
+  --ak-orange-light: rgba(242, 112, 33, 0.09);
+  --ak-pink-red: #ED264F;
+  --ak-gradient: linear-gradient(135deg, #ED264F 0%, #F27021 100%);
+  --ak-black: #1E1E1E;
+  --ak-navy: #0B315F;
+  --ak-navy2: #123F77;
+  
+  /* Text Colors */
+  --ak-text-primary: #0F172A;
+  --ak-text-secondary: #334155;
+  --ak-text-muted: #475569;
+  --ak-text-light: #64748B;
+  
+  /* UI Borders & Lines */
+  --ak-border: #E2E6EB;
+  --ak-border-light: #EFF2F5;
+  --ak-border-strong: #CBD5E0;
+  
+  /* Elevation Shadows */
+  --ak-shadow-subtle: 0 2px 6px rgba(0, 0, 0, 0.04);
+  --ak-shadow-card: 0 4px 12px rgba(15, 38, 68, 0.06);
+  --ak-shadow-hover: 0 8px 24px rgba(15, 38, 68, 0.12);
+  --ak-shadow-drawer: -8px 0 32px rgba(11, 49, 95, 0.22);
+  --ak-shadow-modal: 0 24px 56px rgba(11, 49, 95, 0.20);
+  
+  /* Dimensions & Spacing */
+  --ak-max-width: 1320px;
+  --ak-radius: 8px;
+  --ak-radius-sm: 4px;
+  --ak-radius-lg: 12px;
+  --ak-radius-pill: 9999px;
+  
+  /* Header Dimensions */
+  --ak-header-top-height: 72px;
+  --ak-header-nav-height: 44px;
+  --ak-header-total-height: 116px;
+  
+  /* Transitions */
+  --ak-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --ak-transition-fast: all 0.15s ease;
+
+  /* Typography */
+  --ak-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --ak-font-price: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ak-price-weight: 500;
+}

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <defs>
+    <linearGradient id="synthChassis" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <filter id="synthShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <g filter="url(#synthShadow)" transform="translate(0, 5)">
+    <!-- Wooden End Cheeks -->
+    <rect x="22" y="44" width="8" height="66" rx="3" fill="#B45309" stroke="#78350F" stroke-width="1"/>
+    <rect x="130" y="44" width="8" height="66" rx="3" fill="#B45309" stroke="#78350F" stroke-width="1"/>
+    <!-- Synth Main Body -->
+    <rect x="28" y="46" width="104" height="62" rx="2" fill="url(#synthChassis)"/>
+    <!-- Upper Control Panel with Knobs -->
+    <rect x="32" y="49" width="96" height="28" rx="2" fill="#0B132B"/>
+    <!-- Color Panel Sections -->
+    <rect x="34" y="51" width="22" height="24" rx="1.5" fill="#1D2D44" stroke="#0077B6" stroke-width="0.8"/>
+    <rect x="58" y="51" width="22" height="24" rx="1.5" fill="#1D2D44" stroke="#2B9348" stroke-width="0.8"/>
+    <rect x="82" y="51" width="22" height="24" rx="1.5" fill="#1D2D44" stroke="#D90429" stroke-width="0.8"/>
+    <rect x="106" y="51" width="20" height="24" rx="1.5" fill="#1D2D44" stroke="#F77F00" stroke-width="0.8"/>
+    <!-- Knobs on Panel -->
+    <circle cx="39" cy="58" r="2.5" fill="#00B4D8"/>
+    <circle cx="48" cy="58" r="2.5" fill="#00B4D8"/>
+    <circle cx="43.5" cy="68" r="2.5" fill="#E2E8F0"/>
+    <circle cx="63" cy="58" r="2.5" fill="#55A630"/>
+    <circle cx="72" cy="58" r="2.5" fill="#55A630"/>
+    <circle cx="67.5" cy="68" r="2.5" fill="#E2E8F0"/>
+    <circle cx="87" cy="58" r="2.5" fill="#EF233C"/>
+    <circle cx="96" cy="58" r="2.5" fill="#EF233C"/>
+    <circle cx="91.5" cy="68" r="2.5" fill="#E2E8F0"/>
+    <circle cx="111" cy="58" r="2.5" fill="#F77F00"/>
+    <circle cx="118" cy="58" r="2.5" fill="#F77F00"/>
+    <circle cx="114.5" cy="68" r="2.5" fill="#E2E8F0"/>
+    <!-- Pitch / Mod Wheels on Left -->
+    <rect x="32" y="80" width="4" height="24" rx="1" fill="#111827" stroke="#64748B" stroke-width="0.6"/>
+    <rect x="38" y="80" width="4" height="24" rx="1" fill="#111827" stroke="#64748B" stroke-width="0.6"/>
+    <rect x="32" y="90" width="4" height="4" rx="0.5" fill="#CBD5E1"/>
+    <rect x="38" y="88" width="4" height="4" rx="0.5" fill="#CBD5E1"/>
+    <!-- Keyboard Keys (White Bed) -->
+    <rect x="45" y="79" width="83" height="26" rx="1" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1"/>
+    <!-- Key Dividers -->
+    <line x1="50" y1="79" x2="50" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="55" y1="79" x2="55" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="60" y1="79" x2="60" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="65" y1="79" x2="65" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="70" y1="79" x2="70" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="75" y1="79" x2="75" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="80" y1="79" x2="80" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="85" y1="79" x2="85" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="90" y1="79" x2="90" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="95" y1="79" x2="95" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="100" y1="79" x2="100" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="105" y1="79" x2="105" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="110" y1="79" x2="110" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="115" y1="79" x2="115" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <line x1="120" y1="79" x2="120" y2="105" stroke="#CBD5E1" stroke-width="1"/>
+    <!-- Black Keys -->
+    <g fill="#0F172A">
+      <rect x="48.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="53.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="63.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="68.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="73.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="83.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="88.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="98.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="103.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="108.5" y="79" width="3" height="15" rx="0.5"/>
+      <rect x="118.5" y="79" width="3" height="15" rx="0.5"/>
+    </g>
+  </g>
+</svg>
