@@ -25052,12 +25052,23 @@ Country of Origin: China`,
   // js/services/authService.js
   var AuthService = class {
     constructor() {
-      this.localUserKey = AUDIOKING_CONFIG.userStorageKey || "audioKingUser";
-      const cachedUser = getStorage(this.localUserKey, null);
-      this.currentUser = cachedUser && cachedUser.id ? cachedUser : null;
-      this.status = this.currentUser ? "authenticated" : "loading";
+      this.localUserKey = AUDIOKING_CONFIG.userStorageKey || "audioking_user";
       this.listeners = /* @__PURE__ */ new Set();
       this.isLoggingIn = false;
+      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      const cachedUser = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
+      if (token && cachedUser && cachedUser.id && cachedUser.email) {
+        this.currentUser = cachedUser;
+        this.status = "authenticated";
+      } else {
+        this.currentUser = null;
+        this.status = "unauthenticated";
+        removeStorage(this.localUserKey);
+        removeStorage("audioKingUser");
+        removeStorage("audioKingSessionToken");
+        removeStorage("audioking_token");
+        removeStorage("audioKingToken");
+      }
     }
     getUserAddressKey() {
       const u = this.getUser();
@@ -25089,50 +25100,6 @@ Country of Origin: China`,
           detail: { user: this.currentUser, status: this.status }
         }));
       }
-    }
-    /**
-     * Return registered users in local client storage with seeded admin & demo credentials
-     */
-    _getLocalUsers() {
-      const users = getStorage("audioking_registered_users", []);
-      const hasAdmin = users.some((u) => u.email === "admin@audioking.in" || u.username === "AudioKing30");
-      if (!hasAdmin) {
-        users.push({
-          id: "usr_admin_audioking30",
-          fullName: "AudioKing Administrator",
-          displayName: "Admin",
-          email: "admin@audioking.in",
-          username: "AudioKing30",
-          phone: "8879393743",
-          role: "admin",
-          password: "Lovemytele@321",
-          emailVerified: true
-        });
-        users.push({
-          id: "usr_admin_audioking30_gmail",
-          fullName: "AudioKing Administrator",
-          displayName: "AudioKing30",
-          email: "audioking30@gmail.com",
-          username: "AudioKing30",
-          phone: "8879393743",
-          role: "admin",
-          password: "Lovemytele@321",
-          emailVerified: true
-        });
-        users.push({
-          id: "usr_demo_customer",
-          fullName: "Demo Musician",
-          displayName: "Demo",
-          email: "demo@audioking.in",
-          username: "DemoMusician",
-          phone: "9876543210",
-          role: "customer",
-          password: "Lovemytele@321",
-          emailVerified: true
-        });
-        setStorage("audioking_registered_users", users);
-      }
-      return users;
     }
     /**
      * Safe fetch wrapper with timeout and network failure resilience
@@ -25169,35 +25136,50 @@ Country of Origin: China`,
         };
       } catch (err) {
         clearTimeout(timeoutId);
-        console.warn(`[AUTH API] Network request to ${url} unavailable (${err.message}). Using resilient local sync.`);
         return { ok: false, status: 0, data: null, networkError: true, isStaticFallback: true, error: err.message };
       }
     }
     /**
      * Initialize and restore session from backend or persistent store on load.
-     * Always starts in 'loading' state (set in constructor).
-     * Only transitions to 'unauthenticated' when server explicitly returns 401.
-     * Network errors use cached session and retry once.
      */
     async init() {
-      if (typeof window !== "undefined" && window.location.search) {
+      if (typeof window !== "undefined") {
         try {
-          const urlParams = new URLSearchParams(window.location.search);
-          const redirectToken = urlParams.get("token");
+          let redirectToken = null;
+          if (window.location.hash && window.location.hash.includes("auth_token=")) {
+            const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+            redirectToken = hashParams.get("auth_token");
+          } else if (window.location.search && window.location.search.includes("token=")) {
+            const urlParams = new URLSearchParams(window.location.search);
+            redirectToken = urlParams.get("token");
+          }
           if (redirectToken) {
             setStorage("audioKingSessionToken", redirectToken);
             setStorage("audioking_token", redirectToken);
             setStorage("audioKingToken", redirectToken);
           }
-          if (window.location.search.includes("auth=google_success")) {
+          if (window.location.search.includes("auth=google_success") || window.location.search.includes("token=") || window.location.hash.includes("auth_token=")) {
             const cleanSearch = window.location.search.replace(/[?&]auth=google_success/g, "").replace(/[?&]token=[^&]+/g, "").replace(/^&/, "?");
-            const cleanUrl = window.location.pathname + (cleanSearch && cleanSearch !== "?" ? cleanSearch : "") + window.location.hash;
+            let cleanHash = window.location.hash.replace(/[#&]auth_token=[^&]+/g, "");
+            if (!cleanHash || cleanHash === "#")
+              cleanHash = "";
+            const cleanUrl = window.location.pathname + (cleanSearch && cleanSearch !== "?" ? cleanSearch : "") + cleanHash;
             window.history.replaceState({}, document.title, cleanUrl);
           }
         } catch (e) {
         }
       }
+      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      if (!token) {
+        this.currentUser = null;
+        this.status = "unauthenticated";
+        removeStorage(this.localUserKey);
+        removeStorage("audioKingUser");
+        this.notify();
+        return null;
+      }
       if (this.status === "authenticated" && this.currentUser) {
+        this._recheckSession();
         return this.currentUser;
       }
       let res = await this.safeFetch("/api/auth/me", { method: "GET" });
@@ -25212,50 +25194,58 @@ Country of Origin: China`,
         this.currentUser = res.data.user;
         this.status = "authenticated";
         setStorage(this.localUserKey, this.currentUser);
-      } else if (res.networkError || res.isStaticFallback || res.status === 404 || res.status === 502 || res.status === 503 || res.status === 504) {
-        const local = getStorage(this.localUserKey, null);
+        setStorage("audioKingUser", this.currentUser);
+      } else if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+        const local = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
         if (local && local.email && local.id) {
           this.currentUser = local;
           this.status = "authenticated";
-          if (!res.isStaticFallback) {
-            setTimeout(() => this._recheckSession(), 5e3);
-          }
+          setTimeout(() => this._recheckSession(), 5e3);
         } else {
           this.currentUser = null;
           this.status = "unauthenticated";
         }
       } else {
-        const local = getStorage(this.localUserKey, null);
-        const hasToken = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null);
-        if (!hasToken && local) {
-          this.currentUser = local;
-          this.status = "authenticated";
-        } else {
-          this.currentUser = null;
-          this.status = "unauthenticated";
-          removeStorage(this.localUserKey);
-          removeStorage("audioKingSessionToken");
-        }
+        this.currentUser = null;
+        this.status = "unauthenticated";
+        removeStorage(this.localUserKey);
+        removeStorage("audioKingUser");
+        removeStorage("audioKingSessionToken");
+        removeStorage("audioking_token");
+        removeStorage("audioKingToken");
       }
       this.notify();
       return this.currentUser;
     }
     /**
      * Background session re-check after network recovery.
-     * Silently updates UI if session state changed.
      */
     async _recheckSession() {
+      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null);
+      if (!token) {
+        this.currentUser = null;
+        this.status = "unauthenticated";
+        removeStorage(this.localUserKey);
+        removeStorage("audioKingUser");
+        this.notify();
+        return;
+      }
       try {
         const res = await this.safeFetch("/api/auth/me", { method: "GET" });
         if (res.ok && res.data?.user) {
           this.currentUser = res.data.user;
           this.status = "authenticated";
           setStorage(this.localUserKey, this.currentUser);
+          setStorage("audioKingUser", this.currentUser);
           this.notify();
-        } else if (!res.networkError) {
+        } else if (res.status === 401) {
           this.currentUser = null;
           this.status = "unauthenticated";
           removeStorage(this.localUserKey);
+          removeStorage("audioKingUser");
+          removeStorage("audioKingSessionToken");
+          removeStorage("audioking_token");
+          removeStorage("audioKingToken");
           this.notify();
         }
       } catch (e) {
@@ -25263,9 +25253,12 @@ Country of Origin: China`,
     }
     getUser() {
       if (!this.currentUser) {
-        const cached = getStorage(this.localUserKey, null);
-        if (cached && cached.id)
-          this.currentUser = cached;
+        const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null);
+        if (token) {
+          const cached = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
+          if (cached && cached.id)
+            this.currentUser = cached;
+        }
       }
       return this.currentUser;
     }
@@ -25276,7 +25269,7 @@ Country of Origin: China`,
       return this.status === "authenticated" && !!this.currentUser;
     }
     /**
-     * 1. Sign Up
+     * 1. Sign Up (Send verification OTP)
      */
     async signup(data) {
       const res = await this.safeFetch("/api/auth/signup", {
@@ -25287,25 +25280,8 @@ Country of Origin: China`,
       if (res.ok) {
         return res.data;
       }
-      if (res.isStaticFallback || res.networkError || res.status === 404) {
-        const cleanEmail = (data.email || "").trim().toLowerCase();
-        const users = this._getLocalUsers();
-        if (users.some((u) => u.email.toLowerCase() === cleanEmail)) {
-          throw new Error("An account with this email address already exists. Please sign in.");
-        }
-        const demoOtp = "123456";
-        setStorage("audioking_pending_signup", {
-          ...data,
-          email: cleanEmail,
-          otp: demoOtp,
-          createdAt: Date.now()
-        });
-        return {
-          success: true,
-          message: "Verification code sent to your email. (Demo Code: 123456)",
-          email: cleanEmail,
-          demoOtp
-        };
+      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error("Unable to connect to registration server. Please wait a moment while the server wakes up and try again.");
       }
       throw new Error(res.data?.error || "Registration failed. Please try again.");
     }
@@ -25323,35 +25299,18 @@ Country of Origin: China`,
       if (res.ok && res.data?.user) {
         this.currentUser = res.data.user;
         this.status = "authenticated";
+        if (res.data.token) {
+          setStorage("audioKingSessionToken", res.data.token);
+          setStorage("audioking_token", res.data.token);
+          setStorage("audioKingToken", res.data.token);
+        }
         setStorage(this.localUserKey, this.currentUser);
+        setStorage("audioKingUser", this.currentUser);
         this.notify();
         return res.data;
       }
-      if (res.isStaticFallback || res.networkError || res.status === 404) {
-        const pending = getStorage("audioking_pending_signup", null);
-        if (pending && (pending.otp === cleanOtp || cleanOtp === "123456")) {
-          const users = this._getLocalUsers();
-          const newUser = {
-            id: "usr_" + Date.now(),
-            fullName: `${pending.firstName || ""} ${pending.lastName || ""}`.trim() || "AudioKing Musician",
-            displayName: pending.firstName || "Musician",
-            email: pending.email,
-            phone: pending.phone || "",
-            role: "customer",
-            password: pending.password,
-            emailVerified: true,
-            createdAt: (/* @__PURE__ */ new Date()).toISOString()
-          };
-          users.push(newUser);
-          setStorage("audioking_registered_users", users);
-          removeStorage("audioking_pending_signup");
-          this.currentUser = newUser;
-          this.status = "authenticated";
-          setStorage(this.localUserKey, this.currentUser);
-          this.notify();
-          return { success: true, user: newUser, token: "demo_token_" + Date.now() };
-        }
-        throw new Error("Invalid verification code. Please enter 123456.");
+      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error("Unable to reach server. Please wait a few seconds and try again.");
       }
       throw new Error(res.data?.error || "Invalid or expired verification code.");
     }
@@ -25366,13 +25325,13 @@ Country of Origin: China`,
       });
       if (res.ok)
         return res.data;
-      if (res.isStaticFallback || res.networkError || res.status === 404) {
-        return { success: true, message: "New verification code sent. (Demo Code: 123456)", demoOtp: "123456" };
+      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error("Unable to reach server. Please try again in a moment.");
       }
       throw new Error(res.data?.error || "Failed to resend code.");
     }
     /**
-     * 4. Login (Email + Password)
+     * 4. Login (Email + Password) - Always verifies with backend database
      */
     async login(email, password) {
       this.isLoggingIn = true;
@@ -25392,29 +25351,12 @@ Country of Origin: China`,
             setStorage("audioKingToken", res.data.token);
           }
           setStorage(this.localUserKey, this.currentUser);
+          setStorage("audioKingUser", this.currentUser);
           this.notify();
           return res.data;
         }
-        if (res.isStaticFallback || res.networkError || res.status === 404) {
-          const users = this._getLocalUsers();
-          const found = users.find(
-            (u) => u.email.toLowerCase() === cleanEmail || u.username && u.username.toLowerCase() === cleanEmail
-          );
-          if (found) {
-            const isMatch = found.password === password || found.role === "admin" && (password === "Lovemytele@321" || password === "Musix@Admin2026!" || password === "admin123");
-            if (isMatch) {
-              this.currentUser = found;
-              this.status = "authenticated";
-              const fakeToken = "demo_token_" + Date.now();
-              setStorage("audioKingSessionToken", fakeToken);
-              setStorage("audioking_token", fakeToken);
-              setStorage("audioKingToken", fakeToken);
-              setStorage(this.localUserKey, this.currentUser);
-              this.notify();
-              return { success: true, user: this.currentUser, token: fakeToken };
-            }
-          }
-          throw new Error("Invalid email/username or password.");
+        if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+          throw new Error("Unable to connect to authentication server. Please wait a moment while the server wakes up and try again.");
         }
         const err = new Error(res.data?.error || "Invalid email or password.");
         err.requiresVerification = res.data?.requiresVerification;
@@ -25436,8 +25378,6 @@ Country of Origin: China`,
     }
     /**
      * 5B. Real Google OAuth Authentication
-     * When connected to backend: Redirects browser or opens popup directly to Google accounts screen.
-     * When on GitHub Pages / Static Hosting: Authenticates instantly with Google verified profile without 404 errors.
      */
     async initiateGoogleAuth() {
       const baseUrl = this.getBaseUrl();
@@ -25458,74 +25398,59 @@ Country of Origin: China`,
         popup = null;
       }
       if (!popup || popup.closed || typeof popup.closed === "undefined") {
-        console.log("[Google Auth] Popup blocked or unavailable, redirecting main window...");
         window.location.href = redirectUrl;
         return new Promise(() => {
         });
       }
       return new Promise((resolve, reject) => {
         let settled = false;
-        const finish = (fn, val) => {
-          if (settled)
-            return;
-          settled = true;
-          cleanup();
-          fn(val);
-        };
-        const handleMessage = (event) => {
+        const messageHandler = (event) => {
           if (event.data && event.data.type === "AUDIOKING_GOOGLE_SUCCESS") {
             if (event.data.token) {
               setStorage("audioKingSessionToken", event.data.token);
               setStorage("audioking_token", event.data.token);
               setStorage("audioKingToken", event.data.token);
             }
-            this.currentUser = event.data.user;
-            this.status = "authenticated";
-            setStorage(this.localUserKey, this.currentUser);
+            if (event.data.user) {
+              this.currentUser = event.data.user;
+              this.status = "authenticated";
+              setStorage(this.localUserKey, this.currentUser);
+              setStorage("audioKingUser", this.currentUser);
+            }
             this.notify();
-            finish(resolve, event.data);
+            cleanup();
+            resolve({ success: true, user: this.currentUser });
           } else if (event.data && event.data.type === "AUDIOKING_GOOGLE_ERROR") {
-            finish(reject, new Error(event.data.error || "Google sign-in was cancelled."));
+            cleanup();
+            reject(new Error(event.data.error || "Google sign-in was cancelled."));
           }
         };
-        const pollTimer = setInterval(async () => {
-          if (popup.closed) {
-            clearInterval(pollTimer);
+        const pollTimer = setInterval(() => {
+          if (!popup || popup.closed) {
             setTimeout(async () => {
-              if (!settled) {
-                const res = await this.safeFetch("/api/auth/me", { method: "GET" });
-                if (res.ok && res.data?.user) {
-                  this.currentUser = res.data.user;
-                  this.status = "authenticated";
-                  setStorage(this.localUserKey, this.currentUser);
-                  this.notify();
-                  finish(resolve, res.data);
-                } else {
-                  finish(reject, new Error("Google sign-in window closed."));
-                }
+              if (settled)
+                return;
+              const restored = await this.init();
+              if (restored) {
+                cleanup();
+                resolve({ success: true, user: restored });
+              } else {
+                cleanup();
+                reject(new Error("Google sign-in popup was closed."));
               }
-            }, 400);
+            }, 800);
           }
         }, 500);
-        const safetyTimeout = setTimeout(() => {
-          if (!settled) {
-            try {
-              popup.close();
-            } catch (e) {
-            }
-            finish(reject, new Error("Google sign-in timed out. Please try again."));
-          }
-        }, 18e4);
         const cleanup = () => {
+          settled = true;
           clearInterval(pollTimer);
-          clearTimeout(safetyTimeout);
-          window.removeEventListener("message", handleMessage);
+          window.removeEventListener("message", messageHandler);
         };
-        window.addEventListener("message", handleMessage);
+        window.addEventListener("message", messageHandler);
       });
     }
     /**
-     * 5C. Real Google ID Token Verification (Strict, zero placeholder)
+     * 5C. Google Sign-In with ID Token (GIS One Tap / Button)
      */
     async googleLogin(credential) {
       if (!credential) {
@@ -25539,7 +25464,13 @@ Country of Origin: China`,
       if (res.ok && res.data?.user) {
         this.currentUser = res.data.user;
         this.status = "authenticated";
+        if (res.data.token) {
+          setStorage("audioKingSessionToken", res.data.token);
+          setStorage("audioking_token", res.data.token);
+          setStorage("audioKingToken", res.data.token);
+        }
         setStorage(this.localUserKey, this.currentUser);
+        setStorage("audioKingUser", this.currentUser);
         this.notify();
         return res.data;
       }
@@ -25556,8 +25487,9 @@ Country of Origin: China`,
       });
       if (res.ok)
         return res.data;
-      if (res.isStaticFallback || res.networkError || res.status === 404)
-        return { success: true, message: "Reset code sent. (Demo Code: 123456)", demoOtp: "123456" };
+      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error("Unable to reach reset server. Please wait a moment and try again.");
+      }
       throw new Error(res.data?.error || "Failed to dispatch reset code.");
     }
     /**
@@ -25571,8 +25503,9 @@ Country of Origin: China`,
       });
       if (res.ok)
         return res.data;
-      if (res.isStaticFallback || res.networkError || res.status === 404)
-        return { success: true, resetToken: "rst_" + Date.now() };
+      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error("Unable to reach server. Please try again.");
+      }
       throw new Error(res.data?.error || "Invalid or expired reset code.");
     }
     /**
@@ -25588,24 +25521,16 @@ Country of Origin: China`,
         if (res.data?.user) {
           this.currentUser = res.data.user;
           this.status = "authenticated";
+          if (res.data.token) {
+            setStorage("audioKingSessionToken", res.data.token);
+            setStorage("audioking_token", res.data.token);
+            setStorage("audioKingToken", res.data.token);
+          }
           setStorage(this.localUserKey, this.currentUser);
+          setStorage("audioKingUser", this.currentUser);
           this.notify();
         }
         return res.data;
-      }
-      if (res.isStaticFallback || res.networkError || res.status === 404) {
-        const users = this._getLocalUsers();
-        const cleanEmail = (email || "").trim().toLowerCase();
-        const u = users.find((x) => x.email.toLowerCase() === cleanEmail);
-        if (u) {
-          u.password = newPassword;
-          setStorage("audioking_registered_users", users);
-          this.currentUser = u;
-          this.status = "authenticated";
-          setStorage(this.localUserKey, this.currentUser);
-          this.notify();
-        }
-        return { success: true, message: "Password updated successfully." };
       }
       throw new Error(res.data?.error || "Failed to update password.");
     }
@@ -25620,8 +25545,6 @@ Country of Origin: China`,
       });
       if (res.ok)
         return res.data;
-      if (res.networkError)
-        return { success: true, message: "Password updated." };
       throw new Error(res.data?.error || "Failed to change password.");
     }
     /**
@@ -25636,38 +25559,48 @@ Country of Origin: China`,
       if (res.ok && res.data?.user) {
         this.currentUser = res.data.user;
         setStorage(this.localUserKey, this.currentUser);
+        setStorage("audioKingUser", this.currentUser);
         this.notify();
         return res.data;
       }
-      this.currentUser = {
-        ...this.currentUser,
-        fullName: profileData.full_name || this.currentUser?.fullName,
-        displayName: profileData.display_name || this.currentUser?.displayName,
-        title: profileData.title || this.currentUser?.title,
-        phone: profileData.phone_number || this.currentUser?.phone,
-        profileImage: profileData.profile_image || this.currentUser?.profileImage
-      };
-      setStorage(this.localUserKey, this.currentUser);
-      this.notify();
-      return { success: true, user: this.currentUser };
+      throw new Error(res.data?.error || "Failed to update profile.");
     }
     /**
-     * 11. Logout
+     * 11. Logout - Purges all session tokens, user profiles, and cached keys
      */
     async logout() {
       const oldUser = this.currentUser;
-      await this.safeFetch("/api/auth/logout", { method: "POST" });
+      try {
+        await this.safeFetch("/api/auth/logout", { method: "POST" });
+      } catch (e) {
+      }
       this.currentUser = null;
       this.status = "unauthenticated";
       removeStorage(this.localUserKey);
+      removeStorage("audioKingUser");
+      removeStorage("audioking_user");
+      removeStorage("audioKingSessionToken");
+      removeStorage("audioking_token");
+      removeStorage("audioKingToken");
+      removeStorage("audioking_pending_signup");
+      removeStorage("audiokingSavedAddress");
+      removeStorage("audioking_user_addresses");
+      removeStorage("audioking_admin_view");
+      try {
+        localStorage.removeItem("audioKingSessionToken");
+        localStorage.removeItem("audioking_token");
+        localStorage.removeItem("audioKingToken");
+        localStorage.removeItem("audioKingUser");
+        localStorage.removeItem("audioking_user");
+        localStorage.removeItem("audioking_admin_view");
+        localStorage.removeItem("audioking_registered_users");
+      } catch (e) {
+      }
       if (oldUser && oldUser.id) {
         removeStorage(`audioking_addresses_${oldUser.id}`);
         removeStorage(`audioking_orders_${oldUser.id}`);
         removeStorage(`audioking_saved_address_${oldUser.id}`);
       }
-      removeStorage("audioking_user_addresses");
-      removeStorage("audiokingSavedAddress");
-      removeStorage("audioKingSessionToken");
       this.notify();
     }
     // =========================================================================
@@ -25695,24 +25628,7 @@ Country of Origin: China`,
         setStorage(key, list);
         return res.data.address;
       }
-      const localList = getStorage(key, []);
-      const newAddr = {
-        id: "addr_" + Date.now(),
-        tag: addr.tag || "Studio",
-        recipient_name: addr.recipient_name || "Musician",
-        phone: addr.phone || "",
-        street: addr.street || "",
-        city: addr.city || "Mumbai",
-        state: addr.state || "Maharashtra",
-        pin: addr.pin || "",
-        is_default: Boolean(addr.is_default || localList.length === 0)
-      };
-      if (newAddr.is_default) {
-        localList.forEach((a) => a.is_default = false);
-      }
-      localList.push(newAddr);
-      setStorage(key, localList);
-      return newAddr;
+      throw new Error(res.data?.error || "Failed to save address.");
     }
     async updateAddress(id, addr) {
       const key = this.getUserAddressKey();
@@ -25721,28 +25637,35 @@ Country of Origin: China`,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(addr)
       });
-      if (res.ok && res.data?.address)
+      if (res.ok && res.data?.address) {
+        let list = getStorage(key, []);
+        list = list.map((a) => a.id === id ? { ...a, ...res.data.address } : a);
+        setStorage(key, list);
         return res.data.address;
-      let list = getStorage(key, []);
-      list = list.map((a) => a.id === id ? { ...a, ...addr } : a);
-      setStorage(key, list);
-      return addr;
+      }
+      throw new Error(res.data?.error || "Failed to update address.");
     }
     async deleteAddress(id) {
       const key = this.getUserAddressKey();
-      await this.safeFetch(`/api/user/addresses/${id}`, { method: "DELETE" });
-      let list = getStorage(key, []);
-      list = list.filter((a) => a.id !== id);
-      setStorage(key, list);
-      return true;
+      const res = await this.safeFetch(`/api/user/addresses/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        let list = getStorage(key, []);
+        list = list.filter((a) => a.id !== id);
+        setStorage(key, list);
+        return true;
+      }
+      throw new Error(res.data?.error || "Failed to delete address.");
     }
     async setDefaultAddress(id) {
       const key = this.getUserAddressKey();
-      await this.safeFetch(`/api/user/addresses/${id}/default`, { method: "POST" });
-      let list = getStorage(key, []);
-      list = list.map((a) => ({ ...a, is_default: a.id === id }));
-      setStorage(key, list);
-      return true;
+      const res = await this.safeFetch(`/api/user/addresses/${id}/default`, { method: "POST" });
+      if (res.ok) {
+        let list = getStorage(key, []);
+        list = list.map((a) => ({ ...a, is_default: a.id === id }));
+        setStorage(key, list);
+        return true;
+      }
+      throw new Error(res.data?.error || "Failed to set default address.");
     }
   };
   var authService = new AuthService();
@@ -26183,31 +26106,6 @@ Country of Origin: China`,
           }
           showToast(`Welcome back, ${user?.firstName || "Musician"}!`, getIcon("check-circle", "", 20));
         } catch (err) {
-          if (authService.isAuthenticated()) {
-            closeAuthModal();
-            const user = getCurrentUser();
-            if (user && user.role === "admin") {
-              showToast("Welcome Administrator! Opening Admin Portal...", getIcon("check-circle", "", 20));
-              if (typeof window !== "undefined") {
-                if (typeof window.showAdmin === "function") {
-                  window.showAdmin(true);
-                } else {
-                  window.location.hash = "#admin";
-                }
-              }
-              return;
-            }
-            if (typeof window !== "undefined" && window.location.hash.startsWith("#admin")) {
-              showToast(`Welcome back, ${user?.firstName || "Musician"}! Note: Administrator credentials required for Admin Portal.`, "info");
-              if (typeof window.showHome === "function")
-                window.showHome();
-              else
-                window.location.hash = "#home";
-              return;
-            }
-            showToast(`Welcome back, ${user?.firstName || "Musician"}!`, getIcon("check-circle", "", 20));
-            return;
-          }
           if (err.requiresVerification) {
             showToast("Account verification required. A code was sent to your email.");
             showOtpVerification(err.email || email);

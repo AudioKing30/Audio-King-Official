@@ -40,8 +40,9 @@
         if (h.indexOf('#admin') === 0) {
           css += ' .ak-header, .ak-footer, .ak-nav-bar { display: none !important; }';
           try {
-            var saved = localStorage.getItem('audioKingUser');
-            if (saved && saved.indexOf('"role":"admin"') !== -1) {
+            var token = localStorage.getItem('audioKingSessionToken') || localStorage.getItem('audioking_token');
+            var saved = localStorage.getItem('audioKingUser') || localStorage.getItem('audioking_user');
+            if (token && saved && saved.indexOf('"role":"admin"') !== -1) {
               css += ' #adminPage { display: flex !important; }';
               var sub = h.replace('#admin/', '').replace('#admin', '').split('?')[0];
               if (!sub) sub = localStorage.getItem('audioking_admin_view');

@@ -517,31 +517,6 @@ export function initAuth() {
         }
         showToast(`Welcome back, ${user?.firstName || 'Musician'}!`, getIcon('check-circle', '', 20));
       } catch (err) {
-        // If authentication succeeded despite catching an error, close modal and celebrate
-        if (authService.isAuthenticated()) {
-          closeAuthModal();
-          const user = getCurrentUser();
-          if (user && user.role === 'admin') {
-            showToast('Welcome Administrator! Opening Admin Portal...', getIcon('check-circle', '', 20));
-            if (typeof window !== 'undefined') {
-              if (typeof window.showAdmin === 'function') {
-                window.showAdmin(true);
-              } else {
-                window.location.hash = '#admin';
-              }
-            }
-            return;
-          }
-          if (typeof window !== 'undefined' && window.location.hash.startsWith('#admin')) {
-            showToast(`Welcome back, ${user?.firstName || 'Musician'}! Note: Administrator credentials required for Admin Portal.`, 'info');
-            if (typeof window.showHome === 'function') window.showHome();
-            else window.location.hash = '#home';
-            return;
-          }
-          showToast(`Welcome back, ${user?.firstName || 'Musician'}!`, getIcon('check-circle', '', 20));
-          return;
-        }
-
         if (err.requiresVerification) {
           showToast('Account verification required. A code was sent to your email.');
           showOtpVerification(err.email || email);

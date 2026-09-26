@@ -1,7 +1,7 @@
 /**
  * AudioKing Admin & Catalog Database Seeder
  * Seeds:
- * 1. Hardcoded Admin Account (audioking30@gmail.com / Musix@Admin2026!)
+ * 1. Administrator Account Seeding
  * 2. SQLite Categories & Brands tables
  * 3. SQLite Products table from current catalog (151 products)
  */

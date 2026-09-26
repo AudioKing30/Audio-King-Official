@@ -677,7 +677,7 @@ router.get('/google/callback', async (req, res) => {
     // 4. Create real authenticated session & cookie
     const sessionToken = createSessionForUser(res, user.id, req);
     const sanitized = sanitizeUser(user);
-    const finalRedirectUrl = `${targetRedirectUrl}&token=${encodeURIComponent(sessionToken)}`;
+    const hashRedirectUrl = `${targetRedirectUrl}#auth_token=${encodeURIComponent(sessionToken)}`;
 
     // 5. Return seamless popup bridge or full redirect
     return res.send(`
@@ -737,6 +737,7 @@ router.get('/google/callback', async (req, res) => {
               localStorage.setItem('audioking_token', authData.token);
               localStorage.setItem('audioKingToken', authData.token);
               localStorage.setItem('audioKingUser', JSON.stringify(authData.user));
+              localStorage.setItem('audioking_user', JSON.stringify(authData.user));
             } catch (e) {}
 
             try {
@@ -744,10 +745,10 @@ router.get('/google/callback', async (req, res) => {
                 window.opener.postMessage(authData, '*');
                 setTimeout(() => window.close(), 400);
               } else {
-                window.location.href = ${JSON.stringify(finalRedirectUrl)};
+                window.location.href = ${JSON.stringify(hashRedirectUrl)};
               }
             } catch (e) {
-              window.location.href = ${JSON.stringify(finalRedirectUrl)};
+              window.location.href = ${JSON.stringify(hashRedirectUrl)};
             }
           </script>
         </body>

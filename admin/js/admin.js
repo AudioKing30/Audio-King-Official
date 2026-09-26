@@ -182,8 +182,9 @@ async function loadDashboardStats() {
         if (window.authService && window.authService.getStatus() === 'loading') {
           return;
         }
-        const cachedUser = JSON.parse(localStorage.getItem('audioKingUser') || 'null');
-        if (cachedUser && cachedUser.role === 'admin') {
+        const token = localStorage.getItem('audioKingSessionToken') || localStorage.getItem('audioking_token');
+        const cachedUser = JSON.parse(localStorage.getItem('audioKingUser') || localStorage.getItem('audioking_user') || 'null');
+        if (token && cachedUser && cachedUser.role === 'admin') {
           console.warn('[ADMIN] API returned', res.status, '- backend may still be warming up. Keeping admin session active.');
           return;
         }
@@ -1632,13 +1633,16 @@ async function handleLogout() {
     } else {
       await adminFetch('/api/admin/auth/logout', { method: 'POST' });
     }
-    if (typeof window.showToast === 'function') window.showToast('Signed out of admin panel.');
-    if (typeof window.showHome === 'function') window.showHome();
-    else window.location.hash = '#home';
-  } catch (e) {
-    if (typeof window.showHome === 'function') window.showHome();
-    else window.location.hash = '#home';
-  }
+  } catch (e) {}
+  localStorage.removeItem('audioKingSessionToken');
+  localStorage.removeItem('audioking_token');
+  localStorage.removeItem('audioKingToken');
+  localStorage.removeItem('audioKingUser');
+  localStorage.removeItem('audioking_user');
+  localStorage.removeItem('audioking_admin_view');
+  if (typeof window.showToast === 'function') window.showToast('Signed out of admin panel.');
+  if (typeof window.showHome === 'function') window.showHome();
+  else window.location.hash = '#home';
 }
 window.handleAdminLogout = handleLogout;
 
