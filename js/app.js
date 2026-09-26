@@ -651,6 +651,7 @@ export async function showProduct(productOrId, updateHash = true) {
   let product = typeof productOrId === 'string' ? getProductById(productOrId) : productOrId;
   const productId = typeof productOrId === 'string' ? productOrId : productOrId?.id;
   if (productId) {
+    recordProductClick(productId);
     try {
       const res = await fetch(`/api/products/${encodeURIComponent(productId)}`);
       if (res.ok) {
@@ -1531,62 +1532,67 @@ function renderRelatedProducts(product) {
   const subcatLower = (product.subcategory || '').toLowerCase();
   const nameLower = (product.name || '').toLowerCase();
 
-  // Strictly filter relevant audio gear without random cross-category padding
-  const related = AUDIOKING_PRODUCTS.filter(p => {
-    if (p.id === product.id) return false;
+  const primaryRelated = [];
+  const secondaryRelated = [];
+  const tertiaryRelated = [];
+  const seenIds = new Set([product.id]);
+
+  // 1. Primary: Subcategory match or direct studio gear synergy
+  AUDIOKING_PRODUCTS.forEach(p => {
+    if (seenIds.has(p.id)) return;
     const pCat = (p.category || '').toLowerCase();
     const pSub = (p.subcategory || '').toLowerCase();
     const pName = (p.name || '').toLowerCase();
 
-    // Direct subcategory match
-    if (subcatLower && pSub && subcatLower === pSub) return true;
+    let isPrimary = false;
+    if (subcatLower && pSub && subcatLower === pSub) isPrimary = true;
+    else if ((catLower.includes('drum') || subcatLower.includes('drum') || nameLower.includes('drum')) &&
+             (pCat.includes('drum') || pSub.includes('drum') || pName.includes('drum'))) isPrimary = true;
+    else if ((catLower.includes('mic') || subcatLower.includes('mic') || nameLower.includes('mic')) &&
+             (pCat.includes('mic') || pSub.includes('mic') || pCat.includes('interface') || pName.includes('mic'))) isPrimary = true;
+    else if (catLower.includes('interface') &&
+             (pCat.includes('interface') || pCat.includes('mic') || pCat.includes('monitor') || pCat.includes('headphone'))) isPrimary = true;
+    else if (catLower.includes('monitor') &&
+             (pCat.includes('monitor') || pCat.includes('interface') || pCat.includes('acoustic'))) isPrimary = true;
+    else if ((catLower.includes('pedal') || catLower.includes('effect') || catLower.includes('guitar')) &&
+             (pCat.includes('pedal') || pCat.includes('effect') || pCat.includes('guitar') || pCat.includes('amp') || pSub.includes('pedal'))) isPrimary = true;
+    else if ((catLower.includes('keyboard') || catLower.includes('synth') || catLower.includes('midi')) &&
+             (pCat.includes('keyboard') || pCat.includes('synth') || pCat.includes('midi'))) isPrimary = true;
+    else if (catLower.includes('mixer') &&
+             (pCat.includes('mixer') || pCat.includes('interface') || pCat.includes('mic'))) isPrimary = true;
+    else if (catLower.includes('headphone') &&
+             (pCat.includes('headphone') || pCat.includes('interface'))) isPrimary = true;
+    else if (pCat === catLower) isPrimary = true;
 
-    // Drum gear compatibility (drum mics, electronic drums, drum hardware/accessories)
-    if (catLower.includes('drum') || subcatLower.includes('drum') || nameLower.includes('drum')) {
-      return pCat.includes('drum') || pSub.includes('drum') || pName.includes('drum');
+    if (isPrimary) {
+      primaryRelated.push(p);
+      seenIds.add(p.id);
     }
+  });
 
-    // Microphone gear compatibility (mics, microphone accessories, audio interfaces)
-    if (catLower.includes('mic') || subcatLower.includes('mic') || nameLower.includes('mic')) {
-      return pCat.includes('mic') || pSub.includes('mic') || pCat.includes('interface') || pName.includes('mic');
+  // 2. Secondary: Same brand or complementary equipment in neighboring pro audio domains
+  AUDIOKING_PRODUCTS.forEach(p => {
+    if (seenIds.has(p.id)) return;
+    const pBrand = (p.brand || '').toLowerCase();
+    const pCat = (p.category || '').toLowerCase();
+    if (pBrand === (product.brand || '').toLowerCase() || (catLower && pCat.includes(catLower.split(' ')[0]))) {
+      secondaryRelated.push(p);
+      seenIds.add(p.id);
     }
+  });
 
-    // Audio Interface compatibility (interfaces, microphones, studio monitors, headphones)
-    if (catLower.includes('interface')) {
-      return pCat.includes('interface') || pCat.includes('mic') || pCat.includes('monitor') || pCat.includes('headphone');
-    }
+  // 3. Tertiary: Top studio recording, monitors, and stage gear (guaranteeing at least 20-30 items)
+  AUDIOKING_PRODUCTS.forEach(p => {
+    if (seenIds.has(p.id)) return;
+    tertiaryRelated.push(p);
+    seenIds.add(p.id);
+  });
 
-    // Studio Monitors compatibility (monitors, monitor pads, acoustic treatment, audio interfaces)
-    if (catLower.includes('monitor')) {
-      return pCat.includes('monitor') || pCat.includes('interface') || pCat.includes('acoustic');
-    }
-
-    // Guitar Pedals & Effects compatibility (pedals, guitar effects, amps, electric guitars)
-    if (catLower.includes('pedal') || catLower.includes('effect') || catLower.includes('guitar') || subcatLower.includes('pedal')) {
-      return pCat.includes('pedal') || pCat.includes('effect') || pCat.includes('guitar') || pCat.includes('amp') || pSub.includes('pedal');
-    }
-
-    // Keyboards & Synthesizers compatibility (synthesizers, digital keyboards, midi controllers)
-    if (catLower.includes('keyboard') || catLower.includes('synth') || catLower.includes('midi')) {
-      return pCat.includes('keyboard') || pCat.includes('synth') || pCat.includes('midi');
-    }
-
-    // Audio Mixers compatibility (audio mixers, interfaces, live microphones)
-    if (catLower.includes('mixer')) {
-      return pCat.includes('mixer') || pCat.includes('interface') || pCat.includes('mic');
-    }
-
-    // Headphones compatibility (studio headphones, headphone amps, audio interfaces)
-    if (catLower.includes('headphone')) {
-      return pCat.includes('headphone') || pCat.includes('interface');
-    }
-
-    // Same category fallback
-    return pCat === catLower;
-  }).slice(0, 10);
+  // Target exactly 25 diverse items in the carousel
+  const related = [...primaryRelated, ...secondaryRelated, ...tertiaryRelated].slice(0, 25);
 
   track.innerHTML = related.map(item => `
-    <article class="pp-related-card" data-id="${item.id}">
+    <article class="pp-related-card ak-reveal-card" data-id="${item.id}" style="cursor:pointer;">
       <div class="pp-related-img-box">
         <img src="${item.image || 'assets/images/placeholder.jpg'}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
       </div>
@@ -1599,6 +1605,7 @@ function renderRelatedProducts(product) {
   track.querySelectorAll('.pp-related-card').forEach(card => {
     card.addEventListener('click', () => {
       const pid = card.dataset.id;
+      recordProductClick(pid);
       showProduct(pid);
     });
   });
@@ -1621,6 +1628,7 @@ function renderRelatedProducts(product) {
       track.scrollBy({ left: scrollAmt, behavior: 'smooth' });
     };
   }
+  setTimeout(triggerScrollReveal, 50);
 }
 
 /**
@@ -2058,9 +2066,24 @@ function setupAppEventListeners() {
 }
 
 let globalScrollObserver = null;
+let scrollThrottleTimeout = null;
 
 export function triggerScrollReveal() {
-  const elements = document.querySelectorAll('.ak-reveal:not(.is-revealed), .ak-scroll-reveal:not(.is-revealed), #akContactPage .ak-contact-card-box:not(.is-revealed), #productPage .pp-layout-grid:not(.is-revealed), #akCheckoutPage .ak-checkout-layout:not(.is-revealed)');
+  const selector = [
+    '.ak-reveal:not(.is-revealed)',
+    '.ak-scroll-reveal:not(.is-revealed)',
+    '.ak-reveal-card:not(.is-revealed)',
+    '.ak-product-card:not(.is-revealed)',
+    '.ak-category-card:not(.is-revealed)',
+    '.ak-testimonial-card:not(.is-revealed)',
+    '.ak-trust-item:not(.is-revealed)',
+    '.ak-benefit-card:not(.is-revealed)',
+    '#akContactPage .ak-contact-card-box:not(.is-revealed)',
+    '#productPage .pp-layout-grid:not(.is-revealed)',
+    '#akCheckoutPage .ak-checkout-layout:not(.is-revealed)'
+  ].join(', ');
+
+  const elements = document.querySelectorAll(selector);
   if (!elements.length) return;
 
   if ('IntersectionObserver' in window) {
@@ -2080,11 +2103,12 @@ export function triggerScrollReveal() {
     }
 
     elements.forEach((el, idx) => {
+      if (el.offsetParent === null && el.offsetWidth === 0 && el.offsetHeight === 0) return;
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
+      if (rect.top < window.innerHeight + 60 && rect.bottom > -60) {
         setTimeout(() => {
           el.classList.add('is-revealed');
-        }, Math.min(idx * 60, 360));
+        }, Math.min(idx * 30, 280));
       } else {
         globalScrollObserver.observe(el);
       }
@@ -2094,30 +2118,91 @@ export function triggerScrollReveal() {
   }
 }
 
+function handleScrollForReveal() {
+  if (scrollThrottleTimeout) return;
+  scrollThrottleTimeout = setTimeout(() => {
+    scrollThrottleTimeout = null;
+    triggerScrollReveal();
+  }, 120);
+}
+
 /**
  * Smooth appear-on-scroll and initial load entrance animations
  */
 function initScrollReveal() {
+  document.documentElement.classList.add('js-ready');
   document.documentElement.classList.add('js-loaded');
   triggerScrollReveal();
+  window.addEventListener('scroll', handleScrollForReveal, { passive: true });
+  window.addEventListener('resize', handleScrollForReveal, { passive: true });
   if (document.readyState !== 'complete') {
     window.addEventListener('load', triggerScrollReveal);
   }
 }
 
 /**
+ * Product Engagement & Click Tracking Engine
+ */
+export function getProductClicks() {
+  try {
+    return JSON.parse(localStorage.getItem('audioking_product_clicks') || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+export function recordProductClick(productId) {
+  if (!productId) return;
+  try {
+    const clicks = getProductClicks();
+    clicks[productId] = (clicks[productId] || 0) + 1;
+    localStorage.setItem('audioking_product_clicks', JSON.stringify(clicks));
+
+    // Optional non-blocking beacon to backend
+    try {
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        navigator.sendBeacon('/api/analytics/click', JSON.stringify({ productId }));
+      }
+    } catch (e) {}
+
+    // Dynamically recurring update of featured products if on home page
+    const activeTab = document.querySelector('.ak-tab-btn.active')?.dataset.tab || 'best-sellers';
+    if (activeTab === 'best-sellers') {
+      const currentList = FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS;
+      renderFeaturedProducts(currentList);
+    }
+  } catch (e) {}
+}
+
+/**
  * Render Featured Products Grid (Strictly 5 cards per row, max 2 rows = 10 items total)
+ * Dynamically recurring based on customer click popularity!
  */
 export function renderFeaturedProducts(items) {
   const grid = document.getElementById('akFeaturedProductsGrid');
   if (!grid) return;
 
-  // Render all items for carousel scrolling (4 visible on desktop, rest accessible via arrows)
-  const displayItems = (items && items.length) ? items : AUDIOKING_PRODUCTS;
+  const baseItems = (items && items.length) ? [...items] : [...FEATURED_PRODUCTS];
+  const clicks = getProductClicks();
 
-  grid.innerHTML = displayItems.map((p) => {
+  // Dynamically recurring sort based on maximum clicks:
+  // Products with highest customer clicks bubble to the top of featured products!
+  baseItems.sort((a, b) => {
+    const clicksA = clicks[a.id] || 0;
+    const clicksB = clicks[b.id] || 0;
+    if (clicksB !== clicksA) return clicksB - clicksA;
+    return 0;
+  });
+
+  grid.innerHTML = baseItems.map((p) => {
     const imgSrc = p.image || 'assets/images/placeholder.jpg';
     const cartQty = getCartItemQuantity(p.id);
+    const clickCount = clicks[p.id] || 0;
+    const trendingBadge = clickCount >= 2 ? `
+      <div class="ak-card-trending-badge" style="position:absolute; top:8px; left:8px; background:#EF4444; color:#FFFFFF; font-size:10px; font-weight:700; padding:2px 7px; border-radius:12px; display:inline-flex; align-items:center; gap:3px; z-index:2; box-shadow:0 2px 4px rgba(239,68,68,0.3);">
+        <span>🔥 Trending</span>
+      </div>
+    ` : '';
 
     const actionHtml = cartQty > 0 ? `
       <div class="ak-card-qty-control" data-id="${p.id}">
@@ -2136,7 +2221,8 @@ export function renderFeaturedProducts(items) {
     `;
 
     return `
-      <article class="ak-product-card" data-id="${p.id}" style="cursor:pointer;">
+      <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
+        ${trendingBadge}
         <div class="ak-product-thumb">
           <img class="ak-product-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
         </div>
@@ -2153,6 +2239,7 @@ export function renderFeaturedProducts(items) {
   attachAddToCartListeners(grid);
   attachProductCardListeners(grid);
   updateFeaturedCarouselArrows();
+  setTimeout(triggerScrollReveal, 40);
 }
 
 /**
@@ -2233,6 +2320,7 @@ function initProductTabs() {
       }
 
       renderFeaturedProducts(filtered.length ? filtered : FEATURED_PRODUCTS);
+      setTimeout(triggerScrollReveal, 60);
     });
   });
 }
@@ -2253,6 +2341,7 @@ function attachProductCardListeners(container = document) {
     card.onclick = (e) => {
       if (e.target.closest('.ak-add-btn') || e.target.closest('.ak-card-qty-control')) return;
       const pId = card.dataset.id;
+      if (pId) recordProductClick(pId);
       const product = getProductById(pId);
       if (product) showProduct(product);
     };

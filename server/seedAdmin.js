@@ -13,44 +13,61 @@ const { db } = require('./db');
 async function seedAdminAndCatalog() {
   console.log('[SEED] Running Admin & Catalog Seeder...');
 
-  // 1. Seed / Update Admin Account
-  const adminEmail = 'audioking30@gmail.com';
-  const adminPassword = 'Musix@Admin2026!';
-  const salt = bcrypt.genSaltSync(10);
-  const passwordHash = bcrypt.hashSync(adminPassword, salt);
+  // 1. Seed / Update Admin Accounts
+  const adminAccounts = [
+    {
+      id: 'usr_admin_audioking30',
+      email: 'audioking30@gmail.com',
+      displayName: 'AudioKing30',
+      fullName: 'AudioKing Store Owner',
+      password: 'Lovemytele@321'
+    },
+    {
+      id: 'usr_admin_audioking_official',
+      email: 'admin@audioking.in',
+      displayName: 'Admin',
+      fullName: 'AudioKing Administrator',
+      password: 'Lovemytele@321'
+    }
+  ];
+
   const now = new Date().toISOString();
 
-  const existingAdmin = db.prepare('SELECT id, email, role FROM users WHERE email = ? COLLATE NOCASE').get(adminEmail);
-  if (existingAdmin) {
-    db.prepare(`
-      UPDATE users 
-      SET role = 'admin', password_hash = ?, full_name = 'AudioKing Administrator', updated_at = ?
-      WHERE id = ?
-    `).run(passwordHash, now, existingAdmin.id);
-    console.log(`[SEED] Admin account updated with admin role: ${adminEmail}`);
-  } else {
-    const adminId = 'usr_admin_audioking30';
-    db.prepare(`
-      INSERT INTO users (
-        id, full_name, display_name, title, email, role,
-        auth_provider, email_verified, phone_verified, password_hash,
-        created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(
-      adminId,
-      'AudioKing Administrator',
-      'Admin',
-      'Store Owner & Audio Engineer',
-      adminEmail,
-      'admin',
-      'email',
-      1,
-      1,
-      passwordHash,
-      now,
-      now
-    );
-    console.log(`[SEED] Admin account seeded: ${adminEmail}`);
+  for (const acc of adminAccounts) {
+    const salt = bcrypt.genSaltSync(10);
+    const passwordHash = bcrypt.hashSync(acc.password, salt);
+
+    const existingAdmin = db.prepare('SELECT id, email, role FROM users WHERE email = ? COLLATE NOCASE').get(acc.email);
+    if (existingAdmin) {
+      db.prepare(`
+        UPDATE users 
+        SET role = 'admin', password_hash = ?, display_name = ?, full_name = ?, updated_at = ?
+        WHERE id = ?
+      `).run(passwordHash, acc.displayName, acc.fullName, now, existingAdmin.id);
+      console.log(`[SEED] Admin account updated: ${acc.email}`);
+    } else {
+      db.prepare(`
+        INSERT INTO users (
+          id, full_name, display_name, title, email, role,
+          auth_provider, email_verified, phone_verified, password_hash,
+          created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        acc.id,
+        acc.fullName,
+        acc.displayName,
+        'Store Owner & Audio Specialist',
+        acc.email,
+        'admin',
+        'email',
+        1,
+        1,
+        passwordHash,
+        now,
+        now
+      );
+      console.log(`[SEED] Admin account seeded: ${acc.email}`);
+    }
   }
 
   // 2. Seed Categories & Brands

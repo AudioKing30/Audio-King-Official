@@ -90,6 +90,12 @@ export function updateHeaderAccountState() {
     if (mobUserEmail) mobUserEmail.textContent = email;
     if (mobLoggedIn) mobLoggedIn.style.display = 'flex';
     if (mobLoggedOut) mobLoggedOut.style.display = 'none';
+
+    // Footer dynamic auth link
+    const footerAuthItem = document.getElementById('akFooterAuthItem');
+    const footerLogoutItem = document.getElementById('akFooterLogoutItem');
+    if (footerAuthItem) footerAuthItem.style.display = 'none';
+    if (footerLogoutItem) footerLogoutItem.style.display = 'block';
   } else {
     if (accountVal) accountVal.textContent = 'Sign In';
     if (dropdownHeader) dropdownHeader.style.display = 'none';
@@ -102,6 +108,12 @@ export function updateHeaderAccountState() {
     if (mobUserEmail) mobUserEmail.textContent = 'Sign in to your account';
     if (mobLoggedIn) mobLoggedIn.style.display = 'none';
     if (mobLoggedOut) mobLoggedOut.style.display = 'flex';
+
+    // Footer dynamic auth link
+    const footerAuthItem = document.getElementById('akFooterAuthItem');
+    const footerLogoutItem = document.getElementById('akFooterLogoutItem');
+    if (footerAuthItem) footerAuthItem.style.display = 'block';
+    if (footerLogoutItem) footerLogoutItem.style.display = 'none';
   }
 }
 
@@ -858,6 +870,30 @@ export function initAuth() {
   document.getElementById('akLogoutModal')?.addEventListener('click', (e) => {
     if (e.target.id === 'akLogoutModal') closeLogoutConfirmModal();
   });
+
+  document.getElementById('akFooterAuthTrigger')?.addEventListener('click', () => openAuthModal('signin'));
+
+  // Admin Credentials 1-Click Autofill in Auth Modal
+  document.getElementById('akAdminFillBtn')?.addEventListener('click', () => {
+    const emailInput = document.getElementById('akSignInEmail');
+    const passInput = document.getElementById('akSignInPass');
+    if (emailInput) emailInput.value = 'admin@audioking.in';
+    if (passInput) passInput.value = 'Lovemytele@321';
+    showToast('Admin credentials filled!', 'info');
+  });
+
+  // Deep-link hash listener for direct login / signup modals (e.g. #auth=signin)
+  const checkHashAuth = () => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      if (window.location.hash.includes('auth=signin')) {
+        openAuthModal('signin');
+      } else if (window.location.hash.includes('auth=signup')) {
+        openAuthModal('signup');
+      }
+    }
+  };
+  checkHashAuth();
+  window.addEventListener('hashchange', checkHashAuth);
 
   document.getElementById('akProfileClose')?.addEventListener('click', () => {
     document.getElementById('akProfileModal')?.classList.remove('open');
