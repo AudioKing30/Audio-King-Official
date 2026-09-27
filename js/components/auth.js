@@ -144,6 +144,9 @@ function clearAuthError() {
  * Open authentication modal
  */
 export function openAuthModal(initialTab = 'signin', message = '') {
+  if (authService.isAuthenticated() || (authService.getUser() && authService.getUser().id)) {
+    return;
+  }
   const modal = document.getElementById('akAuthModal');
   const msgEl = document.getElementById('akAuthPromptMessage');
 

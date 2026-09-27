@@ -15,26 +15,26 @@ class AuthService {
     this.listeners = new Set();
     this.isLoggingIn = false;
 
-    // Check if there is an active session token in this browser
-    const token = getStorage('audioKingSessionToken', null) || 
-                  getStorage('audioking_token', null) || 
-                  getStorage('audioKingToken', null);
+    this.currentUser = null;
+    this.status = this.getToken() ? 'loading' : 'unauthenticated';
+  }
 
-    // ONLY pre-populate currentUser if a valid token actually exists in this browser!
-    const cachedUser = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
-    if (token && cachedUser && cachedUser.id && cachedUser.email) {
-      this.currentUser = cachedUser;
-      this.status = 'authenticated';
-    } else {
-      // Clean guest state - NO user logged in by default!
-      this.currentUser = null;
-      this.status = 'unauthenticated';
-      removeStorage(this.localUserKey);
-      removeStorage('audioKingUser');
-      removeStorage('audioKingSessionToken');
-      removeStorage('audioking_token');
-      removeStorage('audioKingToken');
+  getToken() {
+    let token = getStorage('audioKingSessionToken', null) || 
+                getStorage('audioking_token', null) || 
+                getStorage('audioKingToken', null);
+    if (!token && typeof localStorage !== 'undefined') {
+      token = localStorage.getItem('audioKingSessionToken') || 
+              localStorage.getItem('audioking_token') || 
+              localStorage.getItem('audioKingToken');
     }
+    if (token && typeof token === 'string') {
+      token = token.trim();
+      if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))) {
+        token = token.slice(1, -1);
+      }
+    }
+    return token || null;
   }
 
   getUserAddressKey() {
@@ -79,9 +79,7 @@ class AuthService {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    const token = getStorage('audioKingSessionToken', null) || 
-                  getStorage('audioking_token', null) || 
-                  getStorage('audioKingToken', null);
+    const token = this.getToken();
     const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
 
     try {
@@ -150,9 +148,7 @@ class AuthService {
       } catch (e) {}
     }
 
-    const token = getStorage('audioKingSessionToken', null) || 
-                  getStorage('audioking_token', null) || 
-                  getStorage('audioKingToken', null);
+    const token = this.getToken();
 
     // If there is NO session token in this browser, user is unequivocally an unauthenticated guest!
     if (!token) {
@@ -220,7 +216,7 @@ class AuthService {
    * Background session re-check after network recovery.
    */
   async _recheckSession() {
-    const token = getStorage('audioKingSessionToken', null) || getStorage('audioking_token', null);
+    const token = this.getToken();
     if (!token) {
       this.currentUser = null;
       this.status = 'unauthenticated';
@@ -253,13 +249,6 @@ class AuthService {
   }
 
   getUser() {
-    if (!this.currentUser) {
-      const token = getStorage('audioKingSessionToken', null) || getStorage('audioking_token', null);
-      if (token) {
-        const cached = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
-        if (cached && cached.id) this.currentUser = cached;
-      }
-    }
     return this.currentUser;
   }
 

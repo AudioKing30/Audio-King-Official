@@ -38,19 +38,7 @@
       if (h && h !== '#' && h !== '#home' && h.indexOf('#home?') !== 0) {
         var css = '#akMainContent { display: none !important; }';
         if (h.indexOf('#admin') === 0) {
-          css += ' .ak-header, .ak-footer, .ak-nav-bar { display: none !important; }';
-          try {
-            var token = localStorage.getItem('audioKingSessionToken') || localStorage.getItem('audioking_token');
-            var saved = localStorage.getItem('audioKingUser') || localStorage.getItem('audioking_user');
-            if (token && saved && saved.indexOf('"role":"admin"') !== -1) {
-              css += ' #adminPage { display: flex !important; }';
-              var sub = h.replace('#admin/', '').replace('#admin', '').split('?')[0];
-              if (!sub) sub = localStorage.getItem('audioking_admin_view');
-              if (sub && sub !== 'dashboard') {
-                css += ' #view-dashboard { display: none !important; } #view-' + sub + ' { display: block !important; }';
-              }
-            }
-          } catch (e) {}
+          // Strictly do NOT optimistically render admin UI before server-side identity verification
         } else if (h.indexOf('#catalog') === 0 || h.indexOf('#store') === 0 || h.indexOf('#pro-audio') === 0 || h.indexOf('#musical-instruments') === 0 || h.indexOf('#brands') === 0) {
           css += ' #catalogPage { display: block !important; }';
         } else if (h.indexOf('#contact') === 0) {
@@ -2277,8 +2265,8 @@
       <div class="admin-user-pill">
         <div class="admin-avatar">AK</div>
         <div class="admin-user-info">
-          <div class="admin-name">AudioKing Admin</div>
-          <div class="admin-role">audioking30@gmail.com</div>
+          <div class="admin-name" id="adminSidebarName">Administrator</div>
+          <div class="admin-role" id="adminSidebarRole">Admin Portal</div>
         </div>
       </div>
       <button type="button" class="sidebar-btn-logout" onclick="handleLogout()">
@@ -2816,8 +2804,8 @@
           <div class="admin-user-pill">
             <div class="admin-avatar">AK</div>
             <div class="admin-user-info">
-              <div class="admin-name">AudioKing Admin</div>
-              <div class="admin-role">audioking30@gmail.com</div>
+              <div class="admin-name">Administrator</div>
+              <div class="admin-role">Admin Portal</div>
             </div>
           </div>
           <button type="button" class="sidebar-btn-logout" onclick="handleLogout()">
@@ -2909,8 +2897,8 @@
           <div class="admin-user-pill">
             <div class="admin-avatar">AK</div>
             <div class="admin-user-info">
-              <div class="admin-name">AudioKing Admin</div>
-              <div class="admin-role">audioking30@gmail.com</div>
+              <div class="admin-name">Administrator</div>
+              <div class="admin-role">Admin Portal</div>
             </div>
           </div>
           <button type="button" class="sidebar-btn-logout" onclick="handleLogout()">
@@ -2971,8 +2959,8 @@
           <div class="admin-user-pill">
             <div class="admin-avatar">AK</div>
             <div class="admin-user-info">
-              <div class="admin-name">AudioKing Admin</div>
-              <div class="admin-role">audioking30@gmail.com</div>
+              <div class="admin-name">Administrator</div>
+              <div class="admin-role">Admin Portal</div>
             </div>
           </div>
           <button type="button" class="sidebar-btn-logout" onclick="handleLogout()">
@@ -3180,8 +3168,8 @@
 
           <div style="background: var(--ak-card-sub); padding: 16px; border-radius: var(--ak-radius); border: 1px solid var(--ak-border); margin-bottom: 24px;">
             <div style="font-size: 13px; color: var(--ak-text-secondary); margin-bottom: 4px;">Primary Administrator:</div>
-            <div style="font-size: 16px; font-weight: 800; color: var(--ak-text-primary);">AudioKing Administrator</div>
-            <div style="font-size: 13px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;">audioking30@gmail.com</div>
+            <div style="font-size: 16px; font-weight: 800; color: var(--ak-text-primary);" id="adminSettingsOwnerName">Administrator</div>
+            <div style="font-size: 13px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;" id="adminSettingsOwnerEmail">Verified Admin Session</div>
           </div>
 
           <div id="passwordChangeAlert" style="display: none;"></div>

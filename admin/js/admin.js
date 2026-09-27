@@ -63,12 +63,18 @@ function getAdminApiBase() {
 async function adminFetch(url, options = {}) {
   const base = getAdminApiBase();
   const fullUrl = (/^https?:\/\//i.test(url) || !base) ? url : `${base}${url.startsWith('/') ? url : '/' + url}`;
-  const token = localStorage.getItem('audioKingSessionToken') || 
-                localStorage.getItem('audioking_token') || 
-                localStorage.getItem('audioKingToken');
+  let token = localStorage.getItem('audioKingSessionToken') || 
+              localStorage.getItem('audioking_token') || 
+              localStorage.getItem('audioKingToken');
+  if (token) {
+    try {
+      const parsed = JSON.parse(token);
+      if (typeof parsed === 'string') token = parsed;
+    } catch (e) {}
+  }
   const headers = { ...(options.headers || {}) };
   if (token && !headers['Authorization']) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers['Authorization'] = `Bearer ${String(token).trim()}`;
   }
   return fetch(fullUrl, { ...options, credentials: 'include', headers });
 }
@@ -178,20 +184,7 @@ async function loadDashboardStats() {
   try {
     const res = await adminFetch('/api/admin/dashboard/stats');
     if (!res.ok) {
-      if (res.status === 401 || res.status === 403) {
-        if (window.authService && window.authService.getStatus() === 'loading') {
-          return;
-        }
-        const token = localStorage.getItem('audioKingSessionToken') || localStorage.getItem('audioking_token');
-        const cachedUser = JSON.parse(localStorage.getItem('audioKingUser') || localStorage.getItem('audioking_user') || 'null');
-        if (token && cachedUser && cachedUser.role === 'admin') {
-          console.warn('[ADMIN] API returned', res.status, '- backend may still be warming up. Keeping admin session active.');
-          return;
-        }
-        if (typeof window.showHome === 'function') window.showHome();
-        else window.location.hash = '#home';
-        if (typeof window.openAuthModal === 'function') window.openAuthModal('signin');
-      }
+      console.warn('[ADMIN] API stats check returned', res.status);
       return;
     }
     const data = await res.json();
@@ -1646,7 +1639,33 @@ async function handleLogout() {
 }
 window.handleAdminLogout = handleLogout;
 
+function updateAdminUserDisplay() {
+  try {
+    let user = null;
+    if (window.authService && typeof window.authService.getUser === 'function') {
+      user = window.authService.getUser();
+    }
+    if (!user) {
+      try {
+        const raw = localStorage.getItem('audioKingUser') || localStorage.getItem('audioking_user');
+        if (raw) user = JSON.parse(raw);
+      } catch (e) {}
+    }
+    if (user && user.role === 'admin') {
+      const name = user.fullName || user.displayName || 'Administrator';
+      const email = user.email || 'audioking30@gmail.com';
+      document.querySelectorAll('#adminSidebarName').forEach(el => { el.textContent = name; });
+      document.querySelectorAll('#adminSidebarRole').forEach(el => { el.textContent = email; });
+      const ownerName = document.getElementById('adminSettingsOwnerName');
+      if (ownerName) ownerName.textContent = name;
+      const ownerEmail = document.getElementById('adminSettingsOwnerEmail');
+      if (ownerEmail) ownerEmail.textContent = email;
+    }
+  } catch (e) {}
+}
+
 function initAdminDashboardView(targetView) {
+  updateAdminUserDisplay();
   loadCategoriesAndBrands();
 
   // Determine target view in order of precedence:

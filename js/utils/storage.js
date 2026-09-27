@@ -8,9 +8,13 @@ export function getStorage(key, defaultValue = null) {
   try {
     const item = localStorage.getItem(key);
     if (item === null) return defaultValue;
-    return JSON.parse(item);
+    try {
+      return JSON.parse(item);
+    } catch {
+      // If item is a plain string (like a session token), return it directly
+      return item;
+    }
   } catch (error) {
-    console.warn(`[Storage] Error reading key "${key}":`, error);
     return defaultValue;
   }
 }
@@ -18,7 +22,8 @@ export function getStorage(key, defaultValue = null) {
 export function setStorage(key, value) {
   if (typeof localStorage === 'undefined') return false;
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+    localStorage.setItem(key, serialized);
     return true;
   } catch (error) {
     console.error(`[Storage] Error persisting key "${key}":`, error);

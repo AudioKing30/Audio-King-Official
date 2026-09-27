@@ -397,6 +397,16 @@ router.post('/login', async (req, res) => {
 // 5. GOOGLE OAUTH 2.0 (Real Google Authentication via accounts.google.com)
 // =========================================================================
 
+function getGoogleRedirectUri(req) {
+  if (process.env.GOOGLE_REDIRECT_URI && process.env.GOOGLE_REDIRECT_URI.trim()) {
+    return process.env.GOOGLE_REDIRECT_URI.trim().replace(/\/+$/, '');
+  }
+  const host = req.get('host') || 'audioking-api.onrender.com';
+  const isHttps = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' || host.includes('onrender.com');
+  const protocol = isHttps ? 'https' : 'http';
+  return `${protocol}://${host}/api/auth/google/callback`;
+}
+
 /**
  * 5A. Check Google OAuth Configuration
  */
@@ -405,7 +415,8 @@ router.get('/google/config', (req, res) => {
   const configured = Boolean(clientId && clientId.includes('.apps.googleusercontent.com'));
   return res.json({
     configured,
-    clientId: configured ? clientId : null
+    clientId: configured ? clientId : null,
+    redirectUri: getGoogleRedirectUri(req)
   });
 });
 
@@ -419,9 +430,7 @@ router.get('/google/redirect', (req, res) => {
     return res.status(400).send('Google OAuth Client ID is not configured. Please add GOOGLE_CLIENT_ID to .env');
   }
 
-  const host = req.get('host') || 'localhost:3000';
-  const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${protocol}://${host}/api/auth/google/callback`;
+  const redirectUri = getGoogleRedirectUri(req);
 
   const returnTo = req.query.return_to || '/';
   const stateData = JSON.stringify({
@@ -455,9 +464,7 @@ router.get('/google/url', (req, res) => {
     });
   }
 
-  const host = req.get('host') || 'localhost:3000';
-  const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${protocol}://${host}/api/auth/google/callback`;
+  const redirectUri = getGoogleRedirectUri(req);
 
   const returnTo = req.query.return_to || '/';
   const stateData = JSON.stringify({
@@ -537,9 +544,7 @@ router.get('/google/callback', async (req, res) => {
     return res.status(500).send('Google credentials not configured on server.');
   }
 
-  const host = req.get('host') || 'localhost:3000';
-  const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${protocol}://${host}/api/auth/google/callback`;
+  const redirectUri = getGoogleRedirectUri(req);
 
   try {
     // 1. Exchange authorization code for tokens with Google (with deduplication to prevent double-fetch invalid_grant)

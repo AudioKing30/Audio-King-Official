@@ -58,8 +58,8 @@
       <div class="admin-user-pill">
         <div class="admin-avatar">AK</div>
         <div class="admin-user-info">
-          <div class="admin-name">AudioKing Admin</div>
-          <div class="admin-role">audioking30@gmail.com</div>
+          <div class="admin-name" id="adminSidebarName">Administrator</div>
+          <div class="admin-role" id="adminSidebarRole">Admin Portal</div>
         </div>
       </div>
       <button type="button" class="sidebar-btn-logout" onclick="handleLogout()">
@@ -645,8 +645,8 @@
 
           <div style="background: var(--ak-card-sub); padding: 16px; border-radius: var(--ak-radius); border: 1px solid var(--ak-border); margin-bottom: 24px;">
             <div style="font-size: 13px; color: var(--ak-text-secondary); margin-bottom: 4px;">Primary Administrator:</div>
-            <div style="font-size: 16px; font-weight: 800; color: #FFF;">AudioKing Administrator</div>
-            <div style="font-size: 13px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;">audioking30@gmail.com</div>
+            <div style="font-size: 16px; font-weight: 800; color: #FFF;" id="adminSettingsOwnerName">Administrator</div>
+            <div style="font-size: 13px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;" id="adminSettingsOwnerEmail">Verified Admin Session</div>
           </div>
 
           <div id="passwordChangeAlert" style="display: none;"></div>

@@ -24655,9 +24655,12 @@ Country of Origin: China`,
       const item = localStorage.getItem(key);
       if (item === null)
         return defaultValue;
-      return JSON.parse(item);
+      try {
+        return JSON.parse(item);
+      } catch {
+        return item;
+      }
     } catch (error) {
-      console.warn(`[Storage] Error reading key "${key}":`, error);
       return defaultValue;
     }
   }
@@ -24665,7 +24668,8 @@ Country of Origin: China`,
     if (typeof localStorage === "undefined")
       return false;
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      const serialized = typeof value === "string" ? value : JSON.stringify(value);
+      localStorage.setItem(key, serialized);
       return true;
     } catch (error) {
       console.error(`[Storage] Error persisting key "${key}":`, error);
@@ -25055,20 +25059,21 @@ Country of Origin: China`,
       this.localUserKey = AUDIOKING_CONFIG.userStorageKey || "audioking_user";
       this.listeners = /* @__PURE__ */ new Set();
       this.isLoggingIn = false;
-      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
-      const cachedUser = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
-      if (token && cachedUser && cachedUser.id && cachedUser.email) {
-        this.currentUser = cachedUser;
-        this.status = "authenticated";
-      } else {
-        this.currentUser = null;
-        this.status = "unauthenticated";
-        removeStorage(this.localUserKey);
-        removeStorage("audioKingUser");
-        removeStorage("audioKingSessionToken");
-        removeStorage("audioking_token");
-        removeStorage("audioKingToken");
+      this.currentUser = null;
+      this.status = this.getToken() ? "loading" : "unauthenticated";
+    }
+    getToken() {
+      let token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      if (!token && typeof localStorage !== "undefined") {
+        token = localStorage.getItem("audioKingSessionToken") || localStorage.getItem("audioking_token") || localStorage.getItem("audioKingToken");
       }
+      if (token && typeof token === "string") {
+        token = token.trim();
+        if (token.startsWith('"') && token.endsWith('"') || token.startsWith("'") && token.endsWith("'")) {
+          token = token.slice(1, -1);
+        }
+      }
+      return token || null;
     }
     getUserAddressKey() {
       const u = this.getUser();
@@ -25109,7 +25114,7 @@ Country of Origin: China`,
       const url = `${baseUrl}${endpoint}`;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8e3);
-      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      const token = this.getToken();
       const authHeaders = token ? { "Authorization": `Bearer ${token}` } : {};
       try {
         const res = await fetch(url, {
@@ -25169,7 +25174,7 @@ Country of Origin: China`,
         } catch (e) {
         }
       }
-      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      const token = this.getToken();
       if (!token) {
         this.currentUser = null;
         this.status = "unauthenticated";
@@ -25221,7 +25226,7 @@ Country of Origin: China`,
      * Background session re-check after network recovery.
      */
     async _recheckSession() {
-      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null);
+      const token = this.getToken();
       if (!token) {
         this.currentUser = null;
         this.status = "unauthenticated";
@@ -25252,14 +25257,6 @@ Country of Origin: China`,
       }
     }
     getUser() {
-      if (!this.currentUser) {
-        const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null);
-        if (token) {
-          const cached = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
-          if (cached && cached.id)
-            this.currentUser = cached;
-        }
-      }
       return this.currentUser;
     }
     getStatus() {
@@ -25798,6 +25795,9 @@ Country of Origin: China`,
     }
   }
   function openAuthModal(initialTab = "signin", message = "") {
+    if (authService.isAuthenticated() || authService.getUser() && authService.getUser().id) {
+      return;
+    }
     const modal = document.getElementById("akAuthModal");
     const msgEl = document.getElementById("akAuthPromptMessage");
     clearAuthError();

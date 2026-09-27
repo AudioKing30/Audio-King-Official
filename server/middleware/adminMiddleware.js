@@ -8,13 +8,20 @@ const { db } = require('../db');
 const { hashToken } = require('../security');
 
 function getAdminUserFromRequest(req) {
-  const token = req.cookies?.audioking_admin_session || 
+  let token = req.cookies?.audioking_admin_session || 
                 req.cookies?.audioking_session ||
                 req.cookies?.audioKingToken ||
                 req.cookies?.audioKingSessionToken ||
                 req.headers['authorization']?.replace(/^Bearer\s+/i, '') ||
                 req.headers['x-admin-token'] ||
                 req.headers['x-session-token'];
+
+  if (token) {
+    token = String(token).trim();
+    if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))) {
+      token = token.slice(1, -1).trim();
+    }
+  }
 
   if (!token) return null;
 
