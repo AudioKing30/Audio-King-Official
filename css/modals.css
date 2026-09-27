@@ -589,3 +589,50 @@
   background-color: #DC2626;
 }
 
+/* 4. SHOW / HIDE PASSWORD TOGGLE */
+.ak-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ak-password-wrapper input {
+  width: 100%;
+  padding-right: 44px !important;
+}
+
+.ak-password-toggle-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 6px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ak-text-muted, #94a3b8);
+  border-radius: 4px;
+  transition: color var(--ak-transition-fast, 0.15s ease), background-color var(--ak-transition-fast, 0.15s ease);
+  z-index: 3;
+}
+
+.ak-password-toggle-btn:hover {
+  color: var(--ak-orange, #ff6b00);
+}
+
+.ak-password-toggle-btn:focus-visible {
+  outline: 2px solid var(--ak-orange, #ff6b00);
+  outline-offset: 2px;
+}
+
+.ak-password-toggle-btn svg {
+  display: block;
+  pointer-events: none;
+}
+
+

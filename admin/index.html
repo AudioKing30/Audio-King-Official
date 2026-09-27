@@ -654,17 +654,32 @@
           <form id="changePasswordForm" onsubmit="handleChangePassword(event)">
             <div class="form-group">
               <label class="form-label" for="currentPassword">Current Password *</label>
-              <input type="password" id="currentPassword" class="form-input" required placeholder="Enter current password">
+              <div class="ak-password-wrapper">
+                <input type="password" id="currentPassword" class="form-input" required placeholder="Enter current password">
+                <button type="button" class="ak-password-toggle-btn" data-target="currentPassword" aria-label="Show password" title="Show password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="newPassword">New Password * (Min 8 characters)</label>
-              <input type="password" id="newPassword" class="form-input" required minlength="8" placeholder="Enter new strong password">
+              <div class="ak-password-wrapper">
+                <input type="password" id="newPassword" class="form-input" required minlength="8" placeholder="Enter new strong password">
+                <button type="button" class="ak-password-toggle-btn" data-target="newPassword" aria-label="Show password" title="Show password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="confirmPassword">Confirm New Password *</label>
-              <input type="password" id="confirmPassword" class="form-input" required minlength="8" placeholder="Re-enter new password">
+              <div class="ak-password-wrapper">
+                <input type="password" id="confirmPassword" class="form-input" required minlength="8" placeholder="Re-enter new password">
+                <button type="button" class="ak-password-toggle-btn" data-target="confirmPassword" aria-label="Show password" title="Show password">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
             </div>
 
             <button type="submit" class="btn-primary" style="margin-top: 8px;">
