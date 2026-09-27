@@ -64,6 +64,7 @@ export function resolveCategoryName(catName) {
   if (clean === 'synthesizers') return 'Keyboards';
   if (clean === 'monitor speakers' || clean === 'monitors') return 'Studio Monitors';
   if (clean === 'pre amps' || clean === 'preamp' || clean === 'preamps') return 'Preamps & Channel Strips';
+  if (clean === 'power supply cabels' || clean === 'power supply cables') return 'Power Supply Cables';
   const cleanNorm = clean.replace(/[\s\-_&]/g, '');
   const allCats = Array.from(new Set(allProducts.map(p => p.category)));
   const exact = allCats.find(c => (c || '').toLowerCase() === clean);

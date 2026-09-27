@@ -315,6 +315,12 @@ function initDatabase() {
     if (!orderColNames.includes('discount_amount')) {
       db.exec('ALTER TABLE orders ADD COLUMN discount_amount REAL DEFAULT 0;');
     }
+
+    // Ensure Arowana Audioglyphs naming consistency and category normalization in database
+    db.prepare("UPDATE products SET brand = 'Arowana Audioglyphs' WHERE brand = 'Arowana Audioglyph'").run();
+    db.prepare("DELETE FROM brands WHERE LOWER(name) = 'arowana audioglyph'").run();
+    db.prepare("UPDATE products SET category = 'Power Supply Cables' WHERE category = 'Power supply cabels'").run();
+    db.prepare("DELETE FROM categories WHERE LOWER(name) = 'power supply cabels'").run();
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);
   }

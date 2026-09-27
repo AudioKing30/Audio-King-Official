@@ -130,7 +130,7 @@ export function renderTopBrandsRow(brandItems) {
   if (!row) return;
 
   const topBrands = [
-    { label: 'Arowana Audioglyphs', value: 'Arowana Audioglyph' },
+    { label: 'Arowana Audioglyphs', value: 'Arowana Audioglyphs' },
     { label: 'Universal Audio', value: 'Universal Audio' },
     { label: 'Focusrite', value: 'Focusrite' },
     { label: 'Lauten Audio', value: 'Lauten Audio' },
@@ -222,7 +222,7 @@ function renderAllBrandsModalContent(query = '') {
   grid.innerHTML = filtered.map(b => {
     const isArowana = b.name.toLowerCase().includes('arowana');
     const displayName = isArowana ? 'Arowana Audioglyphs' : b.name;
-    const targetBrandValue = isArowana ? 'Arowana Audioglyph' : b.name;
+    const targetBrandValue = isArowana ? 'Arowana Audioglyphs' : b.name;
     const count = b.product_count !== undefined ? Number(b.product_count) : 0;
     const countBadge = count > 0 ? `<span class="ak-brand-modal-count">${count} items</span>` : '';
 

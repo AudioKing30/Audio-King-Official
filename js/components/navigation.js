@@ -46,13 +46,23 @@ function dismissDropdown(navItem) {
 export function renderNavigationBrands(brandsList) {
   let brands = [];
   if (Array.isArray(brandsList) && brandsList.length > 0) {
-    brands = brandsList.map(b => (typeof b === 'string' ? b : (b.name || '')).trim()).filter(Boolean);
+    brands = brandsList.map(b => {
+      let name = (typeof b === 'string' ? b : (b.name || '')).trim();
+      if (name.toLowerCase() === 'arowana audioglyph') name = 'Arowana Audioglyphs';
+      return name;
+    }).filter(Boolean);
   } else {
-    brands = AUDIOKING_BRANDS.map(b => b.name);
+    brands = AUDIOKING_BRANDS.map(b => (b.name.toLowerCase() === 'arowana audioglyph' ? 'Arowana Audioglyphs' : b.name));
   }
 
-  // Deduplicate and sort alphabetically case-insensitively
-  const uniqueBrands = Array.from(new Set(brands)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  // Deduplicate and sort: Arowana Audioglyphs first, then alphabetical
+  const uniqueBrands = Array.from(new Set(brands)).sort((a, b) => {
+    const aLower = a.toLowerCase();
+    const bLower = b.toLowerCase();
+    if (aLower.includes('arowana')) return -1;
+    if (bLower.includes('arowana')) return 1;
+    return a.localeCompare(b, undefined, { sensitivity: 'base' });
+  });
 
   // 1. Desktop Brands Dropdown
   const brandsGrid = document.getElementById('akBrandsDropdownGrid');
@@ -117,23 +127,150 @@ export function renderNavigationBrands(brandsList) {
 
 /**
  * Dynamically render categories in mobile drawer and desktop navigation
+ * Categorizes items appropriately into Pro Audio and Musical Instruments
  */
 export function renderNavigationCategories(categoriesList) {
   if (!Array.isArray(categoriesList) || categoriesList.length === 0) return;
 
-  const cats = categoriesList.map(c => (typeof c === 'string' ? c : (c.name || '')).trim()).filter(Boolean);
-  const uniqueCats = Array.from(new Set(cats)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  const rawCats = categoriesList.map(c => {
+    let name = (typeof c === 'string' ? c : (c.name || '')).trim();
+    if (name.toLowerCase() === 'power supply cabels') name = 'Power Supply Cables';
+    return name;
+  }).filter(Boolean);
 
-  // Mobile Drawer Pro Audio Categories
+  const uniqueCats = Array.from(new Set(rawCats)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+  // Musical Instruments categories keywords
+  const musicalKeywords = ['keyboard', 'synth', 'piano', 'drum', 'guitar amp', 'amplifier'];
+  
+  // Specific categories that MUST be in Pro Audio per user requirement (especially Arowana Audioglyphs categories)
+  const arowanaProAudioKeywords = [
+    'power conditioner',
+    'guitar pedal power supply',
+    'power supply',
+    'power supplies',
+    'power cable',
+    'power supply cable',
+    'cable',
+    'cabel',
+    'microphone cable',
+    'instrument cable'
+  ];
+
+  const musicalCats = [];
+  const proAudioCats = [];
+
+  uniqueCats.forEach(cat => {
+    const lower = cat.toLowerCase();
+    // If it matches an Arowana category, it strictly belongs in Pro Audio
+    if (arowanaProAudioKeywords.some(kw => lower.includes(kw))) {
+      proAudioCats.push(cat);
+    } else if (musicalKeywords.some(kw => lower.includes(kw))) {
+      musicalCats.push(cat);
+    } else if (lower.includes('pedal') || lower.includes('effect')) {
+      musicalCats.push(cat);
+    } else {
+      proAudioCats.push(cat);
+    }
+  });
+
+  const finalProAudio = Array.from(new Set(proAudioCats)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  const finalMusical = Array.from(new Set(musicalCats)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+  // 1. Desktop Pro Audio Dropdown Grid
+  const proAudioGrid = document.getElementById('akProAudioDropdownGrid');
+  if (proAudioGrid && finalProAudio.length > 0) {
+    const half = Math.ceil(finalProAudio.length / 2);
+    const col1 = finalProAudio.slice(0, half);
+    const col2 = finalProAudio.slice(half);
+
+    proAudioGrid.innerHTML = `
+      <div class="ak-proaudio-col">
+        ${col1.map(c => `
+          <a href="#store?category=${encodeURIComponent(c)}" class="ak-nav-drop-item ak-cat-filter-link" data-cat="${c}">
+            ${c}
+          </a>
+        `).join('')}
+      </div>
+      <div class="ak-proaudio-col">
+        ${col2.map(c => `
+          <a href="#store?category=${encodeURIComponent(c)}" class="ak-nav-drop-item ak-cat-filter-link" data-cat="${c}">
+            ${c}
+          </a>
+        `).join('')}
+      </div>
+    `;
+
+    proAudioGrid.querySelectorAll('.ak-cat-filter-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const catText = link.dataset.cat || link.textContent.trim();
+        const parentNavItem = link.closest('.ak-nav-item');
+        if (parentNavItem) {
+          dismissDropdown(parentNavItem);
+          setActiveNavItem(parentNavItem);
+        }
+        window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: catText }));
+      });
+    });
+  }
+
+  // 2. Desktop Musical Instruments Dropdown List
+  const musicalList = document.getElementById('akMusicalDropdownList');
+  if (musicalList && finalMusical.length > 0) {
+    musicalList.innerHTML = finalMusical.map(c => `
+      <a href="#store?category=${encodeURIComponent(c)}" class="ak-nav-drop-item ak-cat-filter-link" data-cat="${c}">
+        ${c}
+      </a>
+    `).join('');
+
+    musicalList.querySelectorAll('.ak-cat-filter-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const catText = link.dataset.cat || link.textContent.trim();
+        const parentNavItem = link.closest('.ak-nav-item');
+        if (parentNavItem) {
+          dismissDropdown(parentNavItem);
+          setActiveNavItem(parentNavItem);
+        }
+        window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: catText }));
+      });
+    });
+  }
+
+  // 3. Mobile Drawer Pro Audio Accordion
   const mobProAudio = document.getElementById('akMobProAudio');
-  if (mobProAudio && uniqueCats.length > 0) {
-    mobProAudio.innerHTML = uniqueCats.map(catName => `
+  if (mobProAudio && finalProAudio.length > 0) {
+    mobProAudio.innerHTML = finalProAudio.map(catName => `
       <a href="#store?category=${encodeURIComponent(catName)}" class="ak-mobile-sub-link ak-mob-cat-link" data-cat="${catName}">
         ${catName}
       </a>
     `).join('');
 
     mobProAudio.querySelectorAll('.ak-mob-cat-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const catText = link.dataset.cat || link.textContent.trim();
+        const mobileDrawer = document.getElementById('akMobileDrawer');
+        if (mobileDrawer) {
+          mobileDrawer.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+        window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: catText }));
+      });
+    });
+  }
+
+  // 4. Mobile Drawer Musical Instruments Accordion
+  const mobMusical = document.getElementById('akMobMusical');
+  if (mobMusical && finalMusical.length > 0) {
+    mobMusical.innerHTML = finalMusical.map(catName => `
+      <a href="#store?category=${encodeURIComponent(catName)}" class="ak-mobile-sub-link ak-mob-cat-link" data-cat="${catName}">
+        ${catName}
+      </a>
+    `).join('');
+
+    mobMusical.querySelectorAll('.ak-mob-cat-link').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const catText = link.dataset.cat || link.textContent.trim();

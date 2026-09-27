@@ -5,9 +5,9 @@
  */
 export const AUDIOKING_BRANDS = [
   {
-    "id": "brand-arowana-audioglyph",
+    "id": "brand-arowana-audioglyphs",
     "name": "Arowana Audioglyphs",
-    "slug": "arowana-audioglyph",
+    "slug": "arowana-audioglyphs",
     "productCount": 27
   },
   {

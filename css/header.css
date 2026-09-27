@@ -484,6 +484,30 @@
   min-width: 175px;
 }
 
+/* PRO AUDIO DROPDOWN (Balanced multi-column layout for complete categories) */
+.ak-proaudio-dropdown {
+  min-width: 480px;
+  padding: 10px 14px;
+}
+
+.ak-proaudio-grid-dropdown {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.ak-proaudio-col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 210px;
+}
+
+.ak-musical-dropdown {
+  min-width: 240px;
+  padding: 8px 0;
+}
+
 /* NESTED SUBDROPDOWN (Pro Audio) */
 .ak-has-nested {
   position: relative;
