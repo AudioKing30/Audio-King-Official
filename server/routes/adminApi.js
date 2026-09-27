@@ -135,7 +135,7 @@ router.post('/upload/images', imageUpload.array('images', 10), (req, res) => {
         fs.unlinkSync(file.path);
         return res.status(400).json({ error: `Security check failed: File "${file.originalname}" is not a valid JPEG, PNG, or WebP image.` });
       }
-      savedPaths.push(`/uploads/products/${file.filename}`);
+      savedPaths.push(`uploads/products/${file.filename}`);
     }
 
     return res.json({ success: true, urls: savedPaths });
@@ -159,7 +159,7 @@ router.post('/upload/video', videoUpload.single('video'), (req, res) => {
 
     return res.json({
       success: true,
-      url: `/uploads/videos/${req.file.filename}`
+      url: `uploads/videos/${req.file.filename}`
     });
   } catch (err) {
     console.error('[VIDEO UPLOAD ERROR]', err);

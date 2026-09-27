@@ -7,7 +7,7 @@ import { AUDIOKING_PRODUCTS, FEATURED_PRODUCTS } from './data/products.js';
 import { AUDIOKING_BRANDS } from './data/brands.js';
 import { QUICK_CATEGORIES } from './data/categories.js';
 import { AUDIOKING_CONFIG } from './config.js';
-import { formatINR, getProductOfferStampHtml } from './utils/formatters.js';
+import { formatINR, getProductOfferStampHtml, resolveProductImage } from './utils/formatters.js';
 import { getIcon } from '../assets/icons/icons.js';
 import { initCart, addToCart, openCartDrawer, getCartItems, getCartSubtotal, clearCart, getCartItemQuantity, updateCartItemQty } from './components/cart.js';
 import { initCheckout, openCheckoutModal } from './components/checkout.js';
@@ -1258,7 +1258,7 @@ export async function showProduct(productOrId, updateHash = true) {
   }
 
   // Amazon / Flipkart Style Manual Media Carousel (Images + Video)
-  const defaultImg = product.image || product.primaryImage || (product.images && product.images[0]) || 'assets/images/placeholder.jpg';
+  const defaultImg = resolveProductImage(product.image || product.primaryImage || (product.images && product.images[0]));
   const track = document.getElementById('ppCarouselTrack');
   const thumbs = document.getElementById('ppCarouselThumbs');
   const prevBtn = document.getElementById('ppCarouselPrev');
@@ -1271,7 +1271,8 @@ export async function showProduct(productOrId, updateHash = true) {
   }
 
   // Build slides array: all images + video demonstration slide (if product has video)
-  const imgList = (product.images && product.images.length) ? product.images : [defaultImg];
+  const rawList = (product.images && product.images.length) ? product.images : [defaultImg];
+  const imgList = rawList.map(resolveProductImage);
   const slidesData = imgList.map((src, idx) => ({
     type: 'image',
     src: src,
@@ -1913,7 +1914,7 @@ function renderDeepDiveSpecifications(product) {
     const spotSrc = (product.images && product.images.length > 2)
       ? product.images[2]
       : (product.image || 'assets/images/placeholder.jpg');
-    spotImg.src = spotSrc;
+    spotImg.src = resolveProductImage(spotSrc);
     spotImg.alt = `${product.name} Studio Detail`;
   }
 
@@ -2399,7 +2400,7 @@ export function renderFeaturedProducts(items) {
   });
 
   grid.innerHTML = baseItems.map((p) => {
-    const imgSrc = p.image || 'assets/images/placeholder.jpg';
+    const imgSrc = resolveProductImage(p.image);
     const cartQty = getCartItemQuantity(p.id);
     const clickCount = clicks[p.id] || 0;
     const trendingBadge = clickCount >= 2 ? `

@@ -101,3 +101,17 @@ export function getProductOfferStampHtml(product, extraClass = '') {
   `;
 }
 
+/**
+ * Safely normalizes product image URLs for GitHub Pages, local dev, and express servers
+ * @param {string} src
+ * @returns {string}
+ */
+export function resolveProductImage(src) {
+  if (!src) return 'assets/images/placeholder.jpg';
+  if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+  if (src.startsWith('/uploads/')) return src.slice(1);
+  if (src.startsWith('/assets/')) return src.slice(1);
+  return src;
+}
+
+

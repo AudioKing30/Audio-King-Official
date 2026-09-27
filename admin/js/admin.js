@@ -39,6 +39,18 @@ function formatDate(isoStr) {
   }
 }
 
+function resolveAdminThumb(src) {
+  const isInsideAdminDir = typeof window !== 'undefined' && (window.location.pathname.includes('/admin/') || window.location.pathname.endsWith('/admin'));
+  const fallback = isInsideAdminDir ? '../assets/images/logo.jpg' : 'assets/images/logo.jpg';
+  if (!src) return fallback;
+  if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+  let clean = src.replace(/^\/+/, '');
+  if (isInsideAdminDir && !clean.startsWith('../')) {
+    return '../' + clean;
+  }
+  return clean;
+}
+
 function getAdminApiBase() {
   if (typeof window !== 'undefined') {
     if (typeof window.getAudioKingApiBase === 'function') {
@@ -205,7 +217,7 @@ async function loadDashboardStats() {
       lowStockTbody.innerHTML = stats.lowStockProducts.map(p => `
         <tr>
           <td style="width: 50px;">
-            <img src="${p.image || '/assets/images/logo.jpg'}" class="table-thumb" alt="${p.name}">
+            <img src="${resolveAdminThumb(p.image)}" class="table-thumb" alt="${p.name}">
           </td>
           <td><strong>${p.name}</strong></td>
           <td>${p.category}</td>
@@ -235,7 +247,7 @@ async function loadDashboardStats() {
           <div class="ak-mobile-lowstock-card">
             <div class="ak-mobile-lowstock-top">
               <div class="ak-mobile-lowstock-img">
-                <img src="${p.image || '/assets/images/logo.jpg'}" alt="${p.name}">
+                <img src="${resolveAdminThumb(p.image)}" alt="${p.name}">
               </div>
               <div class="ak-mobile-lowstock-details">
                 <div class="ak-mobile-lowstock-name">${p.name}</div>
@@ -359,7 +371,7 @@ async function loadProducts() {
     tbody.innerHTML = state.products.map(p => `
       <tr>
         <td style="width: 48px;">
-          <img src="${p.image || '/assets/images/logo.jpg'}" class="table-thumb" alt="${p.name}">
+          <img src="${resolveAdminThumb(p.image)}" class="table-thumb" alt="${p.name}">
         </td>
         <td style="max-width: 220px;">
           <div class="prod-table-name" style="font-weight: 700; color: #0F172A; margin-bottom: 2px; line-height: 1.35;">${p.name}</div>
@@ -394,7 +406,7 @@ async function loadProducts() {
         <div class="ak-mobile-product-card">
           <div class="ak-mpc-top">
             <div class="ak-mpc-img-wrap">
-              <img src="${p.image || '/assets/images/logo.jpg'}" alt="${p.name}">
+              <img src="${resolveAdminThumb(p.image)}" alt="${p.name}">
             </div>
             <div class="ak-mpc-title-wrap">
               <div class="ak-mpc-title">${p.name}</div>
@@ -881,7 +893,7 @@ function renderImagePreviewGrid() {
   grid.innerHTML = state.formImages.map((imgUrl, idx) => `
     <div class="preview-tile ${idx === 0 ? 'cover' : ''}">
       ${idx === 0 ? '<span class="cover-badge">⭐ COVER</span>' : ''}
-      <img src="${imgUrl}" class="preview-img" alt="Product image">
+      <img src="${resolveAdminThumb(imgUrl)}" class="preview-img" alt="Product image">
       <div class="preview-tile-actions">
         <button type="button" class="btn-tile-act" title="Move Left" onclick="moveImage(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>&larr;</button>
         <button type="button" class="btn-tile-act" title="Remove" style="color: var(--ak-danger);" onclick="removeImage(${idx})">&times;</button>
@@ -1388,7 +1400,7 @@ function renderOfferProductList(filterText = '') {
     const isSelected = state.selectedOfferProductId === p.id;
     return `
       <div class="offer-product-item ${isSelected ? 'selected' : ''}" onclick="selectOfferProduct('${p.id}')">
-        <img src="${p.image || '/assets/images/logo.jpg'}" class="offer-product-item-thumb" alt="${p.name}" loading="lazy">
+        <img src="${resolveAdminThumb(p.image)}" class="offer-product-item-thumb" alt="${p.name}" loading="lazy">
         <div class="offer-product-item-info">
           <div class="offer-product-item-name" title="${p.name}">${p.name}</div>
           <div class="offer-product-item-meta">${p.brand ? p.brand + ' · ' : ''}${p.category}</div>
@@ -1418,7 +1430,7 @@ function selectOfferProduct(productId) {
   const searchBox = document.querySelector('.offer-product-search-box');
 
   if (badge && thumb && title && price) {
-    thumb.src = p.image || '/assets/images/logo.jpg';
+    thumb.src = resolveAdminThumb(p.image);
     title.textContent = p.name;
     price.textContent = formatINR(p.price);
     badge.style.display = 'flex';
@@ -1672,7 +1684,7 @@ async function openOrderDetailModal(orderId) {
     const itemsTbody = document.getElementById('modalOrderItemsTbody');
     itemsTbody.innerHTML = ord.items.map(it => `
       <tr>
-        <td style="width: 44px;"><img src="${it.image}" class="table-thumb" alt=""></td>
+        <td style="width: 44px;"><img src="${resolveAdminThumb(it.image)}" class="table-thumb" alt=""></td>
         <td>${it.name}</td>
         <td>${it.quantity}</td>
         <td>${formatINR(it.unitPrice)}</td>
@@ -1991,7 +2003,7 @@ async function loadAnalytics() {
       } else {
         productsBody.innerHTML = prods.map(p => `
           <tr>
-            <td><img src="${p.image || 'assets/images/logo.jpg'}" class="table-thumb" alt=""></td>
+            <td><img src="${resolveAdminThumb(p.image)}" class="table-thumb" alt=""></td>
             <td><strong>${p.name || p.product_id}</strong></td>
             <td style="text-align: right;"><strong style="color: var(--ak-orange);">${p.views}</strong></td>
           </tr>

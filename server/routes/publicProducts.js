@@ -31,14 +31,21 @@ function getActiveOffers() {
  * Format SQLite product row to match standard AudioKing product schema
  */
 function formatProduct(row, activeOffers = []) {
+  const cleanImgPath = (src) => {
+    if (!src || typeof src !== 'string') return src;
+    if (src.startsWith('/uploads/')) return src.slice(1);
+    if (src.startsWith('/assets/')) return src.slice(1);
+    return src;
+  };
+
   let images = [];
   try {
-    images = JSON.parse(row.images_json || '[]');
+    images = (JSON.parse(row.images_json || '[]')).map(cleanImgPath);
   } catch (e) {
     images = [];
   }
-  if (!images.length && row.image) images = [row.image];
-  const mainImage = row.image || images[0] || 'assets/images/logo.jpg';
+  if (!images.length && row.image) images = [cleanImgPath(row.image)];
+  const mainImage = cleanImgPath(row.image) || images[0] || 'assets/images/logo.jpg';
 
   let specs = [];
   try {

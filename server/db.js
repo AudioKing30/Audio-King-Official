@@ -321,6 +321,13 @@ function initDatabase() {
     db.prepare("DELETE FROM brands WHERE LOWER(name) = 'arowana audioglyph'").run();
     db.prepare("UPDATE products SET category = 'Power Supply Cables' WHERE category = 'Power supply cabels'").run();
     db.prepare("DELETE FROM categories WHERE LOWER(name) = 'power supply cabels'").run();
+
+    // Normalize uploaded image paths by stripping leading slashes so they resolve universally
+    db.prepare("UPDATE products SET image = SUBSTR(image, 2) WHERE image LIKE '/uploads/%'").run();
+    const slashJsonProds = db.prepare("SELECT id, images_json FROM products WHERE images_json LIKE '%/uploads/%'").all();
+    for (const p of slashJsonProds) {
+      db.prepare('UPDATE products SET images_json = ? WHERE id = ?').run(p.images_json.replace(/\/uploads\//g, 'uploads/'), p.id);
+    }
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);
   }
