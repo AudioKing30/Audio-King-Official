@@ -24349,10 +24349,16 @@ Country of Origin: China`,
   // js/data/brands.js
   var AUDIOKING_BRANDS = [
     {
+      "id": "brand-arowana-audioglyph",
+      "name": "Arowana Audioglyphs",
+      "slug": "arowana-audioglyph",
+      "productCount": 27
+    },
+    {
       "id": "brand-adam-audio",
       "name": "ADAM Audio",
       "slug": "adam-audio",
-      "productCount": 3
+      "productCount": 8
     },
     {
       "id": "brand-artesia",
@@ -24367,46 +24373,88 @@ Country of Origin: China`,
       "productCount": 2
     },
     {
-      "id": "brand-bluguitar",
-      "name": "BluGuitar",
-      "slug": "bluguitar",
+      "id": "brand-audota",
+      "name": "Audota",
+      "slug": "audota",
       "productCount": 1
     },
     {
-      "id": "brand-dsm-humboldt",
+      "id": "brand-avatar",
+      "name": "Avatar",
+      "slug": "avatar",
+      "productCount": 4
+    },
+    {
+      "id": "brand-bluguitar",
+      "name": "BluGuitar",
+      "slug": "bluguitar",
+      "productCount": 5
+    },
+    {
+      "id": "brand-caline",
+      "name": "Caline",
+      "slug": "caline",
+      "productCount": 3
+    },
+    {
+      "id": "brand-dsm-humboldt-electronics",
       "name": "DSM & Humboldt Electronics",
-      "slug": "dsm-humboldt",
-      "productCount": 2
+      "slug": "dsm-humboldt-electronics",
+      "productCount": 10
+    },
+    {
+      "id": "brand-donner",
+      "name": "Donner",
+      "slug": "donner",
+      "productCount": 13
     },
     {
       "id": "brand-efnote",
       "name": "Efnote",
       "slug": "efnote",
-      "productCount": 3
+      "productCount": 8
     },
     {
       "id": "brand-eikon",
       "name": "Eikon",
       "slug": "eikon",
-      "productCount": 20
+      "productCount": 21
+    },
+    {
+      "id": "brand-focal",
+      "name": "Focal",
+      "slug": "focal",
+      "productCount": 1
     },
     {
       "id": "brand-focal-professional",
       "name": "Focal Professional",
       "slug": "focal-professional",
-      "productCount": 3
+      "productCount": 8
     },
     {
       "id": "brand-focusrite",
       "name": "Focusrite",
       "slug": "focusrite",
-      "productCount": 12
+      "productCount": 13
     },
     {
       "id": "brand-icon-pro-audio",
       "name": "Icon Pro Audio",
       "slug": "icon-pro-audio",
-      "productCount": 3
+      "productCount": 5
+    },
+    {
+      "id": "brand-joyo",
+      "name": "Joyo",
+      "slug": "joyo",
+      "productCount": 11
+    },
+    {
+      "id": "brand-just-pro",
+      "name": "Just PRO",
+      "slug": "just-pro",
+      "productCount": 4
     },
     {
       "id": "brand-lauten-audio",
@@ -24418,7 +24466,13 @@ Country of Origin: China`,
       "id": "brand-lemon-drums",
       "name": "Lemon Drums",
       "slug": "lemon-drums",
-      "productCount": 4
+      "productCount": 8
+    },
+    {
+      "id": "brand-lirevo",
+      "name": "Lirevo",
+      "slug": "lirevo",
+      "productCount": 5
     },
     {
       "id": "brand-mooer",
@@ -24430,25 +24484,43 @@ Country of Origin: China`,
       "id": "brand-native-instruments",
       "name": "Native Instruments",
       "slug": "native-instruments",
-      "productCount": 5
+      "productCount": 10
     },
     {
       "id": "brand-nord",
       "name": "Nord",
       "slug": "nord",
-      "productCount": 4
+      "productCount": 10
     },
     {
       "id": "brand-novation",
       "name": "Novation",
       "slug": "novation",
-      "productCount": 3
+      "productCount": 8
+    },
+    {
+      "id": "brand-procraft",
+      "name": "ProCraft",
+      "slug": "procraft",
+      "productCount": 5
     },
     {
       "id": "brand-proel",
       "name": "Proel",
       "slug": "proel",
-      "productCount": 11
+      "productCount": 15
+    },
+    {
+      "id": "brand-sqoe",
+      "name": "SQOE",
+      "slug": "sqoe",
+      "productCount": 3
+    },
+    {
+      "id": "brand-strydom",
+      "name": "Strydom",
+      "slug": "strydom",
+      "productCount": 1
     },
     {
       "id": "brand-synergy",
@@ -24460,13 +24532,19 @@ Country of Origin: China`,
       "id": "brand-two-notes",
       "name": "Two Notes",
       "slug": "two-notes",
+      "productCount": 5
+    },
+    {
+      "id": "brand-udo",
+      "name": "UDO",
+      "slug": "udo",
       "productCount": 1
     },
     {
       "id": "brand-universal-audio",
       "name": "Universal Audio",
       "slug": "universal-audio",
-      "productCount": 35
+      "productCount": 43
     }
   ];
 
@@ -28263,19 +28341,26 @@ Country of Origin: China`,
       navItem.classList.remove("dropdown-closed");
     }, 450);
   }
-  function initNavigation() {
+  function renderNavigationBrands(brandsList) {
+    let brands = [];
+    if (Array.isArray(brandsList) && brandsList.length > 0) {
+      brands = brandsList.map((b) => (typeof b === "string" ? b : b.name || "").trim()).filter(Boolean);
+    } else {
+      brands = AUDIOKING_BRANDS.map((b) => b.name);
+    }
+    const uniqueBrands = Array.from(new Set(brands)).sort((a, b) => a.localeCompare(b, void 0, { sensitivity: "base" }));
     const brandsGrid = document.getElementById("akBrandsDropdownGrid");
-    if (brandsGrid) {
+    if (brandsGrid && uniqueBrands.length > 0) {
       const chunkSize = 10;
       const cols = [];
-      for (let i = 0; i < AUDIOKING_BRANDS.length; i += chunkSize) {
-        cols.push(AUDIOKING_BRANDS.slice(i, i + chunkSize));
+      for (let i = 0; i < uniqueBrands.length; i += chunkSize) {
+        cols.push(uniqueBrands.slice(i, i + chunkSize));
       }
       brandsGrid.innerHTML = cols.map((col) => `
       <div class="ak-brands-col">
-        ${col.map((b) => `
-          <a href="#catalog" class="ak-nav-drop-item ak-brand-filter-link" data-brand="${b.name}">
-            ${b.name}
+        ${col.map((brandName) => `
+          <a href="#store?brand=${encodeURIComponent(brandName)}" class="ak-nav-drop-item ak-brand-filter-link" data-brand="${brandName}">
+            ${brandName}
           </a>
         `).join("")}
       </div>
@@ -28284,42 +28369,76 @@ Country of Origin: China`,
         link.addEventListener("click", (e) => {
           e.preventDefault();
           const brandName = link.dataset.brand;
-          const brandsItem2 = document.getElementById("akNavItemBrands") || document.getElementById("akNavBrandsItem");
-          if (brandsItem2) {
-            dismissDropdown(brandsItem2);
-            setActiveNavItem(brandsItem2);
+          const brandsItem = document.getElementById("akNavItemBrands") || document.getElementById("akNavBrandsItem");
+          if (brandsItem) {
+            dismissDropdown(brandsItem);
+            setActiveNavItem(brandsItem);
           }
           window.dispatchEvent(new CustomEvent("ak:filter-brand", { detail: brandName }));
         });
       });
     }
-    document.querySelectorAll(".ak-mob-brand-link").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const brandName = link.dataset.brand;
-        const mobileDrawer2 = document.getElementById("akMobileDrawer");
-        if (mobileDrawer2) {
-          mobileDrawer2.classList.remove("open");
-          document.body.style.overflow = "";
-        }
-        const brandsItem2 = document.getElementById("akNavItemBrands") || document.getElementById("akNavBrandsItem");
-        if (brandsItem2) {
-          setActiveNavItem(brandsItem2);
-        }
-        window.dispatchEvent(new CustomEvent("ak:filter-brand", { detail: brandName }));
+    const mobBrandsContainer = document.getElementById("akMobBrands");
+    if (mobBrandsContainer && uniqueBrands.length > 0) {
+      mobBrandsContainer.innerHTML = uniqueBrands.map((brandName) => `
+      <a href="#store?brand=${encodeURIComponent(brandName)}" class="ak-mobile-sub-link ak-mob-brand-link" data-brand="${brandName}">
+        ${brandName}
+      </a>
+    `).join("");
+      mobBrandsContainer.querySelectorAll(".ak-mob-brand-link").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const brandName = link.dataset.brand;
+          const mobileDrawer = document.getElementById("akMobileDrawer");
+          if (mobileDrawer) {
+            mobileDrawer.classList.remove("open");
+            document.body.style.overflow = "";
+          }
+          const brandsItem = document.getElementById("akNavItemBrands") || document.getElementById("akNavBrandsItem");
+          if (brandsItem) {
+            setActiveNavItem(brandsItem);
+          }
+          window.dispatchEvent(new CustomEvent("ak:filter-brand", { detail: brandName }));
+        });
       });
-    });
-    document.querySelectorAll(".ak-mob-cat-link").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const catText = link.dataset.cat || link.textContent.trim();
-        const mobileDrawer2 = document.getElementById("akMobileDrawer");
-        if (mobileDrawer2) {
-          mobileDrawer2.classList.remove("open");
-          document.body.style.overflow = "";
-        }
-        window.dispatchEvent(new CustomEvent("ak:filter-category", { detail: catText }));
+    }
+  }
+  function renderNavigationCategories(categoriesList) {
+    if (!Array.isArray(categoriesList) || categoriesList.length === 0)
+      return;
+    const cats = categoriesList.map((c) => (typeof c === "string" ? c : c.name || "").trim()).filter(Boolean);
+    const uniqueCats = Array.from(new Set(cats)).sort((a, b) => a.localeCompare(b, void 0, { sensitivity: "base" }));
+    const mobProAudio = document.getElementById("akMobProAudio");
+    if (mobProAudio && uniqueCats.length > 0) {
+      mobProAudio.innerHTML = uniqueCats.map((catName) => `
+      <a href="#store?category=${encodeURIComponent(catName)}" class="ak-mobile-sub-link ak-mob-cat-link" data-cat="${catName}">
+        ${catName}
+      </a>
+    `).join("");
+      mobProAudio.querySelectorAll(".ak-mob-cat-link").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const catText = link.dataset.cat || link.textContent.trim();
+          const mobileDrawer = document.getElementById("akMobileDrawer");
+          if (mobileDrawer) {
+            mobileDrawer.classList.remove("open");
+            document.body.style.overflow = "";
+          }
+          window.dispatchEvent(new CustomEvent("ak:filter-category", { detail: catText }));
+        });
       });
+    }
+  }
+  function initNavigation() {
+    renderNavigationBrands(AUDIOKING_BRANDS);
+    window.addEventListener("ak:products-updated", (e) => {
+      const products = e.detail;
+      if (Array.isArray(products) && products.length > 0) {
+        const liveBrands = Array.from(new Set(products.map((p) => (p.brand || "").trim()).filter(Boolean)));
+        const liveCategories = Array.from(new Set(products.map((p) => (p.category || "").trim()).filter(Boolean)));
+        renderNavigationBrands(liveBrands);
+        renderNavigationCategories(liveCategories);
+      }
     });
     document.querySelectorAll(".ak-mobile-home-link").forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -29760,7 +29879,13 @@ Message: ${message}`);
       const b = (p.brand || "Other").trim();
       brandCounts[b] = (brandCounts[b] || 0) + 1;
     });
-    const sortedBrands = Object.keys(brandCounts).sort((a, b) => a.localeCompare(b));
+    const sortedBrands = Object.keys(brandCounts).sort((a, b) => {
+      if (a.toLowerCase().includes("arowana"))
+        return -1;
+      if (b.toLowerCase().includes("arowana"))
+        return 1;
+      return a.localeCompare(b, void 0, { sensitivity: "base" });
+    });
     let html = "";
     sortedBrands.forEach((b) => {
       const isChecked = selectedBrand === b.toLowerCase();
@@ -29941,8 +30066,12 @@ Message: ${message}`);
           return false;
         }
       }
-      if (selectedBrand && (product.brand || "").toLowerCase() !== selectedBrand) {
-        return false;
+      if (selectedBrand) {
+        const pBrand = (product.brand || "").toLowerCase().trim();
+        const sBrand = selectedBrand.toLowerCase().trim();
+        const match = pBrand === sBrand || pBrand.replace(/s$/, "") === sBrand.replace(/s$/, "") || pBrand.includes(sBrand) || sBrand.includes(pBrand);
+        if (!match)
+          return false;
       }
       const anyAvail = inStockOnly || outOfStockOnly || preOrderOnly;
       if (anyAvail) {
@@ -30226,27 +30355,163 @@ Message: ${message}`);
   }
   async function loadLiveCatalog() {
     try {
-      const res = await fetch(apiUrl("/api/products"));
-      if (!res.ok)
-        return;
-      const data = await res.json();
-      if (data && Array.isArray(data.products) && data.products.length > 0) {
-        AUDIOKING_PRODUCTS.length = 0;
-        AUDIOKING_PRODUCTS.push(...data.products);
-        const liveFeatured = data.products.filter((p) => p.isFeatured);
-        if (liveFeatured.length > 0) {
-          FEATURED_PRODUCTS.length = 0;
-          FEATURED_PRODUCTS.push(...liveFeatured);
-        }
-        renderFeaturedProducts(FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS);
-        window.dispatchEvent(new CustomEvent("ak:products-updated", { detail: AUDIOKING_PRODUCTS }));
-        if (window.location.hash && window.location.hash.startsWith("#product") && typeof window.handleHashRoute === "function") {
-          window.handleHashRoute();
+      const [resProducts, resBrands, resCats] = await Promise.all([
+        fetch(apiUrl("/api/products")),
+        fetch(apiUrl("/api/products/meta/brands")).catch(() => null),
+        fetch(apiUrl("/api/products/meta/categories")).catch(() => null)
+      ]);
+      if (resProducts && resProducts.ok) {
+        const data = await resProducts.json();
+        if (data && Array.isArray(data.products) && data.products.length > 0) {
+          AUDIOKING_PRODUCTS.length = 0;
+          AUDIOKING_PRODUCTS.push(...data.products);
+          const liveFeatured = data.products.filter((p) => p.isFeatured);
+          if (liveFeatured.length > 0) {
+            FEATURED_PRODUCTS.length = 0;
+            FEATURED_PRODUCTS.push(...liveFeatured);
+          }
+          renderFeaturedProducts(FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS);
+          window.dispatchEvent(new CustomEvent("ak:products-updated", { detail: AUDIOKING_PRODUCTS }));
+          if (window.location.hash && window.location.hash.startsWith("#product") && typeof window.handleHashRoute === "function") {
+            window.handleHashRoute();
+          }
         }
       }
+      let brandItems = [];
+      if (resBrands && resBrands.ok) {
+        const bData = await resBrands.json();
+        if (bData && Array.isArray(bData.brands)) {
+          brandItems = bData.brands;
+        }
+      }
+      if (!brandItems.length) {
+        const brandCounts = {};
+        AUDIOKING_PRODUCTS.forEach((p) => {
+          const b = (p.brand || "").trim();
+          if (b)
+            brandCounts[b] = (brandCounts[b] || 0) + 1;
+        });
+        brandItems = Object.keys(brandCounts).map((name) => ({ name, product_count: brandCounts[name] }));
+      }
+      window._allCatalogBrands = brandItems;
+      renderNavigationBrands(brandItems);
+      renderTopBrandsRow(brandItems);
+      let catItems = [];
+      if (resCats && resCats.ok) {
+        const cData = await resCats.json();
+        if (cData && Array.isArray(cData.categories)) {
+          catItems = cData.categories;
+        }
+      }
+      if (!catItems.length) {
+        const cats = Array.from(new Set(AUDIOKING_PRODUCTS.map((p) => (p.category || "").trim()).filter(Boolean)));
+        catItems = cats.map((name) => ({ name }));
+      }
+      window._allCatalogCategories = catItems;
+      renderNavigationCategories(catItems);
     } catch (err) {
       console.warn("[AUDIOKING] Could not load live products from /api/products, using bundled catalog:", err.message);
     }
+  }
+  function renderTopBrandsRow(brandItems) {
+    const row = document.getElementById("akBrandsRow");
+    if (!row)
+      return;
+    const topBrands = [
+      { label: "Arowana Audioglyphs", value: "Arowana Audioglyph" },
+      { label: "Universal Audio", value: "Universal Audio" },
+      { label: "Focusrite", value: "Focusrite" },
+      { label: "Lauten Audio", value: "Lauten Audio" },
+      { label: "Native Instruments", value: "Native Instruments" },
+      { label: "Nord", value: "Nord" },
+      { label: "ADAM Audio", value: "ADAM Audio" },
+      { label: "Audix", value: "Audix" },
+      { label: "Focal Professional", value: "Focal Professional" },
+      { label: "Efnote", value: "Efnote" }
+    ];
+    row.innerHTML = topBrands.map((b) => `
+    <a href="#store?brand=${encodeURIComponent(b.value)}" class="ak-brand-card" data-brand="${b.value}">
+      <span class="ak-brand-name">${b.label}</span>
+    </a>
+  `).join("");
+    row.querySelectorAll(".ak-brand-card").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        e.preventDefault();
+        const brand = card.dataset.brand;
+        showCatalog(brand, "brand");
+      });
+    });
+  }
+  function openAllBrandsModal(e) {
+    if (e && e.preventDefault)
+      e.preventDefault();
+    const modal = document.getElementById("akAllBrandsModal");
+    if (!modal)
+      return;
+    renderAllBrandsModalContent();
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+    const input = document.getElementById("akAllBrandsSearchInput");
+    if (input) {
+      input.value = "";
+      setTimeout(() => input.focus(), 60);
+    }
+  }
+  function closeAllBrandsModal() {
+    const modal = document.getElementById("akAllBrandsModal");
+    if (modal) {
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+  }
+  function filterAllBrandsModalList(query) {
+    renderAllBrandsModalContent(query);
+  }
+  function renderAllBrandsModalContent(query = "") {
+    const grid = document.getElementById("akAllBrandsModalGrid");
+    if (!grid)
+      return;
+    let brands = window._allCatalogBrands && window._allCatalogBrands.length ? window._allCatalogBrands : AUDIOKING_BRANDS.map((b) => ({ name: b.name, product_count: 0 }));
+    const sorted = [...brands].sort((a, b) => {
+      const aName = (a.name || "").toLowerCase();
+      const bName = (b.name || "").toLowerCase();
+      if (aName.includes("arowana"))
+        return -1;
+      if (bName.includes("arowana"))
+        return 1;
+      return (a.name || "").localeCompare(b.name || "", void 0, { sensitivity: "base" });
+    });
+    const q = (query || "").trim().toLowerCase();
+    const filtered = q ? sorted.filter((b) => (b.name || "").toLowerCase().includes(q)) : sorted;
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 32px 16px; color: var(--ak-text-muted);">
+        No brands found matching "<strong>${query}</strong>"
+      </div>
+    `;
+      return;
+    }
+    grid.innerHTML = filtered.map((b) => {
+      const isArowana = b.name.toLowerCase().includes("arowana");
+      const displayName = isArowana ? "Arowana Audioglyphs" : b.name;
+      const targetBrandValue = isArowana ? "Arowana Audioglyph" : b.name;
+      const count = b.product_count !== void 0 ? Number(b.product_count) : 0;
+      const countBadge = count > 0 ? `<span class="ak-brand-modal-count">${count} items</span>` : "";
+      return `
+      <a href="#store?brand=${encodeURIComponent(targetBrandValue)}" class="ak-brand-modal-card" data-brand="${targetBrandValue}">
+        <span class="ak-brand-modal-name">${displayName}</span>
+        ${countBadge}
+      </a>
+    `;
+    }).join("");
+    grid.querySelectorAll(".ak-brand-modal-card").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        e.preventDefault();
+        const brand = card.dataset.brand;
+        closeAllBrandsModal();
+        showCatalog(brand, "brand");
+      });
+    });
   }
   if (typeof window !== "undefined") {
     window.showHome = showHome;
@@ -30261,6 +30526,9 @@ Message: ${message}`);
     window.openAuthModal = openAuthModal;
     window.loadLiveCatalog = loadLiveCatalog;
     window.showAdmin = showAdmin;
+    window.openAllBrandsModal = openAllBrandsModal;
+    window.closeAllBrandsModal = closeAllBrandsModal;
+    window.filterAllBrandsModalList = filterAllBrandsModalList;
   }
   if (typeof document !== "undefined") {
     let startAudioKingApp = function() {
@@ -30276,6 +30544,9 @@ Message: ${message}`);
       initStore();
       initAccountSettings();
       loadLiveCatalog();
+      window.addEventListener("ak:catalog-sync", () => {
+        loadLiveCatalog();
+      });
       setProductClickCallback((productId) => {
         const p = AUDIOKING_PRODUCTS.find((item) => item.id === productId);
         if (p)
@@ -32125,6 +32396,9 @@ Message: ${message}`);
         <span class="ak-btn-text">Add to Cart</span>
       </button>
     `;
+      const origPrice = Number(p.originalPrice) || 0;
+      const hasDiscount = origPrice > Number(p.price);
+      const originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>` : "";
       return `
       <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
@@ -32134,7 +32408,10 @@ Message: ${message}`);
         <div class="ak-product-body">
           <span class="ak-product-brand">${p.brand}</span>
           <h3 class="ak-product-name" title="${p.name}">${p.name}</h3>
-          <div class="ak-product-price">${formatINR(p.price)}</div>
+          <div class="ak-product-price" style="display:flex; align-items:baseline; gap:6px;">
+            <span>${formatINR(p.price)}</span>
+            ${originalPriceHtml}
+          </div>
           ${actionHtml}
         </div>
       </article>
@@ -32267,20 +32544,27 @@ Message: ${message}`);
   }
   function initBrandRow() {
     const row = document.getElementById("akBrandsRow");
-    if (!row)
-      return;
-    row.querySelectorAll(".ak-brand-card").forEach((card) => {
-      card.addEventListener("click", (e) => {
-        e.preventDefault();
-        const brand = card.dataset.brand;
-        showCatalog(brand, "brand");
+    if (row) {
+      row.querySelectorAll(".ak-brand-card").forEach((card) => {
+        card.addEventListener("click", (e) => {
+          e.preventDefault();
+          const brand = card.dataset.brand;
+          showCatalog(brand, "brand");
+        });
       });
-    });
+    }
     const viewAllBrandsBtn = document.getElementById("akBrandsViewAllBtn");
     if (viewAllBrandsBtn) {
       viewAllBrandsBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        showCatalog();
+        openAllBrandsModal(e);
+      });
+    }
+    const allBrandsModal = document.getElementById("akAllBrandsModal");
+    if (allBrandsModal) {
+      allBrandsModal.addEventListener("click", (e) => {
+        if (e.target === allBrandsModal)
+          closeAllBrandsModal();
       });
     }
   }

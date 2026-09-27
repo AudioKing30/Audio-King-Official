@@ -166,7 +166,81 @@ router.get('/', (req, res) => {
 });
 
 /**
- * 2. GET SINGLE PRODUCT DETAIL
+ * 2A. GET ALL ACTIVE BRANDS (Public Storefront & Navigation)
+ * GET /api/products/meta/brands & /api/products/brands
+ */
+const getPublicBrandsHandler = (req, res) => {
+  try {
+    // Auto-sync any brand in products table not yet in brands table
+    const unseeded = db.prepare(`
+      SELECT DISTINCT brand AS name FROM products 
+      WHERE brand IS NOT NULL AND TRIM(brand) != '' 
+        AND LOWER(brand) NOT IN (SELECT LOWER(name) FROM brands)
+    `).all();
+    const now = new Date().toISOString();
+    for (const item of unseeded) {
+      const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      db.prepare('INSERT OR IGNORE INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
+        .run(`brand_${slug}`, item.name.trim(), slug, now);
+    }
+
+    const brands = db.prepare(`
+      SELECT b.id, b.name, b.slug, COUNT(p.id) AS product_count 
+      FROM brands b 
+      LEFT JOIN products p ON LOWER(TRIM(p.brand)) = LOWER(TRIM(b.name))
+      GROUP BY b.id 
+      ORDER BY b.name COLLATE NOCASE ASC
+    `).all();
+
+    return res.json({ success: true, count: brands.length, brands });
+  } catch (err) {
+    console.error('[GET PUBLIC BRANDS ERROR]', err);
+    return res.status(500).json({ error: 'Failed to retrieve brands.' });
+  }
+};
+
+router.get('/meta/brands', getPublicBrandsHandler);
+router.get('/brands', getPublicBrandsHandler);
+
+/**
+ * 2B. GET ALL ACTIVE CATEGORIES (Public Storefront & Navigation)
+ * GET /api/products/meta/categories & /api/products/categories
+ */
+const getPublicCategoriesHandler = (req, res) => {
+  try {
+    // Auto-sync any category in products table not yet in categories table
+    const unseeded = db.prepare(`
+      SELECT DISTINCT category AS name FROM products 
+      WHERE category IS NOT NULL AND TRIM(category) != '' 
+        AND LOWER(category) NOT IN (SELECT LOWER(name) FROM categories)
+    `).all();
+    const now = new Date().toISOString();
+    for (const item of unseeded) {
+      const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      db.prepare('INSERT OR IGNORE INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
+        .run(`cat_${slug}`, item.name.trim(), slug, now);
+    }
+
+    const categories = db.prepare(`
+      SELECT c.id, c.name, c.slug, COUNT(p.id) AS product_count 
+      FROM categories c 
+      LEFT JOIN products p ON LOWER(TRIM(p.category)) = LOWER(TRIM(c.name))
+      GROUP BY c.id 
+      ORDER BY c.name COLLATE NOCASE ASC
+    `).all();
+
+    return res.json({ success: true, count: categories.length, categories });
+  } catch (err) {
+    console.error('[GET PUBLIC CATEGORIES ERROR]', err);
+    return res.status(500).json({ error: 'Failed to retrieve categories.' });
+  }
+};
+
+router.get('/meta/categories', getPublicCategoriesHandler);
+router.get('/categories', getPublicCategoriesHandler);
+
+/**
+ * 3. GET SINGLE PRODUCT DETAIL
  * GET /api/products/:id
  */
 router.get('/:id', (req, res) => {

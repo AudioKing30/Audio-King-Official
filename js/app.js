@@ -14,7 +14,7 @@ import { initCheckout, openCheckoutModal } from './components/checkout.js';
 import { initOrderSuccess, showOrderConfirmation } from './components/orderSuccess.js';
 import { initAuth, getCurrentUser, openAuthModal } from './components/auth.js';
 import { initHeader } from './components/header.js';
-import { initNavigation, setActiveNavItem } from './components/navigation.js';
+import { initNavigation, setActiveNavItem, renderNavigationBrands, renderNavigationCategories } from './components/navigation.js';
 import { initHeroSlider } from './components/heroSlider.js';
 import { initTestimonials } from './components/testimonials.js';
 import { initModals } from './components/modals.js';
@@ -51,32 +51,197 @@ function trackPageView(hash, productId = null) {
   } catch (e) {}
 }
 
-// Function to dynamically synchronize live products from SQLite /api/products
+/**
+ * Dynamically synchronize live products, brands, and categories from SQLite
+ */
 async function loadLiveCatalog() {
   try {
-    const res = await fetch(apiUrl('/api/products'));
-    if (!res.ok) return;
-    const data = await res.json();
-    if (data && Array.isArray(data.products) && data.products.length > 0) {
-      AUDIOKING_PRODUCTS.length = 0;
-      AUDIOKING_PRODUCTS.push(...data.products);
+    const [resProducts, resBrands, resCats] = await Promise.all([
+      fetch(apiUrl('/api/products')),
+      fetch(apiUrl('/api/products/meta/brands')).catch(() => null),
+      fetch(apiUrl('/api/products/meta/categories')).catch(() => null)
+    ]);
 
-      const liveFeatured = data.products.filter(p => p.isFeatured);
-      if (liveFeatured.length > 0) {
-        FEATURED_PRODUCTS.length = 0;
-        FEATURED_PRODUCTS.push(...liveFeatured);
-      }
+    if (resProducts && resProducts.ok) {
+      const data = await resProducts.json();
+      if (data && Array.isArray(data.products) && data.products.length > 0) {
+        AUDIOKING_PRODUCTS.length = 0;
+        AUDIOKING_PRODUCTS.push(...data.products);
 
-      renderFeaturedProducts(FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS);
-      window.dispatchEvent(new CustomEvent('ak:products-updated', { detail: AUDIOKING_PRODUCTS }));
+        const liveFeatured = data.products.filter(p => p.isFeatured);
+        if (liveFeatured.length > 0) {
+          FEATURED_PRODUCTS.length = 0;
+          FEATURED_PRODUCTS.push(...liveFeatured);
+        }
 
-      if (window.location.hash && window.location.hash.startsWith('#product') && typeof window.handleHashRoute === 'function') {
-        window.handleHashRoute();
+        renderFeaturedProducts(FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS);
+        window.dispatchEvent(new CustomEvent('ak:products-updated', { detail: AUDIOKING_PRODUCTS }));
+
+        if (window.location.hash && window.location.hash.startsWith('#product') && typeof window.handleHashRoute === 'function') {
+          window.handleHashRoute();
+        }
       }
     }
+
+    // Process live catalog brands
+    let brandItems = [];
+    if (resBrands && resBrands.ok) {
+      const bData = await resBrands.json();
+      if (bData && Array.isArray(bData.brands)) {
+        brandItems = bData.brands;
+      }
+    }
+    if (!brandItems.length) {
+      const brandCounts = {};
+      AUDIOKING_PRODUCTS.forEach(p => {
+        const b = (p.brand || '').trim();
+        if (b) brandCounts[b] = (brandCounts[b] || 0) + 1;
+      });
+      brandItems = Object.keys(brandCounts).map(name => ({ name, product_count: brandCounts[name] }));
+    }
+    window._allCatalogBrands = brandItems;
+    renderNavigationBrands(brandItems);
+    renderTopBrandsRow(brandItems);
+
+    // Process live catalog categories
+    let catItems = [];
+    if (resCats && resCats.ok) {
+      const cData = await resCats.json();
+      if (cData && Array.isArray(cData.categories)) {
+        catItems = cData.categories;
+      }
+    }
+    if (!catItems.length) {
+      const cats = Array.from(new Set(AUDIOKING_PRODUCTS.map(p => (p.category || '').trim()).filter(Boolean)));
+      catItems = cats.map(name => ({ name }));
+    }
+    window._allCatalogCategories = catItems;
+    renderNavigationCategories(catItems);
   } catch (err) {
     console.warn('[AUDIOKING] Could not load live products from /api/products, using bundled catalog:', err.message);
   }
+}
+
+/**
+ * Render Shop Top Brands row with Arowana Audioglyphs placed first
+ */
+export function renderTopBrandsRow(brandItems) {
+  const row = document.getElementById('akBrandsRow');
+  if (!row) return;
+
+  const topBrands = [
+    { label: 'Arowana Audioglyphs', value: 'Arowana Audioglyph' },
+    { label: 'Universal Audio', value: 'Universal Audio' },
+    { label: 'Focusrite', value: 'Focusrite' },
+    { label: 'Lauten Audio', value: 'Lauten Audio' },
+    { label: 'Native Instruments', value: 'Native Instruments' },
+    { label: 'Nord', value: 'Nord' },
+    { label: 'ADAM Audio', value: 'ADAM Audio' },
+    { label: 'Audix', value: 'Audix' },
+    { label: 'Focal Professional', value: 'Focal Professional' },
+    { label: 'Efnote', value: 'Efnote' }
+  ];
+
+  row.innerHTML = topBrands.map(b => `
+    <a href="#store?brand=${encodeURIComponent(b.value)}" class="ak-brand-card" data-brand="${b.value}">
+      <span class="ak-brand-name">${b.label}</span>
+    </a>
+  `).join('');
+
+  row.querySelectorAll('.ak-brand-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      const brand = card.dataset.brand;
+      showCatalog(brand, 'brand');
+    });
+  });
+}
+
+/**
+ * Open All Brands popup modal with faded backdrop and brand cards
+ */
+export function openAllBrandsModal(e) {
+  if (e && e.preventDefault) e.preventDefault();
+  const modal = document.getElementById('akAllBrandsModal');
+  if (!modal) return;
+
+  renderAllBrandsModalContent();
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const input = document.getElementById('akAllBrandsSearchInput');
+  if (input) {
+    input.value = '';
+    setTimeout(() => input.focus(), 60);
+  }
+}
+
+export function closeAllBrandsModal() {
+  const modal = document.getElementById('akAllBrandsModal');
+  if (modal) {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+export function filterAllBrandsModalList(query) {
+  renderAllBrandsModalContent(query);
+}
+
+function renderAllBrandsModalContent(query = '') {
+  const grid = document.getElementById('akAllBrandsModalGrid');
+  if (!grid) return;
+
+  let brands = (window._allCatalogBrands && window._allCatalogBrands.length)
+    ? window._allCatalogBrands
+    : AUDIOKING_BRANDS.map(b => ({ name: b.name, product_count: 0 }));
+
+  // Ensure Arowana Audioglyphs is prioritized at the top, followed by alphabetical
+  const sorted = [...brands].sort((a, b) => {
+    const aName = (a.name || '').toLowerCase();
+    const bName = (b.name || '').toLowerCase();
+    if (aName.includes('arowana')) return -1;
+    if (bName.includes('arowana')) return 1;
+    return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' });
+  });
+
+  const q = (query || '').trim().toLowerCase();
+  const filtered = q
+    ? sorted.filter(b => (b.name || '').toLowerCase().includes(q))
+    : sorted;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 32px 16px; color: var(--ak-text-muted);">
+        No brands found matching "<strong>${query}</strong>"
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(b => {
+    const isArowana = b.name.toLowerCase().includes('arowana');
+    const displayName = isArowana ? 'Arowana Audioglyphs' : b.name;
+    const targetBrandValue = isArowana ? 'Arowana Audioglyph' : b.name;
+    const count = b.product_count !== undefined ? Number(b.product_count) : 0;
+    const countBadge = count > 0 ? `<span class="ak-brand-modal-count">${count} items</span>` : '';
+
+    return `
+      <a href="#store?brand=${encodeURIComponent(targetBrandValue)}" class="ak-brand-modal-card" data-brand="${targetBrandValue}">
+        <span class="ak-brand-modal-name">${displayName}</span>
+        ${countBadge}
+      </a>
+    `;
+  }).join('');
+
+  grid.querySelectorAll('.ak-brand-modal-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      const brand = card.dataset.brand;
+      closeAllBrandsModal();
+      showCatalog(brand, 'brand');
+    });
+  });
 }
 
 // Expose on window for global access
@@ -93,6 +258,9 @@ if (typeof window !== 'undefined') {
   window.openAuthModal = openAuthModal;
   window.loadLiveCatalog = loadLiveCatalog;
   window.showAdmin = showAdmin;
+  window.openAllBrandsModal = openAllBrandsModal;
+  window.closeAllBrandsModal = closeAllBrandsModal;
+  window.filterAllBrandsModalList = filterAllBrandsModalList;
 }
 
 if (typeof document !== 'undefined') {
@@ -112,6 +280,11 @@ if (typeof document !== 'undefined') {
 
     // Fetch live catalog from SQLite API
     loadLiveCatalog();
+
+    // Re-synchronize live catalog whenever admin panel makes changes
+    window.addEventListener('ak:catalog-sync', () => {
+      loadLiveCatalog();
+    });
 
     // Set store product click callback to open product details page
     setProductClickCallback((productId) => {
@@ -2247,6 +2420,12 @@ export function renderFeaturedProducts(items) {
       </button>
     `;
 
+    const origPrice = Number(p.originalPrice) || 0;
+    const hasDiscount = origPrice > Number(p.price);
+    const originalPriceHtml = hasDiscount
+      ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>`
+      : '';
+
     return `
       <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
@@ -2256,7 +2435,10 @@ export function renderFeaturedProducts(items) {
         <div class="ak-product-body">
           <span class="ak-product-brand">${p.brand}</span>
           <h3 class="ak-product-name" title="${p.name}">${p.name}</h3>
-          <div class="ak-product-price">${formatINR(p.price)}</div>
+          <div class="ak-product-price" style="display:flex; align-items:baseline; gap:6px;">
+            <span>${formatINR(p.price)}</span>
+            ${originalPriceHtml}
+          </div>
           ${actionHtml}
         </div>
       </article>
@@ -2425,21 +2607,28 @@ function attachAddToCartListeners(container = document) {
  */
 function initBrandRow() {
   const row = document.getElementById('akBrandsRow');
-  if (!row) return;
-
-  row.querySelectorAll('.ak-brand-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      e.preventDefault();
-      const brand = card.dataset.brand;
-      showCatalog(brand, 'brand');
+  if (row) {
+    row.querySelectorAll('.ak-brand-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        const brand = card.dataset.brand;
+        showCatalog(brand, 'brand');
+      });
     });
-  });
+  }
 
   const viewAllBrandsBtn = document.getElementById('akBrandsViewAllBtn');
   if (viewAllBrandsBtn) {
     viewAllBrandsBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      showCatalog();
+      openAllBrandsModal(e);
+    });
+  }
+
+  const allBrandsModal = document.getElementById('akAllBrandsModal');
+  if (allBrandsModal) {
+    allBrandsModal.addEventListener('click', (e) => {
+      if (e.target === allBrandsModal) closeAllBrandsModal();
     });
   }
 }

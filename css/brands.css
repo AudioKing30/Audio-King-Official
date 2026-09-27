@@ -113,3 +113,64 @@
   white-space: nowrap;
 }
 
+/* All Brands Directory Modal Grid */
+.ak-all-brands-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.ak-brand-modal-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.ak-brand-modal-card:hover {
+  background: #FFFFFF;
+  border-color: var(--ak-orange, #EA580C);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.12);
+  transform: translateY(-2px);
+}
+
+.ak-brand-modal-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F172A;
+  transition: color 0.18s ease;
+}
+
+.ak-brand-modal-card:hover .ak-brand-modal-name {
+  color: var(--ak-orange, #EA580C);
+}
+
+.ak-brand-modal-count {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748B;
+  background: #EDF2F7;
+  padding: 3px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.ak-brand-modal-card:hover .ak-brand-modal-count {
+  background: #FFEDD5;
+  color: #C2410C;
+}
+
+@media (max-width: 600px) {
+  .ak-all-brands-modal-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+

@@ -102,6 +102,10 @@
         <span class="nav-icon">🎸</span>
         <span>Products Catalog</span>
       </a>
+      <a class="nav-link" data-view="brands-categories" onclick="switchView('brands-categories')">
+        <span class="nav-icon">🏷️</span>
+        <span>Brands &amp; Categories</span>
+      </a>
       <a class="nav-link" data-view="offers" onclick="switchView('offers')">
         <span class="nav-icon">🏷️</span>
         <span>Offers &amp; Discounts</span>
@@ -446,8 +450,100 @@
             </div>
           </form>
         </div>
-      </section>
+      <!-- =========================================================
+           VIEW: BRANDS & CATEGORIES MANAGER
+           ========================================================= -->
+      <section id="view-brands-categories" class="panel-view">
+        <div class="admin-card" style="margin-bottom: 24px;">
+          <div class="card-header-bar">
+            <div>
+              <h1 class="card-heading" style="font-size: 22px;">🏷️ Brands &amp; Categories Management</h1>
+              <p class="card-desc">Add, rename, or delete brands and categories. Any changes made here immediately cascade to all matching products and reflect on the storefront live.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-secondary" onclick="loadBrandsAndCategoriesView()">
+                <span>🔄 Refresh</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 24px;">
+          <!-- BRANDS COLUMN -->
+          <div class="admin-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h2 class="card-heading" style="font-size: 17px; display: flex; align-items: center; gap: 8px;">
+                <span>🏢 Brands Directory</span>
+                <span id="adminBrandsCountBadge" class="badge-pending" style="font-size: 11px; padding: 3px 8px;">0 Brands</span>
+              </h2>
+            </div>
+
+            <!-- Create Brand Form -->
+            <form onsubmit="handleCreateBrandSubmit(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <input type="text" id="adminNewBrandName" class="form-input" placeholder="New brand name (e.g. Arowana)" required style="flex: 1;">
+              <button type="submit" class="btn-primary" style="white-space: nowrap;">+ Add Brand</button>
+            </form>
+
+            <!-- Search Brands -->
+            <div style="margin-bottom: 14px;">
+              <input type="text" id="adminBrandFilterInput" class="form-input" placeholder="🔍 Filter brands..." oninput="filterAdminBrandsTable()">
+            </div>
+
+            <!-- Brands Table -->
+            <div class="table-container" style="max-height: 480px; overflow-y: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Brand Name</th>
+                    <th style="text-align: center;">Products</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminBrandsTableBody">
+                  <tr><td colspan="3" style="text-align: center; color: var(--ak-text-muted);">Loading brands...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CATEGORIES COLUMN -->
+          <div class="admin-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <h2 class="card-heading" style="font-size: 17px; display: flex; align-items: center; gap: 8px;">
+                <span>📂 Categories Directory</span>
+                <span id="adminCategoriesCountBadge" class="badge-active" style="font-size: 11px; padding: 3px 8px;">0 Categories</span>
+              </h2>
+            </div>
+
+            <!-- Create Category Form -->
+            <form onsubmit="handleCreateCategorySubmit(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <input type="text" id="adminNewCategoryName" class="form-input" placeholder="New category name" required style="flex: 1;">
+              <button type="submit" class="btn-primary" style="white-space: nowrap; background: #2563EB;">+ Add Category</button>
+            </form>
+
+            <!-- Search Categories -->
+            <div style="margin-bottom: 14px;">
+              <input type="text" id="adminCategoryFilterInput" class="form-input" placeholder="🔍 Filter categories..." oninput="filterAdminCategoriesTable()">
+            </div>
+
+            <!-- Categories Table -->
+            <div class="table-container" style="max-height: 480px; overflow-y: auto;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Category Name</th>
+                    <th style="text-align: center;">Products</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="adminCategoriesTableBody">
+                  <tr><td colspan="3" style="text-align: center; color: var(--ak-text-muted);">Loading categories...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- =========================================================
            4. OFFERS & BLANKET DISCOUNTS VIEW
@@ -861,6 +957,26 @@
           <tbody id="modalCustomerOrdersTbody"></tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <!-- Rename Item Modal -->
+  <div id="renameMetaModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 440px;">
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;" id="renameMetaModalTitle">Rename Item</h3>
+      <p style="font-size: 13px; color: var(--ak-text-secondary); margin-bottom: 16px;">Renaming this will automatically update all matching products across the catalog and live storefront.</p>
+      <form onsubmit="handleRenameMetaSubmit(event)">
+        <input type="hidden" id="renameMetaType">
+        <input type="hidden" id="renameMetaId">
+        <div class="form-group">
+          <label class="form-label" id="renameMetaLabel">New Name *</label>
+          <input type="text" id="renameMetaInput" class="form-input" required autofocus>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="renameMetaSubmitBtn">Save &amp; Update All Products</button>
+        </div>
+      </form>
     </div>
   </div>
 

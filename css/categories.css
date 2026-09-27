@@ -200,6 +200,15 @@
   transform: scale(1.08);
 }
 
+/* 15% Enlarged Popular Category Images */
+.ak-cat-box-img.ak-cat-img-lg {
+  transform: scale(1.15);
+}
+
+.ak-cat-box-card:hover .ak-cat-box-img.ak-cat-img-lg {
+  transform: scale(1.24);
+}
+
 /* Label below the box */
 .ak-cat-box-label {
   margin-top: 10px;
@@ -207,7 +216,9 @@
   font-weight: 600;
   color: #1F2937;
   line-height: 1.35;
-  text-align: left;
+  text-align: center;
+  width: 100%;
+  display: block;
   transition: color 0.18s ease;
 }
 

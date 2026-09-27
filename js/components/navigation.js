@@ -40,21 +40,34 @@ function dismissDropdown(navItem) {
   }, 450);
 }
 
-export function initNavigation() {
-  // Populate Brands dropdown (10 items per column, shifting overflow to new right columns)
+/**
+ * Dynamically render brands in both desktop navbar dropdown and mobile drawer
+ */
+export function renderNavigationBrands(brandsList) {
+  let brands = [];
+  if (Array.isArray(brandsList) && brandsList.length > 0) {
+    brands = brandsList.map(b => (typeof b === 'string' ? b : (b.name || '')).trim()).filter(Boolean);
+  } else {
+    brands = AUDIOKING_BRANDS.map(b => b.name);
+  }
+
+  // Deduplicate and sort alphabetically case-insensitively
+  const uniqueBrands = Array.from(new Set(brands)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+  // 1. Desktop Brands Dropdown
   const brandsGrid = document.getElementById('akBrandsDropdownGrid');
-  if (brandsGrid) {
+  if (brandsGrid && uniqueBrands.length > 0) {
     const chunkSize = 10;
     const cols = [];
-    for (let i = 0; i < AUDIOKING_BRANDS.length; i += chunkSize) {
-      cols.push(AUDIOKING_BRANDS.slice(i, i + chunkSize));
+    for (let i = 0; i < uniqueBrands.length; i += chunkSize) {
+      cols.push(uniqueBrands.slice(i, i + chunkSize));
     }
 
     brandsGrid.innerHTML = cols.map(col => `
       <div class="ak-brands-col">
-        ${col.map(b => `
-          <a href="#catalog" class="ak-nav-drop-item ak-brand-filter-link" data-brand="${b.name}">
-            ${b.name}
+        ${col.map(brandName => `
+          <a href="#store?brand=${encodeURIComponent(brandName)}" class="ak-nav-drop-item ak-brand-filter-link" data-brand="${brandName}">
+            ${brandName}
           </a>
         `).join('')}
       </div>
@@ -74,36 +87,80 @@ export function initNavigation() {
     });
   }
 
-  // Mobile drawer links: Brand filtering
-  document.querySelectorAll('.ak-mob-brand-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const brandName = link.dataset.brand;
-      const mobileDrawer = document.getElementById('akMobileDrawer');
-      if (mobileDrawer) {
-        mobileDrawer.classList.remove('open');
-        document.body.style.overflow = '';
-      }
-      const brandsItem = document.getElementById('akNavItemBrands') || document.getElementById('akNavBrandsItem');
-      if (brandsItem) {
-        setActiveNavItem(brandsItem);
-      }
-      window.dispatchEvent(new CustomEvent('ak:filter-brand', { detail: brandName }));
-    });
-  });
+  // 2. Mobile Drawer Brands Accordion
+  const mobBrandsContainer = document.getElementById('akMobBrands');
+  if (mobBrandsContainer && uniqueBrands.length > 0) {
+    mobBrandsContainer.innerHTML = uniqueBrands.map(brandName => `
+      <a href="#store?brand=${encodeURIComponent(brandName)}" class="ak-mobile-sub-link ak-mob-brand-link" data-brand="${brandName}">
+        ${brandName}
+      </a>
+    `).join('');
 
-  // Mobile drawer links: Category filtering
-  document.querySelectorAll('.ak-mob-cat-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const catText = link.dataset.cat || link.textContent.trim();
-      const mobileDrawer = document.getElementById('akMobileDrawer');
-      if (mobileDrawer) {
-        mobileDrawer.classList.remove('open');
-        document.body.style.overflow = '';
-      }
-      window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: catText }));
+    mobBrandsContainer.querySelectorAll('.ak-mob-brand-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const brandName = link.dataset.brand;
+        const mobileDrawer = document.getElementById('akMobileDrawer');
+        if (mobileDrawer) {
+          mobileDrawer.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+        const brandsItem = document.getElementById('akNavItemBrands') || document.getElementById('akNavBrandsItem');
+        if (brandsItem) {
+          setActiveNavItem(brandsItem);
+        }
+        window.dispatchEvent(new CustomEvent('ak:filter-brand', { detail: brandName }));
+      });
     });
+  }
+}
+
+/**
+ * Dynamically render categories in mobile drawer and desktop navigation
+ */
+export function renderNavigationCategories(categoriesList) {
+  if (!Array.isArray(categoriesList) || categoriesList.length === 0) return;
+
+  const cats = categoriesList.map(c => (typeof c === 'string' ? c : (c.name || '')).trim()).filter(Boolean);
+  const uniqueCats = Array.from(new Set(cats)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+  // Mobile Drawer Pro Audio Categories
+  const mobProAudio = document.getElementById('akMobProAudio');
+  if (mobProAudio && uniqueCats.length > 0) {
+    mobProAudio.innerHTML = uniqueCats.map(catName => `
+      <a href="#store?category=${encodeURIComponent(catName)}" class="ak-mobile-sub-link ak-mob-cat-link" data-cat="${catName}">
+        ${catName}
+      </a>
+    `).join('');
+
+    mobProAudio.querySelectorAll('.ak-mob-cat-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const catText = link.dataset.cat || link.textContent.trim();
+        const mobileDrawer = document.getElementById('akMobileDrawer');
+        if (mobileDrawer) {
+          mobileDrawer.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+        window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: catText }));
+      });
+    });
+  }
+}
+
+export function initNavigation() {
+  // Populate initial Brands dropdown & Mobile brands
+  renderNavigationBrands(AUDIOKING_BRANDS);
+
+  // Re-sync navigation whenever products or catalog meta changes
+  window.addEventListener('ak:products-updated', (e) => {
+    const products = e.detail;
+    if (Array.isArray(products) && products.length > 0) {
+      const liveBrands = Array.from(new Set(products.map(p => (p.brand || '').trim()).filter(Boolean)));
+      const liveCategories = Array.from(new Set(products.map(p => (p.category || '').trim()).filter(Boolean)));
+      renderNavigationBrands(liveBrands);
+      renderNavigationCategories(liveCategories);
+    }
   });
 
   // Mobile drawer links: Home navigation

@@ -156,7 +156,7 @@ function switchView(viewName) {
   const titles = {
     dashboard: 'Store Dashboard',
     products: 'Product Catalog Management',
-    'product-form': state.editingProductId ? 'Edit Product' : 'Add New Product',
+    'brands-categories': 'Brands & Categories Management',
     offers: 'Offers & Blanket Discounts',
     coupons: 'Cart-Level Coupons',
     orders: 'Customer Orders',
@@ -170,6 +170,7 @@ function switchView(viewName) {
   // Load View Specific Data
   if (viewName === 'dashboard') loadDashboardStats();
   if (viewName === 'products') loadProducts();
+  if (viewName === 'brands-categories') loadBrandsAndCategoriesView();
   if (viewName === 'offers') loadOffers();
   if (viewName === 'coupons') loadCoupons();
   if (viewName === 'orders') loadOrders();
@@ -637,6 +638,236 @@ async function saveInlineBrand() {
   } catch (e) {
     alert('Error saving brand');
   }
+}
+
+// -------------------------------------------------------------
+// 2B. BRANDS & CATEGORIES MANAGER VIEW
+// -------------------------------------------------------------
+async function loadBrandsAndCategoriesView() {
+  await loadCategoriesAndBrands();
+
+  // Update counts
+  const brandBadge = document.getElementById('adminBrandsCountBadge');
+  if (brandBadge) brandBadge.textContent = `${state.brands.length} Brands`;
+
+  const catBadge = document.getElementById('adminCategoriesCountBadge');
+  if (catBadge) catBadge.textContent = `${state.categories.length} Categories`;
+
+  // Render Brands Table
+  renderAdminBrandsTable(state.brands);
+
+  // Render Categories Table
+  renderAdminCategoriesTable(state.categories);
+}
+
+function renderAdminBrandsTable(brands) {
+  const tbody = document.getElementById('adminBrandsTableBody');
+  if (!tbody) return;
+
+  if (!brands || brands.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--ak-text-muted); padding: 18px;">No brands found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = brands.map(b => {
+    const pCount = b.product_count || 0;
+    const safeName = (b.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return `
+      <tr>
+        <td style="font-weight: 600; color: #FFF;">
+          <span>${b.name}</span>
+        </td>
+        <td style="text-align: center;">
+          <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
+        </td>
+        <td style="text-align: right;">
+          <div style="display: flex; gap: 6px; justify-content: flex-end;">
+            <button type="button" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px;" onclick="openRenameModal('brand', '${b.id}', '${safeName}')">✏️ Rename</button>
+            <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px;" onclick="confirmDeleteBrand('${b.id}', '${safeName}')">🗑️ Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderAdminCategoriesTable(categories) {
+  const tbody = document.getElementById('adminCategoriesTableBody');
+  if (!tbody) return;
+
+  if (!categories || categories.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--ak-text-muted); padding: 18px;">No categories found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = categories.map(c => {
+    const pCount = c.product_count || 0;
+    const safeName = (c.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return `
+      <tr>
+        <td style="font-weight: 600; color: #FFF;">
+          <span>${c.name}</span>
+        </td>
+        <td style="text-align: center;">
+          <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
+        </td>
+        <td style="text-align: right;">
+          <div style="display: flex; gap: 6px; justify-content: flex-end;">
+            <button type="button" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px;" onclick="openRenameModal('category', '${c.id}', '${safeName}')">✏️ Rename</button>
+            <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px;" onclick="confirmDeleteCategory('${c.id}', '${safeName}')">🗑️ Delete</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterAdminBrandsTable() {
+  const q = document.getElementById('adminBrandFilterInput')?.value.toLowerCase().trim() || '';
+  const filtered = state.brands.filter(b => b.name.toLowerCase().includes(q));
+  renderAdminBrandsTable(filtered);
+}
+
+function filterAdminCategoriesTable() {
+  const q = document.getElementById('adminCategoryFilterInput')?.value.toLowerCase().trim() || '';
+  const filtered = state.categories.filter(c => c.name.toLowerCase().includes(q));
+  renderAdminCategoriesTable(filtered);
+}
+
+async function handleCreateBrandSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('adminNewBrandName');
+  const name = input?.value.trim();
+  if (!name) return;
+
+  try {
+    const res = await adminFetch('/api/admin/brands', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      input.value = '';
+      await loadBrandsAndCategoriesView();
+      if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+      window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+    } else {
+      alert(data.error || 'Failed to create brand.');
+    }
+  } catch (err) {
+    alert('Network error while creating brand.');
+  }
+}
+
+async function handleCreateCategorySubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById('adminNewCategoryName');
+  const name = input?.value.trim();
+  if (!name) return;
+
+  try {
+    const res = await adminFetch('/api/admin/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      input.value = '';
+      await loadBrandsAndCategoriesView();
+      if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+      window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+    } else {
+      alert(data.error || 'Failed to create category.');
+    }
+  } catch (err) {
+    alert('Network error while creating category.');
+  }
+}
+
+function openRenameModal(type, id, currentName) {
+  document.getElementById('renameMetaType').value = type;
+  document.getElementById('renameMetaId').value = id;
+  document.getElementById('renameMetaInput').value = currentName;
+  document.getElementById('renameMetaLabel').textContent = `New ${type === 'brand' ? 'Brand' : 'Category'} Name *`;
+  document.getElementById('renameMetaModalTitle').textContent = `Rename ${type === 'brand' ? 'Brand' : 'Category'}`;
+  openModal('renameMetaModal');
+}
+
+async function handleRenameMetaSubmit(e) {
+  e.preventDefault();
+  const type = document.getElementById('renameMetaType').value;
+  const id = document.getElementById('renameMetaId').value;
+  const name = document.getElementById('renameMetaInput').value.trim();
+  if (!name) return;
+
+  const endpoint = type === 'brand' ? `/api/admin/brands/${id}` : `/api/admin/categories/${id}`;
+
+  try {
+    const res = await adminFetch(endpoint, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      closeModal();
+      await loadBrandsAndCategoriesView();
+      if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+      window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+    } else {
+      alert(data.error || 'Failed to rename item.');
+    }
+  } catch (err) {
+    alert('Network error while renaming item.');
+  }
+}
+
+function confirmDeleteBrand(id, name) {
+  document.getElementById('confirmModalTitle').textContent = `Delete Brand: ${name}?`;
+  document.getElementById('confirmModalMessage').textContent = `Are you sure you want to delete brand "${name}"? Products currently assigned to this brand will remain in your catalog but this brand will be removed from directory listings.`;
+  document.getElementById('confirmModalActionBtn').onclick = async () => {
+    try {
+      const res = await adminFetch(`/api/admin/brands/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      closeModal();
+      if (res.ok) {
+        await loadBrandsAndCategoriesView();
+        if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+        window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+      } else {
+        alert(data.error || 'Failed to delete brand.');
+      }
+    } catch (err) {
+      closeModal();
+      alert('Network error while deleting brand.');
+    }
+  };
+  openModal('confirmModal');
+}
+
+function confirmDeleteCategory(id, name) {
+  document.getElementById('confirmModalTitle').textContent = `Delete Category: ${name}?`;
+  document.getElementById('confirmModalMessage').textContent = `Are you sure you want to delete category "${name}"? Products in this category will remain in your catalog but this category will be removed from category directory listings.`;
+  document.getElementById('confirmModalActionBtn').onclick = async () => {
+    try {
+      const res = await adminFetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      closeModal();
+      if (res.ok) {
+        await loadBrandsAndCategoriesView();
+        if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+        window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+      } else {
+        alert(data.error || 'Failed to delete category.');
+      }
+    } catch (err) {
+      closeModal();
+      alert('Network error while deleting category.');
+    }
+  };
+  openModal('confirmModal');
 }
 
 // Image Uploads & Reordering

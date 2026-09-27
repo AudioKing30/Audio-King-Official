@@ -207,13 +207,35 @@ router.get('/dashboard/stats', (req, res) => {
 });
 
 // -------------------------------------------------------------
-// 2. CATEGORIES & BRANDS (with inline create)
+// -------------------------------------------------------------
+// 2. CATEGORIES & BRANDS (FULL CRUD WITH PRODUCT CASCADE)
 // -------------------------------------------------------------
 router.get('/categories', (req, res) => {
   try {
-    const categories = db.prepare('SELECT id, name, slug FROM categories ORDER BY name ASC').all();
+    // Auto-sync any categories present in products table
+    const unseeded = db.prepare(`
+      SELECT DISTINCT category AS name FROM products 
+      WHERE category IS NOT NULL AND TRIM(category) != '' 
+        AND LOWER(category) NOT IN (SELECT LOWER(name) FROM categories)
+    `).all();
+    const now = new Date().toISOString();
+    for (const item of unseeded) {
+      const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      db.prepare('INSERT OR IGNORE INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
+        .run(`cat_${slug}`, item.name.trim(), slug, now);
+    }
+
+    const categories = db.prepare(`
+      SELECT c.id, c.name, c.slug, c.created_at, COUNT(p.id) AS product_count 
+      FROM categories c 
+      LEFT JOIN products p ON LOWER(TRIM(p.category)) = LOWER(TRIM(c.name))
+      GROUP BY c.id 
+      ORDER BY c.name COLLATE NOCASE ASC
+    `).all();
+
     return res.json({ success: true, categories });
   } catch (err) {
+    console.error('[FETCH CATEGORIES ERROR]', err);
     return res.status(500).json({ error: 'Failed to fetch categories.' });
   }
 });
@@ -226,23 +248,111 @@ router.post('/categories', (req, res) => {
     }
     const cleanName = name.trim();
     const slug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const id = `cat_${slug}`;
+    const id = `cat_${slug}_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
 
-    db.prepare('INSERT OR IGNORE INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
+    const existing = db.prepare('SELECT id FROM categories WHERE LOWER(name) = LOWER(?)').get(cleanName);
+    if (existing) {
+      return res.status(400).json({ error: 'A category with this name already exists.' });
+    }
+
+    db.prepare('INSERT INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
       .run(id, cleanName, slug, now);
 
-    return res.status(201).json({ success: true, category: { id, name: cleanName, slug } });
+    return res.status(201).json({ success: true, category: { id, name: cleanName, slug, product_count: 0 } });
   } catch (err) {
+    console.error('[CREATE CATEGORY ERROR]', err);
     return res.status(500).json({ error: 'Failed to create category.' });
+  }
+});
+
+router.put('/categories/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body || {};
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'New category name is required.' });
+    }
+    const cleanName = name.trim();
+    const slug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    const existing = db.prepare('SELECT * FROM categories WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Category not found.' });
+    }
+
+    // Check duplicate name
+    const dup = db.prepare('SELECT id FROM categories WHERE LOWER(name) = LOWER(?) AND id != ?').get(cleanName, id);
+    if (dup) {
+      return res.status(400).json({ error: 'Another category with this name already exists.' });
+    }
+
+    const oldName = existing.name;
+
+    // Update category row
+    db.prepare('UPDATE categories SET name = ?, slug = ? WHERE id = ?').run(cleanName, slug, id);
+
+    // Cascade update all products referencing old category name
+    const prodUpdate = db.prepare('UPDATE products SET category = ? WHERE LOWER(TRIM(category)) = LOWER(TRIM(?))').run(cleanName, oldName);
+
+    // Cascade update category-targeted blanket offers
+    db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'category' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(cleanName, oldName);
+
+    return res.json({
+      success: true,
+      message: `Category updated to "${cleanName}". Updated ${prodUpdate.changes} matching products.`,
+      category: { id, name: cleanName, slug }
+    });
+  } catch (err) {
+    console.error('[RENAME CATEGORY ERROR]', err);
+    return res.status(500).json({ error: 'Failed to rename category.' });
+  }
+});
+
+router.delete('/categories/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM categories WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Category not found.' });
+    }
+
+    // Delete category
+    db.prepare('DELETE FROM categories WHERE id = ?').run(id);
+
+    return res.json({ success: true, message: `Category "${existing.name}" removed.` });
+  } catch (err) {
+    console.error('[DELETE CATEGORY ERROR]', err);
+    return res.status(500).json({ error: 'Failed to delete category.' });
   }
 });
 
 router.get('/brands', (req, res) => {
   try {
-    const brands = db.prepare('SELECT id, name, slug FROM brands ORDER BY name ASC').all();
+    // Auto-sync any brands present in products table
+    const unseeded = db.prepare(`
+      SELECT DISTINCT brand AS name FROM products 
+      WHERE brand IS NOT NULL AND TRIM(brand) != '' 
+        AND LOWER(brand) NOT IN (SELECT LOWER(name) FROM brands)
+    `).all();
+    const now = new Date().toISOString();
+    for (const item of unseeded) {
+      const slug = item.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      db.prepare('INSERT OR IGNORE INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
+        .run(`brand_${slug}`, item.name.trim(), slug, now);
+    }
+
+    const brands = db.prepare(`
+      SELECT b.id, b.name, b.slug, b.created_at, COUNT(p.id) AS product_count 
+      FROM brands b 
+      LEFT JOIN products p ON LOWER(TRIM(p.brand)) = LOWER(TRIM(b.name))
+      GROUP BY b.id 
+      ORDER BY b.name COLLATE NOCASE ASC
+    `).all();
+
     return res.json({ success: true, brands });
   } catch (err) {
+    console.error('[FETCH BRANDS ERROR]', err);
     return res.status(500).json({ error: 'Failed to fetch brands.' });
   }
 });
@@ -255,15 +365,79 @@ router.post('/brands', (req, res) => {
     }
     const cleanName = name.trim();
     const slug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const id = `brand_${slug}`;
+    const id = `brand_${slug}_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
 
-    db.prepare('INSERT OR IGNORE INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
+    const existing = db.prepare('SELECT id FROM brands WHERE LOWER(name) = LOWER(?)').get(cleanName);
+    if (existing) {
+      return res.status(400).json({ error: 'A brand with this name already exists.' });
+    }
+
+    db.prepare('INSERT INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
       .run(id, cleanName, slug, now);
 
-    return res.status(201).json({ success: true, brand: { id, name: cleanName, slug } });
+    return res.status(201).json({ success: true, brand: { id, name: cleanName, slug, product_count: 0 } });
   } catch (err) {
+    console.error('[CREATE BRAND ERROR]', err);
     return res.status(500).json({ error: 'Failed to create brand.' });
+  }
+});
+
+router.put('/brands/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body || {};
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'New brand name is required.' });
+    }
+    const cleanName = name.trim();
+    const slug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    const existing = db.prepare('SELECT * FROM brands WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Brand not found.' });
+    }
+
+    // Check duplicate name
+    const dup = db.prepare('SELECT id FROM brands WHERE LOWER(name) = LOWER(?) AND id != ?').get(cleanName, id);
+    if (dup) {
+      return res.status(400).json({ error: 'Another brand with this name already exists.' });
+    }
+
+    const oldName = existing.name;
+
+    // Update brand row
+    db.prepare('UPDATE brands SET name = ?, slug = ? WHERE id = ?').run(cleanName, slug, id);
+
+    // Cascade update all products referencing old brand name
+    const prodUpdate = db.prepare('UPDATE products SET brand = ? WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+
+    return res.json({
+      success: true,
+      message: `Brand updated to "${cleanName}". Updated ${prodUpdate.changes} matching products.`,
+      brand: { id, name: cleanName, slug }
+    });
+  } catch (err) {
+    console.error('[RENAME BRAND ERROR]', err);
+    return res.status(500).json({ error: 'Failed to rename brand.' });
+  }
+});
+
+router.delete('/brands/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM brands WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Brand not found.' });
+    }
+
+    // Delete brand
+    db.prepare('DELETE FROM brands WHERE id = ?').run(id);
+
+    return res.json({ success: true, message: `Brand "${existing.name}" removed.` });
+  } catch (err) {
+    console.error('[DELETE BRAND ERROR]', err);
+    return res.status(500).json({ error: 'Failed to delete brand.' });
   }
 });
 

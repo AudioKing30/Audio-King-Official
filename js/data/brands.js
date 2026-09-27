@@ -1,14 +1,20 @@
 /**
  * AudioKing Brands Directory
  * Authoritative brand list derived directly from active catalog inventory.
- * Contains strictly only brands with live products listed in the store.
+ * Contains all live brands listed in the store.
  */
 export const AUDIOKING_BRANDS = [
+  {
+    "id": "brand-arowana-audioglyph",
+    "name": "Arowana Audioglyphs",
+    "slug": "arowana-audioglyph",
+    "productCount": 27
+  },
   {
     "id": "brand-adam-audio",
     "name": "ADAM Audio",
     "slug": "adam-audio",
-    "productCount": 3
+    "productCount": 8
   },
   {
     "id": "brand-artesia",
@@ -23,46 +29,88 @@ export const AUDIOKING_BRANDS = [
     "productCount": 2
   },
   {
-    "id": "brand-bluguitar",
-    "name": "BluGuitar",
-    "slug": "bluguitar",
+    "id": "brand-audota",
+    "name": "Audota",
+    "slug": "audota",
     "productCount": 1
   },
   {
-    "id": "brand-dsm-humboldt",
+    "id": "brand-avatar",
+    "name": "Avatar",
+    "slug": "avatar",
+    "productCount": 4
+  },
+  {
+    "id": "brand-bluguitar",
+    "name": "BluGuitar",
+    "slug": "bluguitar",
+    "productCount": 5
+  },
+  {
+    "id": "brand-caline",
+    "name": "Caline",
+    "slug": "caline",
+    "productCount": 3
+  },
+  {
+    "id": "brand-dsm-humboldt-electronics",
     "name": "DSM & Humboldt Electronics",
-    "slug": "dsm-humboldt",
-    "productCount": 2
+    "slug": "dsm-humboldt-electronics",
+    "productCount": 10
+  },
+  {
+    "id": "brand-donner",
+    "name": "Donner",
+    "slug": "donner",
+    "productCount": 13
   },
   {
     "id": "brand-efnote",
     "name": "Efnote",
     "slug": "efnote",
-    "productCount": 3
+    "productCount": 8
   },
   {
     "id": "brand-eikon",
     "name": "Eikon",
     "slug": "eikon",
-    "productCount": 20
+    "productCount": 21
+  },
+  {
+    "id": "brand-focal",
+    "name": "Focal",
+    "slug": "focal",
+    "productCount": 1
   },
   {
     "id": "brand-focal-professional",
     "name": "Focal Professional",
     "slug": "focal-professional",
-    "productCount": 3
+    "productCount": 8
   },
   {
     "id": "brand-focusrite",
     "name": "Focusrite",
     "slug": "focusrite",
-    "productCount": 12
+    "productCount": 13
   },
   {
     "id": "brand-icon-pro-audio",
     "name": "Icon Pro Audio",
     "slug": "icon-pro-audio",
-    "productCount": 3
+    "productCount": 5
+  },
+  {
+    "id": "brand-joyo",
+    "name": "Joyo",
+    "slug": "joyo",
+    "productCount": 11
+  },
+  {
+    "id": "brand-just-pro",
+    "name": "Just PRO",
+    "slug": "just-pro",
+    "productCount": 4
   },
   {
     "id": "brand-lauten-audio",
@@ -74,7 +122,13 @@ export const AUDIOKING_BRANDS = [
     "id": "brand-lemon-drums",
     "name": "Lemon Drums",
     "slug": "lemon-drums",
-    "productCount": 4
+    "productCount": 8
+  },
+  {
+    "id": "brand-lirevo",
+    "name": "Lirevo",
+    "slug": "lirevo",
+    "productCount": 5
   },
   {
     "id": "brand-mooer",
@@ -86,25 +140,43 @@ export const AUDIOKING_BRANDS = [
     "id": "brand-native-instruments",
     "name": "Native Instruments",
     "slug": "native-instruments",
-    "productCount": 5
+    "productCount": 10
   },
   {
     "id": "brand-nord",
     "name": "Nord",
     "slug": "nord",
-    "productCount": 4
+    "productCount": 10
   },
   {
     "id": "brand-novation",
     "name": "Novation",
     "slug": "novation",
-    "productCount": 3
+    "productCount": 8
+  },
+  {
+    "id": "brand-procraft",
+    "name": "ProCraft",
+    "slug": "procraft",
+    "productCount": 5
   },
   {
     "id": "brand-proel",
     "name": "Proel",
     "slug": "proel",
-    "productCount": 11
+    "productCount": 15
+  },
+  {
+    "id": "brand-sqoe",
+    "name": "SQOE",
+    "slug": "sqoe",
+    "productCount": 3
+  },
+  {
+    "id": "brand-strydom",
+    "name": "Strydom",
+    "slug": "strydom",
+    "productCount": 1
   },
   {
     "id": "brand-synergy",
@@ -116,12 +188,18 @@ export const AUDIOKING_BRANDS = [
     "id": "brand-two-notes",
     "name": "Two Notes",
     "slug": "two-notes",
+    "productCount": 5
+  },
+  {
+    "id": "brand-udo",
+    "name": "UDO",
+    "slug": "udo",
     "productCount": 1
   },
   {
     "id": "brand-universal-audio",
     "name": "Universal Audio",
     "slug": "universal-audio",
-    "productCount": 35
+    "productCount": 43
   }
 ];

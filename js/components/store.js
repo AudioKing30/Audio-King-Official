@@ -295,7 +295,11 @@ function buildBrandFilterList() {
     brandCounts[b] = (brandCounts[b] || 0) + 1;
   });
 
-  const sortedBrands = Object.keys(brandCounts).sort((a, b) => a.localeCompare(b));
+  const sortedBrands = Object.keys(brandCounts).sort((a, b) => {
+    if (a.toLowerCase().includes('arowana')) return -1;
+    if (b.toLowerCase().includes('arowana')) return 1;
+    return a.localeCompare(b, undefined, { sensitivity: 'base' });
+  });
 
   let html = '';
   sortedBrands.forEach(b => {
@@ -503,8 +507,13 @@ function applyFilters(emitEvent = true) {
         return false;
       }
     }
-    if (selectedBrand && (product.brand || '').toLowerCase() !== selectedBrand) {
-      return false;
+    if (selectedBrand) {
+      const pBrand = (product.brand || '').toLowerCase().trim();
+      const sBrand = selectedBrand.toLowerCase().trim();
+      const match = pBrand === sBrand ||
+                    pBrand.replace(/s$/, '') === sBrand.replace(/s$/, '') ||
+                    pBrand.includes(sBrand) || sBrand.includes(pBrand);
+      if (!match) return false;
     }
     // Availability Filter (In Stock Only, Out of Stock, Pre-Order)
     const anyAvail = inStockOnly || outOfStockOnly || preOrderOnly;

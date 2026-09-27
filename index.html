@@ -23,13 +23,13 @@
   <link rel="stylesheet" href="css/checkout.css">
   <link rel="stylesheet" href="css/order-success.css">
   <link rel="stylesheet" href="css/testimonials.css">
-  <link rel="stylesheet" href="css/modals.css?v=202609270625">
+  <link rel="stylesheet" href="css/modals.css?v=202609271405">
   <link rel="stylesheet" href="css/catalog.css">
   <link rel="stylesheet" href="css/product.css">
   <link rel="stylesheet" href="css/contact.css">
   <link rel="stylesheet" href="css/checkout-page.css">
-  <link rel="stylesheet" href="css/account-settings.css?v=202609270625">
-  <link rel="stylesheet" href="admin/css/admin.css?v=202609270625">
+  <link rel="stylesheet" href="css/account-settings.css?v=202609271405">
+  <link rel="stylesheet" href="admin/css/admin.css?v=202609271405">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     // Early route preloader: completely eliminates the flash of Home view on refresh for deep routes
@@ -574,7 +574,7 @@
         <!-- 1. Audio Interfaces (User Image 1 - Transparent) -->
         <a href="#store?category=Audio%20Interfaces" class="ak-cat-box-card" data-filter="Audio Interfaces">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-audio-interfaces-nobg.png" alt="Audio Interfaces" class="ak-cat-box-img" loading="lazy">
+            <img src="assets/images/categories/cat-audio-interfaces-nobg.png" alt="Audio Interfaces" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
           </div>
           <span class="ak-cat-box-label">Audio Interfaces</span>
         </a>
@@ -590,7 +590,7 @@
         <!-- 3. DJ Consoles (User Image 3 - Transparent) -->
         <a href="#store?category=DJ%20Consoles" class="ak-cat-box-card" data-filter="DJ Consoles">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-dj-consoles-nobg.png" alt="DJ Consoles" class="ak-cat-box-img" loading="lazy">
+            <img src="assets/images/categories/cat-dj-consoles-nobg.png" alt="DJ Consoles" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
           </div>
           <span class="ak-cat-box-label">DJ Consoles</span>
         </a>
@@ -614,7 +614,7 @@
         <!-- 6. MIDI Controllers -->
         <a href="#store?category=MIDI%20Controllers" class="ak-cat-box-card" data-filter="MIDI Controllers">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-midi-controllers-nobg.png" alt="MIDI Controllers" class="ak-cat-box-img" loading="lazy">
+            <img src="assets/images/categories/cat-midi-controllers-nobg.png" alt="MIDI Controllers" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
           </div>
           <span class="ak-cat-box-label">MIDI Controllers</span>
         </a>
@@ -638,7 +638,7 @@
         <!-- 9. Pre Amps (Replaces Digital Pianos) -->
         <a href="#store?category=Preamps%20%26%20Channel%20Strips" class="ak-cat-box-card" data-filter="Preamps & Channel Strips">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-pre-amps-nobg.png" alt="Pre Amps" class="ak-cat-box-img" loading="lazy">
+            <img src="assets/images/categories/cat-pre-amps-nobg.png" alt="Pre Amps" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
           </div>
           <span class="ak-cat-box-label">Pre Amps</span>
         </a>
@@ -646,7 +646,7 @@
         <!-- 10. Synthesizers (Replaces Keyboards) -->
         <a href="#store?category=Keyboards" class="ak-cat-box-card" data-filter="Keyboards">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-synthesizers-nobg.png" alt="Synthesizers" class="ak-cat-box-img" loading="lazy">
+            <img src="assets/images/categories/cat-synthesizers-nobg.png" alt="Synthesizers" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
           </div>
           <span class="ak-cat-box-label">Synthesizers</span>
         </a>
@@ -690,12 +690,15 @@
     <section class="ak-brands-section ak-reveal" id="akBrandsSection">
       <div class="ak-section-head ak-brands-section-head">
         <h2 class="ak-section-title">Shop Top Brands</h2>
-        <a href="#catalog" class="ak-brands-view-all" id="akBrandsViewAllBtn">
+        <a href="javascript:void(0)" class="ak-brands-view-all" id="akBrandsViewAllBtn" onclick="openAllBrandsModal(event)">
           <span>View All Brands</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </a>
       </div>
       <div class="ak-brands-grid" id="akBrandsRow">
+        <a href="#catalog" class="ak-brand-card" data-brand="Arowana Audioglyph">
+          <span class="ak-brand-name">Arowana Audioglyphs</span>
+        </a>
         <a href="#catalog" class="ak-brand-card" data-brand="Universal Audio">
           <span class="ak-brand-name">Universal Audio</span>
         </a>
@@ -723,9 +726,6 @@
         <a href="#catalog" class="ak-brand-card" data-brand="Efnote">
           <span class="ak-brand-name">Efnote</span>
         </a>
-        <a href="#catalog" class="ak-brand-card" data-brand="Eikon">
-          <span class="ak-brand-name">Eikon</span>
-        </a>
       </div>
     </section>
 
@@ -747,7 +747,17 @@
               <div class="ak-tcard">
                 <div class="ak-tcard-photo-col">
                   <div class="ak-tcard-photo-wrap">
-                    <img src="assets/images/testimonials/artist-arijit-singh.jpg" alt="Arijit Singh" class="ak-tcard-photo-img ak-photo-arijit" loading="lazy">
+                    <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                      <defs>
+                        <linearGradient id="akAvatar1" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#0F172A"/>
+                          <stop offset="100%" stop-color="#1E3A8A"/>
+                        </linearGradient>
+                      </defs>
+                      <rect width="115" height="130" fill="url(#akAvatar1)"/>
+                      <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                      <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+                    </svg>
                   </div>
                   <div class="ak-tcard-name">Arijit Singh</div>
                 </div>
@@ -761,7 +771,17 @@
               <div class="ak-tcard">
                 <div class="ak-tcard-photo-col">
                   <div class="ak-tcard-photo-wrap">
-                    <img src="assets/images/testimonials/artist-shreya-ghoshal.jpg" alt="Shreya Ghoshal" class="ak-tcard-photo-img" loading="lazy">
+                    <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                      <defs>
+                        <linearGradient id="akAvatar2" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#4C0519"/>
+                          <stop offset="100%" stop-color="#9D174D"/>
+                        </linearGradient>
+                      </defs>
+                      <rect width="115" height="130" fill="url(#akAvatar2)"/>
+                      <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                      <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+                    </svg>
                   </div>
                   <div class="ak-tcard-name">Shreya Ghoshal</div>
                 </div>
@@ -775,7 +795,17 @@
               <div class="ak-tcard">
                 <div class="ak-tcard-photo-col">
                   <div class="ak-tcard-photo-wrap">
-                    <img src="assets/images/testimonials/artist-talwinder.jpg" alt="Talwinder" class="ak-tcard-photo-img" loading="lazy">
+                    <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                      <defs>
+                        <linearGradient id="akAvatar3" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#064E3B"/>
+                          <stop offset="100%" stop-color="#047857"/>
+                        </linearGradient>
+                      </defs>
+                      <rect width="115" height="130" fill="url(#akAvatar3)"/>
+                      <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                      <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+                    </svg>
                   </div>
                   <div class="ak-tcard-name">Talwinder</div>
                 </div>
@@ -789,7 +819,17 @@
               <div class="ak-tcard">
                 <div class="ak-tcard-photo-col">
                   <div class="ak-tcard-photo-wrap">
-                    <img src="assets/images/testimonials/artist-aditya-rikhari.jpg" alt="Aditya Rikhari" class="ak-tcard-photo-img" loading="lazy">
+                    <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                      <defs>
+                        <linearGradient id="akAvatar4" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#78350F"/>
+                          <stop offset="100%" stop-color="#C2410C"/>
+                        </linearGradient>
+                      </defs>
+                      <rect width="115" height="130" fill="url(#akAvatar4)"/>
+                      <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                      <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+                    </svg>
                   </div>
                   <div class="ak-tcard-name">Aditya Rikhari</div>
                 </div>
@@ -803,7 +843,17 @@
               <div class="ak-tcard">
                 <div class="ak-tcard-photo-col">
                   <div class="ak-tcard-photo-wrap">
-                    <img src="assets/images/testimonials/artist-karan-aujla.jpg" alt="Karan Aujla" class="ak-tcard-photo-img" loading="lazy">
+                    <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                      <defs>
+                        <linearGradient id="akAvatar5" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#1E1B4B"/>
+                          <stop offset="100%" stop-color="#4338CA"/>
+                        </linearGradient>
+                      </defs>
+                      <rect width="115" height="130" fill="url(#akAvatar5)"/>
+                      <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                      <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+                    </svg>
                   </div>
                   <div class="ak-tcard-name">Karan Aujla</div>
                 </div>
@@ -2314,6 +2364,34 @@
     </div>
   </div>
 
+  <!-- ==================== ALL BRANDS POPUP MODAL ==================== -->
+  <div class="ak-modal-overlay" id="akAllBrandsModal" role="dialog" aria-modal="true" aria-labelledby="akAllBrandsModalTitle">
+    <div class="ak-modal-container" style="max-width: 860px; width: 95%; max-height: 85vh;">
+      <div class="ak-modal-header" style="padding: 18px 24px; border-bottom: 1px solid var(--ak-border); background: #FAFBFD;">
+        <div>
+          <h3 class="ak-modal-title" id="akAllBrandsModalTitle" style="font-size: 19px; font-weight: 800; color: var(--ak-navy); margin: 0 0 2px 0;">
+            All Brands Directory
+          </h3>
+          <span style="font-size: 12.5px; color: var(--ak-text-muted);">Browse genuine products across all certified manufacturers in our catalog</span>
+        </div>
+        <button class="ak-modal-close" id="akAllBrandsClose" onclick="closeAllBrandsModal()" aria-label="Close brands modal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div style="padding: 12px 24px; border-bottom: 1px solid #EDF2F7; background: #FFFFFF;">
+        <div style="position: relative; display: flex; align-items: center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" style="position: absolute; left: 12px; pointer-events: none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="akAllBrandsSearchInput" placeholder="Quickly search brands..." style="width: 100%; padding: 9px 14px 9px 36px; border: 1px solid #CBD5E1; border-radius: 8px; font-size: 13.5px; outline: none; transition: border-color 0.2s;" oninput="filterAllBrandsModalList(this.value)">
+        </div>
+      </div>
+      <div class="ak-modal-content" style="padding: 20px 24px; max-height: calc(85vh - 145px); overflow-y: auto;">
+        <div id="akAllBrandsModalGrid" class="ak-all-brands-modal-grid">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== LOGOUT CONFIRMATION MODAL ==================== -->
   <div class="ak-modal-overlay ak-modal" id="akLogoutModal" role="dialog" aria-modal="true" aria-labelledby="akLogoutTitle">
     <div class="ak-modal-container ak-confirm-modal-box">
@@ -3618,7 +3696,7 @@
   </a>
 
   <!-- ==================== APPLICATION SCRIPTS ==================== -->
-  <script src="js/bundle.js?v=202609270625"></script>
-  <script src="admin/js/admin.js?v=202609270625"></script>
+  <script src="js/bundle.js?v=202609271405"></script>
+  <script src="admin/js/admin.js?v=202609271405"></script>
 </body>
 </html>
