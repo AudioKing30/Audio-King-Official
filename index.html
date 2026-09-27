@@ -23,13 +23,13 @@
   <link rel="stylesheet" href="css/checkout.css">
   <link rel="stylesheet" href="css/order-success.css">
   <link rel="stylesheet" href="css/testimonials.css">
-  <link rel="stylesheet" href="css/modals.css">
+  <link rel="stylesheet" href="css/modals.css?v=202609270625">
   <link rel="stylesheet" href="css/catalog.css">
   <link rel="stylesheet" href="css/product.css">
   <link rel="stylesheet" href="css/contact.css">
   <link rel="stylesheet" href="css/checkout-page.css">
-  <link rel="stylesheet" href="css/account-settings.css">
-  <link rel="stylesheet" href="admin/css/admin.css">
+  <link rel="stylesheet" href="css/account-settings.css?v=202609270625">
+  <link rel="stylesheet" href="admin/css/admin.css?v=202609270625">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     // Early route preloader: completely eliminates the flash of Home view on refresh for deep routes
@@ -61,6 +61,82 @@
         });
       }
     })();
+  </script>
+  <style>
+    /* Universal Password Toggle & Eye Icon Styles */
+    input::-ms-reveal,
+    input::-ms-clear {
+      display: none !important;
+    }
+    .ak-password-wrapper {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      width: 100% !important;
+    }
+    .ak-password-wrapper input {
+      width: 100% !important;
+      padding-right: 44px !important;
+      box-sizing: border-box !important;
+    }
+    .ak-password-toggle-btn {
+      position: absolute !important;
+      right: 10px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 6px !important;
+      margin: 0 !important;
+      cursor: pointer !important;
+      color: #94A3B8 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      line-height: 1 !important;
+      z-index: 10 !important;
+      border-radius: 6px !important;
+      transition: color 0.15s ease, background-color 0.15s ease !important;
+    }
+    .ak-password-toggle-btn:hover {
+      color: #EA580C !important;
+      background: rgba(234, 88, 12, 0.08) !important;
+    }
+    .ak-password-toggle-btn.active {
+      color: #EA580C !important;
+    }
+    .ak-password-toggle-btn svg {
+      display: block !important;
+      pointer-events: none !important;
+    }
+  </style>
+  <script>
+    window.togglePasswordVisibility = function(btn, inputId) {
+      try {
+        var input = inputId ? document.getElementById(inputId) : null;
+        if (!input && btn && btn.getAttribute) {
+          var target = btn.getAttribute('data-target');
+          if (target) input = document.getElementById(target);
+        }
+        if (!input && btn && btn.closest) {
+          input = btn.closest('.ak-password-wrapper')?.querySelector('input');
+        }
+        if (!input) return;
+
+        var isPassword = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPassword ? 'text' : 'password');
+        btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        btn.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+        btn.classList.toggle('active', isPassword);
+
+        var eyeSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        var eyeOffSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+
+        btn.innerHTML = isPassword ? eyeOffSvg : eyeSvg;
+      } catch (err) {
+        console.error('Password toggle error:', err);
+      }
+    };
   </script>
 </head>
 <body>
@@ -1412,7 +1488,7 @@
                       <label class="ak-acc-label">Current Password *</label>
                       <div class="ak-password-wrapper">
                         <input type="password" id="akChangeCurrentPass" class="ak-acc-input" placeholder="Enter your current password">
-                        <button type="button" class="ak-password-toggle-btn" data-target="akChangeCurrentPass" aria-label="Show password" title="Show password">
+                        <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akChangeCurrentPass')" data-target="akChangeCurrentPass" aria-label="Show password" title="Show password">
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
                       </div>
@@ -1421,7 +1497,7 @@
                       <label class="ak-acc-label">New Password (min 8 chars) *</label>
                       <div class="ak-password-wrapper">
                         <input type="password" id="akChangeNewPass" class="ak-acc-input" placeholder="Enter new password">
-                        <button type="button" class="ak-password-toggle-btn" data-target="akChangeNewPass" aria-label="Show password" title="Show password">
+                        <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akChangeNewPass')" data-target="akChangeNewPass" aria-label="Show password" title="Show password">
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
                       </div>
@@ -1430,14 +1506,25 @@
                       <label class="ak-acc-label">Confirm New Password *</label>
                       <div class="ak-password-wrapper">
                         <input type="password" id="akChangeConfirmPass" class="ak-acc-input" placeholder="Repeat new password">
-                        <button type="button" class="ak-password-toggle-btn" data-target="akChangeConfirmPass" aria-label="Show password" title="Show password">
+                        <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akChangeConfirmPass')" data-target="akChangeConfirmPass" aria-label="Show password" title="Show password">
                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </button>
                       </div>
                     </div>
+
+                    <!-- Email OTP Verification Step -->
+                    <div class="ak-form-group full" id="akChangePassOtpGroup" style="display: none; background: rgba(234, 88, 12, 0.05); border: 1px dashed rgba(234, 88, 12, 0.4); padding: 14px; border-radius: 8px; margin-top: 4px;">
+                      <label class="ak-acc-label" style="color: #EA580C; font-weight: 700; margin-bottom: 6px; display: block;">Email Verification Code (6-digit OTP) *</label>
+                      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="akChangePassOtp" class="ak-acc-input" placeholder="Enter 6-digit code" maxlength="6" style="letter-spacing: 4px; font-weight: 700; font-size: 16px; text-align: center; width: 180px; max-width: 100%;">
+                        <button type="button" id="akChangePassResendOtpBtn" class="ak-acc-btn-discard" style="padding: 7px 14px; font-size: 12px; white-space: nowrap;">Resend Code</button>
+                      </div>
+                      <span style="font-size: 12px; color: #64748B; margin-top: 6px; display: block;" id="akChangePassOtpDesc">A 6-digit verification code has been dispatched to your registered Gmail address. Enter it to authorize this change.</span>
+                    </div>
+
                     <div class="ak-form-group full" style="display:flex; justify-content:flex-end; gap:8px; margin-top:6px;">
                       <button type="button" class="ak-acc-btn-discard" id="akChangePassCancelBtn" style="padding:6px 14px; font-size:13px;">Cancel</button>
-                      <button type="button" class="ak-acc-btn-save" id="akChangePassSaveBtn" style="padding:6px 18px; font-size:13px;">Update Password</button>
+                      <button type="button" class="ak-acc-btn-save" id="akChangePassSaveBtn" style="padding:6px 18px; font-size:13px;">Send Verification Code</button>
                     </div>
                   </div>
                 </div>
@@ -1940,7 +2027,7 @@
               </div>
               <div class="ak-password-wrapper">
                 <input type="password" id="akSignInPass" class="ak-form-input" required placeholder="Enter password" autocomplete="current-password">
-                <button type="button" class="ak-password-toggle-btn" data-target="akSignInPass" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akSignInPass')" data-target="akSignInPass" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -1985,7 +2072,7 @@
               <label class="ak-form-label" for="akSignUpPass">Password <span class="ak-req">*</span></label>
               <div class="ak-password-wrapper">
                 <input type="password" id="akSignUpPass" class="ak-form-input" required placeholder="Min 8 characters" autocomplete="new-password">
-                <button type="button" class="ak-password-toggle-btn" data-target="akSignUpPass" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akSignUpPass')" data-target="akSignUpPass" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -1994,7 +2081,7 @@
               <label class="ak-form-label" for="akSignUpPassConfirm">Confirm Password <span class="ak-req">*</span></label>
               <div class="ak-password-wrapper">
                 <input type="password" id="akSignUpPassConfirm" class="ak-form-input" required placeholder="Repeat password" autocomplete="new-password">
-                <button type="button" class="ak-password-toggle-btn" data-target="akSignUpPassConfirm" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akSignUpPassConfirm')" data-target="akSignUpPassConfirm" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -2109,7 +2196,7 @@
               <label class="ak-form-label" for="akResetNewPass">New Password</label>
               <div class="ak-password-wrapper">
                 <input type="password" id="akResetNewPass" class="ak-form-input" required placeholder="Minimum 8 characters" autocomplete="new-password">
-                <button type="button" class="ak-password-toggle-btn" data-target="akResetNewPass" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akResetNewPass')" data-target="akResetNewPass" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -2118,7 +2205,7 @@
               <label class="ak-form-label" for="akResetConfirmPass">Confirm New Password</label>
               <div class="ak-password-wrapper">
                 <input type="password" id="akResetConfirmPass" class="ak-form-input" required placeholder="Repeat new password" autocomplete="new-password">
-                <button type="button" class="ak-password-toggle-btn" data-target="akResetConfirmPass" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'akResetConfirmPass')" data-target="akResetConfirmPass" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -3219,7 +3306,7 @@
               <label class="form-label" for="currentPassword">Current Password *</label>
               <div class="ak-password-wrapper">
                 <input type="password" id="currentPassword" class="form-input" required placeholder="Enter current password">
-                <button type="button" class="ak-password-toggle-btn" data-target="currentPassword" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'currentPassword')" data-target="currentPassword" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -3229,7 +3316,7 @@
               <label class="form-label" for="newPassword">New Password * (Min 8 characters)</label>
               <div class="ak-password-wrapper">
                 <input type="password" id="newPassword" class="form-input" required minlength="8" placeholder="Enter new strong password">
-                <button type="button" class="ak-password-toggle-btn" data-target="newPassword" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'newPassword')" data-target="newPassword" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -3239,7 +3326,7 @@
               <label class="form-label" for="confirmPassword">Confirm New Password *</label>
               <div class="ak-password-wrapper">
                 <input type="password" id="confirmPassword" class="form-input" required minlength="8" placeholder="Re-enter new password">
-                <button type="button" class="ak-password-toggle-btn" data-target="confirmPassword" aria-label="Show password" title="Show password">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'confirmPassword')" data-target="confirmPassword" aria-label="Show password" title="Show password">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 </button>
               </div>
@@ -3531,7 +3618,7 @@
   </a>
 
   <!-- ==================== APPLICATION SCRIPTS ==================== -->
-  <script src="js/bundle.js"></script>
-  <script src="admin/js/admin.js"></script>
+  <script src="js/bundle.js?v=202609270625"></script>
+  <script src="admin/js/admin.js?v=202609270625"></script>
 </body>
 </html>

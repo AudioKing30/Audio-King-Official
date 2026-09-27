@@ -25532,13 +25532,26 @@ Country of Origin: China`,
       throw new Error(res.data?.error || "Failed to update password.");
     }
     /**
-     * 9. Change Password (In-App Authenticated)
+     * 9A. Request Change Password OTP (In-App Authenticated)
      */
-    async changePassword(currentPassword, newPassword, confirmPassword) {
-      const res = await this.safeFetch("/api/auth/change-password", {
+    async requestChangePasswordOtp(currentPassword, newPassword, confirmPassword) {
+      const res = await this.safeFetch("/api/auth/change-password-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
+      });
+      if (res.ok)
+        return res.data;
+      throw new Error(res.data?.error || "Failed to dispatch verification code.");
+    }
+    /**
+     * 9B. Confirm Change Password with OTP (In-App Authenticated)
+     */
+    async changePassword(currentPassword, newPassword, confirmPassword, otp) {
+      const res = await this.safeFetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword, newPassword, confirmPassword, otp })
       });
       if (res.ok)
         return res.data;
@@ -27080,28 +27093,85 @@ Country of Origin: China`,
     const changePassCancel = document.getElementById("akChangePassCancelBtn");
     const changePassSave = document.getElementById("akChangePassSaveBtn");
     const changePassAlert = document.getElementById("akChangePassAlert");
+    let changePassOtpRequested = false;
+    const resetChangePassForm = () => {
+      changePassOtpRequested = false;
+      const otpGroup = document.getElementById("akChangePassOtpGroup");
+      const otpInput = document.getElementById("akChangePassOtp");
+      const cPass = document.getElementById("akChangeCurrentPass");
+      const nPass = document.getElementById("akChangeNewPass");
+      const cfPass = document.getElementById("akChangeConfirmPass");
+      if (otpGroup)
+        otpGroup.style.display = "none";
+      if (otpInput)
+        otpInput.value = "";
+      if (cPass)
+        cPass.value = "";
+      if (nPass)
+        nPass.value = "";
+      if (cfPass)
+        cfPass.value = "";
+      if (changePassSave) {
+        changePassSave.disabled = false;
+        changePassSave.textContent = "Send Verification Code";
+      }
+      if (changePassAlert)
+        changePassAlert.style.display = "none";
+    };
     if (changePassToggle && changePassPanel) {
       changePassToggle.addEventListener("click", () => {
         const isVisible = changePassPanel.style.display !== "none";
-        changePassPanel.style.display = isVisible ? "none" : "block";
-        if (changePassAlert)
-          changePassAlert.style.display = "none";
+        if (isVisible) {
+          changePassPanel.style.display = "none";
+          resetChangePassForm();
+        } else {
+          changePassPanel.style.display = "block";
+          resetChangePassForm();
+        }
       });
     }
     if (changePassCancel && changePassPanel) {
       changePassCancel.addEventListener("click", () => {
         changePassPanel.style.display = "none";
-        if (changePassAlert)
-          changePassAlert.style.display = "none";
-        const cPass = document.getElementById("akChangeCurrentPass");
-        const nPass = document.getElementById("akChangeNewPass");
-        const cfPass = document.getElementById("akChangeConfirmPass");
-        if (cPass)
-          cPass.value = "";
-        if (nPass)
-          nPass.value = "";
-        if (cfPass)
-          cfPass.value = "";
+        resetChangePassForm();
+      });
+    }
+    const resendOtpBtn = document.getElementById("akChangePassResendOtpBtn");
+    if (resendOtpBtn) {
+      resendOtpBtn.addEventListener("click", async () => {
+        const currentPassword = document.getElementById("akChangeCurrentPass")?.value;
+        const newPassword = document.getElementById("akChangeNewPass")?.value;
+        const confirmPassword = document.getElementById("akChangeConfirmPass")?.value;
+        if (!currentPassword || !newPassword || !confirmPassword) {
+          if (changePassAlert) {
+            changePassAlert.className = "ak-pass-msg error";
+            changePassAlert.textContent = "Please enter your current and new passwords first.";
+            changePassAlert.style.display = "block";
+          }
+          return;
+        }
+        resendOtpBtn.disabled = true;
+        resendOtpBtn.textContent = "Sending...";
+        try {
+          const res = await authService.requestChangePasswordOtp(currentPassword, newPassword, confirmPassword);
+          if (changePassAlert) {
+            changePassAlert.className = "ak-pass-msg success";
+            changePassAlert.textContent = res?.message || "A new verification code has been dispatched to your email.";
+            changePassAlert.style.display = "block";
+          }
+          showToast("New verification code sent!", getIcon("check", "", 18));
+        } catch (err) {
+          if (changePassAlert) {
+            changePassAlert.className = "ak-pass-msg error";
+            changePassAlert.textContent = err.message || "Failed to resend verification code.";
+            changePassAlert.style.display = "block";
+          }
+        } finally {
+          setTimeout(() => {
+            resendOtpBtn.disabled = false;
+            resendOtpBtn.textContent = "Resend Code";
+          }, 3e3);
+        }
       });
     }
     if (changePassSave) {
@@ -27109,12 +27179,15 @@ Country of Origin: China`,
         const currentPassword = document.getElementById("akChangeCurrentPass")?.value;
         const newPassword = document.getElementById("akChangeNewPass")?.value;
         const confirmPassword = document.getElementById("akChangeConfirmPass")?.value;
+        const otpInput = document.getElementById("akChangePassOtp");
+        const otpVal = otpInput?.value?.trim();
         if (changePassAlert)
           changePassAlert.style.display = "none";
         if (!currentPassword || !newPassword || !confirmPassword) {
           if (changePassAlert) {
             changePassAlert.className = "ak-pass-msg error";
             changePassAlert.textContent = "Please fill in all password fields.";
+            changePassAlert.style.display = "block";
           }
           return;
         }
@@ -27122,6 +27195,7 @@ Country of Origin: China`,
           if (changePassAlert) {
             changePassAlert.className = "ak-pass-msg error";
             changePassAlert.textContent = "New password must be at least 8 characters long.";
+            changePassAlert.style.display = "block";
           }
           return;
         }
@@ -27129,33 +27203,76 @@ Country of Origin: China`,
           if (changePassAlert) {
             changePassAlert.className = "ak-pass-msg error";
             changePassAlert.textContent = "New passwords do not match.";
+            changePassAlert.style.display = "block";
           }
           return;
         }
+        if (!changePassOtpRequested) {
+          changePassSave.disabled = true;
+          changePassSave.textContent = "Sending Verification Code...";
+          try {
+            const res = await authService.requestChangePasswordOtp(currentPassword, newPassword, confirmPassword);
+            changePassOtpRequested = true;
+            const otpGroup = document.getElementById("akChangePassOtpGroup");
+            if (otpGroup)
+              otpGroup.style.display = "block";
+            if (otpInput) {
+              otpInput.value = "";
+              otpInput.focus();
+            }
+            if (changePassAlert) {
+              changePassAlert.className = "ak-pass-msg success";
+              changePassAlert.textContent = res?.message || "A 6-digit verification code was sent to your email. Enter it below to confirm.";
+              changePassAlert.style.display = "block";
+            }
+            showToast("Verification code sent to your email!", getIcon("mail", "", 18));
+            changePassSave.textContent = "Verify Code & Update Password";
+          } catch (err) {
+            if (changePassAlert) {
+              changePassAlert.className = "ak-pass-msg error";
+              changePassAlert.textContent = err.message || "Failed to dispatch verification code.";
+              changePassAlert.style.display = "block";
+            }
+            changePassSave.textContent = "Send Verification Code";
+          } finally {
+            changePassSave.disabled = false;
+          }
+          return;
+        }
+        if (!otpVal || otpVal.length !== 6) {
+          if (changePassAlert) {
+            changePassAlert.className = "ak-pass-msg error";
+            changePassAlert.textContent = "Please enter the 6-digit verification code sent to your email.";
+            changePassAlert.style.display = "block";
+          }
+          if (otpInput)
+            otpInput.focus();
+          return;
+        }
         changePassSave.disabled = true;
-        changePassSave.textContent = "Updating...";
+        changePassSave.textContent = "Verifying & Updating...";
         try {
-          await authService.changePassword(currentPassword, newPassword, confirmPassword);
+          const res = await authService.changePassword(currentPassword, newPassword, confirmPassword, otpVal);
           if (changePassAlert) {
             changePassAlert.className = "ak-pass-msg success";
-            changePassAlert.textContent = "Password updated successfully! A security confirmation was dispatched to your email.";
+            changePassAlert.textContent = res?.message || "Password updated successfully! A security confirmation was dispatched to your email.";
+            changePassAlert.style.display = "block";
           }
           showToast("Password changed successfully!", getIcon("check", "", 18));
-          document.getElementById("akChangeCurrentPass").value = "";
-          document.getElementById("akChangeNewPass").value = "";
-          document.getElementById("akChangeConfirmPass").value = "";
+          resetChangePassForm();
           setTimeout(() => {
             if (changePassPanel)
               changePassPanel.style.display = "none";
-          }, 2500);
+          }, 2e3);
         } catch (err) {
           if (changePassAlert) {
             changePassAlert.className = "ak-pass-msg error";
             changePassAlert.textContent = err.message || "Failed to update password.";
+            changePassAlert.style.display = "block";
           }
+          changePassSave.textContent = "Verify Code & Update Password";
         } finally {
           changePassSave.disabled = false;
-          changePassSave.textContent = "Update Password";
         }
       });
     }

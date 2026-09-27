@@ -566,13 +566,27 @@ class AuthService {
   }
 
   /**
-   * 9. Change Password (In-App Authenticated)
+   * 9A. Request Change Password OTP (In-App Authenticated)
    */
-  async changePassword(currentPassword, newPassword, confirmPassword) {
-    const res = await this.safeFetch('/api/auth/change-password', {
+  async requestChangePasswordOtp(currentPassword, newPassword, confirmPassword) {
+    const res = await this.safeFetch('/api/auth/change-password-otp', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
+    });
+
+    if (res.ok) return res.data;
+    throw new Error(res.data?.error || 'Failed to dispatch verification code.');
+  }
+
+  /**
+   * 9B. Confirm Change Password with OTP (In-App Authenticated)
+   */
+  async changePassword(currentPassword, newPassword, confirmPassword, otp) {
+    const res = await this.safeFetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword, newPassword, confirmPassword, otp })
     });
 
     if (res.ok) return res.data;

@@ -19,6 +19,7 @@ const {
 const {
   sendSignupVerificationEmail,
   sendPasswordResetEmail,
+  sendChangePasswordOtpEmail,
   sendPasswordChangedEmail
 } = require('../email');
 const { requireAuth } = require('../middleware/authMiddleware');
@@ -1046,9 +1047,9 @@ router.post('/reset-password', async (req, res) => {
 });
 
 // =========================================================================
-// 9. CHANGE PASSWORD (Authenticated In-App)
+// 9A. REQUEST CHANGE PASSWORD OTP (Authenticated In-App)
 // =========================================================================
-router.post('/change-password', requireAuth, async (req, res) => {
+router.post('/change-password-otp', requireAuth, async (req, res) => {
   const { currentPassword, newPassword, confirmPassword } = req.body;
 
   if (!currentPassword || !newPassword) {
@@ -1063,6 +1064,12 @@ router.post('/change-password', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Passwords do not match.' });
   }
 
+  // Rate limit
+  const limit = checkRateLimit(`change_pass_otp_${req.user.id}`, 3, 60000);
+  if (!limit.allowed) {
+    return res.status(429).json({ error: `Please wait ${limit.retryAfterSec}s before requesting another verification code.` });
+  }
+
   try {
     const user = db.prepare('SELECT password_hash FROM users WHERE id = ?').get(req.user.id);
 
@@ -1075,6 +1082,88 @@ router.post('/change-password', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Current password is incorrect.' });
     }
 
+    const otp = generateOTP();
+    const otpHash = hashToken(otp);
+    const expiresAt = Date.now() + OTP_EXPIRY_MS;
+
+    // Invalidate prior unused change_password OTPs for this user
+    db.prepare("UPDATE verification_codes SET verified = 1 WHERE user_id = ? AND purpose = 'change_password'")
+      .run(req.user.id);
+
+    const codeId = crypto.randomUUID();
+    db.prepare(`
+      INSERT INTO verification_codes (id, user_id, email, otp_hash, purpose, metadata, expires_at, attempts, verified, created_at)
+      VALUES (?, ?, ?, ?, 'change_password', null, ?, 0, 0, ?)
+    `).run(codeId, req.user.id, req.user.email, otpHash, expiresAt, new Date().toISOString());
+
+    await sendChangePasswordOtpEmail(req.user.email, otp, req.user.fullName);
+
+    return res.json({
+      success: true,
+      message: `A 6-digit verification code was sent to ${req.user.email}. Please verify to confirm password change.`
+    });
+  } catch (err) {
+    console.error('[REQUEST CHANGE PASSWORD OTP ERROR]', err);
+    return res.status(500).json({ error: 'Failed to dispatch verification code. Please try again.' });
+  }
+});
+
+// =========================================================================
+// 9B. CONFIRM CHANGE PASSWORD WITH OTP (Authenticated In-App)
+// =========================================================================
+router.post('/change-password', requireAuth, async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword, otp } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Current password and new password are required.' });
+  }
+
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: 'New password must be at least 8 characters long.' });
+  }
+
+  if (confirmPassword && newPassword !== confirmPassword) {
+    return res.status(400).json({ error: 'Passwords do not match.' });
+  }
+
+  if (!otp || String(otp).trim().length !== 6) {
+    return res.status(400).json({ error: 'Please enter the 6-digit verification code sent to your email.' });
+  }
+
+  const cleanOtp = String(otp).trim();
+
+  try {
+    const user = db.prepare('SELECT password_hash FROM users WHERE id = ?').get(req.user.id);
+
+    if (!user || !user.password_hash) {
+      return res.status(400).json({ error: 'Your account was created via Google OAuth. Please set a password through Forgot Password.' });
+    }
+
+    const match = await comparePassword(currentPassword, user.password_hash);
+    if (!match) {
+      return res.status(400).json({ error: 'Current password is incorrect.' });
+    }
+
+    // Verify OTP from database
+    const codeRecord = db.prepare(`
+      SELECT * FROM verification_codes 
+      WHERE user_id = ? AND purpose = 'change_password' AND verified = 0 
+      ORDER BY created_at DESC LIMIT 1
+    `).get(req.user.id);
+
+    if (!codeRecord || codeRecord.expires_at < Date.now()) {
+      return res.status(400).json({ error: 'Verification code has expired. Please request a new code.' });
+    }
+
+    const otpHash = hashToken(cleanOtp);
+    if (otpHash !== codeRecord.otp_hash) {
+      db.prepare('UPDATE verification_codes SET attempts = attempts + 1 WHERE id = ?').run(codeRecord.id);
+      return res.status(400).json({ error: 'Invalid verification code. Please check and try again.' });
+    }
+
+    // Mark OTP as verified
+    db.prepare('UPDATE verification_codes SET verified = 1 WHERE id = ?').run(codeRecord.id);
+
     const newHash = await hashPassword(newPassword);
     const now = new Date().toISOString();
 
@@ -1084,7 +1173,7 @@ router.post('/change-password', requireAuth, async (req, res) => {
     // Send security notification
     await sendPasswordChangedEmail(req.user.email, req.user.fullName);
 
-    return res.json({ success: true, message: 'Password updated successfully.' });
+    return res.json({ success: true, message: 'Password updated successfully!' });
   } catch (err) {
     console.error('[CHANGE PASSWORD ERROR]', err);
     return res.status(500).json({ error: 'Failed to update password.' });

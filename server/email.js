@@ -219,6 +219,31 @@ async function sendPasswordResetEmail(email, otp, fullName = 'Musician') {
 }
 
 /**
+ * 2B. Send Password Change Verification OTP Email
+ */
+async function sendChangePasswordOtpEmail(email, otp, fullName = 'Musician') {
+  const subject = `${otp} is your AudioKing password change verification code`;
+  const text = `Hello ${fullName},\n\nYour AudioKing password change verification code is: ${otp}\n\nThis code expires in 10 minutes. If you did not request to change your password, please secure your account immediately.`;
+
+  const html = wrapEmailTemplate('Verify Password Change', `
+    <h2 class="headline">Verify Password Change</h2>
+    <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
+    <p class="paragraph">We received a request to change the password for your AudioKing account. Enter the 6-digit verification code below to authorize this change:</p>
+    
+    <div class="otp-card">
+      <div class="otp-code">${otp}</div>
+      <div class="otp-note">⏱ Code expires in 10 minutes</div>
+    </div>
+
+    <div class="security-box">
+      <strong>Security Warning:</strong> If you did not request this password change, someone may be attempting to access your account. Please check your credentials or contact <a href="mailto:audioking30@gmail.com" style="color:#C2410C;">audioking30@gmail.com</a>.
+    </div>
+  `);
+
+  return sendEmail({ to: email, subject, html, text });
+}
+
+/**
  * 3. Send Password Changed Security Alert Email
  */
 async function sendPasswordChangedEmail(email, fullName = 'Musician') {
@@ -289,6 +314,7 @@ module.exports = {
   sendEmail,
   sendSignupVerificationEmail,
   sendPasswordResetEmail,
+  sendChangePasswordOtpEmail,
   sendPasswordChangedEmail,
   sendCommunityWelcomeEmail
 };
