@@ -20,8 +20,20 @@ const state = {
   hasVariants: false,
   variantGroups: [],
   variantMatrix: [],
-  selectedOfferProductId: null
+  selectedOfferProductId: null,
+  heroSlides: [],
+  lockedFeaturedIds: []
 };
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 // Formatting Helpers
 function formatINR(amount) {
@@ -174,6 +186,7 @@ function switchView(viewName) {
     orders: 'Customer Orders',
     customers: 'Registered Customers',
     analytics: 'Website Analytics & Traffic Tracker',
+    'homepage-manager': 'Homepage Hero Slideshow & Featured Products',
     settings: 'Admin Account & Security'
   };
   const topbar = document.getElementById('topbarTitle');
@@ -183,6 +196,7 @@ function switchView(viewName) {
   if (viewName === 'dashboard') loadDashboardStats();
   if (viewName === 'products') loadProducts();
   if (viewName === 'brands-categories') loadBrandsAndCategoriesView();
+  if (viewName === 'homepage-manager') loadHomepageManager();
   if (viewName === 'offers') loadOffers();
   if (viewName === 'coupons') loadCoupons();
   if (viewName === 'orders') loadOrders();
@@ -837,17 +851,21 @@ async function handleRenameMetaSubmit(e) {
 }
 
 function confirmDeleteBrand(id, name) {
-  document.getElementById('confirmModalTitle').textContent = `Delete Brand: ${name}?`;
-  document.getElementById('confirmModalMessage').textContent = `Are you sure you want to delete brand "${name}"? Products currently assigned to this brand will remain in your catalog but this brand will be removed from directory listings.`;
-  document.getElementById('confirmModalActionBtn').onclick = async () => {
+  document.getElementById('confirmModalTitle').textContent = `Terminate Brand: ${name}?`;
+  document.getElementById('confirmModalMessage').innerHTML = `⚠️ <strong style="color: var(--ak-danger);">CRITICAL WARNING:</strong> Deleting brand <strong>"${name}"</strong> will <strong>PERMANENTLY TERMINATE</strong> every product, inventory item, blanket offer, and section associated with this brand across the entire store and catalog.<br><br>This cascading deletion cannot be undone. Are you sure you want to proceed?`;
+  const actionBtn = document.getElementById('confirmModalActionBtn');
+  actionBtn.textContent = 'Terminate Brand & All Products';
+  actionBtn.onclick = async () => {
     try {
       const res = await adminFetch(`/api/admin/brands/${id}`, { method: 'DELETE' });
       const data = await res.json();
       closeModal();
       if (res.ok) {
         await loadBrandsAndCategoriesView();
+        await loadProducts();
         if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
         window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+        alert(`Brand "${name}" and all associated products were successfully terminated.`);
       } else {
         alert(data.error || 'Failed to delete brand.');
       }
@@ -860,17 +878,21 @@ function confirmDeleteBrand(id, name) {
 }
 
 function confirmDeleteCategory(id, name) {
-  document.getElementById('confirmModalTitle').textContent = `Delete Category: ${name}?`;
-  document.getElementById('confirmModalMessage').textContent = `Are you sure you want to delete category "${name}"? Products in this category will remain in your catalog but this category will be removed from category directory listings.`;
-  document.getElementById('confirmModalActionBtn').onclick = async () => {
+  document.getElementById('confirmModalTitle').textContent = `Terminate Category: ${name}?`;
+  document.getElementById('confirmModalMessage').innerHTML = `⚠️ <strong style="color: var(--ak-danger);">CRITICAL WARNING:</strong> Deleting category <strong>"${name}"</strong> will <strong>PERMANENTLY TERMINATE</strong> every product, inventory item, blanket offer, and section associated with this category across the entire store and catalog.<br><br>This cascading deletion cannot be undone. Are you sure you want to proceed?`;
+  const actionBtn = document.getElementById('confirmModalActionBtn');
+  actionBtn.textContent = 'Terminate Category & All Products';
+  actionBtn.onclick = async () => {
     try {
       const res = await adminFetch(`/api/admin/categories/${id}`, { method: 'DELETE' });
       const data = await res.json();
       closeModal();
       if (res.ok) {
         await loadBrandsAndCategoriesView();
+        await loadProducts();
         if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
         window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+        alert(`Category "${name}" and all associated products were successfully terminated.`);
       } else {
         alert(data.error || 'Failed to delete category.');
       }
@@ -2295,6 +2317,607 @@ function syncVariantStockToProduct() {
 }
 window.syncVariantStockToProduct = syncVariantStockToProduct;
 
+// -------------------------------------------------------------
+// HOMEPAGE HERO SLIDESHOW & FEATURED PRODUCTS CONTROLLER
+// -------------------------------------------------------------
+async function loadHomepageManager() {
+  const slidesContainer = document.getElementById('heroSlidesListContainer');
+  if (slidesContainer) {
+    slidesContainer.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--ak-text-muted);">Loading hero slides...</div>';
+  }
+
+  // 1. Fetch Hero Slides
+  try {
+    const res = await adminFetch('/api/hero-slides');
+    if (res.ok) {
+      const data = await res.json();
+      state.heroSlides = data.slides || [];
+    } else {
+      const local = localStorage.getItem('audioking_hero_slides');
+      if (local) state.heroSlides = JSON.parse(local);
+    }
+  } catch (e) {
+    console.warn('Failed to load hero slides from API:', e);
+    const local = localStorage.getItem('audioking_hero_slides');
+    if (local) {
+      try { state.heroSlides = JSON.parse(local); } catch (err) {}
+    }
+  }
+
+  // 2. Fetch Featured Settings (Locked Product IDs)
+  try {
+    const res = await adminFetch('/api/featured-settings');
+    if (res.ok) {
+      const data = await res.json();
+      state.lockedFeaturedIds = (data.lockedProductIds || data.locked_product_ids || []).map(String);
+    } else {
+      const local = localStorage.getItem('audioking_locked_featured');
+      if (local) state.lockedFeaturedIds = JSON.parse(local).map(String);
+    }
+  } catch (e) {
+    console.warn('Failed to load featured settings from API:', e);
+    const local = localStorage.getItem('audioking_locked_featured');
+    if (local) {
+      try { state.lockedFeaturedIds = JSON.parse(local).map(String); } catch (err) {}
+    }
+  }
+
+  // 3. Ensure Products are loaded for featured manager
+  if (!state.products || state.products.length === 0) {
+    try {
+      const pRes = await adminFetch('/api/admin/products');
+      if (pRes.ok) {
+        state.products = await pRes.json();
+      }
+    } catch (e) {}
+  }
+
+  // Render both sections
+  renderHeroSlidesAdmin();
+  loadFeaturedManager();
+}
+
+function renderHeroSlidesAdmin() {
+  const container = document.getElementById('heroSlidesListContainer');
+  const countBadge = document.getElementById('heroSlidesCountBadge');
+  if (!container) return;
+
+  const slides = state.heroSlides || [];
+  if (countBadge) {
+    countBadge.textContent = `${slides.length} Slide${slides.length === 1 ? '' : 's'}`;
+  }
+
+  if (slides.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 32px; background: var(--ak-card-sub); border-radius: var(--ak-radius); border: 1px dashed var(--ak-border);">
+        <p style="color: var(--ak-text-muted); margin-bottom: 12px; font-size: 14px;">No hero slides found. Add your first slide to display on the storefront!</p>
+        <button type="button" class="btn-primary" onclick="openAddHeroSlideModal()">+ Add First Slide</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = slides.map((slide, index) => {
+    const thumbUrl = resolveAdminThumb(slide.image_url);
+    const isActive = slide.is_active !== 0 && slide.is_active !== false && slide.is_active !== '0';
+    const isFirst = index === 0;
+    const isLast = index === slides.length - 1;
+
+    return `
+      <div class="hero-slide-admin-card" data-slide-id="${slide.id}">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding-right: 6px;">
+          <button type="button" class="btn-secondary" style="padding: 3px 6px; font-size: 11px; min-width: 28px;" ${isFirst ? 'disabled' : ''} onclick="moveHeroSlide('${slide.id}', -1)" title="Move slide up">▲</button>
+          <span style="font-size: 11px; font-weight: 700; color: var(--ak-text-muted);">#${index + 1}</span>
+          <button type="button" class="btn-secondary" style="padding: 3px 6px; font-size: 11px; min-width: 28px;" ${isLast ? 'disabled' : ''} onclick="moveHeroSlide('${slide.id}', 1)" title="Move slide down">▼</button>
+        </div>
+
+        <div class="hero-slide-admin-thumb" style="background-image: url('${thumbUrl}');">
+          ${!isActive ? '<span style="position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.7); color: #FFF; font-size: 9.5px; font-weight: 700; padding: 2px 5px; border-radius: 4px;">INACTIVE</span>' : ''}
+        </div>
+
+        <div class="hero-slide-admin-info">
+          ${slide.eyebrow ? `<div class="hero-slide-admin-eyebrow">${escapeHtml(slide.eyebrow)}</div>` : ''}
+          <div class="hero-slide-admin-title">
+            <span>${escapeHtml(slide.title || 'Untitled Slide')}</span>
+            ${slide.accent_text ? `<span style="color: var(--ak-orange); margin-left: 6px;">${escapeHtml(slide.accent_text)}</span>` : ''}
+          </div>
+          ${slide.subtitle ? `<div class="hero-slide-admin-sub">${escapeHtml(slide.subtitle)}</div>` : ''}
+          <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <span><strong>Button:</strong> ${escapeHtml(slide.cta_text || 'None')}</span>
+            <span><strong>Link:</strong> <code>${escapeHtml(slide.cta_link || '#')}</code></span>
+            <span><strong>Status:</strong> ${isActive ? '<span style="color: var(--ak-success); font-weight: 600;">Active on Storefront</span>' : '<span style="color: var(--ak-text-muted);">Hidden</span>'}</span>
+          </div>
+        </div>
+
+        <div class="hero-slide-admin-actions">
+          <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 12.5px;" onclick="openEditHeroSlideModal('${slide.id}')">✏️ Edit</button>
+          <button type="button" class="btn-danger" style="padding: 6px 10px; font-size: 12.5px;" onclick="deleteHeroSlide('${slide.id}')">🗑️ Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function updateHeroSlidePreview() {
+  const urlInput = document.getElementById('heroSlideImageUrl');
+  const preview = document.getElementById('heroSlideImagePreview');
+  if (!preview) return;
+  const val = urlInput ? urlInput.value.trim() : '';
+  if (val) {
+    const resolved = resolveAdminThumb(val);
+    preview.style.backgroundImage = `url('${resolved}')`;
+    preview.innerHTML = '';
+  } else {
+    preview.style.backgroundImage = 'none';
+    preview.innerHTML = '<span>No image selected</span>';
+  }
+}
+
+function openAddHeroSlideModal() {
+  const form = document.getElementById('heroSlideForm');
+  if (form) form.reset();
+  const idInput = document.getElementById('heroSlideId');
+  if (idInput) idInput.value = '';
+  const titleEl = document.getElementById('heroSlideModalTitle');
+  if (titleEl) titleEl.textContent = 'Add New Hero Slide';
+  const activeCheck = document.getElementById('heroSlideIsActive');
+  if (activeCheck) activeCheck.checked = true;
+  const saveBtn = document.getElementById('heroSlideSaveBtn');
+  if (saveBtn) saveBtn.textContent = 'Save Slide';
+  updateHeroSlidePreview();
+  openModal('heroSlideModal');
+}
+
+function openEditHeroSlideModal(slideId) {
+  const slide = (state.heroSlides || []).find(s => String(s.id) === String(slideId));
+  if (!slide) return alert('Slide not found');
+
+  document.getElementById('heroSlideId').value = slide.id;
+  document.getElementById('heroSlideImageUrl').value = slide.image_url || '';
+  document.getElementById('heroSlideEyebrow').value = slide.eyebrow || '';
+  document.getElementById('heroSlideAccent').value = slide.accent_text || '';
+  document.getElementById('heroSlideTitle').value = slide.title || '';
+  document.getElementById('heroSlideSubtitle').value = slide.subtitle || '';
+  document.getElementById('heroSlideCtaText').value = slide.cta_text || '';
+  document.getElementById('heroSlideCtaLink').value = slide.cta_link || '';
+  document.getElementById('heroSlideIsActive').checked = slide.is_active !== 0 && slide.is_active !== false && slide.is_active !== '0';
+  document.getElementById('heroSlideModalTitle').textContent = 'Edit Hero Slide';
+  document.getElementById('heroSlideSaveBtn').textContent = 'Update Slide';
+
+  updateHeroSlidePreview();
+  openModal('heroSlideModal');
+}
+
+function closeHeroSlideModal() {
+  const m = document.getElementById('heroSlideModal');
+  if (m) m.classList.remove('open');
+  if (state.activeModal === m) state.activeModal = null;
+}
+
+async function handleHeroSlideFileUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('images', file);
+
+  const preview = document.getElementById('heroSlideImagePreview');
+  if (preview) preview.innerHTML = '<span>Uploading image...</span>';
+
+  try {
+    const res = await adminFetch('/api/admin/upload/images', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (res.ok && data.urls && data.urls.length > 0) {
+      document.getElementById('heroSlideImageUrl').value = data.urls[0];
+      updateHeroSlidePreview();
+    } else {
+      alert(data.error || 'Failed to upload hero slide image');
+      updateHeroSlidePreview();
+    }
+  } catch (err) {
+    alert('Network error while uploading image.');
+    updateHeroSlidePreview();
+  }
+}
+
+async function handleHeroSlideFormSubmit(e) {
+  e.preventDefault();
+  const id = document.getElementById('heroSlideId').value.trim();
+  const imageUrl = document.getElementById('heroSlideImageUrl').value.trim();
+  const eyebrow = document.getElementById('heroSlideEyebrow').value.trim();
+  const accentText = document.getElementById('heroSlideAccent').value.trim();
+  const title = document.getElementById('heroSlideTitle').value.trim();
+  const subtitle = document.getElementById('heroSlideSubtitle').value.trim();
+  const ctaText = document.getElementById('heroSlideCtaText').value.trim();
+  const ctaLink = document.getElementById('heroSlideCtaLink').value.trim();
+  const isActive = document.getElementById('heroSlideIsActive').checked ? 1 : 0;
+
+  if (!imageUrl || !title) {
+    return alert('Please provide an image URL and a headline title.');
+  }
+
+  const payload = {
+    image_url: imageUrl,
+    eyebrow,
+    accent_text: accentText,
+    title,
+    subtitle,
+    cta_text: ctaText,
+    cta_link: ctaLink,
+    is_active: isActive
+  };
+
+  const saveBtn = document.getElementById('heroSlideSaveBtn');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving...'; }
+
+  try {
+    let res;
+    if (id) {
+      res = await adminFetch(`/api/admin/hero-slides/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      res = await adminFetch('/api/admin/hero-slides', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    const data = await res.json();
+    if (res.ok) {
+      closeHeroSlideModal();
+      await loadHomepageManager();
+      try {
+        localStorage.setItem('audioking_hero_slides', JSON.stringify(state.heroSlides));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:hero-sync'));
+    } else {
+      alert(data.error || 'Failed to save hero slide');
+    }
+  } catch (err) {
+    alert('Network error while saving hero slide');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = id ? 'Update Slide' : 'Save Slide'; }
+  }
+}
+
+async function deleteHeroSlide(slideId) {
+  if (!confirm('Are you sure you want to delete this hero slide?')) return;
+  try {
+    const res = await adminFetch(`/api/admin/hero-slides/${slideId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (res.ok) {
+      await loadHomepageManager();
+      try {
+        localStorage.setItem('audioking_hero_slides', JSON.stringify(state.heroSlides));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:hero-sync'));
+    } else {
+      alert(data.error || 'Failed to delete hero slide');
+    }
+  } catch (err) {
+    alert('Network error while deleting hero slide');
+  }
+}
+
+async function moveHeroSlide(slideId, delta) {
+  const slides = [...(state.heroSlides || [])];
+  const idx = slides.findIndex(s => String(s.id) === String(slideId));
+  if (idx < 0) return;
+  const targetIdx = idx + delta;
+  if (targetIdx < 0 || targetIdx >= slides.length) return;
+
+  const temp = slides[idx];
+  slides[idx] = slides[targetIdx];
+  slides[targetIdx] = temp;
+
+  const slideIds = slides.map(s => s.id);
+
+  try {
+    const res = await adminFetch('/api/admin/hero-slides/reorder', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slideIds })
+    });
+    if (res.ok) {
+      state.heroSlides = slides;
+      renderHeroSlidesAdmin();
+      try {
+        localStorage.setItem('audioking_hero_slides', JSON.stringify(state.heroSlides));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:hero-sync'));
+    } else {
+      alert('Failed to reorder hero slides');
+    }
+  } catch (err) {
+    alert('Network error while reordering hero slides');
+  }
+}
+
+// -------------------------------------------------------------
+// FEATURED PRODUCTS & LOCKING MANAGER
+// -------------------------------------------------------------
+function loadFeaturedManager() {
+  renderLockedFeaturedProducts();
+  renderPopularFeaturedProducts();
+}
+
+function renderLockedFeaturedProducts() {
+  const container = document.getElementById('lockedProductsListContainer');
+  const countBadge = document.getElementById('lockedFeaturedCountBadge');
+  if (!container) return;
+
+  const lockedIds = (state.lockedFeaturedIds || []).map(String);
+  if (countBadge) {
+    countBadge.textContent = `${lockedIds.length} Locked`;
+  }
+
+  if (lockedIds.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 24px; color: var(--ak-text-muted); font-size: 13px;">
+        🔒 No products currently locked.<br>
+        <span style="font-size: 12px;">Search above or click "+ Lock / Pin" on any popular item to lock it to the top of the homepage carousel.</span>
+      </div>
+    `;
+    return;
+  }
+
+  const allProducts = state.products || [];
+  const prodMap = new Map();
+  allProducts.forEach(p => prodMap.set(String(p.id), p));
+
+  container.innerHTML = lockedIds.map((pid, idx) => {
+    const product = prodMap.get(String(pid)) || { id: pid, name: `Product #${pid}`, brand: '', price: 0, image: '' };
+    const thumb = resolveAdminThumb(product.image || (product.images && product.images[0]));
+    const isFirst = idx === 0;
+    const isLast = idx === lockedIds.length - 1;
+
+    return `
+      <div class="locked-product-item">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+          <button type="button" class="btn-secondary" style="padding: 2px 5px; font-size: 10px;" ${isFirst ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', -1)" title="Move up priority">▲</button>
+          <span style="font-size: 11px; font-weight: 700; color: #2563EB;">#${idx + 1}</span>
+          <button type="button" class="btn-secondary" style="padding: 2px 5px; font-size: 10px;" ${isLast ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', 1)" title="Move down priority">▼</button>
+        </div>
+
+        <img src="${thumb}" alt="${escapeHtml(product.name)}" class="locked-product-thumb" onerror="this.src='${resolveAdminThumb('')}'">
+
+        <div class="locked-product-info">
+          <div class="locked-product-title" title="${escapeHtml(product.name)}">${escapeHtml(product.name)}</div>
+          <div class="locked-product-meta">
+            ${product.brand ? `<span>${escapeHtml(product.brand)}</span> • ` : ''}
+            <span>${formatINR(product.price)}</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-danger" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap;" onclick="unlockFeaturedProduct('${pid}')" title="Unlock product from featured">
+          🔓 Unlock
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderPopularFeaturedProducts() {
+  const container = document.getElementById('impressionProductsListContainer');
+  if (!container) return;
+
+  const lockedSet = new Set((state.lockedFeaturedIds || []).map(String));
+  const allProducts = state.products || [];
+
+  const unlocked = allProducts.filter(p => !lockedSet.has(String(p.id)));
+
+  unlocked.sort((a, b) => {
+    const aScore = (Number(a.clicks) || 0) * 3 + (Number(a.views || a.impressions) || 0);
+    const bScore = (Number(b.clicks) || 0) * 3 + (Number(b.views || b.impressions) || 0);
+    return bScore - aScore;
+  });
+
+  const topCandidates = unlocked.slice(0, 10);
+
+  if (topCandidates.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">All products are already pinned!</div>';
+    return;
+  }
+
+  container.innerHTML = topCandidates.map((product, idx) => {
+    const thumb = resolveAdminThumb(product.image || (product.images && product.images[0]));
+    const impressions = Number(product.views || product.impressions) || 0;
+    const clicks = Number(product.clicks) || 0;
+
+    return `
+      <div class="locked-product-item" style="background: #FAFAFA;">
+        <span style="font-size: 12px; font-weight: 700; color: var(--ak-text-muted); width: 22px; text-align: center;">${idx + 1}</span>
+        <img src="${thumb}" alt="${escapeHtml(product.name)}" class="locked-product-thumb" onerror="this.src='${resolveAdminThumb('')}'">
+
+        <div class="locked-product-info">
+          <div class="locked-product-title" title="${escapeHtml(product.name)}">${escapeHtml(product.name)}</div>
+          <div class="locked-product-meta">
+            ${product.brand ? `<span>${escapeHtml(product.brand)}</span> • ` : ''}
+            <span>${formatINR(product.price)}</span> • 
+            <span style="color: var(--ak-orange);">${clicks} clicks / ${impressions} views</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap; background: #2563EB;" onclick="lockFeaturedProduct('${product.id}')" title="Pin this product to featured carousel">
+          🔒 Lock / Pin
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function handleFeaturedSearchInput(e) {
+  const query = (e.target.value || '').trim().toLowerCase();
+  const dropdown = document.getElementById('featuredProductSearchResults');
+  if (!dropdown) return;
+
+  if (!query) {
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+    return;
+  }
+
+  const allProducts = state.products || [];
+  const lockedSet = new Set((state.lockedFeaturedIds || []).map(String));
+
+  const matches = allProducts.filter(p => {
+    const nameMatch = (p.name || '').toLowerCase().includes(query);
+    const brandMatch = (p.brand || '').toLowerCase().includes(query);
+    const skuMatch = (p.sku || '').toLowerCase().includes(query);
+    return nameMatch || brandMatch || skuMatch;
+  }).slice(0, 8);
+
+  if (matches.length === 0) {
+    dropdown.innerHTML = `<div style="padding: 12px 16px; font-size: 13px; color: var(--ak-text-muted); text-align: center;">No matching products found</div>`;
+    dropdown.style.display = 'block';
+    return;
+  }
+
+  dropdown.innerHTML = matches.map(product => {
+    const isLocked = lockedSet.has(String(product.id));
+    const thumb = resolveAdminThumb(product.image || (product.images && product.images[0]));
+
+    return `
+      <div class="featured-search-item" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--ak-border); cursor: pointer;" onclick="${isLocked ? `unlockFeaturedProduct('${product.id}')` : `lockFeaturedProduct('${product.id}')`}">
+        <img src="${thumb}" alt="${escapeHtml(product.name)}" style="width: 36px; height: 36px; object-fit: contain; background: #FFF; border-radius: 4px; border: 1px solid var(--ak-border-subtle);">
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 13px; font-weight: 600; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(product.name)}</div>
+          <div style="font-size: 11.5px; color: var(--ak-text-muted);">${escapeHtml(product.brand || '')} • ${formatINR(product.price)}</div>
+        </div>
+        ${isLocked ? `
+          <span style="font-size: 11px; font-weight: 700; color: #2563EB; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 3px 8px; border-radius: 4px;">🔒 Already Locked (Click to Unlock)</span>
+        ` : `
+          <span style="font-size: 11px; font-weight: 700; color: #16A34A; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 3px 8px; border-radius: 4px;">+ Click to Lock</span>
+        `}
+      </div>
+    `;
+  }).join('');
+  dropdown.style.display = 'block';
+}
+
+function clearFeaturedProductSearch() {
+  const input = document.getElementById('featuredProductSearchInput');
+  if (input) input.value = '';
+  const dropdown = document.getElementById('featuredProductSearchResults');
+  if (dropdown) {
+    dropdown.style.display = 'none';
+    dropdown.innerHTML = '';
+  }
+}
+
+async function lockFeaturedProduct(productId) {
+  const current = [...(state.lockedFeaturedIds || [])].map(String);
+  if (current.includes(String(productId))) return;
+
+  current.push(String(productId));
+
+  try {
+    const res = await adminFetch('/api/admin/featured-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lockedProductIds: current })
+    });
+    if (res.ok) {
+      state.lockedFeaturedIds = current;
+      try {
+        localStorage.setItem('audioking_locked_featured', JSON.stringify(current));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:featured-sync'));
+      clearFeaturedProductSearch();
+      loadFeaturedManager();
+    } else {
+      alert('Failed to update featured settings');
+    }
+  } catch (err) {
+    alert('Network error while locking featured product');
+  }
+}
+
+async function unlockFeaturedProduct(productId) {
+  const current = (state.lockedFeaturedIds || []).map(String).filter(id => id !== String(productId));
+
+  try {
+    const res = await adminFetch('/api/admin/featured-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lockedProductIds: current })
+    });
+    if (res.ok) {
+      state.lockedFeaturedIds = current;
+      try {
+        localStorage.setItem('audioking_locked_featured', JSON.stringify(current));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:featured-sync'));
+      clearFeaturedProductSearch();
+      loadFeaturedManager();
+    } else {
+      alert('Failed to update featured settings');
+    }
+  } catch (err) {
+    alert('Network error while unlocking featured product');
+  }
+}
+
+async function moveLockedProduct(productId, delta) {
+  const list = [...(state.lockedFeaturedIds || [])].map(String);
+  const idx = list.findIndex(id => id === String(productId));
+  if (idx < 0) return;
+  const targetIdx = idx + delta;
+  if (targetIdx < 0 || targetIdx >= list.length) return;
+
+  const temp = list[idx];
+  list[idx] = list[targetIdx];
+  list[targetIdx] = temp;
+
+  try {
+    const res = await adminFetch('/api/admin/featured-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lockedProductIds: list })
+    });
+    if (res.ok) {
+      state.lockedFeaturedIds = list;
+      try {
+        localStorage.setItem('audioking_locked_featured', JSON.stringify(list));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:featured-sync'));
+      loadFeaturedManager();
+    } else {
+      alert('Failed to reorder locked products');
+    }
+  } catch (err) {
+    alert('Network error while reordering locked products');
+  }
+}
+
+// Expose Homepage & Featured APIs to Window
+window.loadHomepageManager = loadHomepageManager;
+window.renderHeroSlidesAdmin = renderHeroSlidesAdmin;
+window.openAddHeroSlideModal = openAddHeroSlideModal;
+window.openEditHeroSlideModal = openEditHeroSlideModal;
+window.closeHeroSlideModal = closeHeroSlideModal;
+window.updateHeroSlidePreview = updateHeroSlidePreview;
+window.handleHeroSlideFileUpload = handleHeroSlideFileUpload;
+window.handleHeroSlideFormSubmit = handleHeroSlideFormSubmit;
+window.deleteHeroSlide = deleteHeroSlide;
+window.moveHeroSlide = moveHeroSlide;
+
+window.loadFeaturedManager = loadFeaturedManager;
+window.renderLockedFeaturedProducts = renderLockedFeaturedProducts;
+window.renderPopularFeaturedProducts = renderPopularFeaturedProducts;
+window.handleFeaturedSearchInput = handleFeaturedSearchInput;
+window.clearFeaturedProductSearch = clearFeaturedProductSearch;
+window.lockFeaturedProduct = lockFeaturedProduct;
+window.unlockFeaturedProduct = unlockFeaturedProduct;
+window.moveLockedProduct = moveLockedProduct;
+
 // Expose Blanket Offer Picker APIs to Window
 window.handleOfferTargetTypeChange = handleOfferTargetTypeChange;
 window.handleOfferCategoryChange = handleOfferCategoryChange;
@@ -2332,6 +2955,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const wrap = document.getElementById('offerProductTargetWrap');
     if (wrap && !wrap.contains(e.target)) {
       closeOfferProductDropdown();
+    }
+    const searchInput = document.getElementById('featuredProductSearchInput');
+    const searchDropdown = document.getElementById('featuredProductSearchResults');
+    if (searchDropdown && searchInput && !searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+      searchDropdown.style.display = 'none';
     }
   });
 

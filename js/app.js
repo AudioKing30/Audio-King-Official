@@ -15,7 +15,7 @@ import { initOrderSuccess, showOrderConfirmation } from './components/orderSucce
 import { initAuth, getCurrentUser, openAuthModal } from './components/auth.js';
 import { initHeader } from './components/header.js';
 import { initNavigation, setActiveNavItem, renderNavigationBrands, renderNavigationCategories } from './components/navigation.js';
-import { initHeroSlider } from './components/heroSlider.js';
+import { initHeroSlider, loadAndInitHeroSlider } from './components/heroSlider.js';
 import { initTestimonials } from './components/testimonials.js';
 import { initModals } from './components/modals.js';
 import { showToast } from './components/toast.js';
@@ -117,6 +117,19 @@ async function loadLiveCatalog() {
     }
     window._allCatalogCategories = catItems;
     renderNavigationCategories(catItems);
+
+    // Fetch locked featured products settings
+    try {
+      const featRes = await fetch(`${apiBase}/api/featured-settings`);
+      if (featRes.ok) {
+        const featData = await featRes.json();
+        if (featData && Array.isArray(featData.lockedProductIds)) {
+          window._lockedFeaturedProductIds = featData.lockedProductIds;
+          localStorage.setItem('audioking_locked_featured', JSON.stringify(featData.lockedProductIds));
+          renderFeaturedProducts();
+        }
+      }
+    } catch (fe) {}
   } catch (err) {
     console.warn('[AUDIOKING] Could not load live products from /api/products, using bundled catalog:', err.message);
   }
@@ -129,7 +142,13 @@ export function renderTopBrandsRow(brandItems) {
   const row = document.getElementById('akBrandsRow');
   if (!row) return;
 
-  const topBrands = [
+  const validBrandSet = new Set(
+    (brandItems && brandItems.length ? brandItems : (window._allCatalogBrands || []))
+      .map(b => (b.name || b.label || b.value || '').toLowerCase().trim())
+      .filter(Boolean)
+  );
+
+  const defaultTopBrands = [
     { label: 'Arowana Audioglyphs', value: 'Arowana Audioglyphs' },
     { label: 'Universal Audio', value: 'Universal Audio' },
     { label: 'Focusrite', value: 'Focusrite' },
@@ -141,6 +160,10 @@ export function renderTopBrandsRow(brandItems) {
     { label: 'Focal Professional', value: 'Focal Professional' },
     { label: 'Efnote', value: 'Efnote' }
   ];
+
+  const topBrands = validBrandSet.size > 0
+    ? defaultTopBrands.filter(b => validBrandSet.has(b.value.toLowerCase().trim()))
+    : defaultTopBrands;
 
   row.innerHTML = topBrands.map(b => `
     <a href="#store?brand=${encodeURIComponent(b.value)}" class="ak-brand-card" data-brand="${b.value}">
@@ -272,7 +295,7 @@ if (typeof document !== 'undefined') {
     initAuth();
     initHeader();
     initNavigation();
-    initHeroSlider();
+    loadAndInitHeroSlider();
     initTestimonials();
     initModals();
     initStore();
@@ -284,6 +307,15 @@ if (typeof document !== 'undefined') {
     // Re-synchronize live catalog whenever admin panel makes changes
     window.addEventListener('ak:catalog-sync', () => {
       loadLiveCatalog();
+    });
+
+    // Re-synchronize featured products whenever admin locks/unlocks products
+    window.addEventListener('ak:featured-sync', (e) => {
+      if (e && e.detail && Array.isArray(e.detail.lockedProductIds)) {
+        window._lockedFeaturedProductIds = e.detail.lockedProductIds;
+        localStorage.setItem('audioking_locked_featured', JSON.stringify(e.detail.lockedProductIds));
+      }
+      renderFeaturedProducts();
     });
 
     // Set store product click callback to open product details page
@@ -2390,16 +2422,46 @@ export function renderFeaturedProducts(items) {
   const baseItems = (items && items.length) ? [...items] : [...FEATURED_PRODUCTS];
   const clicks = getProductClicks();
 
-  // Dynamically recurring sort based on maximum clicks:
-  // Products with highest customer clicks bubble to the top of featured products!
-  baseItems.sort((a, b) => {
+  // Retrieve locked featured product IDs (configured by client in Admin Panel)
+  let lockedIds = window._lockedFeaturedProductIds || [];
+  if (!lockedIds || !lockedIds.length) {
+    try {
+      const saved = localStorage.getItem('audioking_locked_featured');
+      if (saved) lockedIds = JSON.parse(saved);
+    } catch (e) {}
+  }
+  if (!Array.isArray(lockedIds)) lockedIds = [];
+
+  // Split into locked products (protected from impression sorting) and remaining products
+  const lockedProducts = [];
+  const remainingProducts = [];
+
+  // Map locked products in their exact assigned order
+  lockedIds.forEach(id => {
+    const found = baseItems.find(p => p.id === id);
+    if (found && !lockedProducts.some(lp => lp.id === found.id)) {
+      lockedProducts.push(found);
+    }
+  });
+
+  baseItems.forEach(p => {
+    if (!lockedIds.includes(p.id)) {
+      remainingProducts.push(p);
+    }
+  });
+
+  // Dynamically sort remaining products based on customer impressions/clicks:
+  remainingProducts.sort((a, b) => {
     const clicksA = clicks[a.id] || 0;
     const clicksB = clicks[b.id] || 0;
     if (clicksB !== clicksA) return clicksB - clicksA;
     return 0;
   });
 
-  grid.innerHTML = baseItems.map((p) => {
+  // Combine: Locked products stay firmly at the front, followed by impression-ranked products
+  const displayItems = [...lockedProducts, ...remainingProducts];
+
+  grid.innerHTML = displayItems.map((p) => {
     const imgSrc = resolveProductImage(p.image);
     const cartQty = getCartItemQuantity(p.id);
     const clickCount = clicks[p.id] || 0;

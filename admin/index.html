@@ -106,6 +106,10 @@
         <span class="nav-icon">🏷️</span>
         <span>Brands &amp; Categories</span>
       </a>
+      <a class="nav-link" data-view="homepage-manager" onclick="switchView('homepage-manager')">
+        <span class="nav-icon">🖼️</span>
+        <span>Hero &amp; Featured</span>
+      </a>
       <a class="nav-link" data-view="offers" onclick="switchView('offers')">
         <span class="nav-icon">🏷️</span>
         <span>Offers &amp; Discounts</span>
@@ -542,6 +546,102 @@
               </table>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           HERO SLIDESHOW & FEATURED PRODUCTS VIEW
+           ========================================================= -->
+      <section id="view-homepage-manager" class="panel-view">
+        <div class="admin-card" style="margin-bottom: 24px;">
+          <div class="card-header-bar">
+            <div>
+              <h1 class="card-heading" style="font-size: 22px;">🖼️ Homepage Hero Slideshow &amp; Featured Products</h1>
+              <p class="card-desc">Customize landscape hero slides (images, titles, CTAs) and manage featured products with permanent locking support.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-secondary" onclick="loadHomepageManager()">
+                <span>🔄 Refresh</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 28px;">
+
+          <!-- SECTION A: HERO SLIDESHOW MANAGER -->
+          <div class="admin-card">
+            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px;">
+              <div>
+                <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                  <span>🎠 Homepage Hero Slideshow</span>
+                  <span id="heroSlidesCountBadge" class="badge-active" style="font-size: 11.5px; padding: 2px 8px;">3 Slides</span>
+                </h2>
+                <p class="card-desc">Add new slides, change images, alter texts, and reorder. Slides auto-rotate every 3.5 seconds on the customer storefront.</p>
+              </div>
+              <button type="button" class="btn-primary" onclick="openAddHeroSlideModal()">
+                <span>+ Add New Slide</span>
+              </button>
+            </div>
+
+            <!-- Slides Grid Container -->
+            <div id="heroSlidesListContainer" class="hero-slides-admin-grid">
+              <div style="text-align: center; padding: 24px; color: var(--ak-text-muted);">Loading hero slides...</div>
+            </div>
+          </div>
+
+          <!-- SECTION B: FEATURED PRODUCTS & LOCKING MANAGER -->
+          <div class="admin-card">
+            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px;">
+              <div>
+                <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                  <span>⭐ Featured Products &amp; Permanent Locking</span>
+                  <span id="lockedFeaturedCountBadge" class="badge-pending" style="font-size: 11.5px; padding: 2px 8px;">0 Locked</span>
+                </h2>
+                <p class="card-desc">Lock specific products to keep them firmly pinned to the homepage carousel, protected against customer clicks/impressions. Remaining slots auto-populate by customer popularity.</p>
+              </div>
+            </div>
+
+            <!-- Search and Pin Product Bar -->
+            <div style="background: var(--ak-card-sub); border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; margin-bottom: 20px; position: relative;">
+              <label class="form-label" style="font-weight: 700; margin-bottom: 6px;">🔍 Quick-Lock Any Product from Catalog into Featured Carousel</label>
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="featuredProductSearchInput" class="form-input" placeholder="Search catalog by name, brand, or SKU to lock into featured..." oninput="handleFeaturedSearchInput(event)" autocomplete="off">
+                <button type="button" class="btn-secondary" onclick="clearFeaturedProductSearch()">Clear</button>
+              </div>
+              <div id="featuredProductSearchResults" class="featured-search-dropdown" style="display: none;"></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
+              <!-- 1. LOCKED / PINNED PRODUCTS -->
+              <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <h3 style="font-size: 15px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                    <span>🔒 Pinned Products</span>
+                    <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Priority #1 on Homepage)</span>
+                  </h3>
+                </div>
+                <div id="lockedProductsListContainer">
+                  <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">No locked products yet. Use the search bar above or pick from popular products to lock items.</div>
+                </div>
+              </div>
+
+              <!-- 2. POPULAR IMPRESSION-RANKED PRODUCTS -->
+              <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <h3 style="font-size: 15px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                    <span>🔥 Customer Popularity Rankings</span>
+                    <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Auto-fill slots)</span>
+                  </h3>
+                </div>
+                <div id="impressionProductsListContainer">
+                  <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">Loading popularity rankings...</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
       </section>
 
@@ -990,6 +1090,75 @@
         <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
         <button type="button" id="confirmModalActionBtn" class="btn-danger" style="padding: 10px 20px;">Confirm &amp; Proceed</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Hero Slide Add / Edit Modal -->
+  <div id="heroSlideModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 18px; font-weight: 800;" id="heroSlideModalTitle">Add New Hero Slide</h3>
+        <button type="button" class="modal-close" onclick="closeHeroSlideModal()">&times;</button>
+      </div>
+      <form id="heroSlideForm" onsubmit="handleHeroSlideFormSubmit(event)">
+        <input type="hidden" id="heroSlideId">
+        
+        <!-- Image Upload or Path -->
+        <div class="form-group">
+          <label class="form-label">1. Slide Image * (Landscape 1920x800 recommended)</label>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <input type="text" id="heroSlideImageUrl" class="form-input" placeholder="Image URL or uploaded path (e.g. assets/images/hero/...)" required style="flex: 1;" oninput="updateHeroSlidePreview()">
+            <button type="button" class="btn-secondary" onclick="document.getElementById('heroSlideFileInput').click()">Browse Image</button>
+          </div>
+          <input type="file" id="heroSlideFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleHeroSlideFileUpload(event)">
+          <!-- Live Preview Box -->
+          <div id="heroSlideImagePreview" style="height: 130px; border-radius: 8px; border: 1px dashed var(--ak-border); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: var(--ak-text-muted); font-size: 13px; overflow: hidden; background-color: #F8FAFC;">
+            <span>No image selected</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="heroSlideEyebrow">2. Eyebrow Tag (Optional)</label>
+            <input type="text" id="heroSlideEyebrow" class="form-input" placeholder="e.g. PROFESSIONAL AUDIO">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="heroSlideAccent">3. Accent Text (Orange)</label>
+            <input type="text" id="heroSlideAccent" class="form-input" placeholder="e.g. Built Better.">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="heroSlideTitle">4. Main Headline Title *</label>
+          <input type="text" id="heroSlideTitle" class="form-input" placeholder="e.g. Sound." required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="heroSlideSubtitle">5. Subtitle Description</label>
+          <textarea id="heroSlideSubtitle" class="form-textarea" rows="2" placeholder="Brief description of the gear or experience..."></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="heroSlideCtaText">6. Button Text</label>
+            <input type="text" id="heroSlideCtaText" class="form-input" placeholder="Explore Pro Audio →">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="heroSlideCtaLink">7. Button Link</label>
+            <input type="text" id="heroSlideCtaLink" class="form-input" placeholder="#catalog or #store?category=...">
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; margin: 12px 0 16px 0;">
+          <input type="checkbox" id="heroSlideIsActive" checked style="width: 16px; height: 16px; accent-color: var(--ak-orange);">
+          <label for="heroSlideIsActive" style="font-size: 13.5px; font-weight: 600; cursor: pointer;">Show this slide on live storefront</label>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+          <button type="button" class="btn-secondary" onclick="closeHeroSlideModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="heroSlideSaveBtn">Save Slide</button>
+        </div>
+      </form>
     </div>
   </div>
 

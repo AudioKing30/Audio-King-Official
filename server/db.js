@@ -291,6 +291,31 @@ function initDatabase() {
     );
 
     CREATE INDEX IF NOT EXISTS idx_variants_product ON product_variants(product_id);
+
+    -- HERO SLIDES TABLE (Customizable Homepage Hero Slideshow)
+    CREATE TABLE IF NOT EXISTS hero_slides (
+      id TEXT PRIMARY KEY,
+      eyebrow TEXT,
+      title TEXT NOT NULL,
+      accent_text TEXT,
+      subtitle TEXT,
+      image_url TEXT NOT NULL,
+      cta_text TEXT,
+      cta_link TEXT,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_hero_slides_order ON hero_slides(sort_order ASC);
+
+    -- FEATURED PRODUCTS SETTINGS (Pinned/Locked products)
+    CREATE TABLE IF NOT EXISTS featured_settings (
+      key TEXT PRIMARY KEY,
+      value_json TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
   `);
 
   // Safe schema migrations for existing database columns
@@ -327,6 +352,62 @@ function initDatabase() {
     const slashJsonProds = db.prepare("SELECT id, images_json FROM products WHERE images_json LIKE '%/uploads/%'").all();
     for (const p of slashJsonProds) {
       db.prepare('UPDATE products SET images_json = ? WHERE id = ?').run(p.images_json.replace(/\/uploads\//g, 'uploads/'), p.id);
+    }
+
+    // Seed default hero slides if table is empty
+    const slideCount = db.prepare('SELECT COUNT(*) AS count FROM hero_slides').get();
+    if (slideCount && slideCount.count === 0) {
+      const nowIso = new Date().toISOString();
+      const defaultSlides = [
+        {
+          id: 'hero-slide-1',
+          eyebrow: 'PROFESSIONAL AUDIO',
+          title: 'Sound.',
+          accent_text: 'Built Better.',
+          subtitle: 'Professional gear for studios, creators, and performers. Find the right equipment for every sound.',
+          image_url: 'assets/images/hero/hero-slide-1.png',
+          cta_text: 'Explore Pro Audio →',
+          cta_link: '#catalog',
+          sort_order: 1
+        },
+        {
+          id: 'hero-slide-2',
+          eyebrow: 'MAKE MUSIC TOGETHER',
+          title: 'Your Sound. Your People. Your',
+          accent_text: 'Moment.',
+          subtitle: 'Everything you need to create, connect, and make every session worth remembering.',
+          image_url: 'assets/images/hero/hero-slide-2.png',
+          cta_text: 'Explore Musical Instruments →',
+          cta_link: '#catalog',
+          sort_order: 2
+        },
+        {
+          id: 'hero-slide-3',
+          eyebrow: 'STUDIO CREATIVITY',
+          title: 'Turn Ideas Into',
+          accent_text: 'Sound.',
+          subtitle: 'The right tools help your ideas move faster, sound better, and become something worth sharing.',
+          image_url: 'assets/images/hero/hero-slide-create.png',
+          cta_text: 'Build Your Setup →',
+          cta_link: '#catalog',
+          sort_order: 3
+        }
+      ];
+
+      const insertSlide = db.prepare(`
+        INSERT INTO hero_slides (id, eyebrow, title, accent_text, subtitle, image_url, cta_text, cta_link, sort_order, is_active, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+      `);
+
+      for (const s of defaultSlides) {
+        insertSlide.run(s.id, s.eyebrow, s.title, s.accent_text, s.subtitle, s.image_url, s.cta_text, s.cta_link, s.sort_order, nowIso, nowIso);
+      }
+    }
+
+    // Seed default featured settings if empty
+    const featRow = db.prepare("SELECT key FROM featured_settings WHERE key = 'locked_product_ids'").get();
+    if (!featRow) {
+      db.prepare("INSERT INTO featured_settings (key, value_json, updated_at) VALUES ('locked_product_ids', '[]', datetime('now'))").run();
     }
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);

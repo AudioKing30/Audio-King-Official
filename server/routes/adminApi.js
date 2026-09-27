@@ -23,6 +23,58 @@ const router = express.Router();
 // Protect all routes in this router with requireAdminApi
 router.use(requireAdminApi);
 
+/**
+ * Synchronize SQLite products table with products_master.json and js/data/products.js
+ */
+function syncMasterFiles() {
+  try {
+    const products = db.prepare('SELECT * FROM products ORDER BY id ASC').all();
+    const formatted = products.map(p => {
+      let images = [];
+      try { images = JSON.parse(p.images_json || '[]'); } catch (e) { images = []; }
+      let specs = [];
+      try { specs = JSON.parse(p.specs_json || '[]'); } catch (e) { specs = []; }
+      let deepSpecs = [];
+      try { deepSpecs = JSON.parse(p.deep_specs_json || '[]'); } catch (e) { deepSpecs = []; }
+      return {
+        id: p.id,
+        name: p.name,
+        shortName: p.short_name || p.name,
+        brand: p.brand,
+        category: p.category,
+        subcategory: p.subcategory || '',
+        price: p.price,
+        originalPrice: p.original_price,
+        stock: p.stock,
+        inStock: Boolean(p.in_stock),
+        rating: p.rating || 5.0,
+        reviewCount: p.review_count || 0,
+        badge: p.badge || '',
+        sku: p.sku || '',
+        description: p.description || '',
+        image: p.image || (images[0] || 'assets/images/logo.jpg'),
+        images: images.length ? images : (p.image ? [p.image] : ['assets/images/logo.jpg']),
+        videoType: p.video_type || null,
+        videoUrl: p.video_url || null,
+        youtubeVideoId: p.youtube_video_id || null,
+        specs: specs,
+        deepSpecs: deepSpecs
+      };
+    });
+
+    const masterPath = path.resolve(__dirname, '..', 'data', 'products_master.json');
+    fs.writeFileSync(masterPath, JSON.stringify(formatted, null, 2), 'utf8');
+
+    const jsDataPath = path.resolve(__dirname, '..', '..', 'js', 'data', 'products.js');
+    if (fs.existsSync(jsDataPath)) {
+      const jsContent = `export const AUDIOKING_PRODUCTS = ${JSON.stringify(formatted, null, 2)};\n`;
+      fs.writeFileSync(jsDataPath, jsContent, 'utf8');
+    }
+  } catch (err) {
+    console.warn('[SYNC MASTER FILES WARN]', err.message);
+  }
+}
+
 // -------------------------------------------------------------
 // SECURE FILE UPLOAD CONFIGURATION (Multer + Magic Bytes)
 // -------------------------------------------------------------
@@ -298,6 +350,8 @@ router.put('/categories/:id', (req, res) => {
     // Cascade update category-targeted blanket offers
     db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'category' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(cleanName, oldName);
 
+    syncMasterFiles();
+
     return res.json({
       success: true,
       message: `Category updated to "${cleanName}". Updated ${prodUpdate.changes} matching products.`,
@@ -313,17 +367,52 @@ router.delete('/categories/:id', (req, res) => {
   try {
     const { id } = req.params;
     const existing = db.prepare('SELECT * FROM categories WHERE id = ?').get(id);
-    if (!existing) {
-      return res.status(404).json({ error: 'Category not found.' });
+    const catName = existing ? existing.name : id;
+
+    // Find all matching products to cascade delete
+    const matchingProducts = db.prepare('SELECT id FROM products WHERE LOWER(TRIM(category)) = LOWER(TRIM(?))').all(catName);
+    const prodIds = matchingProducts.map(p => p.id);
+
+    if (prodIds.length > 0) {
+      const placeholders = prodIds.map(() => '?').join(',');
+      try {
+        db.prepare(`DELETE FROM product_variant_options WHERE group_id IN (SELECT id FROM product_variant_groups WHERE product_id IN (${placeholders}))`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM product_variant_groups WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM product_variants WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM cart_items WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM wishlist_items WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM offers WHERE target_type = 'product' AND target_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+
+      db.prepare(`DELETE FROM products WHERE LOWER(TRIM(category)) = LOWER(TRIM(?))`).run(catName);
     }
 
-    // Delete category
-    db.prepare('DELETE FROM categories WHERE id = ?').run(id);
+    try {
+      db.prepare("DELETE FROM offers WHERE target_type = 'category' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(catName);
+    } catch (e) {}
+    db.prepare('DELETE FROM categories WHERE id = ? OR LOWER(TRIM(name)) = LOWER(TRIM(?))').run(id, catName);
 
-    return res.json({ success: true, message: `Category "${existing.name}" removed.` });
+    syncMasterFiles();
+
+    console.log(`[ADMIN CASCADE DELETE] Terminated category "${catName}" and ${prodIds.length} associated products.`);
+    return res.json({
+      success: true,
+      message: `Category "${catName}" and all ${prodIds.length} associated products and sections have been terminated.`,
+      deletedCount: prodIds.length
+    });
   } catch (err) {
     console.error('[DELETE CATEGORY ERROR]', err);
-    return res.status(500).json({ error: 'Failed to delete category.' });
+    return res.status(500).json({ error: 'Failed to delete category: ' + err.message });
   }
 });
 
@@ -412,6 +501,13 @@ router.put('/brands/:id', (req, res) => {
     // Cascade update all products referencing old brand name
     const prodUpdate = db.prepare('UPDATE products SET brand = ? WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
 
+    // Cascade update brand-targeted offers if any
+    try {
+      db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'brand' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(cleanName, oldName);
+    } catch (e) {}
+
+    syncMasterFiles();
+
     return res.json({
       success: true,
       message: `Brand updated to "${cleanName}". Updated ${prodUpdate.changes} matching products.`,
@@ -427,17 +523,52 @@ router.delete('/brands/:id', (req, res) => {
   try {
     const { id } = req.params;
     const existing = db.prepare('SELECT * FROM brands WHERE id = ?').get(id);
-    if (!existing) {
-      return res.status(404).json({ error: 'Brand not found.' });
+    const brandName = existing ? existing.name : id;
+
+    // Find all matching products to cascade delete
+    const matchingProducts = db.prepare('SELECT id FROM products WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').all(brandName);
+    const prodIds = matchingProducts.map(p => p.id);
+
+    if (prodIds.length > 0) {
+      const placeholders = prodIds.map(() => '?').join(',');
+      try {
+        db.prepare(`DELETE FROM product_variant_options WHERE group_id IN (SELECT id FROM product_variant_groups WHERE product_id IN (${placeholders}))`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM product_variant_groups WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM product_variants WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM cart_items WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM wishlist_items WHERE product_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+      try {
+        db.prepare(`DELETE FROM offers WHERE target_type = 'product' AND target_id IN (${placeholders})`).run(...prodIds);
+      } catch (e) {}
+
+      db.prepare(`DELETE FROM products WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))`).run(brandName);
     }
 
-    // Delete brand
-    db.prepare('DELETE FROM brands WHERE id = ?').run(id);
+    try {
+      db.prepare("DELETE FROM offers WHERE target_type = 'brand' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(brandName);
+    } catch (e) {}
+    db.prepare('DELETE FROM brands WHERE id = ? OR LOWER(TRIM(name)) = LOWER(TRIM(?))').run(id, brandName);
 
-    return res.json({ success: true, message: `Brand "${existing.name}" removed.` });
+    syncMasterFiles();
+
+    console.log(`[ADMIN CASCADE DELETE] Terminated brand "${brandName}" and ${prodIds.length} associated products.`);
+    return res.json({
+      success: true,
+      message: `Brand "${brandName}" and all ${prodIds.length} associated products and sections have been terminated.`,
+      deletedCount: prodIds.length
+    });
   } catch (err) {
     console.error('[DELETE BRAND ERROR]', err);
-    return res.status(500).json({ error: 'Failed to delete brand.' });
+    return res.status(500).json({ error: 'Failed to delete brand: ' + err.message });
   }
 });
 
@@ -677,6 +808,8 @@ router.post('/products', (req, res) => {
       now
     );
 
+    syncMasterFiles();
+
     return res.status(201).json({
       success: true,
       message: 'Product created successfully.',
@@ -763,6 +896,8 @@ router.put('/products/:id', (req, res) => {
       req.params.id
     );
 
+    syncMasterFiles();
+
     return res.json({ success: true, message: 'Product updated successfully.' });
   } catch (err) {
     console.error('[ADMIN UPDATE PRODUCT ERROR]', err);
@@ -777,6 +912,7 @@ router.delete('/products/:id', (req, res) => {
     if (!existing) return res.status(404).json({ error: 'Product not found.' });
 
     db.prepare('DELETE FROM products WHERE id = ?').run(req.params.id);
+    syncMasterFiles();
     console.log(`[ADMIN] Deleted product: ${existing.name} (${req.params.id})`);
     return res.json({ success: true, message: `Product "${existing.name}" deleted successfully.` });
   } catch (err) {
@@ -1298,6 +1434,181 @@ router.delete('/products/:id/variants', (req, res) => {
     res.json({ success: true, message: 'All variants removed. Product reverted to simple mode.' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete variants.' });
+  }
+});
+
+// -------------------------------------------------------------
+// 8. HOMEPAGE HERO SLIDES & FEATURED SETTINGS
+// -------------------------------------------------------------
+router.get('/hero-slides', (req, res) => {
+  try {
+    const slides = db.prepare('SELECT * FROM hero_slides ORDER BY sort_order ASC, created_at ASC').all();
+    return res.json({ success: true, count: slides.length, slides });
+  } catch (err) {
+    console.error('[ADMIN GET HERO SLIDES ERROR]', err);
+    return res.status(500).json({ error: 'Failed to fetch hero slides.' });
+  }
+});
+
+router.post('/hero-slides', (req, res) => {
+  try {
+    const { eyebrow, title, accent_text, subtitle, image_url, cta_text, cta_link, is_active } = req.body || {};
+    if (!title || !title.trim()) {
+      return res.status(400).json({ error: 'Slide title is required.' });
+    }
+    if (!image_url || !image_url.trim()) {
+      return res.status(400).json({ error: 'Slide image is required.' });
+    }
+
+    const cleanImg = image_url.trim().replace(/^\/+/, '');
+    const maxOrder = db.prepare('SELECT MAX(sort_order) AS max_o FROM hero_slides').get();
+    const sortOrder = (maxOrder && maxOrder.max_o ? maxOrder.max_o : 0) + 1;
+    const id = `hero-slide-${Date.now().toString(36)}`;
+    const nowIso = new Date().toISOString();
+
+    db.prepare(`
+      INSERT INTO hero_slides (id, eyebrow, title, accent_text, subtitle, image_url, cta_text, cta_link, sort_order, is_active, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      id,
+      (eyebrow || '').trim(),
+      title.trim(),
+      (accent_text || '').trim(),
+      (subtitle || '').trim(),
+      cleanImg,
+      (cta_text || 'Explore Gear →').trim(),
+      (cta_link || '#catalog').trim(),
+      sortOrder,
+      is_active !== undefined ? (is_active ? 1 : 0) : 1,
+      nowIso,
+      nowIso
+    );
+
+    const slide = db.prepare('SELECT * FROM hero_slides WHERE id = ?').get(id);
+    return res.status(201).json({ success: true, slide });
+  } catch (err) {
+    console.error('[ADMIN CREATE HERO SLIDE ERROR]', err);
+    return res.status(500).json({ error: 'Failed to create hero slide: ' + err.message });
+  }
+});
+
+router.put('/hero-slides/reorder', (req, res) => {
+  try {
+    const { orderedIds } = req.body || {};
+    if (!Array.isArray(orderedIds)) {
+      return res.status(400).json({ error: 'orderedIds array required.' });
+    }
+
+    const stmt = db.prepare('UPDATE hero_slides SET sort_order = ? WHERE id = ?');
+    orderedIds.forEach((id, idx) => {
+      stmt.run(idx + 1, id);
+    });
+
+    const slides = db.prepare('SELECT * FROM hero_slides ORDER BY sort_order ASC').all();
+    return res.json({ success: true, slides });
+  } catch (err) {
+    console.error('[REORDER HERO SLIDES ERROR]', err);
+    return res.status(500).json({ error: 'Failed to reorder hero slides.' });
+  }
+});
+
+router.put('/hero-slides/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { eyebrow, title, accent_text, subtitle, image_url, cta_text, cta_link, is_active, sort_order } = req.body || {};
+
+    const existing = db.prepare('SELECT * FROM hero_slides WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Hero slide not found.' });
+    }
+
+    const nowIso = new Date().toISOString();
+    const cleanImg = image_url ? image_url.trim().replace(/^\/+/, '') : existing.image_url;
+
+    db.prepare(`
+      UPDATE hero_slides SET
+        eyebrow = ?,
+        title = ?,
+        accent_text = ?,
+        subtitle = ?,
+        image_url = ?,
+        cta_text = ?,
+        cta_link = ?,
+        sort_order = ?,
+        is_active = ?,
+        updated_at = ?
+      WHERE id = ?
+    `).run(
+      eyebrow !== undefined ? (eyebrow || '').trim() : existing.eyebrow,
+      title !== undefined ? title.trim() : existing.title,
+      accent_text !== undefined ? (accent_text || '').trim() : existing.accent_text,
+      subtitle !== undefined ? (subtitle || '').trim() : existing.subtitle,
+      cleanImg,
+      cta_text !== undefined ? (cta_text || '').trim() : existing.cta_text,
+      cta_link !== undefined ? (cta_link || '').trim() : existing.cta_link,
+      sort_order !== undefined ? Number(sort_order) : existing.sort_order,
+      is_active !== undefined ? (is_active ? 1 : 0) : existing.is_active,
+      nowIso,
+      id
+    );
+
+    const slide = db.prepare('SELECT * FROM hero_slides WHERE id = ?').get(id);
+    return res.json({ success: true, slide });
+  } catch (err) {
+    console.error('[ADMIN UPDATE HERO SLIDE ERROR]', err);
+    return res.status(500).json({ error: 'Failed to update hero slide: ' + err.message });
+  }
+});
+
+router.delete('/hero-slides/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM hero_slides WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Hero slide not found.' });
+    }
+
+    db.prepare('DELETE FROM hero_slides WHERE id = ?').run(id);
+    return res.json({ success: true, message: 'Hero slide removed.' });
+  } catch (err) {
+    console.error('[ADMIN DELETE HERO SLIDE ERROR]', err);
+    return res.status(500).json({ error: 'Failed to delete hero slide.' });
+  }
+});
+
+// FEATURED PRODUCTS SETTINGS (Pinned/Locked Products)
+router.get('/featured-settings', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'locked_product_ids'").get();
+    let lockedProductIds = [];
+    if (row && row.value_json) {
+      try { lockedProductIds = JSON.parse(row.value_json); } catch (e) {}
+    }
+    return res.json({ success: true, lockedProductIds });
+  } catch (err) {
+    console.error('[ADMIN GET FEATURED SETTINGS ERROR]', err);
+    return res.status(500).json({ error: 'Failed to fetch featured settings.' });
+  }
+});
+
+router.put('/featured-settings', (req, res) => {
+  try {
+    const { lockedProductIds } = req.body || {};
+    if (!Array.isArray(lockedProductIds)) {
+      return res.status(400).json({ error: 'lockedProductIds must be an array of product IDs.' });
+    }
+
+    const valueJson = JSON.stringify(lockedProductIds);
+    db.prepare(`
+      INSERT INTO featured_settings (key, value_json, updated_at)
+      VALUES ('locked_product_ids', ?, datetime('now'))
+      ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at
+    `).run(valueJson);
+
+    return res.json({ success: true, lockedProductIds });
+  } catch (err) {
+    console.error('[ADMIN SAVE FEATURED SETTINGS ERROR]', err);
+    return res.status(500).json({ error: 'Failed to save featured settings.' });
   }
 });
 

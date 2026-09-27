@@ -249,6 +249,36 @@ router.get('/meta/categories', getPublicCategoriesHandler);
 router.get('/categories', getPublicCategoriesHandler);
 
 /**
+ * GET HERO SLIDES (Active Homepage Slideshow)
+ * GET /api/products/hero-slides
+ */
+router.get('/hero-slides', (req, res) => {
+  try {
+    const slides = db.prepare('SELECT * FROM hero_slides WHERE is_active = 1 ORDER BY sort_order ASC, created_at ASC').all();
+    return res.json({ success: true, count: slides.length, slides });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to retrieve hero slides.' });
+  }
+});
+
+/**
+ * GET FEATURED SETTINGS (Pinned/Locked Featured Products)
+ * GET /api/products/featured-settings
+ */
+router.get('/featured-settings', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'locked_product_ids'").get();
+    let lockedProductIds = [];
+    if (row && row.value_json) {
+      try { lockedProductIds = JSON.parse(row.value_json); } catch (e) {}
+    }
+    return res.json({ success: true, lockedProductIds });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to retrieve featured settings.' });
+  }
+});
+
+/**
  * 3. GET SINGLE PRODUCT DETAIL
  * GET /api/products/:id
  */

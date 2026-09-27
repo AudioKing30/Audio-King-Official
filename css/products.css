@@ -210,6 +210,11 @@
     font-size: 13px;
     margin-bottom: 6px;
   }
+  /* Mobile responsive: hide strikethrough MRP pricing in featured section to avoid frame overflow */
+  .ak-products-grid .ak-card-original-price,
+  .ak-featured-carousel-wrapper .ak-card-original-price {
+    display: none !important;
+  }
   .ak-products-grid .ak-add-btn {
     height: 28px;
     font-size: 10.5px;

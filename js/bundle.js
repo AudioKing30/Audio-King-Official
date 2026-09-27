@@ -28727,6 +28727,38 @@ Country of Origin: China`,
   }
 
   // js/components/heroSlider.js
+  var activeAutoPlayTimer = null;
+  function renderHeroSlidesHtml(slides) {
+    const track = document.getElementById("akHeroTrack");
+    const dotsContainer = document.querySelector(".ak-hero-dots");
+    if (!track || !slides || !slides.length)
+      return false;
+    track.innerHTML = slides.map((slide, idx) => {
+      const bgUrl = resolveProductImage(slide.image_url || slide.imageUrl || "assets/images/hero/hero-slide-1.png");
+      const eyebrowHtml = slide.eyebrow ? `<span class="ak-hero-eyebrow">${slide.eyebrow}</span>` : "";
+      const accentHtml = slide.accent_text || slide.accentText ? `<span class="ak-hero-accent">${slide.accent_text || slide.accentText}</span>` : "";
+      const subtitleHtml = slide.subtitle ? `<p class="ak-hero-subtitle">${slide.subtitle}</p>` : "";
+      const ctaText = slide.cta_text || slide.ctaText || "Explore Pro Audio";
+      const ctaLink = slide.cta_link || slide.ctaLink || "#catalog";
+      return `
+      <div class="ak-hero-slide ${idx === 0 ? "active" : ""}" style="background-image: url('${bgUrl}');">
+        <div class="ak-hero-overlay"></div>
+        <div class="ak-hero-content">
+          ${eyebrowHtml}
+          <h1 class="ak-hero-title">${slide.title} ${accentHtml}</h1>
+          ${subtitleHtml}
+          <a href="${ctaLink}" class="ak-hero-cta">${ctaText} <span class="ak-cta-arrow">&rarr;</span></a>
+        </div>
+      </div>
+    `;
+    }).join("");
+    if (dotsContainer) {
+      dotsContainer.innerHTML = slides.map((_, idx) => `
+      <div class="ak-hero-dot ${idx === 0 ? "active" : ""}" data-slide="${idx}"></div>
+    `).join("");
+    }
+    return true;
+  }
   function initHeroSlider() {
     const slides = document.querySelectorAll(".ak-hero-slide");
     const dots = document.querySelectorAll(".ak-hero-dot");
@@ -28735,9 +28767,12 @@ Country of Origin: China`,
     const container = document.getElementById("akHeroSection");
     if (!slides.length)
       return;
+    if (activeAutoPlayTimer) {
+      clearInterval(activeAutoPlayTimer);
+      activeAutoPlayTimer = null;
+    }
     let currentIndex = 0;
-    let timer = null;
-    const slideInterval = 3e3;
+    const slideInterval = 3500;
     function showSlide(index) {
       slides.forEach((slide, i) => {
         slide.classList.toggle("active", i === index);
@@ -28757,42 +28792,44 @@ Country of Origin: China`,
     }
     function startAutoPlay() {
       stopAutoPlay();
-      timer = setInterval(nextSlide, slideInterval);
+      activeAutoPlayTimer = setInterval(nextSlide, slideInterval);
     }
     function stopAutoPlay() {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
+      if (activeAutoPlayTimer) {
+        clearInterval(activeAutoPlayTimer);
+        activeAutoPlayTimer = null;
       }
     }
-    if (nextBtn)
-      nextBtn.addEventListener("click", () => {
+    if (nextBtn) {
+      nextBtn.onclick = () => {
         nextSlide();
         startAutoPlay();
-      });
-    if (prevBtn)
-      prevBtn.addEventListener("click", () => {
+      };
+    }
+    if (prevBtn) {
+      prevBtn.onclick = () => {
         prevSlide();
         startAutoPlay();
-      });
+      };
+    }
     dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => {
+      dot.onclick = () => {
         showSlide(index);
         startAutoPlay();
-      });
+      };
     });
     if (container) {
-      container.addEventListener("mouseenter", stopAutoPlay);
-      container.addEventListener("mouseleave", startAutoPlay);
+      container.onmouseenter = stopAutoPlay;
+      container.onmouseleave = startAutoPlay;
       let touchStartX = 0;
       let touchStartY = 0;
-      container.addEventListener("touchstart", (e) => {
+      container.ontouchstart = (e) => {
         if (e.touches && e.touches.length > 0) {
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
         }
-      }, { passive: true });
-      container.addEventListener("touchend", (e) => {
+      };
+      container.ontouchend = (e) => {
         if (e.changedTouches && e.changedTouches.length > 0) {
           const touchEndX = e.changedTouches[0].clientX;
           const touchEndY = e.changedTouches[0].clientY;
@@ -28807,10 +28844,43 @@ Country of Origin: China`,
             startAutoPlay();
           }
         }
-      }, { passive: true });
+      };
     }
     showSlide(0);
     startAutoPlay();
+  }
+  async function loadAndInitHeroSlider() {
+    try {
+      const local = localStorage.getItem("audioking_hero_slides");
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          renderHeroSlidesHtml(parsed.filter((s) => s.is_active !== 0 && s.is_active !== false));
+        }
+      }
+    } catch (e) {
+    }
+    initHeroSlider();
+    try {
+      const apiBase2 = typeof window !== "undefined" && typeof window.getAudioKingApiBase === "function" ? window.getAudioKingApiBase() : "";
+      const res = await fetch(`${apiBase2}/api/hero-slides`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.slides) && data.slides.length > 0) {
+          localStorage.setItem("audioking_hero_slides", JSON.stringify(data.slides));
+          const rendered = renderHeroSlidesHtml(data.slides.filter((s) => s.is_active !== 0 && s.is_active !== false));
+          if (rendered) {
+            initHeroSlider();
+          }
+        }
+      }
+    } catch (err) {
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("ak:hero-sync", () => {
+      loadAndInitHeroSlider();
+    });
   }
 
   // js/components/testimonials.js
@@ -30590,6 +30660,18 @@ Message: ${message}`);
       }
       window._allCatalogCategories = catItems;
       renderNavigationCategories(catItems);
+      try {
+        const featRes = await fetch(`${apiBase}/api/featured-settings`);
+        if (featRes.ok) {
+          const featData = await featRes.json();
+          if (featData && Array.isArray(featData.lockedProductIds)) {
+            window._lockedFeaturedProductIds = featData.lockedProductIds;
+            localStorage.setItem("audioking_locked_featured", JSON.stringify(featData.lockedProductIds));
+            renderFeaturedProducts();
+          }
+        }
+      } catch (fe) {
+      }
     } catch (err) {
       console.warn("[AUDIOKING] Could not load live products from /api/products, using bundled catalog:", err.message);
     }
@@ -30598,7 +30680,10 @@ Message: ${message}`);
     const row = document.getElementById("akBrandsRow");
     if (!row)
       return;
-    const topBrands = [
+    const validBrandSet = new Set(
+      (brandItems && brandItems.length ? brandItems : window._allCatalogBrands || []).map((b) => (b.name || b.label || b.value || "").toLowerCase().trim()).filter(Boolean)
+    );
+    const defaultTopBrands = [
       { label: "Arowana Audioglyphs", value: "Arowana Audioglyphs" },
       { label: "Universal Audio", value: "Universal Audio" },
       { label: "Focusrite", value: "Focusrite" },
@@ -30610,6 +30695,7 @@ Message: ${message}`);
       { label: "Focal Professional", value: "Focal Professional" },
       { label: "Efnote", value: "Efnote" }
     ];
+    const topBrands = validBrandSet.size > 0 ? defaultTopBrands.filter((b) => validBrandSet.has(b.value.toLowerCase().trim())) : defaultTopBrands;
     row.innerHTML = topBrands.map((b) => `
     <a href="#store?brand=${encodeURIComponent(b.value)}" class="ak-brand-card" data-brand="${b.value}">
       <span class="ak-brand-name">${b.label}</span>
@@ -30719,7 +30805,7 @@ Message: ${message}`);
       initAuth();
       initHeader();
       initNavigation();
-      initHeroSlider();
+      loadAndInitHeroSlider();
       initTestimonials();
       initModals();
       initStore();
@@ -30727,6 +30813,13 @@ Message: ${message}`);
       loadLiveCatalog();
       window.addEventListener("ak:catalog-sync", () => {
         loadLiveCatalog();
+      });
+      window.addEventListener("ak:featured-sync", (e) => {
+        if (e && e.detail && Array.isArray(e.detail.lockedProductIds)) {
+          window._lockedFeaturedProductIds = e.detail.lockedProductIds;
+          localStorage.setItem("audioking_locked_featured", JSON.stringify(e.detail.lockedProductIds));
+        }
+        renderFeaturedProducts();
       });
       setProductClickCallback((productId) => {
         const p = AUDIOKING_PRODUCTS.find((item) => item.id === productId);
@@ -32551,14 +32644,39 @@ Message: ${message}`);
       return;
     const baseItems = items && items.length ? [...items] : [...FEATURED_PRODUCTS];
     const clicks = getProductClicks();
-    baseItems.sort((a, b) => {
+    let lockedIds = window._lockedFeaturedProductIds || [];
+    if (!lockedIds || !lockedIds.length) {
+      try {
+        const saved = localStorage.getItem("audioking_locked_featured");
+        if (saved)
+          lockedIds = JSON.parse(saved);
+      } catch (e) {
+      }
+    }
+    if (!Array.isArray(lockedIds))
+      lockedIds = [];
+    const lockedProducts = [];
+    const remainingProducts = [];
+    lockedIds.forEach((id) => {
+      const found = baseItems.find((p) => p.id === id);
+      if (found && !lockedProducts.some((lp) => lp.id === found.id)) {
+        lockedProducts.push(found);
+      }
+    });
+    baseItems.forEach((p) => {
+      if (!lockedIds.includes(p.id)) {
+        remainingProducts.push(p);
+      }
+    });
+    remainingProducts.sort((a, b) => {
       const clicksA = clicks[a.id] || 0;
       const clicksB = clicks[b.id] || 0;
       if (clicksB !== clicksA)
         return clicksB - clicksA;
       return 0;
     });
-    grid.innerHTML = baseItems.map((p) => {
+    const displayItems = [...lockedProducts, ...remainingProducts];
+    grid.innerHTML = displayItems.map((p) => {
       const imgSrc = resolveProductImage(p.image);
       const cartQty = getCartItemQuantity(p.id);
       const clickCount = clicks[p.id] || 0;

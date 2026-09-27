@@ -114,6 +114,29 @@ app.use('/api/user/wishlist', wishlistRoutes);
 app.use('/api/payment/razorpay', razorpayRoutes);
 app.use('/api/payment/cashfree', cashfreeRoutes);
 
+// Public Hero Slides & Featured Settings
+app.get('/api/hero-slides', (req, res) => {
+  try {
+    const slides = db.prepare('SELECT * FROM hero_slides WHERE is_active = 1 ORDER BY sort_order ASC, created_at ASC').all();
+    res.json({ success: true, count: slides.length, slides });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
+app.get('/api/featured-settings', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'locked_product_ids'").get();
+    let lockedProductIds = [];
+    if (row && row.value_json) {
+      try { lockedProductIds = JSON.parse(row.value_json); } catch (e) {}
+    }
+    res.json({ success: true, lockedProductIds });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
 // Admin APIs (Protected by requireAdminApi inside adminApi.js)
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin', adminApiRoutes);
