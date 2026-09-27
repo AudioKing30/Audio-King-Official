@@ -6,7 +6,7 @@
 
 import { AUDIOKING_PRODUCTS } from '../data/products.js';
 import { AUDIOKING_BRANDS } from '../data/brands.js';
-import { formatINR } from '../utils/formatters.js';
+import { formatINR, getProductOfferStampHtml } from '../utils/formatters.js';
 import { addToCart, getCartItemQuantity, updateCartItemQty } from './cart.js';
 
 let allProducts = [];
@@ -697,10 +697,13 @@ function renderStorePage() {
       ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>`
       : (!isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : '');
 
+    const offerStampHtml = getProductOfferStampHtml(product);
+
     gridHtml += '<article class="ak-store-card' + (isOutOfStock ? ' ak-card-out-of-stock' : '') + '" data-product-id="' + product.id + '">' +
       '<div class="ak-store-card-img-wrap">' +
       '<img src="' + product.image + '" alt="' + product.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'assets/images/placeholder.jpg\';">' +
       stockBadge +
+      offerStampHtml +
       '</div>' +
       '<div class="ak-store-card-body">' +
       '<div class="ak-store-card-brand">' + (product.brand || 'Pro Audio') + '</div>' +

@@ -99,6 +99,8 @@ function formatProduct(row, activeOffers = []) {
     originalPrice: originalPrice,
     discountPercent,
     activeOfferTitle,
+    offerDiscount: maxOfferDiscount,
+    hasOffer: Boolean(activeOfferTitle || maxOfferDiscount > 0 || (originalPrice > sellingPrice && originalPrice > 0)),
     stock: Number(row.stock ?? 10),
     inStock: Boolean(row.in_stock === 1 && row.stock > 0),
     isOutOfStock: Boolean(row.in_stock === 0 || row.stock === 0),

@@ -7,7 +7,7 @@ import { AUDIOKING_PRODUCTS, FEATURED_PRODUCTS } from './data/products.js';
 import { AUDIOKING_BRANDS } from './data/brands.js';
 import { QUICK_CATEGORIES } from './data/categories.js';
 import { AUDIOKING_CONFIG } from './config.js';
-import { formatINR } from './utils/formatters.js';
+import { formatINR, getProductOfferStampHtml } from './utils/formatters.js';
 import { getIcon } from '../assets/icons/icons.js';
 import { initCart, addToCart, openCartDrawer, getCartItems, getCartSubtotal, clearCart, getCartItemQuantity, updateCartItemQty } from './components/cart.js';
 import { initCheckout, openCheckoutModal } from './components/checkout.js';
@@ -1265,6 +1265,10 @@ export async function showProduct(productOrId, updateHash = true) {
   const nextBtn = document.getElementById('ppCarouselNext');
   const counter = document.getElementById('ppCarouselCounter');
   const viewport = document.getElementById('ppCarouselViewport');
+  const stampContainer = document.getElementById('ppOfferStampContainer');
+  if (stampContainer) {
+    stampContainer.innerHTML = getProductOfferStampHtml(product, 'ak-offer-stamp-modal');
+  }
 
   // Build slides array: all images + video demonstration slide (if product has video)
   const imgList = (product.images && product.images.length) ? product.images : [defaultImg];
@@ -2425,10 +2429,12 @@ export function renderFeaturedProducts(items) {
     const originalPriceHtml = hasDiscount
       ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>`
       : '';
+    const offerStampHtml = getProductOfferStampHtml(p);
 
     return `
       <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
+        ${offerStampHtml}
         <div class="ak-product-thumb">
           <img class="ak-product-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
         </div>

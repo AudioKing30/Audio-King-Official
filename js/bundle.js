@@ -24571,6 +24571,52 @@ Country of Origin: China`,
       year: "numeric"
     });
   }
+  function hasProductOffer(product) {
+    if (!product)
+      return false;
+    const price = Number(product.price) || 0;
+    const originalPrice = Number(product.originalPrice) || 0;
+    const hasDiscount = originalPrice > price && price > 0;
+    const discountPercent = hasDiscount ? Math.round((originalPrice - price) / originalPrice * 100) : Number(product.discountPercent) || Number(product.offerDiscount) || 0;
+    return Boolean(
+      product.hasOffer || product.activeOfferTitle || hasDiscount || discountPercent > 0 || product.badge && /(offer|sale|deal|discount|%\s*off)/i.test(product.badge) && !/pre-order/i.test(product.badge)
+    );
+  }
+  function getProductOfferPercent(product) {
+    if (!product)
+      return 10;
+    const price = Number(product.price) || 0;
+    const originalPrice = Number(product.originalPrice) || 0;
+    if (originalPrice > price && price > 0) {
+      return Math.round((originalPrice - price) / originalPrice * 100);
+    }
+    if (Number(product.discountPercent) > 0)
+      return Number(product.discountPercent);
+    if (Number(product.offerDiscount) > 0)
+      return Number(product.offerDiscount);
+    if (product.badge) {
+      const m = product.badge.match(/(\d+)%\s*off/i);
+      if (m)
+        return parseInt(m[1], 10);
+    }
+    return 10;
+  }
+  function getProductOfferStampHtml(product, extraClass = "") {
+    if (!hasProductOffer(product))
+      return "";
+    const pct = getProductOfferPercent(product);
+    const offerTitle = product.activeOfferTitle ? `${product.activeOfferTitle} (${pct}% OFF)` : `${pct}% OFF Special Offer`;
+    const availableStamps = [5, 8, 10, 11, 12, 14, 15, 16, 18, 20, 22, 25, 30, 35, 40, 48, 50];
+    let stampSrc = "assets/images/offer-stamp-ref.png";
+    if (availableStamps.includes(pct)) {
+      stampSrc = `assets/images/offer-stamp-${pct}.png`;
+    }
+    return `
+    <div class="ak-offer-stamp-badge ${extraClass}" title="${offerTitle}" aria-label="${offerTitle}">
+      <img class="ak-offer-stamp-img" src="${stampSrc}" alt="${offerTitle}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/offer-stamp-ref.png';">
+    </div>
+  `;
+  }
 
   // js/config.js
   var AUDIOKING_CONFIG = {
@@ -30348,7 +30394,8 @@ Message: ${message}`);
       const ratingVal = product.rating || (4.6 + product.id.charCodeAt(0) % 4 * 0.1).toFixed(1);
       const reviewsCount = product.reviewsCount || 18 + product.id.charCodeAt(product.id.length - 1) % 42;
       const stockWarningHtml = !isOutOfStock && product.stock > 0 && product.stock <= 3 ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>` : !isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : "";
-      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + product.image + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">` + stockBadge + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing"><span class="ak-store-card-price">' + formatINR(product.price) + "</span>" + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
+      const offerStampHtml = getProductOfferStampHtml(product);
+      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + product.image + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing"><span class="ak-store-card-price">' + formatINR(product.price) + "</span>" + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
     });
     grid.innerHTML = gridHtml;
     grid.querySelectorAll(".ak-store-card").forEach((card) => {
@@ -31520,6 +31567,10 @@ Message: ${message}`);
     const nextBtn = document.getElementById("ppCarouselNext");
     const counter = document.getElementById("ppCarouselCounter");
     const viewport = document.getElementById("ppCarouselViewport");
+    const stampContainer = document.getElementById("ppOfferStampContainer");
+    if (stampContainer) {
+      stampContainer.innerHTML = getProductOfferStampHtml(product, "ak-offer-stamp-modal");
+    }
     const imgList = product.images && product.images.length ? product.images : [defaultImg];
     const slidesData = imgList.map((src, idx) => ({
       type: "image",
@@ -32522,9 +32573,11 @@ Message: ${message}`);
       const origPrice = Number(p.originalPrice) || 0;
       const hasDiscount = origPrice > Number(p.price);
       const originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>` : "";
+      const offerStampHtml = getProductOfferStampHtml(p);
       return `
       <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
+        ${offerStampHtml}
         <div class="ak-product-thumb">
           <img class="ak-product-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
         </div>
