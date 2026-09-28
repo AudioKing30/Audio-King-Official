@@ -23637,3 +23637,4 @@ export const AUDIOKING_PRODUCTS = [
     "deepSpecs": []
   }
 ];
+export const FEATURED_PRODUCTS = [];

@@ -644,7 +644,7 @@ class AuthService {
       localStorage.removeItem('audioKingUser');
       localStorage.removeItem('audioking_user');
       localStorage.removeItem('audioking_admin_view');
-      localStorage.removeItem('audioking_registered_users');
+      // NOTE: audioking_registered_users is intentionally NOT cleared — it's global data
     } catch (e) {}
 
     if (oldUser && oldUser.id) {

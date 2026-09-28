@@ -1269,6 +1269,13 @@ router.post('/logout', (req, res) => {
     path: '/'
   });
 
+  // Also clear admin session cookie to prevent stale cookie causing 401 on re-login
+  res.clearCookie('audioking_admin_session', {
+    httpOnly: true,
+    sameSite: 'lax',
+    path: '/'
+  });
+
   return res.json({ success: true, message: 'Logged out successfully.' });
 });
 

@@ -136,6 +136,10 @@
   box-sizing: border-box;
 }
 
+.ak-products-grid .ak-product-card:nth-child(n+11) {
+  display: none !important;
+}
+
 /* Trending Badge for Featured Products */
 .ak-card-trending-badge {
   position: absolute;

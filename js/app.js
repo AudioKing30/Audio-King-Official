@@ -2474,7 +2474,7 @@ export function renderFeaturedProducts(items) {
   });
 
   // Combine: Locked products stay firmly at the front, followed by impression-ranked products
-  const displayItems = [...lockedProducts, ...remainingProducts];
+  const displayItems = [...lockedProducts, ...remainingProducts].slice(0, 10);
 
   grid.innerHTML = displayItems.map((p) => {
     const imgSrc = resolveProductImage(p.image);

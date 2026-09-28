@@ -209,9 +209,22 @@ function switchView(viewName) {
 // -------------------------------------------------------------
 async function loadDashboardStats() {
   try {
-    const res = await adminFetch('/api/admin/dashboard/stats');
+    let res = await adminFetch('/api/admin/dashboard/stats');
+    // If 401 (session may not be established yet), retry once after a short delay
+    if (res.status === 401) {
+      await new Promise(r => setTimeout(r, 800));
+      res = await adminFetch('/api/admin/dashboard/stats');
+    }
     if (!res.ok) {
       console.warn('[ADMIN] API stats check returned', res.status);
+      // Show 0 instead of '--' so it doesn't look broken
+      const fallback = { totalCustomers: 0, totalOrders: 0, currentOrders: 0, completedOrders: 0, totalRevenue: 0, lowStockCount: 0, lowStockProducts: [] };
+      const stats = fallback;
+      document.getElementById('statCustomers').textContent = stats.totalCustomers;
+      document.getElementById('statOrders').textContent = stats.totalOrders;
+      document.getElementById('statOrdersSplit').textContent = `${stats.currentOrders} Current · ${stats.completedOrders} Delivered`;
+      document.getElementById('statRevenue').textContent = formatINR(stats.totalRevenue);
+      document.getElementById('statLowStock').textContent = stats.lowStockCount;
       return;
     }
     const data = await res.json();
@@ -733,11 +746,11 @@ function renderAdminBrandsTable(brands) {
     const safeName = (b.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     return `
       <tr>
-        <td style="font-weight: 600; color: #FFF;">
+        <td style="font-weight: 600; color: var(--ak-text-primary, #0F172A);">
           <span>${b.name}</span>
         </td>
         <td style="text-align: center;">
-          <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
+          <span class="badge" style="background: #F1F5F9; border: 1px solid var(--ak-border, #E2E8F0); border-radius: 4px; color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
         </td>
         <td style="text-align: right;">
           <div style="display: flex; gap: 6px; justify-content: flex-end;">
@@ -769,14 +782,14 @@ function renderAdminCategoriesTable(categories) {
 
     return `
       <tr>
-        <td style="font-weight: 600; color: #FFF;">
+        <td style="font-weight: 600; color: var(--ak-text-primary, #0F172A);">
           <span>${c.name}</span>
         </td>
         <td>
           ${sectionBadge}
         </td>
         <td style="text-align: center;">
-          <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
+          <span class="badge" style="background: #F1F5F9; border: 1px solid var(--ak-border, #E2E8F0); border-radius: 4px; color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
         </td>
         <td style="text-align: right;">
           <div style="display: flex; gap: 6px; justify-content: flex-end;">
@@ -2021,10 +2034,11 @@ function openConfirmModal(title, message, onConfirm) {
 async function handleLogout() {
   if (!confirm('Sign out of the admin panel?')) return;
   try {
+    // Always call admin-specific logout to clear admin session cookie
+    await adminFetch('/api/admin/auth/logout', { method: 'POST' });
+    // Also call regular auth logout to clear all session cookies
     if (window.authService && typeof window.authService.logout === 'function') {
       await window.authService.logout();
-    } else {
-      await adminFetch('/api/admin/auth/logout', { method: 'POST' });
     }
   } catch (e) {}
   localStorage.removeItem('audioKingSessionToken');

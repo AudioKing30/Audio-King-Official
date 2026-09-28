@@ -8,68 +8,77 @@ const { db } = require('../db');
 const { hashToken } = require('../security');
 
 function getAdminUserFromRequest(req) {
-  let token = req.cookies?.audioking_admin_session || 
-                req.cookies?.audioking_session ||
-                req.cookies?.audioKingToken ||
-                req.cookies?.audioKingSessionToken ||
-                req.headers['authorization']?.replace(/^Bearer\s+/i, '') ||
-                req.headers['x-admin-token'] ||
-                req.headers['x-session-token'];
+  const rawCandidates = [
+    req.headers['authorization']?.replace(/^Bearer\s+/i, ''),
+    req.headers['x-admin-token'],
+    req.headers['x-session-token'],
+    req.cookies?.audioking_admin_session,
+    req.cookies?.audioking_session,
+    req.cookies?.audioKingToken,
+    req.cookies?.audioKingSessionToken
+  ];
 
-  if (token) {
-    token = String(token).trim();
-    if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))) {
-      token = token.slice(1, -1).trim();
+  const candidateTokens = [];
+  for (let c of rawCandidates) {
+    if (!c) continue;
+    c = String(c).trim();
+    if ((c.startsWith('"') && c.endsWith('"')) || (c.startsWith("'") && c.endsWith("'"))) {
+      c = c.slice(1, -1).trim();
+    }
+    if (c && !candidateTokens.includes(c)) {
+      candidateTokens.push(c);
     }
   }
 
-  if (!token) return null;
+  if (candidateTokens.length === 0) return null;
 
-  const tokenHash = hashToken(token);
   const now = Date.now();
+  const sessionQuery = db.prepare(`
+    SELECT 
+      s.id AS session_id,
+      s.expires_at AS session_expires_at,
+      u.id,
+      u.full_name,
+      u.display_name,
+      u.email,
+      u.role,
+      u.profile_image
+    FROM sessions s
+    JOIN users u ON s.user_id = u.id
+    WHERE s.token_hash = ? AND s.expires_at > ?
+  `);
 
-  try {
-    const sessionQuery = db.prepare(`
-      SELECT 
-        s.id AS session_id,
-        s.expires_at AS session_expires_at,
-        u.id,
-        u.full_name,
-        u.display_name,
-        u.email,
-        u.role,
-        u.profile_image
-      FROM sessions s
-      JOIN users u ON s.user_id = u.id
-      WHERE s.token_hash = ? AND s.expires_at > ?
-    `);
-
-    const record = sessionQuery.get(tokenHash, now);
-    if (!record) return null;
-
-    if (record.role !== 'admin') {
-      return { forbidden: true, user: record };
-    }
-
-    // Refresh last active
+  for (const token of candidateTokens) {
     try {
-      db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
-        .run(new Date().toISOString(), record.session_id);
-    } catch (e) {}
+      const tokenHash = hashToken(token);
+      const record = sessionQuery.get(tokenHash, now);
+      if (!record) continue;
 
-    return {
-      id: record.id,
-      fullName: record.full_name,
-      displayName: record.display_name || 'Admin',
-      email: record.email,
-      role: record.role,
-      profileImage: record.profile_image || 'assets/images/logo.jpg',
-      sessionId: record.session_id
-    };
-  } catch (err) {
-    console.error('[ADMIN AUTH ERROR]', err);
-    return null;
+      if (record.role !== 'admin') {
+        return { forbidden: true, user: record };
+      }
+
+      // Refresh last active
+      try {
+        db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
+          .run(new Date().toISOString(), record.session_id);
+      } catch (e) {}
+
+      return {
+        id: record.id,
+        fullName: record.full_name,
+        displayName: record.display_name || 'Admin',
+        email: record.email,
+        role: record.role,
+        profileImage: record.profile_image || 'assets/images/logo.jpg',
+        sessionId: record.session_id
+      };
+    } catch (err) {
+      console.error('[ADMIN AUTH ERROR]', err);
+    }
   }
+
+  return null;
 }
 
 /**

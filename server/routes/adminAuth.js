@@ -121,6 +121,8 @@ router.post('/logout', (req, res) => {
     }
 
     res.clearCookie('audioking_admin_session', { httpOnly: true, sameSite: 'lax', path: '/' });
+    // Also clear regular session cookie to prevent stale cookies
+    res.clearCookie('audioking_session', { httpOnly: true, sameSite: 'lax', path: '/' });
     return res.json({ success: true, message: 'Logged out successfully.' });
   } catch (err) {
     console.error('[ADMIN LOGOUT ERROR]', err);
