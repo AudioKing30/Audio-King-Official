@@ -560,8 +560,13 @@ span.ak-req, .ak-req {
   text-align: center;
 }
 
-.ak-products-section {
+.ak-products-section,
+#akProductsSection {
   padding: 32px 0 20px;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
 }
 
 /* ==================== DYNAMIC CATALOG & PRODUCT DETAIL PAGES ==================== */

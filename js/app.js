@@ -2434,10 +2434,29 @@ export function renderFeaturedProducts(items) {
   const grid = document.getElementById('akFeaturedProductsGrid');
   if (!grid) return;
 
-  const baseItems = (items && items.length) ? [...items] : [...FEATURED_PRODUCTS];
+  // 1. Gather all catalog products as universal safety source
+  const allProds = (Array.isArray(AUDIOKING_PRODUCTS) && AUDIOKING_PRODUCTS.length > 0)
+    ? AUDIOKING_PRODUCTS
+    : ((Array.isArray(FEATURED_PRODUCTS) && FEATURED_PRODUCTS.length > 0) ? FEATURED_PRODUCTS : []);
+
+  // 2. Resolve base items: passed items -> FEATURED_PRODUCTS -> allProds
+  let baseItems = [];
+  if (items && Array.isArray(items) && items.length > 0) {
+    baseItems = [...items];
+  } else if (Array.isArray(FEATURED_PRODUCTS) && FEATURED_PRODUCTS.length > 0) {
+    baseItems = [...FEATURED_PRODUCTS];
+  } else if (allProds.length > 0) {
+    baseItems = [...allProds];
+  }
+
+  // Guarantee non-empty baseItems if any products exist
+  if (!baseItems.length && allProds.length > 0) {
+    baseItems = [...allProds];
+  }
+
   const clicks = getProductClicks();
 
-  // Retrieve locked featured product IDs (configured by client in Admin Panel)
+  // 3. Retrieve locked featured product IDs (configured by client in Admin Panel)
   let lockedIds = window._lockedFeaturedProductIds || [];
   if (!lockedIds || !lockedIds.length) {
     try {
@@ -2447,20 +2466,23 @@ export function renderFeaturedProducts(items) {
   }
   if (!Array.isArray(lockedIds)) lockedIds = [];
 
-  // Split into locked products (protected from impression sorting) and remaining products
   const lockedProducts = [];
   const remainingProducts = [];
 
-  // Map locked products in their exact assigned order
+  // Map locked products in their exact assigned order (check full catalog and baseItems)
   lockedIds.forEach(id => {
-    const found = baseItems.find(p => p.id === id);
+    const found = allProds.find(p => p && String(p.id) === String(id)) ||
+                  baseItems.find(p => p && String(p.id) === String(id));
     if (found && !lockedProducts.some(lp => lp.id === found.id)) {
       lockedProducts.push(found);
     }
   });
 
+  const lockedIdSet = new Set(lockedProducts.map(p => String(p.id)));
+
+  // Add non-locked products from baseItems
   baseItems.forEach(p => {
-    if (!lockedIds.includes(p.id)) {
+    if (p && p.id && !lockedIdSet.has(String(p.id))) {
       remainingProducts.push(p);
     }
   });
@@ -2474,9 +2496,23 @@ export function renderFeaturedProducts(items) {
   });
 
   // Combine: Locked products stay firmly at the front, followed by impression-ranked products
-  const displayItems = [...lockedProducts, ...remainingProducts].slice(0, 10);
+  let displayItems = [...lockedProducts, ...remainingProducts];
+
+  // If fewer than 10 products, auto-fill remaining slots from catalog to guarantee 10 products (2 rows x 5)
+  if (displayItems.length < 10 && allProds.length > 0) {
+    for (const p of allProds) {
+      if (displayItems.length >= 10) break;
+      if (p && p.id && !displayItems.some(item => String(item.id) === String(p.id))) {
+        displayItems.push(p);
+      }
+    }
+  }
+
+  // Strictly enforce 10 products max (2 rows x 5 columns)
+  displayItems = displayItems.slice(0, 10);
 
   grid.innerHTML = displayItems.map((p) => {
+    if (!p) return '';
     const imgSrc = resolveProductImage(p.image);
     const cartQty = getCartItemQuantity(p.id);
     const clickCount = clicks[p.id] || 0;
@@ -2510,7 +2546,7 @@ export function renderFeaturedProducts(items) {
     const offerStampHtml = getProductOfferStampHtml(p);
 
     return `
-      <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
+      <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
         ${offerStampHtml}
         <div class="ak-product-thumb">
@@ -2532,6 +2568,12 @@ export function renderFeaturedProducts(items) {
   attachAddToCartListeners(grid);
   attachProductCardListeners(grid);
   updateFeaturedCarouselArrows();
+
+  // Guarantee section and cards are visible immediately
+  const section = document.getElementById('akProductsSection');
+  if (section) section.classList.add('is-revealed');
+  grid.classList.add('is-revealed');
+
   setTimeout(triggerScrollReveal, 40);
 }
 

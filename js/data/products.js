@@ -23637,4 +23637,4 @@ export const AUDIOKING_PRODUCTS = [
     "deepSpecs": []
   }
 ];
-export const FEATURED_PRODUCTS = [];
+export const FEATURED_PRODUCTS = AUDIOKING_PRODUCTS.slice(0, 10);

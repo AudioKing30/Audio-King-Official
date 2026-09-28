@@ -25202,7 +25202,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "deepSpecs": []
     }
   ];
-  var FEATURED_PRODUCTS = [];
+  var FEATURED_PRODUCTS = AUDIOKING_PRODUCTS.slice(0, 10);
 
   // js/data/brands.js
   var AUDIOKING_BRANDS = [
@@ -33546,7 +33546,18 @@ Message: ${message}`);
     const grid = document.getElementById("akFeaturedProductsGrid");
     if (!grid)
       return;
-    const baseItems = items && items.length ? [...items] : [...FEATURED_PRODUCTS];
+    const allProds = Array.isArray(AUDIOKING_PRODUCTS) && AUDIOKING_PRODUCTS.length > 0 ? AUDIOKING_PRODUCTS : Array.isArray(FEATURED_PRODUCTS) && FEATURED_PRODUCTS.length > 0 ? FEATURED_PRODUCTS : [];
+    let baseItems = [];
+    if (items && Array.isArray(items) && items.length > 0) {
+      baseItems = [...items];
+    } else if (Array.isArray(FEATURED_PRODUCTS) && FEATURED_PRODUCTS.length > 0) {
+      baseItems = [...FEATURED_PRODUCTS];
+    } else if (allProds.length > 0) {
+      baseItems = [...allProds];
+    }
+    if (!baseItems.length && allProds.length > 0) {
+      baseItems = [...allProds];
+    }
     const clicks = getProductClicks();
     let lockedIds = window._lockedFeaturedProductIds || [];
     if (!lockedIds || !lockedIds.length) {
@@ -33562,13 +33573,14 @@ Message: ${message}`);
     const lockedProducts = [];
     const remainingProducts = [];
     lockedIds.forEach((id) => {
-      const found = baseItems.find((p) => p.id === id);
+      const found = allProds.find((p) => p && String(p.id) === String(id)) || baseItems.find((p) => p && String(p.id) === String(id));
       if (found && !lockedProducts.some((lp) => lp.id === found.id)) {
         lockedProducts.push(found);
       }
     });
+    const lockedIdSet = new Set(lockedProducts.map((p) => String(p.id)));
     baseItems.forEach((p) => {
-      if (!lockedIds.includes(p.id)) {
+      if (p && p.id && !lockedIdSet.has(String(p.id))) {
         remainingProducts.push(p);
       }
     });
@@ -33579,8 +33591,20 @@ Message: ${message}`);
         return clicksB - clicksA;
       return 0;
     });
-    const displayItems = [...lockedProducts, ...remainingProducts].slice(0, 10);
+    let displayItems = [...lockedProducts, ...remainingProducts];
+    if (displayItems.length < 10 && allProds.length > 0) {
+      for (const p of allProds) {
+        if (displayItems.length >= 10)
+          break;
+        if (p && p.id && !displayItems.some((item) => String(item.id) === String(p.id))) {
+          displayItems.push(p);
+        }
+      }
+    }
+    displayItems = displayItems.slice(0, 10);
     grid.innerHTML = displayItems.map((p) => {
+      if (!p)
+        return "";
       const imgSrc = resolveProductImage(p.image);
       const cartQty = getCartItemQuantity(p.id);
       const clickCount = clicks[p.id] || 0;
@@ -33609,7 +33633,7 @@ Message: ${message}`);
       const originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>` : "";
       const offerStampHtml = getProductOfferStampHtml(p);
       return `
-      <article class="ak-product-card ak-reveal-card" data-id="${p.id}" style="cursor:pointer; position:relative;">
+      <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
         ${offerStampHtml}
         <div class="ak-product-thumb">
@@ -33630,6 +33654,10 @@ Message: ${message}`);
     attachAddToCartListeners(grid);
     attachProductCardListeners(grid);
     updateFeaturedCarouselArrows();
+    const section = document.getElementById("akProductsSection");
+    if (section)
+      section.classList.add("is-revealed");
+    grid.classList.add("is-revealed");
     setTimeout(triggerScrollReveal, 40);
   }
   function updateFeaturedCarouselArrows() {
