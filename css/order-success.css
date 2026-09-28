@@ -100,8 +100,10 @@
 }
 
 .ak-order-shell {
-  max-width: 960px;
+  max-width: 1040px;
+  width: 95%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 /* Header with Soft Emerald Icon */
@@ -143,7 +145,9 @@
   border: 1px solid #E2E8F0;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
-  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: visible;
 }
 
 /* Top bar with Order ID & Status Badge */
@@ -154,6 +158,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .ak-order-id-label {
@@ -184,12 +189,25 @@
   font-weight: 700;
 }
 
-/* Card Body Layout (62% Left / 38% Right) */
+/* Card Body Layout - minmax(0, 1fr) ensures left column never overflows grid container */
 .ak-order-card-body {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 32px;
-  padding: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  gap: 24px;
+  padding: 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ak-order-card-left {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.ak-order-card-right {
+  min-width: 0;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 /* Left Column: Purchased Items */
@@ -319,15 +337,18 @@
   background-color: #FAFAFA;
   border: 1px solid #E2E8F0;
   border-radius: 6px;
-  padding: 20px;
+  padding: 18px;
   height: fit-content;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 .ak-order-summary-card h3 {
   font-size: 15px;
   font-weight: 800;
   color: #0F172A;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .ak-sum-items-list {
@@ -335,6 +356,8 @@
   flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .ak-sum-line {
@@ -345,15 +368,22 @@
   font-size: 12.5px;
   color: #475569;
   line-height: 1.35;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .ak-sum-line span {
   flex: 1;
+  min-width: 0;
+  word-break: break-word;
 }
 
 .ak-sum-line strong {
   color: #0F172A;
   font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 .ak-sum-divider {
@@ -365,13 +395,18 @@
 .ak-sum-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 12.5px;
   color: #64748B;
   margin-bottom: 8px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .ak-sum-row strong {
   color: #0F172A;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .ak-sum-total-row {
@@ -384,6 +419,14 @@
   margin-top: 14px;
   padding-top: 12px;
   border-top: 1px solid #CBD5E1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.ak-sum-total-row span:last-child {
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 /* Bottom Action Buttons */
@@ -430,18 +473,33 @@
 }
 
 /* Responsive */
-@media (max-width: 820px) {
+@media (max-width: 860px) {
   .ak-order-card-body {
     grid-template-columns: 1fr;
-    padding: 20px;
-    gap: 24px;
+    padding: 18px;
+    gap: 20px;
   }
 }
 
 /* ==================== PRINT STYLES ==================== */
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 12mm;
+  }
+
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
   body {
     background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 11pt !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .ak-header,
@@ -450,18 +508,66 @@
   #akMainContent,
   #catalogPage,
   #productPage,
-  .ak-toast-container {
+  #akAccountModal,
+  .ak-toast-container,
+  .ak-order-anim-overlay,
+  .ak-order-disclaimer-box {
     display: none !important;
   }
 
   .ak-order-view {
     display: block !important;
     padding: 0 !important;
+    margin: 0 !important;
     background: #FFFFFF !important;
+    width: 100% !important;
+  }
+
+  .ak-order-shell {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .ak-bill-head {
+    margin-bottom: 14px !important;
+  }
+
+  .ak-bill-title {
+    font-size: 20pt !important;
+    color: #0F172A !important;
+    margin-bottom: 4px !important;
   }
 
   .ak-order-card {
     box-shadow: none !important;
+    border: 1.5px solid #CBD5E1 !important;
+    border-radius: 6px !important;
+    overflow: visible !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  .ak-order-card-top {
+    padding: 10px 16px !important;
+    border-bottom: 1.5px solid #CBD5E1 !important;
+    background: #F8FAFC !important;
+  }
+
+  .ak-order-card-body {
+    grid-template-columns: minmax(0, 1fr) 260px !important;
+    gap: 16px !important;
+    padding: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .ak-order-summary-card {
+    background: #F8FAFC !important;
     border: 1px solid #CBD5E1 !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
   }
 }

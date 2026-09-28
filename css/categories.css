@@ -209,13 +209,15 @@
   transform: scale(1.24);
 }
 
-/* 16% Size Boost for Audio Interfaces, MIDI Controllers, Pre Amps, Synthesizers */
-.ak-cat-box-img.ak-cat-boost-16 {
-  transform: scale(1.334) !important;
+/* Another 20% Size Boost for Audio Interfaces, MIDI Controllers, Pre Amps, Synthesizers (total scale 1.60) */
+.ak-cat-box-img.ak-cat-boost-16,
+.ak-cat-box-img.ak-cat-boost-20 {
+  transform: scale(1.60) !important;
 }
 
-.ak-cat-box-card:hover .ak-cat-box-img.ak-cat-boost-16 {
-  transform: scale(1.44) !important;
+.ak-cat-box-card:hover .ak-cat-box-img.ak-cat-boost-16,
+.ak-cat-box-card:hover .ak-cat-box-img.ak-cat-boost-20 {
+  transform: scale(1.72) !important;
 }
 
 /* Label below the box */

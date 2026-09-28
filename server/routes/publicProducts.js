@@ -231,7 +231,7 @@ const getPublicCategoriesHandler = (req, res) => {
     }
 
     const categories = db.prepare(`
-      SELECT c.id, c.name, c.slug, COUNT(p.id) AS product_count 
+      SELECT c.id, c.name, c.slug, COALESCE(c.section, 'pro-audio') AS section, COUNT(p.id) AS product_count 
       FROM categories c 
       LEFT JOIN products p ON LOWER(TRIM(p.category)) = LOWER(TRIM(c.name))
       GROUP BY c.id 

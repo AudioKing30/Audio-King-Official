@@ -28490,12 +28490,25 @@ Country of Origin: China`,
   function renderNavigationCategories(categoriesList) {
     if (!Array.isArray(categoriesList) || categoriesList.length === 0)
       return;
-    const rawCats = categoriesList.map((c) => {
-      let name = (typeof c === "string" ? c : c.name || "").trim();
+    const sectionMap = /* @__PURE__ */ new Map();
+    const rawCats = [];
+    categoriesList.forEach((c) => {
+      let name = "";
+      let sec = null;
+      if (typeof c === "string") {
+        name = c.trim();
+      } else if (c && typeof c === "object") {
+        name = (c.name || "").trim();
+        sec = c.section || null;
+      }
       if (name.toLowerCase() === "power supply cabels")
         name = "Power Supply Cables";
-      return name;
-    }).filter(Boolean);
+      if (name) {
+        rawCats.push(name);
+        if (sec)
+          sectionMap.set(name.toLowerCase(), sec);
+      }
+    });
     const uniqueCats = Array.from(new Set(rawCats)).sort((a, b) => a.localeCompare(b, void 0, { sensitivity: "base" }));
     const musicalKeywords = ["keyboard", "synth", "piano", "drum", "guitar amp", "amplifier"];
     const arowanaProAudioKeywords = [
@@ -28514,7 +28527,12 @@ Country of Origin: China`,
     const proAudioCats = [];
     uniqueCats.forEach((cat) => {
       const lower = cat.toLowerCase();
-      if (arowanaProAudioKeywords.some((kw) => lower.includes(kw))) {
+      const explicitSection = sectionMap.get(lower);
+      if (explicitSection === "musical-instruments") {
+        musicalCats.push(cat);
+      } else if (explicitSection === "pro-audio") {
+        proAudioCats.push(cat);
+      } else if (arowanaProAudioKeywords.some((kw) => lower.includes(kw))) {
         proAudioCats.push(cat);
       } else if (musicalKeywords.some((kw) => lower.includes(kw))) {
         musicalCats.push(cat);
@@ -30623,7 +30641,7 @@ Message: ${message}`);
       const [resProducts, resBrands, resCats] = await Promise.all([
         fetch(apiUrl("/api/products")),
         fetch(apiUrl("/api/products/meta/brands")).catch(() => null),
-        fetch(apiUrl("/api/products/meta/categories")).catch(() => null)
+        fetch(apiUrl("/api/categories")).catch(() => fetch(apiUrl("/api/products/meta/categories"))).catch(() => null)
       ]);
       if (resProducts && resProducts.ok) {
         const data = await resProducts.json();
@@ -30669,11 +30687,18 @@ Message: ${message}`);
         }
       }
       if (!catItems.length) {
-        const cats = Array.from(new Set(AUDIOKING_PRODUCTS.map((p) => (p.category || "").trim()).filter(Boolean)));
-        catItems = cats.map((name) => ({ name }));
+        const catMap = /* @__PURE__ */ new Map();
+        AUDIOKING_PRODUCTS.forEach((p) => {
+          const cat = (p.category || "").trim();
+          if (cat && !catMap.has(cat.toLowerCase())) {
+            catMap.set(cat.toLowerCase(), { name: cat, section: p.section || "pro-audio" });
+          }
+        });
+        catItems = Array.from(catMap.values());
       }
       window._allCatalogCategories = catItems;
       renderNavigationCategories(catItems);
+      window.loadLiveCatalog = loadLiveCatalog;
       try {
         const featRes = await fetch(apiUrl("/api/featured-settings"));
         if (featRes.ok) {
@@ -32703,7 +32728,7 @@ Message: ${message}`);
       const cartQty = getCartItemQuantity(p.id);
       const clickCount = clicks[p.id] || 0;
       const trendingBadge = clickCount >= 2 ? `
-      <div class="ak-card-trending-badge" style="position:absolute; top:8px; left:8px; background:#EF4444; color:#FFFFFF; font-size:10px; font-weight:700; padding:2px 7px; border-radius:12px; display:inline-flex; align-items:center; gap:3px; z-index:2; box-shadow:0 2px 4px rgba(239,68,68,0.3);">
+      <div class="ak-card-trending-badge" aria-label="Trending Product">
         <span>\u{1F525} Trending</span>
       </div>
     ` : "";

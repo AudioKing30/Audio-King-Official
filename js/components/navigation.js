@@ -132,11 +132,25 @@ export function renderNavigationBrands(brandsList) {
 export function renderNavigationCategories(categoriesList) {
   if (!Array.isArray(categoriesList) || categoriesList.length === 0) return;
 
-  const rawCats = categoriesList.map(c => {
-    let name = (typeof c === 'string' ? c : (c.name || '')).trim();
+  // Build map of category names to explicit section if available
+  const sectionMap = new Map();
+  const rawCats = [];
+
+  categoriesList.forEach(c => {
+    let name = '';
+    let sec = null;
+    if (typeof c === 'string') {
+      name = c.trim();
+    } else if (c && typeof c === 'object') {
+      name = (c.name || '').trim();
+      sec = c.section || null;
+    }
     if (name.toLowerCase() === 'power supply cabels') name = 'Power Supply Cables';
-    return name;
-  }).filter(Boolean);
+    if (name) {
+      rawCats.push(name);
+      if (sec) sectionMap.set(name.toLowerCase(), sec);
+    }
+  });
 
   const uniqueCats = Array.from(new Set(rawCats)).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
@@ -162,8 +176,13 @@ export function renderNavigationCategories(categoriesList) {
 
   uniqueCats.forEach(cat => {
     const lower = cat.toLowerCase();
-    // If it matches an Arowana category, it strictly belongs in Pro Audio
-    if (arowanaProAudioKeywords.some(kw => lower.includes(kw))) {
+    const explicitSection = sectionMap.get(lower);
+
+    if (explicitSection === 'musical-instruments') {
+      musicalCats.push(cat);
+    } else if (explicitSection === 'pro-audio') {
+      proAudioCats.push(cat);
+    } else if (arowanaProAudioKeywords.some(kw => lower.includes(kw))) {
       proAudioCats.push(cat);
     } else if (musicalKeywords.some(kw => lower.includes(kw))) {
       musicalCats.push(cat);

@@ -109,6 +109,19 @@
       display: block !important;
       pointer-events: none !important;
     }
+    @media (max-width: 900px) {
+      .ak-card-trending-badge,
+      .ak-products-grid .ak-card-trending-badge,
+      .ak-featured-carousel-wrapper .ak-card-trending-badge,
+      .ak-product-card .ak-card-trending-badge {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        pointer-events: none !important;
+      }
+    }
   </style>
   <script>
     window.togglePasswordVisibility = function(btn, inputId) {
@@ -2730,16 +2743,29 @@
               <input type="text" id="productName" class="form-input" required placeholder="e.g. Universal Audio Apollo Twin X USB DUO Heritage Edition">
             </div>
 
-            <!-- 2. Category (Dropdown + Inline Add New Category) -->
+            <!-- 2. Department / Section Selector -->
             <div class="form-group">
-              <label class="form-label" for="productCategory">2. Category *</label>
+              <label class="form-label" for="productSection">2. Department / Section *</label>
+              <select id="productSection" class="form-select" required onchange="handleProductSectionChange()">
+                <option value="pro-audio" selected>Pro Audio</option>
+                <option value="musical-instruments">Musical Instruments</option>
+                <option value="home-audio" disabled style="color: #94A3B8; background: #1E293B;">Home Audio (Launching Soon)</option>
+              </select>
+              <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Assigns this product to the Pro Audio or Musical Instruments store department.</div>
+            </div>
+
+            <!-- 3. Category (Dropdown + Inline Add New Category) -->
+            <div class="form-group">
+              <label class="form-label" for="productCategory">3. Category *</label>
               <select id="productCategory" class="form-select" required onchange="handleCategorySelectChange()">
                 <option value="">-- Select Category --</option>
                 <option value="__NEW__">+ Add New Category</option>
               </select>
-              <div id="inlineNewCatRow" class="inline-add-row" style="display: none;">
-                <input type="text" id="inlineNewCatInput" class="form-input" placeholder="Enter new category name (e.g. Studio Microphones)">
-                <button type="button" class="btn-primary" style="white-space: nowrap;" onclick="saveInlineCategory()">Save &amp; Select</button>
+              <div id="inlineNewCatRow" class="inline-add-row" style="display: none; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="inlineNewCatInput" class="form-input" placeholder="Enter new category name (e.g. Studio Microphones)" style="flex: 1;">
+                  <button type="button" class="btn-primary" style="white-space: nowrap;" onclick="saveInlineCategory()">Save &amp; Select</button>
+                </div>
               </div>
             </div>
 
@@ -2997,9 +3023,14 @@
             </div>
 
             <!-- Create Category Form -->
-            <form onsubmit="handleCreateCategorySubmit(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
-              <input type="text" id="adminNewCategoryName" class="form-input" placeholder="New category name" required style="flex: 1;">
-              <button type="submit" class="btn-primary" style="white-space: nowrap;">+ Add Category</button>
+            <form onsubmit="handleCreateCategorySubmit(event)" style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+              <input type="text" id="adminNewCategoryName" class="form-input" placeholder="New category name" required style="flex: 1; min-width: 140px;">
+              <select id="adminNewCategorySection" class="form-select" style="width: auto; min-width: 160px;" required>
+                <option value="pro-audio" selected>Pro Audio</option>
+                <option value="musical-instruments">Musical Instruments</option>
+                <option value="home-audio" disabled style="color: #94A3B8;">Home Audio (Launching Soon)</option>
+              </select>
+              <button type="submit" class="btn-primary" style="white-space: nowrap; background: #2563EB;">+ Add Category</button>
             </form>
 
             <!-- Search Categories -->
@@ -3013,6 +3044,7 @@
                 <thead>
                   <tr>
                     <th>Category Name</th>
+                    <th>Section</th>
                     <th style="text-align: center;">Products</th>
                     <th style="text-align: right;">Actions</th>
                   </tr>
@@ -3371,7 +3403,7 @@
             </button>
             <button type="button" id="tabHistoryOrders" class="tab-btn" onclick="setOrdersTab('history')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <span>Order History (Delivered)</span>
+              <span>Order History (Delivered / Cancelled)</span>
             </button>
           </div>
 
@@ -3706,19 +3738,23 @@
         </table>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--ak-border); padding-top: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--ak-border); padding-top: 16px; flex-wrap: wrap; gap: 12px;">
         <div>
           <span style="font-size: 14px; color: var(--ak-text-secondary);">Total Amount: </span>
           <span style="font-size: 20px; font-weight: 800; color: var(--ak-orange);" id="modalTotalAmount"></span>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <label style="font-size: 13px; font-weight: 700;">Update Status:</label>
-          <select id="modalOrderStatusSelect" class="form-select" style="width: 150px; height: 38px;">
+          <select id="modalOrderStatusSelect" class="form-select" style="width: 145px; height: 38px;">
             <option value="Confirmed">Confirmed</option>
             <option value="Dispatched">Dispatched</option>
             <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
           <button class="btn-primary" style="height: 38px; padding: 0 16px;" onclick="updateOrderStatusFromModal()">Save</button>
+          <button type="button" class="btn-danger" style="height: 38px; padding: 0 14px; background: #EF4444; color: #FFF; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" onclick="cancelOrderFromModal()">
+            <span>🚫 Cancel Order</span>
+          </button>
         </div>
       </div>
     </div>

@@ -320,22 +320,45 @@ async function sendOrderConfirmedEmail({ email, fullName = 'Valued Customer', or
     ? (shippingAddress.line1 ? `${shippingAddress.line1}${shippingAddress.line2 ? ', ' + shippingAddress.line2 : ''}, ${shippingAddress.city || ''}, ${shippingAddress.state || ''} - ${shippingAddress.pin || shippingAddress.pincode || ''}` : (shippingAddress.address || 'Address on file'))
     : String(shippingAddress || 'Address on file');
 
-  const itemsListText = (items || []).map(i => `- ${i.name || i.product_name} (x${i.quantity || 1}) - ₹${Number(i.unitPrice || i.unit_price || 0).toLocaleString('en-IN')}`).join('\n');
-  const text = `Hello ${fullName},\n\nYour order #${orderNumber} has been confirmed! We will notify once dispatched.\n\nOrder Total: ₹${Number(totalAmount).toLocaleString('en-IN')}\nShipping To: ${formattedAddress}\n\nItems Ordered:\n${itemsListText}\n\nThank you for choosing AudioKing Pro Audio India!`;
+  const productNamesSummary = (items || []).map(i => {
+    const name = i.name || i.product_name || 'Pro Audio Equipment';
+    const pid = i.productId || i.product_id || i.id || '';
+    return pid ? `${name} (Product ID: ${pid})` : name;
+  }).join(', ');
 
-  const itemsHtml = (items || []).map(i => `
+  const itemsListText = (items || []).map(i => {
+    const pid = i.productId || i.product_id || i.id || 'N/A';
+    return `- ${i.name || i.product_name} [Product ID: ${pid}] (x${i.quantity || 1}) - ₹${Number(i.unitPrice || i.unit_price || 0).toLocaleString('en-IN')}`;
+  }).join('\n');
+
+  const text = `Hello ${fullName},\n\nYour order #${orderNumber} has been confirmed for ${productNamesSummary || 'your ordered products'}!\n\nThank you for shopping with AudioKing, and you will be updated on further details as your order is processed.\n\nOrder Total: ₹${Number(totalAmount).toLocaleString('en-IN')}\nShipping To: ${formattedAddress}\n\nEquipment Details:\n${itemsListText}\n\nAudioKing Pro Audio India`;
+
+  const itemsHtml = (items || []).map(i => {
+    const pid = i.productId || i.product_id || i.id || 'N/A';
+    return `
     <tr style="border-bottom: 1px solid #E2E8F0;">
-      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; font-weight: 600;">${i.name || i.product_name}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; font-weight: 600;">
+        ${i.name || i.product_name}
+        <div style="font-size: 11.5px; color: #64748B; font-weight: 500; margin-top: 3px;">
+          Product ID: <code style="background: #F1F5F9; color: #0F172A; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 11px;">${pid}</code>
+        </div>
+      </td>
       <td style="padding: 10px 0; font-size: 14px; color: #64748B; text-align: center;">x${i.quantity || 1}</td>
       <td style="padding: 10px 0; font-size: 14px; color: #0F172A; text-align: right; font-weight: 700;">₹${(Number(i.unitPrice || i.unit_price || 0) * (Number(i.quantity) || 1)).toLocaleString('en-IN')}</td>
     </tr>
-  `).join('');
+    `;
+  }).join('');
 
   const html = wrapEmailTemplate('Order Confirmed', `
     <h2 class="headline" style="color: #16A34A;">Order Confirmed! 📦</h2>
     <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
-    <p class="paragraph" style="font-size: 16px; font-weight: 600; color: #0F172A;">
-      Your order <strong>#${orderNumber}</strong> has been confirmed! We will notify once dispatched.
+    <p class="paragraph" style="font-size: 16px; font-weight: 600; color: #0F172A; line-height: 1.5;">
+      Your order <strong>#${orderNumber}</strong> has been confirmed for: <br>
+      <span style="color: #EA580C; font-size: 15px;">${productNamesSummary || 'your selected pro audio equipment'}</span>
+    </p>
+
+    <p class="paragraph" style="font-size: 14px; color: #334155; line-height: 1.5;">
+      Thank you for shopping with AudioKing! You will be updated on further details as our warehouse prepares and dispatches your equipment.
     </p>
 
     <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 18px 20px; margin: 20px 0;">
@@ -354,11 +377,11 @@ async function sendOrderConfirmedEmail({ email, fullName = 'Valued Customer', or
     </div>
 
     ${items && items.length ? `
-      <h3 style="font-size: 15px; font-weight: 700; margin: 22px 0 10px 0; color: #0F172A;">Order Summary</h3>
+      <h3 style="font-size: 15px; font-weight: 700; margin: 22px 0 10px 0; color: #0F172A;">Order Summary &amp; Equipment IDs</h3>
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
         <thead>
           <tr style="border-bottom: 2px solid #CBD5E1; text-align: left; font-size: 12px; color: #64748B; text-transform: uppercase;">
-            <th style="padding-bottom: 6px;">Item</th>
+            <th style="padding-bottom: 6px;">Item &amp; ID</th>
             <th style="padding-bottom: 6px; text-align: center;">Qty</th>
             <th style="padding-bottom: 6px; text-align: right;">Price</th>
           </tr>
@@ -501,6 +524,35 @@ async function sendOrderDeliveredEmail({ email, fullName = 'Valued Customer', or
   return sendEmail({ to: email, subject, html, text });
 }
 
+/**
+ * 8. Send Order Cancelled Notification Email
+ */
+async function sendOrderCancelledEmail({ email, fullName = 'Valued Customer', orderNumber }) {
+  if (!email || !email.includes('@')) return;
+  const subject = `Your AudioKing Order #${orderNumber} Has Been Cancelled`;
+  const text = `Hello ${fullName},\n\nYour order #${orderNumber} was canceled due to some issues. Inconvenience is regretted while you can browse on more products from our website: http://localhost:3000/#store\n\nThank you for choosing AudioKing,\nAudioKing Pro Audio India`;
+
+  const html = wrapEmailTemplate('Order Cancelled', `
+    <h2 class="headline" style="color: #DC2626;">Order Cancelled</h2>
+    <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
+    <p class="paragraph" style="font-size: 15px; color: #0F172A; line-height: 1.6;">
+      Your order <strong>#${orderNumber}</strong> was canceled due to some issues. Inconvenience is regretted while you can browse on more products from our website.
+    </p>
+
+    <div style="text-align: center; margin: 28px 0;">
+      <a href="http://localhost:3000/#store" class="cta-btn" style="background: #EA580C; color: #FFFFFF; font-size: 15px; padding: 13px 28px; text-decoration: none; border-radius: 6px; font-weight: 700; display: inline-block;">
+        Browse More Products &rarr;
+      </a>
+    </div>
+
+    <p class="paragraph" style="font-size: 13px; color: #64748B; line-height: 1.5;">
+      If payment was already completed, a full refund will be processed back to your original source within 3–5 business days. If you have any questions or require custom studio recommendations, our sound specialists are always available on WhatsApp at <strong>+91 88793 93743</strong>.
+    </p>
+  `);
+
+  return sendEmail({ to: email, subject, html, text });
+}
+
 module.exports = {
   sendEmail,
   sendSignupVerificationEmail,
@@ -510,5 +562,6 @@ module.exports = {
   sendCommunityWelcomeEmail,
   sendOrderConfirmedEmail,
   sendOrderDispatchedEmail,
-  sendOrderDeliveredEmail
+  sendOrderDeliveredEmail,
+  sendOrderCancelledEmail
 };

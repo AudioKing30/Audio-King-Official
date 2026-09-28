@@ -341,6 +341,29 @@ function initDatabase() {
       db.exec('ALTER TABLE orders ADD COLUMN discount_amount REAL DEFAULT 0;');
     }
 
+    const catColumns = db.prepare("PRAGMA table_info(categories)").all();
+    const catColNames = catColumns.map(c => c.name);
+    if (!catColNames.includes('section')) {
+      db.exec("ALTER TABLE categories ADD COLUMN section TEXT DEFAULT 'pro-audio';");
+    }
+
+    const prodColumns = db.prepare("PRAGMA table_info(products)").all();
+    const prodColNames = prodColumns.map(c => c.name);
+    if (!prodColNames.includes('section')) {
+      db.exec("ALTER TABLE products ADD COLUMN section TEXT DEFAULT 'pro-audio';");
+    }
+
+    // Ensure musical instrument categories default to 'musical-instruments' section
+    db.prepare(`
+      UPDATE categories SET section = 'musical-instruments'
+      WHERE (LOWER(name) LIKE '%keyboard%' 
+         OR LOWER(name) LIKE '%piano%' 
+         OR LOWER(name) LIKE '%drum%' 
+         OR LOWER(name) LIKE '%guitar%' 
+         OR LOWER(name) LIKE '%synth%')
+        AND (section IS NULL OR section = '' OR section = 'pro-audio')
+    `).run();
+
     // Ensure Arowana Audioglyphs naming consistency and category normalization in database
     db.prepare("UPDATE products SET brand = 'Arowana Audioglyphs' WHERE brand = 'Arowana Audioglyph'").run();
     db.prepare("DELETE FROM brands WHERE LOWER(name) = 'arowana audioglyph'").run();

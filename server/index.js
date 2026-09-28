@@ -114,7 +114,21 @@ app.use('/api/user/wishlist', wishlistRoutes);
 app.use('/api/payment/razorpay', razorpayRoutes);
 app.use('/api/payment/cashfree', cashfreeRoutes);
 
-// Public Hero Slides & Featured Settings
+// Public Categories Endpoint
+app.get('/api/categories', (req, res) => {
+  try {
+    const categories = db.prepare(`
+      SELECT c.id, c.name, c.slug, COALESCE(c.section, 'pro-audio') AS section, COUNT(p.id) AS product_count
+      FROM categories c
+      LEFT JOIN products p ON LOWER(TRIM(p.category)) = LOWER(TRIM(c.name))
+      GROUP BY c.id
+      ORDER BY c.name COLLATE NOCASE ASC
+    `).all();
+    res.json({ success: true, count: categories.length, categories });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
 app.get('/api/hero-slides', (req, res) => {
   try {
     const slides = db.prepare('SELECT * FROM hero_slides WHERE is_active = 1 ORDER BY sort_order ASC, created_at ASC').all();

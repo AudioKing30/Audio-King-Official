@@ -317,14 +317,32 @@ async function loadCategoriesAndBrands() {
 }
 
 function populateFormSelects() {
+  const secSelect = document.getElementById('productSection');
+  const currentSection = secSelect ? secSelect.value : 'pro-audio';
+
   const catSelect = document.getElementById('productCategory');
   if (catSelect) {
     const currentVal = catSelect.value;
-    catSelect.innerHTML = `
+    const matchingCats = state.categories.filter(c => !c.section || c.section === currentSection);
+    const otherCats = state.categories.filter(c => c.section && c.section !== currentSection);
+
+    let optionsHtml = `
       <option value="">-- Select Category --</option>
       <option value="__NEW__" style="color: var(--ak-orange); font-weight: 700;">+ Add New Category</option>
-      ${state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('')}
     `;
+
+    if (matchingCats.length > 0) {
+      optionsHtml += `<optgroup label="${currentSection === 'musical-instruments' ? 'Musical Instruments Categories' : 'Pro Audio Categories'}">` +
+        matchingCats.map(c => `<option value="${c.name}">${c.name}</option>`).join('') +
+        `</optgroup>`;
+    }
+    if (otherCats.length > 0) {
+      optionsHtml += `<optgroup label="Other Categories">` +
+        otherCats.map(c => `<option value="${c.name}">${c.name}</option>`).join('') +
+        `</optgroup>`;
+    }
+
+    catSelect.innerHTML = optionsHtml;
     if (currentVal && currentVal !== '__NEW__') catSelect.value = currentVal;
   }
 
@@ -339,6 +357,11 @@ function populateFormSelects() {
     if (currentVal && currentVal !== '__NEW__') brandSelect.value = currentVal;
   }
 }
+
+function handleProductSectionChange() {
+  populateFormSelects();
+}
+window.handleProductSectionChange = handleProductSectionChange;
 
 async function loadProducts() {
   const search = document.getElementById('searchProductInput')?.value.trim() || '';
@@ -506,6 +529,9 @@ function resetProductForm() {
   document.getElementById('discountBadgePreview').textContent = '0% OFF';
   document.getElementById('inlineNewCatRow').style.display = 'none';
   document.getElementById('inlineNewBrandRow').style.display = 'none';
+  const secSelect = document.getElementById('productSection');
+  if (secSelect) secSelect.value = 'pro-audio';
+  populateFormSelects();
 
   setVideoChoice('none');
   renderImagePreviewGrid();
@@ -529,6 +555,10 @@ async function openEditProduct(productId) {
 
     document.getElementById('productIdHidden').value = p.id;
     document.getElementById('productName').value = p.name;
+    if (document.getElementById('productSection')) {
+      document.getElementById('productSection').value = p.section || 'pro-audio';
+    }
+    populateFormSelects();
     document.getElementById('productCategory').value = p.category;
     document.getElementById('productBrand').value = p.brand;
     document.getElementById('productMrp').value = p.originalPrice;
@@ -609,12 +639,13 @@ async function saveInlineCategory() {
   const input = document.getElementById('inlineNewCatInput');
   const name = input.value.trim();
   if (!name) return alert('Please enter a category name');
+  const section = document.getElementById('productSection')?.value || 'pro-audio';
 
   try {
     const res = await adminFetch('/api/admin/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, section })
     });
     const data = await res.json();
     if (res.ok) {
@@ -622,6 +653,8 @@ async function saveInlineCategory() {
       document.getElementById('productCategory').value = data.category.name;
       document.getElementById('inlineNewCatRow').style.display = 'none';
       input.value = '';
+      if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+      window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
     } else {
       alert(data.error || 'Failed to save category');
     }
@@ -722,17 +755,25 @@ function renderAdminCategoriesTable(categories) {
   if (!tbody) return;
 
   if (!categories || categories.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--ak-text-muted); padding: 18px;">No categories found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--ak-text-muted); padding: 18px;">No categories found.</td></tr>';
     return;
   }
 
   tbody.innerHTML = categories.map(c => {
     const pCount = c.product_count || 0;
     const safeName = (c.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    const isMusical = c.section === 'musical-instruments';
+    const sectionBadge = isMusical
+      ? `<span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC; font-size: 11px; padding: 2px 7px; border: 1px solid rgba(168,85,247,0.3); border-radius: 4px;">🎸 Musical Instruments</span>`
+      : `<span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 11px; padding: 2px 7px; border: 1px solid rgba(56,189,248,0.3); border-radius: 4px;">🎛️ Pro Audio</span>`;
+
     return `
       <tr>
         <td style="font-weight: 600; color: #FFF;">
           <span>${c.name}</span>
+        </td>
+        <td>
+          ${sectionBadge}
         </td>
         <td style="text-align: center;">
           <span class="badge" style="background: rgba(255,255,255,0.06); color: var(--ak-text-secondary); font-size: 11.5px; padding: 2px 7px;">${pCount} item${pCount === 1 ? '' : 's'}</span>
@@ -789,14 +830,16 @@ async function handleCreateBrandSubmit(e) {
 async function handleCreateCategorySubmit(e) {
   e.preventDefault();
   const input = document.getElementById('adminNewCategoryName');
+  const sectionSelect = document.getElementById('adminNewCategorySection');
   const name = input?.value.trim();
+  const section = sectionSelect?.value || 'pro-audio';
   if (!name) return;
 
   try {
     const res = await adminFetch('/api/admin/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, section })
     });
     const data = await res.json();
     if (res.ok) {
@@ -1162,9 +1205,12 @@ async function handleSaveProduct(e) {
   if (!category || category === '__NEW__') return alert('Please select or create a valid category');
   if (!brand || brand === '__NEW__') return alert('Please select or create a valid brand');
 
+  const section = document.getElementById('productSection')?.value || 'pro-audio';
+
   const payload = {
     name,
     category,
+    section,
     brand,
     mrp,
     sellingPrice,
@@ -1683,13 +1729,18 @@ async function loadOrders() {
         </td>
         <td><strong style="color: var(--ak-orange);">${formatINR(o.totalAmount)}</strong></td>
         <td>
-          <span class="badge-stock ${o.status === 'Delivered' ? 'in' : (o.status === 'Dispatched' ? 'low' : 'pending')}">
+          <span class="badge-stock ${o.status === 'Delivered' ? 'in' : (o.status === 'Cancelled' ? 'out' : (o.status === 'Dispatched' ? 'low' : 'pending'))}">
             ${o.status}
           </span>
         </td>
         <td style="font-size: 12px; color: var(--ak-text-secondary);">${formatDate(o.createdAt)}</td>
         <td>
-          <button class="btn-edit" onclick="openOrderDetailModal('${o.id}')">View Details</button>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <button class="btn-edit" onclick="openOrderDetailModal('${o.id}')">View Details</button>
+            ${o.status !== 'Cancelled' && o.status !== 'Delivered' ? `
+              <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px; background: #EF4444;" onclick="cancelOrderDirect('${o.id}', '${o.orderNumber}')" title="Cancel Order">🚫 Cancel</button>
+            ` : ''}
+          </div>
         </td>
       </tr>
       `;
@@ -1773,6 +1824,59 @@ async function updateOrderStatusFromModal() {
     alert('Error updating status.');
   }
 }
+
+async function cancelOrderFromModal() {
+  const select = document.getElementById('modalOrderStatusSelect');
+  const orderId = select ? select.dataset.orderId : null;
+  if (!orderId) return alert('Order ID not found.');
+
+  const confirmed = confirm('Are you sure you want to cancel this order? The status will immediately be updated to "Cancelled" and the customer will receive an official cancellation notification email with the website store link.');
+  if (!confirmed) return;
+
+  try {
+    const res = await adminFetch(`/api/admin/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'Cancelled' })
+    });
+    if (res.ok) {
+      alert('Order has been cancelled successfully and the customer has been notified via email.');
+      closeModal();
+      loadOrders();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Failed to cancel order.');
+    }
+  } catch (e) {
+    alert('Error cancelling order: ' + e.message);
+  }
+}
+
+async function cancelOrderDirect(orderId, orderNumber) {
+  if (!orderId) return;
+  const confirmed = confirm(`Are you sure you want to cancel order #${orderNumber}? The status will immediately be updated to "Cancelled" and the customer will receive an official cancellation email.`);
+  if (!confirmed) return;
+
+  try {
+    const res = await adminFetch(`/api/admin/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'Cancelled' })
+    });
+    if (res.ok) {
+      alert(`Order #${orderNumber} cancelled successfully and customer notified via email.`);
+      loadOrders();
+    } else {
+      const err = await res.json();
+      alert(err.error || 'Failed to cancel order.');
+    }
+  } catch (e) {
+    alert('Error cancelling order: ' + e.message);
+  }
+}
+
+window.cancelOrderFromModal = cancelOrderFromModal;
+window.cancelOrderDirect = cancelOrderDirect;
 
 // -------------------------------------------------------------
 // 7. CUSTOMERS VIEW

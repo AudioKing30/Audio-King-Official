@@ -17,7 +17,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
-const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail } = require('../email');
+const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
 
 const router = express.Router();
 
@@ -43,6 +43,7 @@ function syncMasterFiles() {
         shortName: p.short_name || p.name,
         brand: p.brand,
         category: p.category,
+        section: p.section || 'pro-audio',
         subcategory: p.subcategory || '',
         price: p.price,
         originalPrice: p.original_price,
@@ -279,7 +280,7 @@ router.get('/categories', (req, res) => {
     }
 
     const categories = db.prepare(`
-      SELECT c.id, c.name, c.slug, c.created_at, COUNT(p.id) AS product_count 
+      SELECT c.id, c.name, c.slug, COALESCE(c.section, 'pro-audio') AS section, c.created_at, COUNT(p.id) AS product_count 
       FROM categories c 
       LEFT JOIN products p ON LOWER(TRIM(p.category)) = LOWER(TRIM(c.name))
       GROUP BY c.id 
@@ -295,11 +296,12 @@ router.get('/categories', (req, res) => {
 
 router.post('/categories', (req, res) => {
   try {
-    const { name } = req.body || {};
+    const { name, section } = req.body || {};
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'Category name is required.' });
     }
     const cleanName = name.trim();
+    const cleanSection = (section === 'musical-instruments' || section === 'home-audio') ? section : 'pro-audio';
     const slug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const id = `cat_${slug}_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
@@ -309,10 +311,10 @@ router.post('/categories', (req, res) => {
       return res.status(400).json({ error: 'A category with this name already exists.' });
     }
 
-    db.prepare('INSERT INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
-      .run(id, cleanName, slug, now);
+    db.prepare('INSERT INTO categories (id, name, slug, section, created_at) VALUES (?, ?, ?, ?, ?)')
+      .run(id, cleanName, slug, cleanSection, now);
 
-    return res.status(201).json({ success: true, category: { id, name: cleanName, slug, product_count: 0 } });
+    return res.status(201).json({ success: true, category: { id, name: cleanName, slug, section: cleanSection, product_count: 0 } });
   } catch (err) {
     console.error('[CREATE CATEGORY ERROR]', err);
     return res.status(500).json({ error: 'Failed to create category.' });
@@ -322,7 +324,7 @@ router.post('/categories', (req, res) => {
 router.put('/categories/:id', (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body || {};
+    const { name, section } = req.body || {};
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'New category name is required.' });
     }
@@ -341,12 +343,15 @@ router.put('/categories/:id', (req, res) => {
     }
 
     const oldName = existing.name;
+    const targetSection = (section === 'musical-instruments' || section === 'home-audio' || section === 'pro-audio') 
+      ? section 
+      : (existing.section || 'pro-audio');
 
     // Update category row
-    db.prepare('UPDATE categories SET name = ?, slug = ? WHERE id = ?').run(cleanName, slug, id);
+    db.prepare('UPDATE categories SET name = ?, slug = ?, section = ? WHERE id = ?').run(cleanName, slug, targetSection, id);
 
     // Cascade update all products referencing old category name
-    const prodUpdate = db.prepare('UPDATE products SET category = ? WHERE LOWER(TRIM(category)) = LOWER(TRIM(?))').run(cleanName, oldName);
+    const prodUpdate = db.prepare('UPDATE products SET category = ?, section = ? WHERE LOWER(TRIM(category)) = LOWER(TRIM(?))').run(cleanName, targetSection, oldName);
 
     // Cascade update category-targeted blanket offers
     db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'category' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(cleanName, oldName);
@@ -356,7 +361,7 @@ router.put('/categories/:id', (req, res) => {
     return res.json({
       success: true,
       message: `Category updated to "${cleanName}". Updated ${prodUpdate.changes} matching products.`,
-      category: { id, name: cleanName, slug }
+      category: { id, name: cleanName, slug, section: targetSection }
     });
   } catch (err) {
     console.error('[RENAME CATEGORY ERROR]', err);
@@ -624,6 +629,7 @@ router.get('/products', (req, res) => {
         name: r.name,
         shortName: r.short_name || r.name,
         category: r.category,
+        section: r.section || 'pro-audio',
         brand: r.brand,
         originalPrice: mrp,
         price: sellingPrice,
@@ -673,6 +679,7 @@ router.get('/products/:id', (req, res) => {
         name: r.name,
         shortName: r.short_name || r.name,
         category: r.category,
+        section: r.section || 'pro-audio',
         brand: r.brand,
         subcategory: r.subcategory || '',
         originalPrice: mrp,
@@ -714,12 +721,14 @@ router.post('/products', (req, res) => {
   try {
     const {
       name, category, brand, images, videoChoice, videoInput,
-      mrp, sellingPrice, stock, inStock, description
+      mrp, sellingPrice, stock, inStock, description, section
     } = req.body || {};
 
     if (!name || !name.trim()) return res.status(400).json({ error: 'Product name is required.' });
     if (!category || !category.trim()) return res.status(400).json({ error: 'Category is required.' });
     if (!brand || !brand.trim()) return res.status(400).json({ error: 'Brand is required.' });
+
+    const cleanSection = (section === 'musical-instruments' || section === 'home-audio') ? section : 'pro-audio';
 
     const numMrp = parseFloat(mrp);
     const numSelling = parseFloat(sellingPrice);
@@ -759,22 +768,22 @@ router.post('/products', (req, res) => {
     const now = new Date().toISOString();
 
     // Auto-register category & brand if not already present
-    db.prepare('INSERT OR IGNORE INTO categories (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
-      .run(`cat_${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, category.trim(), category.toLowerCase().replace(/[^a-z0-9]+/g, '-'), now);
+    db.prepare('INSERT OR IGNORE INTO categories (id, name, slug, section, created_at) VALUES (?, ?, ?, ?, ?)')
+      .run(`cat_${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, category.trim(), category.toLowerCase().replace(/[^a-z0-9]+/g, '-'), cleanSection, now);
 
     db.prepare('INSERT OR IGNORE INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
       .run(`brand_${brand.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, brand.trim(), brand.toLowerCase().replace(/[^a-z0-9]+/g, '-'), now);
 
     db.prepare(`
       INSERT INTO products (
-        id, name, short_name, brand, category, subcategory,
+        id, name, short_name, brand, category, subcategory, section,
         price, original_price, stock, in_stock, rating, review_count,
         badge, sku, description, image, images_json,
         video_type, video_url, youtube_video_id,
         specs_json, deep_specs_json, is_featured,
         created_at, updated_at
       ) VALUES (
-        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?,
         ?, ?, ?,
@@ -788,6 +797,7 @@ router.post('/products', (req, res) => {
       brand.trim(),
       category.trim(),
       '',
+      cleanSection,
       numSelling,
       numMrp,
       validStock,
@@ -832,6 +842,9 @@ router.put('/products/:id', (req, res) => {
     const name = body.name !== undefined ? body.name.trim() : existing.name;
     const category = body.category !== undefined ? body.category.trim() : existing.category;
     const brand = body.brand !== undefined ? body.brand.trim() : existing.brand;
+    const section = (body.section === 'musical-instruments' || body.section === 'home-audio' || body.section === 'pro-audio')
+      ? body.section
+      : (existing.section || 'pro-audio');
 
     const mrp = body.mrp !== undefined ? parseFloat(body.mrp) : Number(existing.original_price);
     const sellingPrice = body.sellingPrice !== undefined ? parseFloat(body.sellingPrice) : Number(existing.price);
@@ -874,7 +887,7 @@ router.put('/products/:id', (req, res) => {
 
     db.prepare(`
       UPDATE products SET
-        name = ?, brand = ?, category = ?,
+        name = ?, brand = ?, category = ?, section = ?,
         price = ?, original_price = ?, stock = ?, in_stock = ?,
         image = ?, images_json = ?, video_type = ?, video_url = ?, youtube_video_id = ?,
         description = ?, updated_at = ?
@@ -883,6 +896,7 @@ router.put('/products/:id', (req, res) => {
       name,
       brand,
       category,
+      section,
       sellingPrice,
       mrp,
       stock,
@@ -1250,6 +1264,12 @@ router.patch('/orders/:id/status', async (req, res) => {
         totalAmount: ord.total_amount,
         items
       }).catch(e => console.error('[ORDER EMAIL ERROR - DELIVERED]', e));
+    } else if (status === 'Cancelled') {
+      sendOrderCancelledEmail({
+        email: customerEmail,
+        fullName: customerName,
+        orderNumber: ord.order_number
+      }).catch(e => console.error('[ORDER EMAIL ERROR - CANCELLED]', e));
     }
 
     return res.json({ success: true, message: `Order status updated to ${status}.` });

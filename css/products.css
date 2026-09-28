@@ -136,9 +136,37 @@
   box-sizing: border-box;
 }
 
-/* Strictly 10 products divided into two rows with each row having 5 products */
-.ak-products-grid .ak-product-card:nth-child(n+11) {
-  display: none !important;
+/* Trending Badge for Featured Products */
+.ak-card-trending-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 900px) {
+  /* Strictly in mobile responsive layout: remove trending label from featured products */
+  .ak-card-trending-badge,
+  .ak-products-grid .ak-card-trending-badge,
+  .ak-featured-carousel-wrapper .ak-card-trending-badge,
+  .ak-product-card .ak-card-trending-badge {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    pointer-events: none !important;
+  }
 }
 
 @media (max-width: 768px) {

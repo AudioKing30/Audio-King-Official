@@ -321,22 +321,35 @@
               <input type="text" id="productName" class="form-input" required placeholder="e.g. Universal Audio Apollo Twin X USB DUO Heritage Edition">
             </div>
 
-            <!-- 2. Category (Dropdown + Inline Add New Category) -->
+            <!-- 2. Department / Section Selector -->
             <div class="form-group">
-              <label class="form-label" for="productCategory">2. Category *</label>
+              <label class="form-label" for="productSection">2. Department / Section *</label>
+              <select id="productSection" class="form-select" required onchange="handleProductSectionChange()">
+                <option value="pro-audio" selected>Pro Audio</option>
+                <option value="musical-instruments">Musical Instruments</option>
+                <option value="home-audio" disabled style="color: #94A3B8; background: #1E293B;">Home Audio (Launching Soon)</option>
+              </select>
+              <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Assigns this product to the Pro Audio or Musical Instruments store department.</div>
+            </div>
+
+            <!-- 3. Category (Dropdown + Inline Add New Category) -->
+            <div class="form-group">
+              <label class="form-label" for="productCategory">3. Category *</label>
               <select id="productCategory" class="form-select" required onchange="handleCategorySelectChange()">
                 <option value="">-- Select Category --</option>
                 <option value="__NEW__">➕ Add New Category</option>
               </select>
-              <div id="inlineNewCatRow" class="inline-add-row" style="display: none;">
-                <input type="text" id="inlineNewCatInput" class="form-input" placeholder="Enter new category name (e.g. Studio Microphones)">
-                <button type="button" class="btn-primary" style="white-space: nowrap;" onclick="saveInlineCategory()">Save &amp; Select</button>
+              <div id="inlineNewCatRow" class="inline-add-row" style="display: none; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="inlineNewCatInput" class="form-input" placeholder="Enter new category name (e.g. Studio Microphones)" style="flex: 1;">
+                  <button type="button" class="btn-primary" style="white-space: nowrap;" onclick="saveInlineCategory()">Save &amp; Select</button>
+                </div>
               </div>
             </div>
 
-            <!-- 3. Brand (Dropdown + Inline Add New Brand) -->
+            <!-- 4. Brand (Dropdown + Inline Add New Brand) -->
             <div class="form-group">
-              <label class="form-label" for="productBrand">3. Brand *</label>
+              <label class="form-label" for="productBrand">4. Brand *</label>
               <select id="productBrand" class="form-select" required onchange="handleBrandSelectChange()">
                 <option value="">-- Select Brand --</option>
                 <option value="__NEW__">➕ Add New Brand</option>
@@ -347,9 +360,9 @@
               </div>
             </div>
 
-            <!-- 4. Product Images (Multi-upload, drag/drop, reorderable, first image = cover) -->
+            <!-- 5. Product Images (Multi-upload, drag/drop, reorderable, first image = cover) -->
             <div class="form-group">
-              <label class="form-label">4. Product Images * (First image is main cover image)</label>
+              <label class="form-label">5. Product Images * (First image is main cover image)</label>
               <div class="upload-dropzone" onclick="document.getElementById('productImageFiles').click()">
                 <div style="font-size: 28px; margin-bottom: 8px;">📁</div>
                 <div style="font-weight: 700; color: #FFF; margin-bottom: 4px;">Drag and drop product images here, or browse files</div>
@@ -367,9 +380,9 @@
               <div class="image-preview-grid" id="imagePreviewGrid"></div>
             </div>
 
-            <!-- 5. Product Video (Choice: YouTube URL/ID OR Direct File Upload) -->
+            <!-- 6. Product Demonstration Video (Plays inline, never off-site) -->
             <div class="form-group">
-              <label class="form-label">5. Product Demonstration Video (Plays inline, never off-site)</label>
+              <label class="form-label">6. Product Demonstration Video (Plays inline, never off-site)</label>
               <div class="video-choice-group">
                 <button type="button" class="video-choice-btn selected" data-choice="youtube" onclick="setVideoChoice('youtube')">
                   📺 YouTube Video (URL or ID)
@@ -399,16 +412,16 @@
               <div class="inline-video-preview" id="inlineVideoPreview" style="display: none;"></div>
             </div>
 
-            <!-- 6 & 7. MRP and Selling Price with Live Validation & Auto Discount % -->
+            <!-- 7 & 8. MRP and Selling Price with Live Validation & Auto Discount % -->
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label" for="productMrp">6. MRP / Original Price (₹) *</label>
+                <label class="form-label" for="productMrp">7. MRP / Original Price (₹) *</label>
                 <input type="number" id="productMrp" class="form-input" required min="1" step="1" placeholder="e.g. 50000" oninput="calculateDiscountAndValidate()">
                 <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Base list price (shown with strikethrough).</div>
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="productSellingPrice">7. Selling Price (₹) *</label>
+                <label class="form-label" for="productSellingPrice">8. Selling Price (₹) *</label>
                 <input type="number" id="productSellingPrice" class="form-input" required min="1" step="1" placeholder="e.g. 39900" oninput="calculateDiscountAndValidate()">
                 <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Actual price charged to customer (&le; MRP).</div>
               </div>
@@ -421,16 +434,16 @@
               <span style="font-size: 12px; color: var(--ak-text-muted);">(Formula: round(((MRP − SellingPrice) / MRP) × 100))</span>
             </div>
 
-            <!-- 8 & 9. Stock & Availability Toggle -->
+            <!-- 9 & 10. Stock & Availability Toggle -->
             <div class="form-grid-2" style="margin-top: 20px;">
               <div class="form-group">
-                <label class="form-label" for="productStock">8. Stock Quantity (Units) *</label>
+                <label class="form-label" for="productStock">9. Stock Quantity (Units) *</label>
                 <input type="number" id="productStock" class="form-input" required min="0" step="1" value="10" oninput="handleStockInputChange()">
                 <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Units in studio inventory. Auto-flips to Out of Stock at 0.</div>
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="productAvailability">9. Availability Status *</label>
+                <label class="form-label" for="productAvailability">10. Availability Status *</label>
                 <select id="productAvailability" class="form-select">
                   <option value="1">In Stock (Available for Purchase)</option>
                   <option value="0">Out of Stock</option>
@@ -445,7 +458,7 @@
               <textarea id="productDescription" class="form-textarea" placeholder="Detailed product overview, audio engineering specs, and included items..."></textarea>
             </div>
 
-            <!-- 10. Save / Submit Button -->
+            <!-- 11. Save / Submit Button -->
             <div style="display: flex; gap: 12px; margin-top: 28px; border-top: 1px solid var(--ak-border); padding-top: 20px;">
               <button type="submit" id="saveProductBtn" class="btn-primary" style="padding: 12px 28px; font-size: 15px;">
                 <span>💾 Save / Update Product</span>
@@ -520,8 +533,13 @@
             </div>
 
             <!-- Create Category Form -->
-            <form onsubmit="handleCreateCategorySubmit(event)" style="display: flex; gap: 8px; margin-bottom: 16px;">
-              <input type="text" id="adminNewCategoryName" class="form-input" placeholder="New category name" required style="flex: 1;">
+            <form onsubmit="handleCreateCategorySubmit(event)" style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+              <input type="text" id="adminNewCategoryName" class="form-input" placeholder="New category name" required style="flex: 1; min-width: 140px;">
+              <select id="adminNewCategorySection" class="form-select" style="width: auto; min-width: 160px;" required>
+                <option value="pro-audio" selected>Pro Audio</option>
+                <option value="musical-instruments">Musical Instruments</option>
+                <option value="home-audio" disabled style="color: #94A3B8;">Home Audio (Launching Soon)</option>
+              </select>
               <button type="submit" class="btn-primary" style="white-space: nowrap; background: #2563EB;">+ Add Category</button>
             </form>
 
@@ -536,6 +554,7 @@
                 <thead>
                   <tr>
                     <th>Category Name</th>
+                    <th>Section</th>
                     <th style="text-align: center;">Products</th>
                     <th style="text-align: right;">Actions</th>
                   </tr>
@@ -863,7 +882,7 @@
               📦 Active Orders (Confirmed / Dispatched)
             </button>
             <button type="button" id="tabHistoryOrders" class="tab-btn" onclick="setOrdersTab('history')">
-              📜 Order History (Delivered)
+              📜 Order History (Delivered / Cancelled)
             </button>
           </div>
 
@@ -1032,19 +1051,23 @@
         </table>
       </div>
 
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--ak-border); padding-top: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--ak-border); padding-top: 16px; flex-wrap: wrap; gap: 12px;">
         <div>
           <span style="font-size: 14px; color: var(--ak-text-secondary);">Total Amount: </span>
           <span style="font-size: 20px; font-weight: 800; color: var(--ak-orange);" id="modalTotalAmount"></span>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
           <label style="font-size: 13px; font-weight: 700;">Update Status:</label>
-          <select id="modalOrderStatusSelect" class="form-select" style="width: 150px; height: 38px;">
+          <select id="modalOrderStatusSelect" class="form-select" style="width: 145px; height: 38px;">
             <option value="Confirmed">Confirmed</option>
             <option value="Dispatched">Dispatched</option>
             <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
           <button class="btn-primary" style="height: 38px; padding: 0 16px;" onclick="updateOrderStatusFromModal()">Save</button>
+          <button type="button" class="btn-danger" style="height: 38px; padding: 0 14px; background: #EF4444; color: #FFF; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" onclick="cancelOrderFromModal()">
+            <span>🚫 Cancel Order</span>
+          </button>
         </div>
       </div>
     </div>
