@@ -17,6 +17,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
+const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail } = require('../email');
 
 const router = express.Router();
 
@@ -226,7 +227,7 @@ router.get('/dashboard/stats', (req, res) => {
   try {
     const totalCustomers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE role != 'admin'").get().count;
     const totalOrders = db.prepare('SELECT COUNT(*) AS count FROM orders').get().count;
-    const currentOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status IN ('Pending', 'Confirmed', 'Shipped')").get().count;
+    const currentOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status IN ('Confirmed', 'Dispatched', 'Pending', 'Shipped')").get().count;
     const completedOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status = 'Delivered'").get().count;
     
     const revRow = db.prepare("SELECT SUM(total_amount) AS total FROM orders WHERE status NOT IN ('Cancelled', 'Returned')").get();
@@ -1093,7 +1094,7 @@ router.get('/orders', (req, res) => {
     `;
 
     if (tab === 'current') {
-      query += " AND o.status IN ('Pending', 'Confirmed', 'Shipped')";
+      query += " AND o.status IN ('Confirmed', 'Dispatched', 'Pending', 'Shipped')";
     } else if (tab === 'history') {
       query += " AND o.status IN ('Delivered', 'Cancelled', 'Returned')";
     }
@@ -1106,11 +1107,21 @@ router.get('/orders', (req, res) => {
 
     const formatted = orders.map(ord => {
       const items = itemsQuery.all(ord.id);
+      let parsedAddress = {};
+      try { 
+        parsedAddress = JSON.parse(ord.shipping_address); 
+      } catch (e) { 
+        parsedAddress = { address: ord.shipping_address }; 
+      }
+
       return {
         id: ord.id,
         orderNumber: ord.order_number,
-        customerName: ord.customer_name || 'Store Customer',
-        customerEmail: ord.customer_email || 'customer@audioking.in',
+        customerName: ord.customer_name || (parsedAddress && (parsedAddress.name || parsedAddress.fullName)) || 'Store Customer',
+        customerEmail: ord.customer_email || (parsedAddress && parsedAddress.email) || 'customer@audioking.in',
+        customerPhone: ord.customer_phone || (parsedAddress && (parsedAddress.phone || parsedAddress.phoneNumber)) || 'N/A',
+        shippingAddress: parsedAddress,
+        paymentMethod: ord.payment_method || 'Prepaid / Online',
         itemsSummary: items.map(i => `${i.product_name} (x${i.quantity})`).join(', ') || 'Audio Products',
         itemsCount: items.length,
         totalAmount: ord.total_amount,
@@ -1150,14 +1161,14 @@ router.get('/orders/:id', (req, res) => {
       order: {
         id: ord.id,
         orderNumber: ord.order_number,
-        customerName: ord.customer_name || 'Store Customer',
-        customerEmail: ord.customer_email || 'customer@audioking.in',
-        customerPhone: ord.customer_phone || shippingAddress.phone || 'N/A',
+        customerName: ord.customer_name || (shippingAddress && (shippingAddress.name || shippingAddress.fullName)) || 'Store Customer',
+        customerEmail: ord.customer_email || (shippingAddress && shippingAddress.email) || 'customer@audioking.in',
+        customerPhone: ord.customer_phone || (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || 'N/A',
         totalAmount: ord.total_amount,
         couponCode: ord.coupon_code || null,
         discountAmount: ord.discount_amount || 0,
         status: ord.status,
-        paymentMethod: ord.payment_method,
+        paymentMethod: ord.payment_method || 'Prepaid / Online',
         shippingAddress,
         createdAt: ord.created_at,
         updatedAt: ord.updated_at,
@@ -1177,20 +1188,73 @@ router.get('/orders/:id', (req, res) => {
   }
 });
 
-router.patch('/orders/:id/status', (req, res) => {
+router.patch('/orders/:id/status', async (req, res) => {
   try {
     const { status } = req.body || {};
-    const validStatuses = ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled', 'Returned'];
+    const validStatuses = ['Confirmed', 'Dispatched', 'Delivered', 'Cancelled', 'Returned', 'Pending', 'Shipped'];
 
     if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
     }
 
+    const ord = db.prepare(`
+      SELECT o.*, u.full_name, u.email, u.phone_number 
+      FROM orders o 
+      LEFT JOIN users u ON o.user_id = u.id 
+      WHERE o.id = ?
+    `).get(req.params.id);
+
+    if (!ord) {
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+
     const now = new Date().toISOString();
     db.prepare('UPDATE orders SET status = ?, updated_at = ? WHERE id = ?').run(status, now, req.params.id);
 
+    // Fetch items for email template
+    const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(ord.id);
+    let shippingAddress = {};
+    try { 
+      shippingAddress = JSON.parse(ord.shipping_address); 
+    } catch (e) { 
+      shippingAddress = { address: ord.shipping_address }; 
+    }
+
+    const customerEmail = ord.email || (shippingAddress && shippingAddress.email);
+    const customerName = ord.full_name || (shippingAddress && (shippingAddress.name || shippingAddress.fullName)) || 'Musician';
+
+    // Dispatch status-specific email notification
+    if (status === 'Confirmed') {
+      sendOrderConfirmedEmail({
+        email: customerEmail,
+        fullName: customerName,
+        orderNumber: ord.order_number,
+        totalAmount: ord.total_amount,
+        items,
+        shippingAddress
+      }).catch(e => console.error('[ORDER EMAIL ERROR - CONFIRMED]', e));
+    } else if (status === 'Dispatched' || status === 'Shipped') {
+      sendOrderDispatchedEmail({
+        email: customerEmail,
+        fullName: customerName,
+        orderNumber: ord.order_number,
+        totalAmount: ord.total_amount,
+        items,
+        shippingAddress
+      }).catch(e => console.error('[ORDER EMAIL ERROR - DISPATCHED]', e));
+    } else if (status === 'Delivered') {
+      sendOrderDeliveredEmail({
+        email: customerEmail,
+        fullName: customerName,
+        orderNumber: ord.order_number,
+        totalAmount: ord.total_amount,
+        items
+      }).catch(e => console.error('[ORDER EMAIL ERROR - DELIVERED]', e));
+    }
+
     return res.json({ success: true, message: `Order status updated to ${status}.` });
   } catch (err) {
+    console.error('[ADMIN UPDATE ORDER STATUS ERROR]', err);
     return res.status(500).json({ error: 'Failed to update order status.' });
   }
 });

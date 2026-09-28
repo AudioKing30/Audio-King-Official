@@ -120,7 +120,7 @@ async function loadLiveCatalog() {
 
     // Fetch locked featured products settings
     try {
-      const featRes = await fetch(`${apiBase}/api/featured-settings`);
+      const featRes = await fetch(apiUrl('/api/featured-settings'));
       if (featRes.ok) {
         const featData = await featRes.json();
         if (featData && Array.isArray(featData.lockedProductIds)) {
@@ -399,7 +399,15 @@ if (typeof document !== 'undefined') {
 
     // Comprehensive SPA Hash Router & State Restoration
     const handleHashRoute = () => {
-      const currentHash = window.location.hash || '#home';
+      let currentHash = window.location.hash;
+      if (!currentHash || currentHash === '#home') {
+        const path = (window.location.pathname || '').toLowerCase();
+        if (path.includes('/store') || path.includes('/catalog')) {
+          currentHash = '#store';
+        } else {
+          currentHash = currentHash || '#home';
+        }
+      }
       const parsed = parseHashRoute(currentHash);
       const route = parsed.route;
       const params = parsed.params;

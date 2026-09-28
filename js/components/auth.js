@@ -144,9 +144,6 @@ function clearAuthError() {
  * Open authentication modal
  */
 export function openAuthModal(initialTab = 'signin', message = '') {
-  if (authService.isAuthenticated() || (authService.getUser() && authService.getUser().id)) {
-    return;
-  }
   const modal = document.getElementById('akAuthModal');
   const msgEl = document.getElementById('akAuthPromptMessage');
 
@@ -814,6 +811,22 @@ export function initAuth() {
   // -------------------------------------------------------------------------
   // DROPDOWN & EXTERNAL TRIGGERS
   // -------------------------------------------------------------------------
+  const accountTrigger = document.getElementById('akAccountTrigger');
+  if (accountTrigger) {
+    accountTrigger.addEventListener('click', (e) => {
+      if (e.target.closest('#akAccountDropdown a, #akAccountDropdown button')) return;
+      if (!authService.isAuthenticated()) {
+        openAuthModal('signin');
+      } else {
+        accountTrigger.classList.toggle('open');
+      }
+    });
+    document.addEventListener('click', (e) => {
+      if (!accountTrigger.contains(e.target)) {
+        accountTrigger.classList.remove('open');
+      }
+    });
+  }
   document.getElementById('akSignInTrigger')?.addEventListener('click', () => openAuthModal('signin'));
   document.getElementById('akSignUpTrigger')?.addEventListener('click', () => openAuthModal('signup'));
   document.getElementById('akProfileTrigger')?.addEventListener('click', openProfileModal);

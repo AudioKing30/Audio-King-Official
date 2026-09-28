@@ -268,6 +268,7 @@
       <nav class="ak-navbar" aria-label="Primary Navigation">
         <ul class="ak-nav-list">
           <li class="ak-nav-item" id="akNavItemHome"><a href="#" class="ak-nav-link ak-nav-home">Home</a></li>
+          <li class="ak-nav-item" id="akNavItemStore"><a href="#store" class="ak-nav-link">Store</a></li>
 
           <li class="ak-nav-item" id="akNavItemBrands">
             <a href="javascript:void(0)" class="ak-nav-link" id="akBrandsNavToggle">
@@ -406,6 +407,9 @@
       <div class="ak-mobile-drawer-nav">
         <div class="ak-mobile-nav-item">
           <a href="#" class="ak-mobile-nav-link ak-mobile-home-link">Home</a>
+        </div>
+        <div class="ak-mobile-nav-item">
+          <a href="#store" class="ak-mobile-nav-link ak-mobile-store-link">Store</a>
         </div>
         <div class="ak-mobile-nav-item">
           <a href="javascript:void(0)" class="ak-mobile-nav-link ak-mobile-accordion-toggle" data-target="akMobBrands">
@@ -587,7 +591,7 @@
         <!-- 1. Audio Interfaces (User Image 1 - Transparent) -->
         <a href="#store?category=Audio%20Interfaces" class="ak-cat-box-card" data-filter="Audio Interfaces">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-audio-interfaces-nobg.png" alt="Audio Interfaces" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
+            <img src="assets/images/categories/cat-audio-interfaces-nobg.png" alt="Audio Interfaces" class="ak-cat-box-img ak-cat-img-lg ak-cat-boost-16" loading="lazy">
           </div>
           <span class="ak-cat-box-label">Audio Interfaces</span>
         </a>
@@ -627,7 +631,7 @@
         <!-- 6. MIDI Controllers -->
         <a href="#store?category=MIDI%20Controllers" class="ak-cat-box-card" data-filter="MIDI Controllers">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-midi-controllers-nobg.png" alt="MIDI Controllers" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
+            <img src="assets/images/categories/cat-midi-controllers-nobg.png" alt="MIDI Controllers" class="ak-cat-box-img ak-cat-img-lg ak-cat-boost-16" loading="lazy">
           </div>
           <span class="ak-cat-box-label">MIDI Controllers</span>
         </a>
@@ -651,7 +655,7 @@
         <!-- 9. Pre Amps (Replaces Digital Pianos) -->
         <a href="#store?category=Preamps%20%26%20Channel%20Strips" class="ak-cat-box-card" data-filter="Preamps & Channel Strips">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-pre-amps-nobg.png" alt="Pre Amps" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
+            <img src="assets/images/categories/cat-pre-amps-nobg.png" alt="Pre Amps" class="ak-cat-box-img ak-cat-img-lg ak-cat-boost-16" loading="lazy">
           </div>
           <span class="ak-cat-box-label">Pre Amps</span>
         </a>
@@ -659,7 +663,7 @@
         <!-- 10. Synthesizers (Replaces Keyboards) -->
         <a href="#store?category=Keyboards" class="ak-cat-box-card" data-filter="Keyboards">
           <div class="ak-cat-box">
-            <img src="assets/images/categories/cat-synthesizers-nobg.png" alt="Synthesizers" class="ak-cat-box-img ak-cat-img-lg" loading="lazy">
+            <img src="assets/images/categories/cat-synthesizers-nobg.png" alt="Synthesizers" class="ak-cat-box-img ak-cat-img-lg ak-cat-boost-16" loading="lazy">
           </div>
           <span class="ak-cat-box-label">Synthesizers</span>
         </a>
@@ -3065,13 +3069,32 @@
 
           <!-- SECTION B: FEATURED PRODUCTS & LOCKING MANAGER -->
           <div class="admin-card">
-            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px;">
+            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
               <div>
                 <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
-                  <span>⭐ Featured Products &amp; Permanent Locking</span>
+                  <span>⭐ Featured Products Manager</span>
                   <span id="lockedFeaturedCountBadge" class="badge-pending" style="font-size: 11.5px; padding: 2px 8px;">0 Locked</span>
                 </h2>
-                <p class="card-desc">Lock specific products to keep them firmly pinned to the homepage carousel, protected against customer clicks/impressions. Remaining slots auto-populate by customer popularity.</p>
+                <p class="card-desc">Manage the exact products appearing on the homepage featured section. Shift order, lock/unlock gear, and save changes to update the live store.</p>
+              </div>
+              <div>
+                <button type="button" class="btn-primary" id="saveFeaturedSettingsBtn" onclick="saveFeaturedSettingsToServer()" style="display: flex; align-items: center; gap: 6px; padding: 8px 18px; font-weight: 700; background: #16A34A;">
+                  <span>💾 Save Featured Changes</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 1. LIVE HOMEPAGE FEATURED SECTION (TOP 10 SLOTS) -->
+            <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 15px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                  <span>🌐 Currently Live on Homepage Featured Section</span>
+                  <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Top 10 Slots)</span>
+                </h3>
+                <span id="activeFeaturedSlotsBadge" style="font-size: 12px; font-weight: 700; color: var(--ak-orange);">10 Live Slots</span>
+              </div>
+              <div id="activeHomepageFeaturedContainer">
+                <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">Loading live homepage featured items...</div>
               </div>
             </div>
 
@@ -3086,12 +3109,12 @@
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
-              <!-- 1. LOCKED / PINNED PRODUCTS -->
+              <!-- 2. LOCKED / PINNED PRODUCTS -->
               <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                   <h3 style="font-size: 15px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
                     <span>🔒 Pinned Products</span>
-                    <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Priority #1 on Homepage)</span>
+                    <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Custom Assigned Order)</span>
                   </h3>
                 </div>
                 <div id="lockedProductsListContainer">
@@ -3340,15 +3363,15 @@
             </div>
           </div>
 
-          <!-- Two Tabs: Current Orders vs Order History -->
+          <!-- Two Tabs: Active Orders vs Order History -->
           <div class="tab-strip">
             <button type="button" id="tabCurrentOrders" class="tab-btn active" onclick="setOrdersTab('current')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-              <span>Current Orders (Pending / Confirmed / Shipped)</span>
+              <span>Active Orders (Confirmed / Dispatched)</span>
             </button>
             <button type="button" id="tabHistoryOrders" class="tab-btn" onclick="setOrdersTab('history')">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              <span>Order History (Delivered / Cancelled / Returned)</span>
+              <span>Order History (Delivered)</span>
             </button>
           </div>
 
@@ -3357,17 +3380,18 @@
               <thead>
                 <tr>
                   <th>Order #</th>
-                  <th>Customer</th>
+                  <th>Order Type</th>
+                  <th>Customer Contact</th>
+                  <th>Full Address</th>
                   <th>Items Summary</th>
                   <th>Total Amount</th>
-                  <th>Coupon Used</th>
                   <th>Status</th>
                   <th>Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="ordersTableBody">
-                <tr><td colspan="8" style="text-align: center; padding: 24px;">Loading orders...</td></tr>
+                <tr><td colspan="9" style="text-align: center; padding: 24px;">Loading orders...</td></tr>
               </tbody>
             </table>
           </div>
@@ -3689,13 +3713,10 @@
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
           <label style="font-size: 13px; font-weight: 700;">Update Status:</label>
-          <select id="modalOrderStatusSelect" class="form-select" style="width: 140px; height: 38px;">
-            <option value="Pending">Pending</option>
+          <select id="modalOrderStatusSelect" class="form-select" style="width: 150px; height: 38px;">
             <option value="Confirmed">Confirmed</option>
-            <option value="Shipped">Shipped</option>
+            <option value="Dispatched">Dispatched</option>
             <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Returned">Returned</option>
           </select>
           <button class="btn-primary" style="height: 38px; padding: 0 16px;" onclick="updateOrderStatusFromModal()">Save</button>
         </div>

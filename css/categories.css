@@ -209,6 +209,15 @@
   transform: scale(1.24);
 }
 
+/* 16% Size Boost for Audio Interfaces, MIDI Controllers, Pre Amps, Synthesizers */
+.ak-cat-box-img.ak-cat-boost-16 {
+  transform: scale(1.334) !important;
+}
+
+.ak-cat-box-card:hover .ak-cat-box-img.ak-cat-boost-16 {
+  transform: scale(1.44) !important;
+}
+
 /* Label below the box */
 .ak-cat-box-label {
   margin-top: 10px;

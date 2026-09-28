@@ -1641,45 +1641,61 @@ async function loadOrders() {
     const orders = data.orders || [];
 
     if (orders.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="padding: 0; border: none;">
+      tbody.innerHTML = `<tr><td colspan="9" style="padding: 0; border: none;">
         <div class="admin-empty-state-box">
           <svg class="admin-empty-icon" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-          <div class="admin-empty-title">No ${state.ordersTab === 'current' ? 'current' : 'past'} orders found.</div>
+          <div class="admin-empty-title">No ${state.ordersTab === 'current' ? 'active' : 'past'} orders found.</div>
         </div>
       </td></tr>`;
       return;
     }
 
-    tbody.innerHTML = orders.map(o => `
+    tbody.innerHTML = orders.map(o => {
+      let addrStr = 'N/A';
+      if (o.shippingAddress) {
+        if (typeof o.shippingAddress === 'object') {
+          const a = o.shippingAddress;
+          addrStr = a.line1 ? `${a.line1}${a.line2 ? ', ' + a.line2 : ''}, ${a.city || ''}, ${a.state || ''} - ${a.pin || a.pincode || ''}` : (a.address || 'Address on file');
+        } else {
+          addrStr = String(o.shippingAddress);
+        }
+      }
+
+      return `
       <tr>
-        <td><strong>${o.orderNumber}</strong></td>
+        <td><strong>#${o.orderNumber}</strong></td>
         <td>
-          <div>${o.customerName}</div>
+          <span style="font-size: 11.5px; padding: 4px 8px; font-weight: 700; background: #0F172A; border: 1px solid #334155; color: #38BDF8; border-radius: 4px; display: inline-block;">
+            ${o.paymentMethod || 'Prepaid / Online'}
+          </span>
+        </td>
+        <td>
+          <div style="font-weight: 700; color: #FFF;">${o.customerName}</div>
           <div style="font-size: 11px; color: var(--ak-text-muted);">${o.customerEmail}</div>
+          <div style="font-size: 11px; color: #38BDF8; margin-top: 2px;">📞 ${o.customerPhone || 'N/A'}</div>
         </td>
-        <td style="max-width: 250px;">
-          <div style="font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${o.itemsSummary}</div>
-          <div style="font-size: 11px; color: var(--ak-text-muted);">${o.itemsCount} unique product(s)</div>
+        <td style="max-width: 220px;">
+          <div style="font-size: 12px; line-height: 1.4; color: var(--ak-text-secondary); word-break: break-word;">${addrStr}</div>
         </td>
-        <td><strong>${formatINR(o.totalAmount)}</strong></td>
+        <td style="max-width: 200px;">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${o.itemsSummary}">${o.itemsSummary}</div>
+          <div style="font-size: 11px; color: var(--ak-text-muted);">${o.itemsCount} product(s)</div>
+        </td>
+        <td><strong style="color: var(--ak-orange);">${formatINR(o.totalAmount)}</strong></td>
         <td>
-          ${o.couponCode 
-            ? `<span class="badge-discount">${o.couponCode} (-${formatINR(o.discountAmount)})</span>` 
-            : '<span style="color: var(--ak-text-muted); font-size: 12px;">None</span>'}
-        </td>
-        <td>
-          <span class="badge-stock ${o.status === 'Delivered' ? 'in' : (o.status === 'Cancelled' ? 'out' : 'low')}">
+          <span class="badge-stock ${o.status === 'Delivered' ? 'in' : (o.status === 'Dispatched' ? 'low' : 'pending')}">
             ${o.status}
           </span>
         </td>
-        <td style="font-size: 13px; color: var(--ak-text-secondary);">${formatDate(o.createdAt)}</td>
+        <td style="font-size: 12px; color: var(--ak-text-secondary);">${formatDate(o.createdAt)}</td>
         <td>
           <button class="btn-edit" onclick="openOrderDetailModal('${o.id}')">View Details</button>
         </td>
       </tr>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--ak-danger);">Failed to load orders.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color: var(--ak-danger);">Failed to load orders.</td></tr>';
   }
 }
 
@@ -1689,11 +1705,26 @@ async function openOrderDetailModal(orderId) {
     const data = await res.json();
     const ord = data.order;
 
+    let addrText = 'N/A';
+    if (ord.shippingAddress) {
+      if (typeof ord.shippingAddress === 'string') {
+        try {
+          const parsed = JSON.parse(ord.shippingAddress);
+          addrText = parsed.line1 ? `${parsed.line1}${parsed.line2 ? ', ' + parsed.line2 : ''}, ${parsed.city || ''}, ${parsed.state || ''} - ${parsed.pin || parsed.pincode || ''}` : (parsed.address || ord.shippingAddress);
+        } catch(e) {
+          addrText = ord.shippingAddress;
+        }
+      } else if (typeof ord.shippingAddress === 'object') {
+        const a = ord.shippingAddress;
+        addrText = a.line1 ? `${a.line1}${a.line2 ? ', ' + a.line2 : ''}, ${a.city || ''}, ${a.state || ''} - ${a.pin || a.pincode || ''}` : (a.address || JSON.stringify(a));
+      }
+    }
+
     document.getElementById('modalOrderNumber').textContent = ord.orderNumber;
     document.getElementById('modalCustomerName').textContent = ord.customerName;
     document.getElementById('modalCustomerEmail').textContent = ord.customerEmail;
     document.getElementById('modalCustomerPhone').textContent = ord.customerPhone;
-    document.getElementById('modalShippingAddr').textContent = ord.shippingAddress ? (ord.shippingAddress.line1 ? `${ord.shippingAddress.line1}, ${ord.shippingAddress.city}, ${ord.shippingAddress.state} - ${ord.shippingAddress.pin}` : JSON.stringify(ord.shippingAddress)) : 'N/A';
+    document.getElementById('modalShippingAddr').textContent = addrText;
     document.getElementById('modalPaymentMethod').textContent = ord.paymentMethod;
     document.getElementById('modalTotalAmount').textContent = formatINR(ord.totalAmount);
     document.getElementById('modalCouponDetail').textContent = ord.couponCode ? `${ord.couponCode} (-${formatINR(ord.discountAmount)})` : 'None';
@@ -2367,7 +2398,8 @@ async function loadHomepageManager() {
     try {
       const pRes = await adminFetch('/api/admin/products');
       if (pRes.ok) {
-        state.products = await pRes.json();
+        const pData = await pRes.json();
+        state.products = Array.isArray(pData.products) ? pData.products : (Array.isArray(pData) ? pData : []);
       }
     } catch (e) {}
   }
@@ -2644,8 +2676,109 @@ async function moveHeroSlide(slideId, delta) {
 // FEATURED PRODUCTS & LOCKING MANAGER
 // -------------------------------------------------------------
 function loadFeaturedManager() {
+  renderActiveHomepageFeaturedProducts();
   renderLockedFeaturedProducts();
   renderPopularFeaturedProducts();
+}
+
+function renderActiveHomepageFeaturedProducts() {
+  const container = document.getElementById('activeHomepageFeaturedContainer');
+  const slotsBadge = document.getElementById('activeFeaturedSlotsBadge');
+  if (!container) return;
+
+  const allProducts = state.products || [];
+  const prodMap = new Map();
+  allProducts.forEach(p => prodMap.set(String(p.id), p));
+
+  const lockedIds = (state.lockedFeaturedIds || []).map(String);
+  const lockedSet = new Set(lockedIds);
+
+  const activeItems = [];
+  lockedIds.forEach(id => {
+    const prod = prodMap.get(id);
+    if (prod) {
+      activeItems.push({ product: prod, isLocked: true });
+    }
+  });
+
+  const unlocked = allProducts.filter(p => !lockedSet.has(String(p.id)));
+  unlocked.sort((a, b) => {
+    const aScore = (Number(a.clicks) || 0) * 3 + (Number(a.views || a.impressions) || 0);
+    const bScore = (Number(b.clicks) || 0) * 3 + (Number(b.views || b.impressions) || 0);
+    return bScore - aScore;
+  });
+
+  const remainingNeeded = Math.max(0, 10 - activeItems.length);
+  const autoFilled = unlocked.slice(0, remainingNeeded);
+  autoFilled.forEach(prod => {
+    activeItems.push({ product: prod, isLocked: false });
+  });
+
+  if (slotsBadge) {
+    slotsBadge.textContent = `${activeItems.length} Live Items (${lockedIds.length} Pinned, ${autoFilled.length} Auto-filled)`;
+  }
+
+  if (activeItems.length === 0) {
+    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">No products available in catalog.</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      ${activeItems.map((item, idx) => {
+        const prod = item.product;
+        const thumb = resolveAdminThumb(prod.image || (prod.images && prod.images[0]));
+        const isLocked = item.isLocked;
+        const clicks = Number(prod.clicks) || 0;
+        const impressions = Number(prod.views || prod.impressions) || 0;
+
+        return `
+          <div class="locked-product-item" style="background: ${isLocked ? '#F0FDF4' : '#F8FAFC'}; border: 1px solid ${isLocked ? '#BBF7D0' : 'var(--ak-border)'};">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 13px; font-weight: 800; color: ${isLocked ? '#16A34A' : '#64748B'}; width: 28px; text-align: center;">#${idx + 1}</span>
+              ${isLocked ? `
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <button type="button" class="btn-secondary" style="padding: 1px 5px; font-size: 9px;" ${idx === 0 ? 'disabled' : ''} onclick="moveLockedProduct('${prod.id}', -1)" title="Shift Up">▲</button>
+                  <button type="button" class="btn-secondary" style="padding: 1px 5px; font-size: 9px;" ${idx === lockedIds.length - 1 ? 'disabled' : ''} onclick="moveLockedProduct('${prod.id}', 1)" title="Shift Down">▼</button>
+                </div>
+              ` : `
+                <div style="width: 22px;"></div>
+              `}
+              <img src="${thumb}" alt="${escapeHtml(prod.name)}" class="locked-product-thumb" onerror="this.src='${resolveAdminThumb('')}'">
+            </div>
+
+            <div class="locked-product-info">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 3px;">
+                <span class="locked-product-title" title="${escapeHtml(prod.name)}" style="margin-bottom:0;">${escapeHtml(prod.name)}</span>
+                ${isLocked ? `
+                  <span style="background: #DCFCE7; color: #166534; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1px solid #86EFAC;">🔒 LOCKED</span>
+                ` : `
+                  <span style="background: #E0F2FE; color: #0369A1; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; border: 1px solid #BAE6FD;">🔥 AUTO-FILL</span>
+                `}
+              </div>
+              <div class="locked-product-meta">
+                ${prod.brand ? `<span>${escapeHtml(prod.brand)}</span> • ` : ''}
+                <span>${formatINR(prod.price)}</span> • 
+                <span style="color: var(--ak-orange);">${clicks} clicks / ${impressions} views</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center;">
+              ${isLocked ? `
+                <button type="button" class="btn-danger" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap;" onclick="unlockFeaturedProduct('${prod.id}')" title="Unlock product from featured">
+                  🔓 Unlock
+                </button>
+              ` : `
+                <button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap; background: #2563EB;" onclick="lockFeaturedProduct('${prod.id}')" title="Lock this product to featured carousel">
+                  🔒 Lock to Featured
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
 }
 
 function renderLockedFeaturedProducts() {
@@ -2897,6 +3030,38 @@ async function moveLockedProduct(productId, delta) {
   }
 }
 
+async function saveFeaturedSettingsToServer() {
+  const list = [...(state.lockedFeaturedIds || [])].map(String);
+  const btn = document.getElementById('saveFeaturedSettingsBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+  }
+
+  try {
+    const res = await adminFetch('/api/admin/featured-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lockedProductIds: list })
+    });
+    if (res.ok) {
+      try { localStorage.setItem('audioking_locked_featured', JSON.stringify(list)); } catch (e) {}
+      window.dispatchEvent(new CustomEvent('ak:featured-sync', { detail: { lockedProductIds: list } }));
+      loadFeaturedManager();
+      alert('✓ Featured products settings successfully saved and updated on homepage!');
+    } else {
+      alert('Failed to save featured settings.');
+    }
+  } catch (err) {
+    alert('Network error while saving featured settings: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>💾 Save Featured Changes</span>';
+    }
+  }
+}
+
 // Expose Homepage & Featured APIs to Window
 window.loadHomepageManager = loadHomepageManager;
 window.renderHeroSlidesAdmin = renderHeroSlidesAdmin;
@@ -2910,6 +3075,7 @@ window.deleteHeroSlide = deleteHeroSlide;
 window.moveHeroSlide = moveHeroSlide;
 
 window.loadFeaturedManager = loadFeaturedManager;
+window.renderActiveHomepageFeaturedProducts = renderActiveHomepageFeaturedProducts;
 window.renderLockedFeaturedProducts = renderLockedFeaturedProducts;
 window.renderPopularFeaturedProducts = renderPopularFeaturedProducts;
 window.handleFeaturedSearchInput = handleFeaturedSearchInput;
@@ -2917,6 +3083,7 @@ window.clearFeaturedProductSearch = clearFeaturedProductSearch;
 window.lockFeaturedProduct = lockFeaturedProduct;
 window.unlockFeaturedProduct = unlockFeaturedProduct;
 window.moveLockedProduct = moveLockedProduct;
+window.saveFeaturedSettingsToServer = saveFeaturedSettingsToServer;
 
 // Expose Blanket Offer Picker APIs to Window
 window.handleOfferTargetTypeChange = handleOfferTargetTypeChange;

@@ -181,6 +181,11 @@ app.get(['/admin', '/admin/', '/admin/login'], (req, res) => {
   res.redirect('/#admin');
 });
 
+// Unified Store & Catalog Redirect: routes directly to the storefront catalog
+app.get(['/store', '/store/*', '/catalog', '/catalog/*'], (req, res) => {
+  res.redirect('/#store');
+});
+
 // Static Asset Serving (Frontend & Storefront)
 app.use(express.static(rootDir));
 

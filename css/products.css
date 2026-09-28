@@ -215,6 +215,11 @@
   .ak-featured-carousel-wrapper .ak-card-original-price {
     display: none !important;
   }
+  /* Strictly in mobile responsive layout: remove trending label from featured products */
+  .ak-products-grid .ak-card-trending-badge,
+  .ak-featured-carousel-wrapper .ak-card-trending-badge {
+    display: none !important;
+  }
   .ak-products-grid .ak-add-btn {
     height: 28px;
     font-size: 10.5px;

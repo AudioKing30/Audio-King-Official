@@ -25943,9 +25943,6 @@ Country of Origin: China`,
     }
   }
   function openAuthModal(initialTab = "signin", message = "") {
-    if (authService.isAuthenticated() || authService.getUser() && authService.getUser().id) {
-      return;
-    }
     const modal = document.getElementById("akAuthModal");
     const msgEl = document.getElementById("akAuthPromptMessage");
     clearAuthError();
@@ -26487,6 +26484,23 @@ Country of Origin: China`,
     };
     document.getElementById("akGoogleBtn")?.addEventListener("click", handleGoogleClick);
     document.getElementById("akGoogleBtnSignUp")?.addEventListener("click", handleGoogleClick);
+    const accountTrigger = document.getElementById("akAccountTrigger");
+    if (accountTrigger) {
+      accountTrigger.addEventListener("click", (e) => {
+        if (e.target.closest("#akAccountDropdown a, #akAccountDropdown button"))
+          return;
+        if (!authService.isAuthenticated()) {
+          openAuthModal("signin");
+        } else {
+          accountTrigger.classList.toggle("open");
+        }
+      });
+      document.addEventListener("click", (e) => {
+        if (!accountTrigger.contains(e.target)) {
+          accountTrigger.classList.remove("open");
+        }
+      });
+    }
     document.getElementById("akSignInTrigger")?.addEventListener("click", () => openAuthModal("signin"));
     document.getElementById("akSignUpTrigger")?.addEventListener("click", () => openAuthModal("signup"));
     document.getElementById("akProfileTrigger")?.addEventListener("click", openProfileModal);
@@ -28862,8 +28876,8 @@ Country of Origin: China`,
     }
     initHeroSlider();
     try {
-      const apiBase2 = typeof window !== "undefined" && typeof window.getAudioKingApiBase === "function" ? window.getAudioKingApiBase() : "";
-      const res = await fetch(`${apiBase2}/api/hero-slides`);
+      const apiBase = typeof window !== "undefined" && typeof window.getAudioKingApiBase === "function" ? window.getAudioKingApiBase() : "";
+      const res = await fetch(`${apiBase}/api/hero-slides`);
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.slides) && data.slides.length > 0) {
@@ -30661,7 +30675,7 @@ Message: ${message}`);
       window._allCatalogCategories = catItems;
       renderNavigationCategories(catItems);
       try {
-        const featRes = await fetch(`${apiBase}/api/featured-settings`);
+        const featRes = await fetch(apiUrl("/api/featured-settings"));
         if (featRes.ok) {
           const featData = await featRes.json();
           if (featData && Array.isArray(featData.lockedProductIds)) {
@@ -30880,7 +30894,15 @@ Message: ${message}`);
         el.textContent = AUDIOKING_CONFIG.expertPhone;
       });
       const handleHashRoute = () => {
-        const currentHash = window.location.hash || "#home";
+        let currentHash = window.location.hash;
+        if (!currentHash || currentHash === "#home") {
+          const path = (window.location.pathname || "").toLowerCase();
+          if (path.includes("/store") || path.includes("/catalog")) {
+            currentHash = "#store";
+          } else {
+            currentHash = currentHash || "#home";
+          }
+        }
         const parsed = parseHashRoute(currentHash);
         const route = parsed.route;
         const params = parsed.params;

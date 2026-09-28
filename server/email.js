@@ -310,11 +310,205 @@ async function sendCommunityWelcomeEmail({ email, fullName = 'Creator' }) {
   return sendEmail({ to: email, subject, html, text });
 }
 
+/**
+ * 5. Send Order Confirmed Notification Email
+ */
+async function sendOrderConfirmedEmail({ email, fullName = 'Valued Customer', orderNumber, totalAmount = 0, items = [], shippingAddress = {} }) {
+  if (!email || !email.includes('@')) return;
+  const subject = `Your AudioKing Order #${orderNumber} is Confirmed! 📦`;
+  const formattedAddress = typeof shippingAddress === 'object' && shippingAddress 
+    ? (shippingAddress.line1 ? `${shippingAddress.line1}${shippingAddress.line2 ? ', ' + shippingAddress.line2 : ''}, ${shippingAddress.city || ''}, ${shippingAddress.state || ''} - ${shippingAddress.pin || shippingAddress.pincode || ''}` : (shippingAddress.address || 'Address on file'))
+    : String(shippingAddress || 'Address on file');
+
+  const itemsListText = (items || []).map(i => `- ${i.name || i.product_name} (x${i.quantity || 1}) - ₹${Number(i.unitPrice || i.unit_price || 0).toLocaleString('en-IN')}`).join('\n');
+  const text = `Hello ${fullName},\n\nYour order #${orderNumber} has been confirmed! We will notify once dispatched.\n\nOrder Total: ₹${Number(totalAmount).toLocaleString('en-IN')}\nShipping To: ${formattedAddress}\n\nItems Ordered:\n${itemsListText}\n\nThank you for choosing AudioKing Pro Audio India!`;
+
+  const itemsHtml = (items || []).map(i => `
+    <tr style="border-bottom: 1px solid #E2E8F0;">
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; font-weight: 600;">${i.name || i.product_name}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #64748B; text-align: center;">x${i.quantity || 1}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; text-align: right; font-weight: 700;">₹${(Number(i.unitPrice || i.unit_price || 0) * (Number(i.quantity) || 1)).toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+
+  const html = wrapEmailTemplate('Order Confirmed', `
+    <h2 class="headline" style="color: #16A34A;">Order Confirmed! 📦</h2>
+    <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
+    <p class="paragraph" style="font-size: 16px; font-weight: 600; color: #0F172A;">
+      Your order <strong>#${orderNumber}</strong> has been confirmed! We will notify once dispatched.
+    </p>
+
+    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 18px 20px; margin: 20px 0;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+        <span style="color: #64748B;">Order Number:</span>
+        <strong style="color: #0F172A;">#${orderNumber}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+        <span style="color: #64748B;">Total Amount:</span>
+        <strong style="color: #EA580C; font-size: 16px;">₹${Number(totalAmount).toLocaleString('en-IN')}</strong>
+      </div>
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #E2E8F0; font-size: 13px;">
+        <span style="color: #64748B;">Shipping Destination:</span>
+        <div style="color: #0F172A; font-weight: 500; margin-top: 3px;">${formattedAddress}</div>
+      </div>
+    </div>
+
+    ${items && items.length ? `
+      <h3 style="font-size: 15px; font-weight: 700; margin: 22px 0 10px 0; color: #0F172A;">Order Summary</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead>
+          <tr style="border-bottom: 2px solid #CBD5E1; text-align: left; font-size: 12px; color: #64748B; text-transform: uppercase;">
+            <th style="padding-bottom: 6px;">Item</th>
+            <th style="padding-bottom: 6px; text-align: center;">Qty</th>
+            <th style="padding-bottom: 6px; text-align: right;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
+    ` : ''}
+
+    <div class="security-box" style="border-left-color: #3B82F6; background: #EFF6FF; color: #1E40AF;">
+      <strong>What's Next:</strong> Our audio warehouse is preparing your gear with transit insurance. As soon as your shipment departs, you will receive another email notifying you that your order has been dispatched.
+    </div>
+  `);
+
+  return sendEmail({ to: email, subject, html, text });
+}
+
+/**
+ * 6. Send Order Dispatched Notification Email
+ */
+async function sendOrderDispatchedEmail({ email, fullName = 'Valued Customer', orderNumber, totalAmount = 0, items = [], shippingAddress = {} }) {
+  if (!email || !email.includes('@')) return;
+  const subject = `Your AudioKing Order #${orderNumber} Has Been Dispatched! 🚀`;
+  const formattedAddress = typeof shippingAddress === 'object' && shippingAddress 
+    ? (shippingAddress.line1 ? `${shippingAddress.line1}${shippingAddress.line2 ? ', ' + shippingAddress.line2 : ''}, ${shippingAddress.city || ''}, ${shippingAddress.state || ''} - ${shippingAddress.pin || shippingAddress.pincode || ''}` : (shippingAddress.address || 'Address on file'))
+    : String(shippingAddress || 'Address on file');
+
+  const text = `Hello ${fullName},\n\nYour order #${orderNumber} has been dispatched and is on its way!\n\nOrder Total: ₹${Number(totalAmount).toLocaleString('en-IN')}\nDelivering To: ${formattedAddress}\n\nOur delivery courier is expediting your studio package with full transit insurance.\n\nThank you for shopping with AudioKing!`;
+
+  const itemsHtml = (items || []).map(i => `
+    <tr style="border-bottom: 1px solid #E2E8F0;">
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; font-weight: 600;">${i.name || i.product_name}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #64748B; text-align: center;">x${i.quantity || 1}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; text-align: right; font-weight: 700;">₹${(Number(i.unitPrice || i.unit_price || 0) * (Number(i.quantity) || 1)).toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+
+  const html = wrapEmailTemplate('Order Dispatched', `
+    <h2 class="headline" style="color: #2563EB;">Your Order is On Its Way! 🚀</h2>
+    <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
+    <p class="paragraph" style="font-size: 16px; font-weight: 600; color: #0F172A;">
+      Your order <strong>#${orderNumber}</strong> has been dispatched and is on its way!
+    </p>
+
+    <div style="background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 8px; padding: 18px 20px; margin: 20px 0;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+        <span style="color: #166534; font-weight: 600;">Dispatch Status:</span>
+        <strong style="color: #15803D; text-transform: uppercase;">In Transit (Pan-India Express)</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px;">
+        <span style="color: #166534;">Order Number:</span>
+        <strong style="color: #0F172A;">#${orderNumber}</strong>
+      </div>
+      <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #BBF7D0; font-size: 13px;">
+        <span style="color: #166534;">Delivery Destination:</span>
+        <div style="color: #0F172A; font-weight: 500; margin-top: 3px;">${formattedAddress}</div>
+      </div>
+    </div>
+
+    ${items && items.length ? `
+      <h3 style="font-size: 15px; font-weight: 700; margin: 22px 0 10px 0; color: #0F172A;">En-Route Equipment</h3>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead>
+          <tr style="border-bottom: 2px solid #CBD5E1; text-align: left; font-size: 12px; color: #64748B; text-transform: uppercase;">
+            <th style="padding-bottom: 6px;">Item</th>
+            <th style="padding-bottom: 6px; text-align: center;">Qty</th>
+            <th style="padding-bottom: 6px; text-align: right;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
+    ` : ''}
+
+    <p class="paragraph">Please keep your phone active for delivery updates.</p>
+  `);
+
+  return sendEmail({ to: email, subject, html, text });
+}
+
+/**
+ * 7. Send Order Delivered Notification Email
+ */
+async function sendOrderDeliveredEmail({ email, fullName = 'Valued Customer', orderNumber, totalAmount = 0, items = [] }) {
+  if (!email || !email.includes('@')) return;
+  const subject = `Your AudioKing Order #${orderNumber} Has Been Delivered! 🎵`;
+  const text = `Hello ${fullName},\n\nThank you for shopping with AudioKing! Your order #${orderNumber} has been delivered. We hope you enjoy your new gear. Shop more from Audio King!\n\nExplore gear: http://localhost:3000/#store\n\nAudioKing Pro Audio India`;
+
+  const itemsHtml = (items || []).map(i => `
+    <tr style="border-bottom: 1px solid #E2E8F0;">
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; font-weight: 600;">${i.name || i.product_name}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #64748B; text-align: center;">x${i.quantity || 1}</td>
+      <td style="padding: 10px 0; font-size: 14px; color: #0F172A; text-align: right; font-weight: 700;">₹${(Number(i.unitPrice || i.unit_price || 0) * (Number(i.quantity) || 1)).toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+
+  const html = wrapEmailTemplate('Order Delivered', `
+    <h2 class="headline" style="color: #16A34A;">Your Order Has Been Delivered! 🎉</h2>
+    <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
+    <p class="paragraph" style="font-size: 16px; font-weight: 600; color: #0F172A;">
+      Thank you for shopping with AudioKing! Your order <strong>#${orderNumber}</strong> has been successfully delivered. We hope you enjoy your new gear!
+    </p>
+
+    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px; text-align: center; margin: 24px 0;">
+      <div style="font-size: 36px; margin-bottom: 8px;">🎧 🎸 🎹</div>
+      <div style="font-size: 16px; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Thank You for Shopping with AudioKing!</div>
+      <p style="font-size: 13.5px; color: #64748B; margin: 0; line-height: 1.5;">
+        We hope your new audio gear elevates your sound and inspires your craft. Every piece of equipment is backed by authorized distributor warranty.
+      </p>
+    </div>
+
+    ${items && items.length ? `
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <thead>
+          <tr style="border-bottom: 2px solid #CBD5E1; text-align: left; font-size: 12px; color: #64748B; text-transform: uppercase;">
+            <th style="padding-bottom: 6px;">Delivered Item</th>
+            <th style="padding-bottom: 6px; text-align: center;">Qty</th>
+            <th style="padding-bottom: 6px; text-align: right;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
+    ` : ''}
+
+    <div style="text-align: center; margin: 28px 0 16px 0;">
+      <a href="http://localhost:3000/#store" class="cta-btn" style="background: #EA580C; font-size: 15px; padding: 13px 28px;">
+        Shop More from Audio King &rarr;
+      </a>
+    </div>
+
+    <p class="paragraph" style="font-size: 12.5px; color: #94A3B8; text-align: center; margin-top: 16px;">
+      Need specialist tips on setup or calibration? Reach out to our sound engineers anytime on WhatsApp at <strong>+91 88793 93743</strong>.
+    </p>
+  `);
+
+  return sendEmail({ to: email, subject, html, text });
+}
+
 module.exports = {
   sendEmail,
   sendSignupVerificationEmail,
   sendPasswordResetEmail,
   sendChangePasswordOtpEmail,
   sendPasswordChangedEmail,
-  sendCommunityWelcomeEmail
+  sendCommunityWelcomeEmail,
+  sendOrderConfirmedEmail,
+  sendOrderDispatchedEmail,
+  sendOrderDeliveredEmail
 };

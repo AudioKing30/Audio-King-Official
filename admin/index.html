@@ -592,13 +592,32 @@
 
           <!-- SECTION B: FEATURED PRODUCTS & LOCKING MANAGER -->
           <div class="admin-card">
-            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px;">
+            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
               <div>
                 <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
-                  <span>⭐ Featured Products &amp; Permanent Locking</span>
+                  <span>⭐ Featured Products Manager</span>
                   <span id="lockedFeaturedCountBadge" class="badge-pending" style="font-size: 11.5px; padding: 2px 8px;">0 Locked</span>
                 </h2>
-                <p class="card-desc">Lock specific products to keep them firmly pinned to the homepage carousel, protected against customer clicks/impressions. Remaining slots auto-populate by customer popularity.</p>
+                <p class="card-desc">Manage the exact products appearing on the homepage featured section. Shift order, lock/unlock gear, and save changes to update the live store.</p>
+              </div>
+              <div>
+                <button type="button" class="btn-primary" id="saveFeaturedSettingsBtn" onclick="saveFeaturedSettingsToServer()" style="display: flex; align-items: center; gap: 6px; padding: 8px 18px; font-weight: 700; background: #16A34A;">
+                  <span>💾 Save Featured Changes</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 1. LIVE HOMEPAGE FEATURED SECTION (TOP 10 SLOTS) -->
+            <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 15px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                  <span>🌐 Currently Live on Homepage Featured Section</span>
+                  <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Top 10 Slots)</span>
+                </h3>
+                <span id="activeFeaturedSlotsBadge" style="font-size: 12px; font-weight: 700; color: var(--ak-orange);">10 Live Slots</span>
+              </div>
+              <div id="activeHomepageFeaturedContainer">
+                <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">Loading live homepage featured items...</div>
               </div>
             </div>
 
@@ -613,12 +632,12 @@
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
-              <!-- 1. LOCKED / PINNED PRODUCTS -->
+              <!-- 2. LOCKED / PINNED PRODUCTS -->
               <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                   <h3 style="font-size: 15px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
                     <span>🔒 Pinned Products</span>
-                    <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Priority #1 on Homepage)</span>
+                    <span style="font-size: 12px; font-weight: 500; color: var(--ak-text-muted);">(Custom Assigned Order)</span>
                   </h3>
                 </div>
                 <div id="lockedProductsListContainer">
@@ -838,12 +857,13 @@
           </div>
 
           <!-- Two Tabs: Current Orders vs Order History -->
+          <!-- Two Tabs: Active Orders vs Order History -->
           <div class="tab-strip">
             <button type="button" id="tabCurrentOrders" class="tab-btn active" onclick="setOrdersTab('current')">
-              📦 Current Orders (Pending / Confirmed / Shipped)
+              📦 Active Orders (Confirmed / Dispatched)
             </button>
             <button type="button" id="tabHistoryOrders" class="tab-btn" onclick="setOrdersTab('history')">
-              📜 Order History (Delivered / Cancelled / Returned)
+              📜 Order History (Delivered)
             </button>
           </div>
 
@@ -852,17 +872,18 @@
               <thead>
                 <tr>
                   <th>Order #</th>
-                  <th>Customer</th>
+                  <th>Order Type</th>
+                  <th>Customer Contact</th>
+                  <th>Full Address</th>
                   <th>Items Summary</th>
                   <th>Total Amount</th>
-                  <th>Coupon Used</th>
                   <th>Status</th>
                   <th>Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="ordersTableBody">
-                <tr><td colspan="8" style="text-align: center; padding: 24px;">Loading orders...</td></tr>
+                <tr><td colspan="9" style="text-align: center; padding: 24px;">Loading orders...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1018,13 +1039,10 @@
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
           <label style="font-size: 13px; font-weight: 700;">Update Status:</label>
-          <select id="modalOrderStatusSelect" class="form-select" style="width: 140px; height: 38px;">
-            <option value="Pending">Pending</option>
+          <select id="modalOrderStatusSelect" class="form-select" style="width: 150px; height: 38px;">
             <option value="Confirmed">Confirmed</option>
-            <option value="Shipped">Shipped</option>
+            <option value="Dispatched">Dispatched</option>
             <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Returned">Returned</option>
           </select>
           <button class="btn-primary" style="height: 38px; padding: 0 16px;" onclick="updateOrderStatusFromModal()">Save</button>
         </div>
