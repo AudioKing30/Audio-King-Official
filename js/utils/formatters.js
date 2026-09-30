@@ -107,8 +107,10 @@ export function getProductOfferStampHtml(product, extraClass = '') {
  * @returns {string}
  */
 export function resolveProductImage(src) {
-  if (!src) return 'assets/images/placeholder.jpg';
-  if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+  if (!src || src === 'assets/images/logo.jpg' || src === 'assets/images/placeholder.jpg') {
+    return 'assets/images/placeholder.svg';
+  }
+  if (/^https?:\/\//i.test(src) || src.startsWith('data:') || src.startsWith('blob:')) return src;
   if (src.startsWith('/uploads/')) return src.slice(1);
   if (src.startsWith('/assets/')) return src.slice(1);
   return src;

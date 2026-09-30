@@ -232,10 +232,31 @@ function initDatabase() {
       min_cart_value REAL NOT NULL DEFAULT 0,
       usage_limit INTEGER,
       used_count INTEGER NOT NULL DEFAULT 0,
+      per_user_limit INTEGER NOT NULL DEFAULT 1,
       expires_at TEXT,
       is_active INTEGER NOT NULL DEFAULT 1,
+      target_brand TEXT DEFAULT 'all',
+      target_category TEXT DEFAULT 'all',
+      applicable_brand TEXT DEFAULT 'all',
+      applicable_category TEXT DEFAULT 'all',
+      created_at TEXT NOT NULL,
+      updated_at TEXT
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_coupons_code ON coupons(code);
+
+    -- COUPON USAGES TABLE (Per-User Redemptions)
+    CREATE TABLE IF NOT EXISTS coupon_usages (
+      id TEXT PRIMARY KEY,
+      coupon_id TEXT NOT NULL REFERENCES coupons(id) ON DELETE CASCADE,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      order_id TEXT REFERENCES orders(id) ON DELETE SET NULL,
+      discount_amount REAL NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL
     );
+
+    CREATE INDEX IF NOT EXISTS idx_coupon_usages_lookup ON coupon_usages(user_id, coupon_id);
+    CREATE INDEX IF NOT EXISTS idx_coupon_usages_coupon ON coupon_usages(coupon_id);
 
     -- PAGE VIEWS TABLE (Lightweight Analytics Tracker)
     CREATE TABLE IF NOT EXISTS page_views (
@@ -352,6 +373,50 @@ function initDatabase() {
     if (!prodColNames.includes('section')) {
       db.exec("ALTER TABLE products ADD COLUMN section TEXT DEFAULT 'pro-audio';");
     }
+
+    const couponColumns = db.prepare("PRAGMA table_info(coupons)").all();
+    const couponColNames = couponColumns.map(c => c.name);
+    if (!couponColNames.includes('target_brand')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN target_brand TEXT DEFAULT 'all';");
+    }
+    if (!couponColNames.includes('target_category')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN target_category TEXT DEFAULT 'all';");
+    }
+    if (!couponColNames.includes('applicable_brand')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN applicable_brand TEXT DEFAULT 'all';");
+    }
+    if (!couponColNames.includes('applicable_category')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN applicable_category TEXT DEFAULT 'all';");
+    }
+    if (!couponColNames.includes('per_user_limit')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN per_user_limit INTEGER NOT NULL DEFAULT 1;");
+    }
+    if (!couponColNames.includes('updated_at')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN updated_at TEXT;");
+    }
+
+    // Backfill existing coupons to 'all' so nothing breaks
+    db.prepare(`
+      UPDATE coupons 
+      SET target_brand = CASE 
+            WHEN target_brand IS NOT NULL AND target_brand != '' AND LOWER(target_brand) != 'all' THEN target_brand
+            WHEN applicable_brand IS NOT NULL AND applicable_brand != '' AND LOWER(applicable_brand) != 'all' THEN applicable_brand
+            ELSE 'all'
+          END,
+          target_category = CASE 
+            WHEN target_category IS NOT NULL AND target_category != '' AND LOWER(target_category) != 'all' THEN target_category
+            WHEN applicable_category IS NOT NULL AND applicable_category != '' AND LOWER(applicable_category) != 'all' THEN applicable_category
+            ELSE 'all'
+          END,
+          applicable_brand = CASE 
+            WHEN applicable_brand IS NOT NULL AND applicable_brand != '' AND LOWER(applicable_brand) != 'all' THEN applicable_brand
+            ELSE 'all'
+          END,
+          applicable_category = CASE 
+            WHEN applicable_category IS NOT NULL AND applicable_category != '' AND LOWER(applicable_category) != 'all' THEN applicable_category
+            ELSE 'all'
+          END
+    `).run();
 
     // Ensure musical instrument categories default to 'musical-instruments' section
     db.prepare(`

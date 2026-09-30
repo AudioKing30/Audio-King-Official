@@ -45,7 +45,7 @@ function formatProduct(row, activeOffers = []) {
     images = [];
   }
   if (!images.length && row.image) images = [cleanImgPath(row.image)];
-  const mainImage = cleanImgPath(row.image) || images[0] || 'assets/images/logo.jpg';
+  const mainImage = cleanImgPath(row.image) || images[0] || 'assets/images/placeholder.svg';
 
   let specs = [];
   try {

@@ -48,6 +48,8 @@ function getAdminUserFromRequest(req) {
     WHERE s.token_hash = ? AND s.expires_at > ?
   `);
 
+  let nonAdminUser = null;
+
   for (const token of candidateTokens) {
     try {
       const tokenHash = hashToken(token);
@@ -55,7 +57,8 @@ function getAdminUserFromRequest(req) {
       if (!record) continue;
 
       if (record.role !== 'admin') {
-        return { forbidden: true, user: record };
+        nonAdminUser = record;
+        continue;
       }
 
       // Refresh last active
@@ -76,6 +79,10 @@ function getAdminUserFromRequest(req) {
     } catch (err) {
       console.error('[ADMIN AUTH ERROR]', err);
     }
+  }
+
+  if (nonAdminUser) {
+    return { forbidden: true, user: nonAdminUser };
   }
 
   return null;

@@ -110,7 +110,7 @@ router.get('/', (req, res) => {
           id: item.id,
           productId: item.product_id,
           name: item.product_name,
-          image: item.product_image || 'assets/images/logo.jpg',
+          image: item.product_image || 'assets/images/placeholder.svg',
           quantity: item.quantity,
           unitPrice: item.unit_price,
           subtotal: item.subtotal
@@ -244,7 +244,7 @@ router.post('/', async (req, res) => {
 
     let verifiedPrice = Math.max(0, parseFloat(item.unitPrice || item.price) || 0);
     let verifiedName = item.name || 'Pro Audio Equipment';
-    let verifiedImage = item.image || item.img || 'assets/images/logo.jpg';
+    let verifiedImage = item.image || item.img || 'assets/images/placeholder.svg';
 
     // Verify against database product catalog to prevent price tampering
     if (prodId) {
@@ -277,11 +277,15 @@ router.post('/', async (req, res) => {
   // 3. Server-side coupon verification & discount application
   let appliedCouponCode = null;
   let appliedDiscountAmount = 0;
+  let appliedCouponId = null;
 
   if (couponCode && typeof couponCode === 'string') {
     const cleanCode = couponCode.trim().toUpperCase();
     const coupon = db.prepare(`
-      SELECT id, code, discount_type, discount_value, min_cart_value, usage_limit, used_count, expires_at, is_active
+      SELECT id, code, discount_type, discount_value, min_cart_value, usage_limit, used_count,
+             COALESCE(per_user_limit, 1) AS per_user_limit, expires_at, is_active,
+             LOWER(COALESCE(target_brand, applicable_brand, 'all')) AS target_brand,
+             LOWER(COALESCE(target_category, applicable_category, 'all')) AS target_category
       FROM coupons
       WHERE code = ? COLLATE NOCASE
     `).get(cleanCode);
@@ -292,12 +296,53 @@ router.post('/', async (req, res) => {
       const withinLimit = coupon.usage_limit === null || coupon.usage_limit === undefined || coupon.used_count < coupon.usage_limit;
       const meetsMinVal = !coupon.min_cart_value || itemsSubtotal >= coupon.min_cart_value;
 
-      if (notExpired && withinLimit && meetsMinVal) {
+      // Check per-user limit
+      let withinUserLimit = true;
+      if (userId && coupon.per_user_limit > 0) {
+        try {
+          const userUsage = db.prepare('SELECT COUNT(*) AS count FROM coupon_usages WHERE user_id = ? AND coupon_id = ?').get(userId, coupon.id);
+          if (userUsage && userUsage.count >= coupon.per_user_limit) {
+            withinUserLimit = false;
+          }
+        } catch (e) {}
+      }
+
+      // Check targeting scope (Target Brand & Target Category)
+      const hasBrandScope = coupon.target_brand && coupon.target_brand !== 'all';
+      const hasCatScope = coupon.target_category && coupon.target_category !== 'all';
+
+      let applicableBase = itemsSubtotal;
+      if (hasBrandScope || hasCatScope) {
+        applicableBase = processedItems.reduce((sum, it) => {
+          let b = '';
+          let c = '';
+          if (it.productId) {
+            try {
+              const pRow = db.prepare('SELECT brand, category FROM products WHERE id = ?').get(it.productId);
+              if (pRow) {
+                b = pRow.brand || '';
+                c = pRow.category || '';
+              }
+            } catch (e) {}
+          }
+          const itemBrand = b.trim().toLowerCase();
+          const itemCat = c.trim().toLowerCase();
+          const brandMatches = !hasBrandScope || itemBrand === coupon.target_brand.trim();
+          const catMatches = !hasCatScope || itemCat === coupon.target_category.trim();
+          if (brandMatches && catMatches) {
+            return sum + it.subtotal;
+          }
+          return sum;
+        }, 0);
+      }
+
+      if (notExpired && withinLimit && meetsMinVal && withinUserLimit && applicableBase > 0) {
         appliedCouponCode = coupon.code;
+        appliedCouponId = coupon.id;
         if (coupon.discount_type === 'percentage') {
-          appliedDiscountAmount = Math.round((itemsSubtotal * Number(coupon.discount_value)) / 100);
+          appliedDiscountAmount = Math.round((applicableBase * Number(coupon.discount_value)) / 100);
         } else {
-          appliedDiscountAmount = Math.min(Number(coupon.discount_value), itemsSubtotal);
+          appliedDiscountAmount = Math.min(Number(coupon.discount_value), applicableBase);
         }
 
         db.prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?').run(coupon.id);
@@ -336,6 +381,25 @@ router.post('/', async (req, res) => {
 
     for (const it of processedItems) {
       insertItem.run(it.id, orderId, it.productId, it.name, it.image, it.quantity, it.unitPrice, it.subtotal);
+    }
+
+    // Record coupon usage per user if coupon was applied
+    if (appliedCouponId && userId) {
+      try {
+        db.prepare(`
+          INSERT INTO coupon_usages (id, coupon_id, user_id, order_id, discount_amount, created_at)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `).run(crypto.randomUUID(), appliedCouponId, userId, orderId, appliedDiscountAmount, now);
+      } catch (e) {
+        console.warn('[ORDER] Could not record coupon usage:', e.message);
+      }
+    }
+
+    // Automatically clear user's cart in the DB upon order placement
+    if (userId) {
+      try {
+        db.prepare('DELETE FROM cart_items WHERE user_id = ?').run(userId);
+      } catch (e) {}
     }
 
     // 4. Dispatch Order Confirmed Email Notification

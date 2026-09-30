@@ -194,6 +194,63 @@ router.post('/signup', async (req, res) => {
 });
 
 // =========================================================================
+// 1B. DIRECT REGISTER (Direct user registration endpoint)
+// =========================================================================
+router.post('/register', async (req, res) => {
+  const { fullName, email, password, phone } = req.body;
+
+  if (!fullName || !email || !password) {
+    return res.status(400).json({ error: 'Full name, email, and password are required.' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(cleanEmail)) {
+    return res.status(400).json({ error: 'Please enter a valid email address.' });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters long.' });
+  }
+
+  try {
+    const existingUser = db.prepare('SELECT id, email_verified FROM users WHERE email = ?').get(cleanEmail);
+    if (existingUser && existingUser.email_verified === 1) {
+      return res.status(409).json({ error: 'An account with this email address already exists. Please sign in instead.' });
+    }
+
+    const passwordHash = await hashPassword(password);
+    const now = new Date().toISOString();
+    let userId = existingUser?.id;
+
+    if (!userId) {
+      userId = crypto.randomUUID();
+      const displayName = fullName.trim().split(' ')[0] + Math.floor(Math.random() * 90 + 10);
+      db.prepare(`
+        INSERT INTO users (id, full_name, display_name, title, email, phone_number, profile_image, auth_provider, email_verified, password_hash, created_at, updated_at, last_login_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 'email', 1, ?, ?, ?, ?)
+      `).run(userId, fullName.trim(), displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, (phone || '').trim(), 'assets/images/placeholder.svg', passwordHash, now, now, now);
+    } else {
+      db.prepare(`
+        UPDATE users SET full_name = ?, phone_number = ?, password_hash = ?, email_verified = 1, updated_at = ?, last_login_at = ? WHERE id = ?
+      `).run(fullName.trim(), (phone || '').trim(), passwordHash, now, now, userId);
+    }
+
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    const token = createSessionForUser(res, userId, req);
+
+    return res.status(201).json({
+      success: true,
+      user: sanitizeUser(user),
+      token
+    });
+  } catch (err) {
+    console.error('[REGISTER ERROR]', err);
+    return res.status(500).json({ error: 'Failed to process registration.' });
+  }
+});
+
+// =========================================================================
 // 2. VERIFY SIGNUP OTP (Complete Registration & Log In)
 // =========================================================================
 router.post('/verify-signup-otp', async (req, res) => {

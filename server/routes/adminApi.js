@@ -54,8 +54,8 @@ function syncMasterFiles() {
         badge: p.badge || '',
         sku: p.sku || '',
         description: p.description || '',
-        image: p.image || (images[0] || 'assets/images/logo.jpg'),
-        images: images.length ? images : (p.image ? [p.image] : ['assets/images/logo.jpg']),
+        image: p.image || (images[0] || 'assets/images/placeholder.svg'),
+        images: images.length ? images : (p.image ? [p.image] : ['assets/images/placeholder.svg']),
         videoType: p.video_type || null,
         videoUrl: p.video_url || null,
         youtubeVideoId: p.youtube_video_id || null,
@@ -636,7 +636,7 @@ router.get('/products', (req, res) => {
         discountPercent,
         stock: Number(r.stock ?? 0),
         inStock: Boolean(r.in_stock && r.stock > 0),
-        image: r.image || images[0] || 'assets/images/logo.jpg',
+        image: r.image || images[0] || 'assets/images/placeholder.svg',
         images,
         videoType: r.video_type || null,
         videoUrl: r.video_url || null,
@@ -690,7 +690,7 @@ router.get('/products/:id', (req, res) => {
         badge: r.badge || '',
         sku: r.sku || '',
         description: r.description || '',
-        image: r.image || images[0] || 'assets/images/logo.jpg',
+        image: r.image || images[0] || 'assets/images/placeholder.svg',
         images,
         videoType: r.video_type || null,
         videoUrl: r.video_url || null,
@@ -746,7 +746,7 @@ router.post('/products', (req, res) => {
     // Auto-flip inStock if stock is 0, but allow manual toggle if stock > 0
     const finalInStock = validStock === 0 ? 0 : (inStock !== false ? 1 : 0);
 
-    const imageArray = Array.isArray(images) && images.length > 0 ? images : ['assets/images/logo.jpg'];
+    const imageArray = Array.isArray(images) && images.length > 0 ? images : ['assets/images/placeholder.svg'];
     const mainImage = imageArray[0];
 
     // Video processing
@@ -1013,7 +1013,20 @@ router.delete('/offers/:id', (req, res) => {
 // -------------------------------------------------------------
 router.get('/coupons', (req, res) => {
   try {
-    const coupons = db.prepare('SELECT * FROM coupons ORDER BY created_at DESC').all();
+    const rows = db.prepare('SELECT * FROM coupons ORDER BY created_at DESC').all();
+    const coupons = rows.map(r => {
+      const targetBrand = (r.target_brand || r.applicable_brand || 'all').trim();
+      const targetCategory = (r.target_category || r.applicable_category || 'all').trim();
+      return {
+        ...r,
+        target_brand: targetBrand,
+        target_category: targetCategory,
+        targetBrand: targetBrand,
+        targetCategory: targetCategory,
+        applicable_brand: targetBrand,
+        applicable_category: targetCategory
+      };
+    });
     return res.json({ success: true, coupons });
   } catch (err) {
     return res.status(500).json({ error: 'Failed to fetch coupons.' });
@@ -1022,7 +1035,10 @@ router.get('/coupons', (req, res) => {
 
 router.post('/coupons', (req, res) => {
   try {
-    const { code, discountType, discountValue, minCartValue, usageLimit, expiresAt, isActive } = req.body || {};
+    const { 
+      code, discountType, discountValue, minCartValue, usageLimit, perUserLimit, expiresAt, isActive, 
+      targetBrand, targetCategory, applicableBrand, applicableCategory 
+    } = req.body || {};
 
     if (!code || !code.trim()) return res.status(400).json({ error: 'Coupon code is required.' });
     const cleanCode = code.trim().toUpperCase();
@@ -1039,6 +1055,13 @@ router.post('/coupons', (req, res) => {
 
     const minCart = minCartValue !== undefined ? Math.max(0, parseFloat(minCartValue) || 0) : 0;
     const limit = usageLimit ? parseInt(usageLimit, 10) : null;
+    const userLimit = perUserLimit ? parseInt(perUserLimit, 10) : 1;
+
+    const rawBrand = targetBrand ?? applicableBrand;
+    const rawCat = targetCategory ?? applicableCategory;
+    const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
+    const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
+
     const id = `cpn_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
 
@@ -1047,8 +1070,9 @@ router.post('/coupons', (req, res) => {
 
     db.prepare(`
       INSERT INTO coupons (
-        id, code, discount_type, discount_value, min_cart_value, usage_limit, used_count, expires_at, is_active, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)
+        id, code, discount_type, discount_value, min_cart_value, usage_limit, used_count, per_user_limit, expires_at, is_active, 
+        target_brand, target_category, applicable_brand, applicable_category, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       id,
       cleanCode,
@@ -1056,14 +1080,113 @@ router.post('/coupons', (req, res) => {
       val,
       minCart,
       limit,
+      userLimit,
       expiresAt || null,
       isActive !== false ? 1 : 0,
+      cleanBrand,
+      cleanCat,
+      cleanBrand,
+      cleanCat,
+      now,
       now
     );
 
-    return res.status(201).json({ success: true, message: `Coupon "${cleanCode}" created successfully.`, couponId: id });
+    const createdCoupon = db.prepare('SELECT * FROM coupons WHERE id = ?').get(id);
+    return res.status(201).json({ 
+      success: true, 
+      message: `Coupon "${cleanCode}" created successfully.`, 
+      couponId: id,
+      coupon: {
+        ...createdCoupon,
+        target_brand: cleanBrand,
+        target_category: cleanCat,
+        targetBrand: cleanBrand,
+        targetCategory: cleanCat
+      },
+      targetBrand: cleanBrand,
+      targetCategory: cleanCat
+    });
   } catch (err) {
     return res.status(500).json({ error: 'Failed to create coupon: ' + err.message });
+  }
+});
+
+router.put('/coupons/:id', (req, res) => {
+  try {
+    const existing = db.prepare('SELECT * FROM coupons WHERE id = ?').get(req.params.id);
+    if (!existing) return res.status(404).json({ error: 'Coupon not found.' });
+
+    const { 
+      code, discountType, discountValue, minCartValue, usageLimit, perUserLimit, expiresAt, isActive, 
+      targetBrand, targetCategory, applicableBrand, applicableCategory 
+    } = req.body || {};
+
+    if (!code || !code.trim()) return res.status(400).json({ error: 'Coupon code is required.' });
+    const cleanCode = code.trim().toUpperCase();
+
+    const dup = db.prepare('SELECT id FROM coupons WHERE code = ? COLLATE NOCASE AND id != ?').get(cleanCode, existing.id);
+    if (dup) return res.status(400).json({ error: `Coupon code "${cleanCode}" is already in use by another coupon.` });
+
+    if (!discountType || !['flat', 'percentage'].includes(discountType)) {
+      return res.status(400).json({ error: 'Discount type must be "flat" or "percentage".' });
+    }
+
+    const val = parseFloat(discountValue);
+    if (isNaN(val) || val <= 0) return res.status(400).json({ error: 'Please enter a valid discount value.' });
+    if (discountType === 'percentage' && val > 100) {
+      return res.status(400).json({ error: 'Percentage discount cannot exceed 100%.' });
+    }
+
+    const minCart = minCartValue !== undefined ? Math.max(0, parseFloat(minCartValue) || 0) : 0;
+    const limit = usageLimit ? parseInt(usageLimit, 10) : null;
+    const userLimit = perUserLimit ? parseInt(perUserLimit, 10) : (existing.per_user_limit || 1);
+
+    const rawBrand = targetBrand !== undefined ? targetBrand : (applicableBrand !== undefined ? applicableBrand : existing.target_brand);
+    const rawCat = targetCategory !== undefined ? targetCategory : (applicableCategory !== undefined ? applicableCategory : existing.target_category);
+    const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
+    const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
+    const now = new Date().toISOString();
+
+    db.prepare(`
+      UPDATE coupons SET
+        code = ?, discount_type = ?, discount_value = ?, min_cart_value = ?,
+        usage_limit = ?, per_user_limit = ?, expires_at = ?, is_active = ?,
+        target_brand = ?, target_category = ?, applicable_brand = ?, applicable_category = ?,
+        updated_at = ?
+      WHERE id = ?
+    `).run(
+      cleanCode,
+      discountType,
+      val,
+      minCart,
+      limit,
+      userLimit,
+      expiresAt !== undefined ? expiresAt : existing.expires_at,
+      isActive !== undefined ? (isActive ? 1 : 0) : existing.is_active,
+      cleanBrand,
+      cleanCat,
+      cleanBrand,
+      cleanCat,
+      now,
+      existing.id
+    );
+
+    const updatedCoupon = db.prepare('SELECT * FROM coupons WHERE id = ?').get(existing.id);
+    return res.json({ 
+      success: true, 
+      message: `Coupon "${cleanCode}" updated successfully.`,
+      coupon: {
+        ...updatedCoupon,
+        target_brand: cleanBrand,
+        target_category: cleanCat,
+        targetBrand: cleanBrand,
+        targetCategory: cleanCat
+      },
+      targetBrand: cleanBrand,
+      targetCategory: cleanCat
+    });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to update coupon: ' + err.message });
   }
 });
 
@@ -1073,7 +1196,7 @@ router.patch('/coupons/:id', (req, res) => {
     if (!coupon) return res.status(404).json({ error: 'Coupon not found.' });
 
     const newActive = req.body.isActive !== undefined ? (req.body.isActive ? 1 : 0) : (coupon.is_active ? 0 : 1);
-    db.prepare('UPDATE coupons SET is_active = ? WHERE id = ?').run(newActive, coupon.id);
+    db.prepare('UPDATE coupons SET is_active = ?, updated_at = ? WHERE id = ?').run(newActive, new Date().toISOString(), coupon.id);
 
     return res.json({ success: true, isActive: Boolean(newActive) });
   } catch (err) {
@@ -1190,7 +1313,7 @@ router.get('/orders/:id', (req, res) => {
           id: i.id,
           productId: i.product_id,
           name: i.product_name,
-          image: i.product_image || 'assets/images/logo.jpg',
+          image: i.product_image || 'assets/images/placeholder.svg',
           quantity: i.quantity,
           unitPrice: i.unit_price,
           subtotal: i.subtotal

@@ -2785,10 +2785,14 @@
             <!-- 4. Product Images (Multi-upload, drag/drop, reorderable, first image = cover) -->
             <div class="form-group">
               <label class="form-label">4. Product Images * (First image is main cover image)</label>
-              <div class="upload-dropzone" onclick="document.getElementById('productImageFiles').click()">
+              <div class="upload-dropzone" id="productImageDropzone" style="cursor: pointer; text-align: center; padding: 24px 16px; border: 2px dashed var(--ak-border, #CBD5E1); border-radius: 12px; background: var(--ak-card-bg, #FFFFFF);">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--ak-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                 <div style="font-weight: 700; color: var(--ak-text-primary); margin-bottom: 4px;">Drag and drop product images here, or browse files</div>
-                <div style="font-size: 12px; color: var(--ak-text-muted);">Allowed: JPG, PNG, WebP (Max 5MB each). Multi-selection supported.</div>
+                <div style="font-size: 12px; color: var(--ak-text-muted); margin-bottom: 12px;">Allowed: JPG, PNG, WebP (Max 5MB each). Multi-selection supported.</div>
+                <button type="button" class="btn-primary" style="margin: 0 auto; display: inline-flex; align-items: center; gap: 8px;" onclick="event.stopPropagation(); document.getElementById('productImageFiles').click()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Choose Images from Device
+                </button>
                 <input type="file" id="productImageFiles" multiple accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleImageFilesUpload(event)">
               </div>
               <div id="imageUploadStatus" style="font-size: 12px; font-weight: 600; color: var(--ak-orange); margin-top: 6px; display: none;"></div>
@@ -3320,15 +3324,27 @@
               <input type="number" id="couponValue" class="form-input" required min="1" step="1" placeholder="500">
             </div>
             <div>
-              <label class="form-label">Min Cart Value (₹)</label>
+              <label class="form-label" for="couponBrand">Target Brand</label>
+              <select id="couponBrand" class="form-select">
+                <option value="all">All</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="couponCategory">Target Category</label>
+              <select id="couponCategory" class="form-select">
+                <option value="all">All</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="couponMinCart">Min Cart Value (₹)</label>
               <input type="number" id="couponMinCart" class="form-input" min="0" step="1" placeholder="10000">
             </div>
             <div>
-              <label class="form-label">Usage Limit</label>
-              <input type="number" id="couponLimit" class="form-input" min="1" placeholder="100 (Optional)">
+              <label class="form-label" for="couponLimit">Usage Limit (Global)</label>
+              <input type="number" id="couponLimit" class="form-input" min="1" placeholder="Unlimited">
             </div>
             <div>
-              <label class="form-label">Expiry Date</label>
+              <label class="form-label" for="couponExpiry">Expiry Date</label>
               <input type="date" id="couponExpiry" class="form-input">
             </div>
             <div class="admin-form-submit-row">
@@ -3342,7 +3358,7 @@
           <div class="card-header-bar">
             <div>
               <h2 class="card-heading">Coupons Directory</h2>
-              <p class="card-desc">Track real-time redemptions, thresholds, and coupon status</p>
+              <p class="card-desc">Track real-time redemptions, brand/category targets, and coupon status</p>
             </div>
           </div>
           <div class="table-responsive">
@@ -3352,6 +3368,8 @@
                   <th>Code</th>
                   <th>Type</th>
                   <th>Discount</th>
+                  <th>Target Brand</th>
+                  <th>Target Category</th>
                   <th>Min Cart</th>
                   <th>Used / Limit</th>
                   <th>Expiry</th>
@@ -3360,7 +3378,7 @@
                 </tr>
               </thead>
               <tbody id="couponsTableBody">
-                <tr><td colspan="8" style="text-align: center; padding: 24px;">Loading coupons...</td></tr>
+                <tr><td colspan="10" style="text-align: center; padding: 24px;">Loading coupons...</td></tr>
               </tbody>
             </table>
           </div>
@@ -3818,6 +3836,74 @@
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
           <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
           <button type="submit" class="btn-primary" id="renameMetaSubmitBtn">Save &amp; Update All Products</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Coupon Modal -->
+  <div id="editCouponModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 18px; font-weight: 800;">Edit Cart Coupon</h3>
+        <button type="button" class="modal-close" onclick="closeEditCouponModal()">&times;</button>
+      </div>
+      <form id="editCouponForm" onsubmit="handleUpdateCoupon(event)">
+        <input type="hidden" id="editCouponId">
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" for="editCouponCode">Coupon Code *</label>
+          <input type="text" id="editCouponCode" class="form-input" required style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="editCouponType">Discount Type *</label>
+            <select id="editCouponType" class="form-select">
+              <option value="flat">Flat Amount (₹)</option>
+              <option value="percentage">Percentage (%)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCouponValue">Discount Value *</label>
+            <input type="number" id="editCouponValue" class="form-input" required min="1" step="1">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="editCouponBrand">Target Brand</label>
+            <select id="editCouponBrand" class="form-select">
+              <option value="all">All</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCouponCategory">Target Category</label>
+            <select id="editCouponCategory" class="form-select">
+              <option value="all">All</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="editCouponMinCart">Min Cart Value (₹)</label>
+            <input type="number" id="editCouponMinCart" class="form-input" min="0" step="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCouponLimit">Usage Limit (Global)</label>
+            <input type="number" id="editCouponLimit" class="form-input" min="1" placeholder="Unlimited">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+          <div class="form-group">
+            <label class="form-label" for="editCouponPerUserLimit">Per-User Limit</label>
+            <input type="number" id="editCouponPerUserLimit" class="form-input" min="1" value="1">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCouponExpiry">Expiry Date</label>
+            <input type="date" id="editCouponExpiry" class="form-input">
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+          <button type="button" class="btn-secondary" onclick="closeEditCouponModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="editCouponSaveBtn">Save Changes</button>
         </div>
       </form>
     </div>

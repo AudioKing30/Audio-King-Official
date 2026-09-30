@@ -287,7 +287,7 @@ function renderCheckoutStep() {
           const res = await fetch(apiUrl('/api/coupons/validate'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ code: codeVal, cartTotal: subtotal })
+            body: JSON.stringify({ code: codeVal, cartTotal: subtotal, items: checkoutItems })
           });
           const data = await res.json();
 

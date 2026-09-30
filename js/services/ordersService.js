@@ -96,36 +96,28 @@ class OrdersService {
       if (res.ok) {
         const data = await res.json();
         serverSavedOrder = data.order;
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `Server returned error (${res.status}) while creating order.`);
       }
     } catch (err) {
-      console.warn('[OrdersService] Could not persist to backend directly, saving locally:', err.message);
+      console.error('[OrdersService] Failed to persist order to database:', err);
+      throw err;
     }
 
-    // Format local order object
-    const finalOrder = serverSavedOrder || {
-      id: 'ord_' + Date.now(),
-      orderNumber: orderData.orderId || ('AK-' + Date.now()),
-      totalAmount: (orderData.items || []).reduce((sum, it) => sum + (Number(it.price) || 0) * (Number(it.qty || it.quantity) || 1), 0),
-      status: 'Confirmed',
-      shippingAddress: orderData.customer || {},
-      paymentMethod: orderData.paymentMethod || 'Cash on Delivery (COD)',
-      createdAt: new Date().toISOString(),
-      items: (orderData.items || []).map(it => ({
-        id: 'item_' + Math.random().toString(36).substr(2, 6),
-        name: it.name,
-        image: it.image || it.img || 'assets/images/logo.jpg',
-        quantity: it.qty || it.quantity || 1,
-        unitPrice: it.price || 0,
-        subtotal: (Number(it.price) || 0) * (Number(it.qty || it.quantity) || 1)
-      }))
-    };
+    if (!serverSavedOrder) {
+      throw new Error('Order could not be saved to server database.');
+    }
 
     const currentList = getStorage(localKey, []);
-    currentList.unshift(finalOrder);
-    setStorage(localKey, currentList);
+    const exists = currentList.some(o => o.id === serverSavedOrder.id);
+    if (!exists) {
+      currentList.unshift(serverSavedOrder);
+      setStorage(localKey, currentList);
+    }
     this.cachedOrders = currentList;
 
-    return finalOrder;
+    return serverSavedOrder;
   }
 }
 

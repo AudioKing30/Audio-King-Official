@@ -506,7 +506,7 @@ export async function renderOrdersList() {
           ${items.map(item => `
             <div class="ak-order-card-item-row" data-product-id="${item.productId || item.id || ''}" style="cursor: pointer;" title="Click to view product details">
               <div class="ak-order-item-img-box">
-                <img src="${item.image || 'assets/images/logo.jpg'}" alt="${item.name}">
+                <img src="${item.image || 'assets/images/placeholder.svg'}" alt="${item.name}">
               </div>
               <div class="ak-order-item-info">
                 <h4 class="ak-order-item-name">${item.name}</h4>

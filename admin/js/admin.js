@@ -53,10 +53,14 @@ function formatDate(isoStr) {
 
 function resolveAdminThumb(src) {
   const isInsideAdminDir = typeof window !== 'undefined' && (window.location.pathname.includes('/admin/') || window.location.pathname.endsWith('/admin'));
-  const fallback = isInsideAdminDir ? '../assets/images/logo.jpg' : 'assets/images/logo.jpg';
+  const fallback = isInsideAdminDir ? '../assets/images/placeholder.svg' : 'assets/images/placeholder.svg';
   if (!src) return fallback;
-  if (/^https?:\/\//i.test(src) || src.startsWith('data:')) return src;
+  if (/^https?:\/\//i.test(src) || src.startsWith('data:') || src.startsWith('blob:')) return src;
   let clean = src.replace(/^\/+/, '');
+  const base = getAdminApiBase();
+  if (base && clean.startsWith('uploads/')) {
+    return `${base}/${clean}`;
+  }
   if (isInsideAdminDir && !clean.startsWith('../')) {
     return '../' + clean;
   }
@@ -210,21 +214,17 @@ function switchView(viewName) {
 async function loadDashboardStats() {
   try {
     let res = await adminFetch('/api/admin/dashboard/stats');
-    // If 401 (session may not be established yet), retry once after a short delay
-    if (res.status === 401) {
-      await new Promise(r => setTimeout(r, 800));
+    // If 401 or 403 (session establishing or token sync in-flight), retry
+    if (res.status === 401 || res.status === 403) {
+      await new Promise(r => setTimeout(r, 600));
       res = await adminFetch('/api/admin/dashboard/stats');
+      if (res.status === 401 || res.status === 403) {
+        await new Promise(r => setTimeout(r, 1000));
+        res = await adminFetch('/api/admin/dashboard/stats');
+      }
     }
     if (!res.ok) {
       console.warn('[ADMIN] API stats check returned', res.status);
-      // Show 0 instead of '--' so it doesn't look broken
-      const fallback = { totalCustomers: 0, totalOrders: 0, currentOrders: 0, completedOrders: 0, totalRevenue: 0, lowStockCount: 0, lowStockProducts: [] };
-      const stats = fallback;
-      document.getElementById('statCustomers').textContent = stats.totalCustomers;
-      document.getElementById('statOrders').textContent = stats.totalOrders;
-      document.getElementById('statOrdersSplit').textContent = `${stats.currentOrders} Current · ${stats.completedOrders} Delivered`;
-      document.getElementById('statRevenue').textContent = formatINR(stats.totalRevenue);
-      document.getElementById('statLowStock').textContent = stats.lowStockCount;
       return;
     }
     const data = await res.json();
@@ -321,6 +321,21 @@ async function loadCategoriesAndBrands() {
       brandFilter.innerHTML = '<option value="All">All Brands</option>' + 
         state.brands.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
     }
+
+    // Populate Coupon Target Selects (Create and Edit forms)
+    const populateCouponSelect = (elemId, items) => {
+      const el = document.getElementById(elemId);
+      if (el) {
+        const prev = el.value || 'all';
+        el.innerHTML = '<option value="all">All</option>' +
+          items.map(item => `<option value="${item.name}">${item.name}</option>`).join('');
+        el.value = prev;
+      }
+    };
+    populateCouponSelect('couponBrand', state.brands);
+    populateCouponSelect('couponCategory', state.categories);
+    populateCouponSelect('editCouponBrand', state.brands);
+    populateCouponSelect('editCouponCategory', state.categories);
 
     // Populate Form Selects
     populateFormSelects();
@@ -963,15 +978,16 @@ function confirmDeleteCategory(id, name) {
 // Image Uploads & Reordering
 function renderImagePreviewGrid() {
   const grid = document.getElementById('imagePreviewGrid');
+  if (!grid) return;
   if (state.formImages.length === 0) {
-    grid.innerHTML = `<span style="font-size: 12px; color: var(--ak-text-muted);">No images uploaded yet. Upload images or paste URLs below.</span>`;
+    grid.innerHTML = `<span style="font-size: 12px; color: var(--ak-text-muted);">No images uploaded yet. Upload images from your device or paste URLs below.</span>`;
     return;
   }
 
   grid.innerHTML = state.formImages.map((imgUrl, idx) => `
     <div class="preview-tile ${idx === 0 ? 'cover' : ''}">
       ${idx === 0 ? '<span class="cover-badge">⭐ COVER</span>' : ''}
-      <img src="${resolveAdminThumb(imgUrl)}" class="preview-img" alt="Product image">
+      <img src="${resolveAdminThumb(imgUrl)}" class="preview-img" alt="Product image" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
       <div class="preview-tile-actions">
         <button type="button" class="btn-tile-act" title="Move Left" onclick="moveImage(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>&larr;</button>
         <button type="button" class="btn-tile-act" title="Remove" style="color: var(--ak-danger);" onclick="removeImage(${idx})">&times;</button>
@@ -1005,7 +1021,7 @@ function addImageUrl() {
 }
 
 async function handleImageFilesUpload(event) {
-  const files = event.target.files;
+  const files = event?.dataTransfer ? event.dataTransfer.files : event?.target?.files;
   if (!files || files.length === 0) return;
 
   const formData = new FormData();
@@ -1014,8 +1030,11 @@ async function handleImageFilesUpload(event) {
   }
 
   const uploadStatus = document.getElementById('imageUploadStatus');
-  uploadStatus.textContent = 'Uploading and verifying images...';
-  uploadStatus.style.display = 'block';
+  if (uploadStatus) {
+    uploadStatus.textContent = `Uploading ${files.length} image(s)...`;
+    uploadStatus.style.display = 'block';
+    uploadStatus.style.color = 'var(--ak-orange)';
+  }
 
   try {
     const res = await adminFetch('/api/admin/upload/images', {
@@ -1023,20 +1042,52 @@ async function handleImageFilesUpload(event) {
       body: formData
     });
     const data = await res.json();
-    if (res.ok && data.urls) {
+    if (res.ok && data.urls && Array.isArray(data.urls)) {
       state.formImages.push(...data.urls);
       renderImagePreviewGrid();
-      uploadStatus.textContent = 'Upload successful!';
-      uploadStatus.style.color = 'var(--ak-success)';
-      setTimeout(() => { uploadStatus.style.display = 'none'; uploadStatus.style.color = ''; }, 3000);
+      if (uploadStatus) {
+        uploadStatus.textContent = `✓ ${data.urls.length} image(s) uploaded successfully!`;
+        uploadStatus.style.color = 'var(--ak-success, #16A34A)';
+        setTimeout(() => { uploadStatus.style.display = 'none'; uploadStatus.style.color = ''; }, 3000);
+      }
     } else {
-      alert(data.error || 'Image upload failed');
-      uploadStatus.style.display = 'none';
+      alert(data.error || 'Image upload failed. Please try again.');
+      if (uploadStatus) uploadStatus.style.display = 'none';
     }
   } catch (err) {
     alert('Network error while uploading images.');
-    uploadStatus.style.display = 'none';
+    if (uploadStatus) uploadStatus.style.display = 'none';
+  } finally {
+    if (event?.target) {
+      try { event.target.value = ''; } catch (e) {}
+    }
   }
+}
+
+function initDragAndDropImageUpload() {
+  document.querySelectorAll('.upload-dropzone').forEach(zone => {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      zone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.style.borderColor = 'var(--ak-orange, #EA580C)';
+        zone.style.backgroundColor = 'rgba(234, 88, 12, 0.05)';
+      });
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      zone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.style.borderColor = '';
+        zone.style.backgroundColor = '';
+      });
+    });
+    zone.addEventListener('drop', (e) => {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleImageFilesUpload({ dataTransfer: e.dataTransfer });
+      }
+    });
+  });
 }
 
 // Video Choice & Inline Preview
@@ -1230,7 +1281,7 @@ async function handleSaveProduct(e) {
     stock,
     inStock,
     description,
-    images: state.formImages.length > 0 ? state.formImages : ['assets/images/logo.jpg'],
+    images: state.formImages.length > 0 ? state.formImages : ['assets/images/placeholder.svg'],
     videoChoice: state.formVideoChoice,
     videoInput
   };
@@ -1277,6 +1328,8 @@ async function handleSaveProduct(e) {
       }
 
       alert(isEdit ? 'Product updated successfully!' : 'Product created successfully!');
+      if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+      window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
       switchView('products');
     } else {
       alert(data.error || 'Failed to save product');
@@ -1301,6 +1354,8 @@ function confirmDeleteProduct(id, name) {
         const data = await res.json();
         if (res.ok) {
           loadProducts();
+          if (typeof window.loadLiveCatalog === 'function') window.loadLiveCatalog();
+          window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
           closeModal();
         } else {
           alert(data.error || 'Failed to delete product');
@@ -1594,15 +1649,17 @@ async function deleteOffer(id) {
 // -------------------------------------------------------------
 async function loadCoupons() {
   const tbody = document.getElementById('couponsTableBody');
-  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px;">Loading coupons...</td></tr>';
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 24px;">Loading coupons...</td></tr>';
 
   try {
     const res = await adminFetch('/api/admin/coupons');
     const data = await res.json();
     const coupons = data.coupons || [];
+    state.coupons = coupons;
 
     if (coupons.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="padding: 0; border: none;">
+      tbody.innerHTML = `<tr><td colspan="10" style="padding: 0; border: none;">
         <div class="admin-empty-state-box">
           <svg class="admin-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
           <div class="admin-empty-title">No coupons found.</div>
@@ -1612,26 +1669,70 @@ async function loadCoupons() {
       return;
     }
 
-    tbody.innerHTML = coupons.map(c => `
+    tbody.innerHTML = coupons.map(c => {
+      const targetBrand = (c.targetBrand || c.target_brand || c.applicable_brand || 'all').trim();
+      const targetCategory = (c.targetCategory || c.target_category || c.applicable_category || 'all').trim();
+
+      // Brand display with deleted check
+      let brandDisplay;
+      if (!targetBrand || targetBrand.toLowerCase() === 'all') {
+        brandDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Brands</span>';
+      } else {
+        const brandExists = (state.brands || []).some(b => b.name && b.name.toLowerCase() === targetBrand.toLowerCase());
+        if (brandExists) {
+          brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #E0F2FE; color: #0369A1; font-weight: 700;">${escapeHtml(targetBrand)}</span>`;
+        } else {
+          brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">⚠️ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
+        }
+      }
+
+      // Category display with deleted check
+      let categoryDisplay;
+      if (!targetCategory || targetCategory.toLowerCase() === 'all') {
+        categoryDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Categories</span>';
+      } else {
+        const catExists = (state.categories || []).some(cat => cat.name && cat.name.toLowerCase() === targetCategory.toLowerCase());
+        if (catExists) {
+          categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #F3E8FF; color: #6B21A8; font-weight: 700;">${escapeHtml(targetCategory)}</span>`;
+        } else {
+          categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">⚠️ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
+        }
+      }
+
+      const discType = c.discountType || c.discount_type;
+      const discVal = c.discountValue != null ? c.discountValue : c.discount_value;
+      const minCart = c.minCartValue != null ? c.minCartValue : c.min_cart_value;
+      const usedCount = c.usedCount != null ? c.usedCount : (c.used_count || 0);
+      const usageLimit = c.usageLimit != null ? c.usageLimit : c.usage_limit;
+      const expiresAt = c.expiresAt || c.expires_at;
+      const isActive = c.isActive != null ? c.isActive : (c.is_active !== 0 && c.is_active !== false);
+
+      return `
       <tr>
-        <td><strong style="color: var(--ak-orange); font-size: 15px; letter-spacing: 0.5px;">${c.code}</strong></td>
-        <td>${c.discount_type === 'flat' ? 'Flat Amount' : 'Percentage'}</td>
-        <td><strong>${c.discount_type === 'flat' ? formatINR(c.discount_value) : `${c.discount_value}%`}</strong></td>
-        <td>${c.min_cart_value > 0 ? formatINR(c.min_cart_value) : 'None'}</td>
-        <td><strong>${c.used_count}</strong> / ${c.usage_limit || '∞'}</td>
-        <td>${c.expires_at || 'Never'}</td>
+        <td><strong style="color: var(--ak-orange); font-size: 15px; letter-spacing: 0.5px;">${escapeHtml(c.code)}</strong></td>
+        <td>${discType === 'flat' ? 'Flat Amount' : 'Percentage'}</td>
+        <td><strong>${discType === 'flat' ? formatINR(discVal) : `${discVal}%`}</strong></td>
+        <td>${brandDisplay}</td>
+        <td>${categoryDisplay}</td>
+        <td>${minCart > 0 ? formatINR(minCart) : 'None'}</td>
+        <td><strong>${usedCount}</strong> / ${usageLimit || '∞'}</td>
+        <td>${expiresAt ? String(expiresAt).slice(0, 10) : 'Never'}</td>
         <td>
-          <button class="badge-stock ${c.is_active ? 'in' : 'out'}" style="cursor: pointer; border: none;" onclick="toggleCoupon('${c.id}')">
-            ${c.is_active ? 'Active' : 'Disabled'}
+          <button class="badge-stock ${isActive ? 'in' : 'out'}" style="cursor: pointer; border: none;" onclick="toggleCoupon('${c.id}')">
+            ${isActive ? 'Active' : 'Disabled'}
           </button>
         </td>
         <td>
-          <button class="btn-danger" onclick="deleteCoupon('${c.id}')">Delete</button>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" class="btn-edit" onclick="openEditCoupon('${c.id}')">Edit</button>
+            <button type="button" class="btn-danger" onclick="deleteCoupon('${c.id}')">Delete</button>
+          </div>
         </td>
       </tr>
-    `).join('');
+    `;
+    }).join('');
   } catch (err) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--ak-danger);">Failed to load coupons.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color: var(--ak-danger);">Failed to load coupons.</td></tr>';
   }
 }
 
@@ -1643,6 +1744,8 @@ async function handleCreateCoupon(e) {
   const minCartValue = parseFloat(document.getElementById('couponMinCart').value) || 0;
   const usageLimit = parseInt(document.getElementById('couponLimit').value, 10) || null;
   const expiresAt = document.getElementById('couponExpiry').value || null;
+  const targetBrand = document.getElementById('couponBrand')?.value || 'all';
+  const targetCategory = document.getElementById('couponCategory')?.value || 'all';
 
   if (!code || isNaN(discountValue)) return alert('Please enter code and discount value');
 
@@ -1650,12 +1753,27 @@ async function handleCreateCoupon(e) {
     const res = await adminFetch('/api/admin/coupons', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, discountType, discountValue, minCartValue, usageLimit, expiresAt })
+      body: JSON.stringify({
+        code,
+        discountType,
+        discountValue,
+        minCartValue,
+        usageLimit,
+        expiresAt,
+        targetBrand,
+        targetCategory,
+        applicableBrand: targetBrand,
+        applicableCategory: targetCategory
+      })
     });
     const data = await res.json();
     if (res.ok) {
       alert(`Coupon "${code}" created successfully!`);
       document.getElementById('couponForm').reset();
+      const brandSel = document.getElementById('couponBrand');
+      if (brandSel) brandSel.value = 'all';
+      const catSel = document.getElementById('couponCategory');
+      if (catSel) catSel.value = 'all';
       loadCoupons();
     } else {
       alert(data.error || 'Failed to create coupon');
@@ -1679,6 +1797,124 @@ async function deleteCoupon(id) {
     loadCoupons();
   } catch (e) {}
 }
+
+async function openEditCoupon(id) {
+  try {
+    let coupon = (state.coupons || []).find(c => String(c.id) === String(id));
+    if (!coupon) {
+      const res = await adminFetch('/api/admin/coupons');
+      const data = await res.json();
+      state.coupons = data.coupons || [];
+      coupon = (state.coupons || []).find(item => String(item.id) === String(id));
+    }
+    if (!coupon) return alert('Coupon not found');
+
+    const c = coupon;
+    document.getElementById('editCouponId').value = c.id;
+    document.getElementById('editCouponCode').value = c.code || '';
+    document.getElementById('editCouponType').value = c.discountType || c.discount_type || 'flat';
+    document.getElementById('editCouponValue').value = c.discountValue != null ? c.discountValue : (c.discount_value != null ? c.discount_value : '');
+
+    const bSelect = document.getElementById('editCouponBrand');
+    const cSelect = document.getElementById('editCouponCategory');
+    const curBrand = (c.targetBrand || c.target_brand || c.applicable_brand || 'all').trim();
+    const curCat = (c.targetCategory || c.target_category || c.applicable_category || 'all').trim();
+
+    if (bSelect) {
+      if (!Array.from(bSelect.options).some(o => o.value.toLowerCase() === curBrand.toLowerCase())) {
+        const opt = document.createElement('option');
+        opt.value = curBrand;
+        opt.textContent = curBrand.toLowerCase() === 'all' ? 'All' : `${curBrand} (Target no longer exists)`;
+        bSelect.appendChild(opt);
+      }
+      bSelect.value = curBrand;
+    }
+
+    if (cSelect) {
+      if (!Array.from(cSelect.options).some(o => o.value.toLowerCase() === curCat.toLowerCase())) {
+        const opt = document.createElement('option');
+        opt.value = curCat;
+        opt.textContent = curCat.toLowerCase() === 'all' ? 'All' : `${curCat} (Target no longer exists)`;
+        cSelect.appendChild(opt);
+      }
+      cSelect.value = curCat;
+    }
+
+    document.getElementById('editCouponMinCart').value = c.minCartValue != null ? c.minCartValue : (c.min_cart_value != null ? c.min_cart_value : 0);
+    document.getElementById('editCouponLimit').value = c.usageLimit != null ? c.usageLimit : (c.usage_limit != null ? c.usage_limit : '');
+    document.getElementById('editCouponPerUserLimit').value = c.perUserLimit != null ? c.perUserLimit : (c.per_user_limit != null ? c.per_user_limit : 1);
+
+    const exp = c.expiresAt || c.expires_at;
+    document.getElementById('editCouponExpiry').value = exp ? String(exp).slice(0, 10) : '';
+
+    openModal('editCouponModal');
+  } catch (err) {
+    console.error('Error opening edit coupon modal:', err);
+    alert('Failed to load coupon details for editing.');
+  }
+}
+
+function closeEditCouponModal() {
+  const m = document.getElementById('editCouponModal');
+  if (m) m.classList.remove('open');
+  if (state.activeModal === m) state.activeModal = null;
+}
+
+async function handleUpdateCoupon(e) {
+  e.preventDefault();
+  const id = document.getElementById('editCouponId').value.trim();
+  const code = document.getElementById('editCouponCode').value.trim().toUpperCase();
+  const discountType = document.getElementById('editCouponType').value;
+  const discountValue = parseFloat(document.getElementById('editCouponValue').value);
+  const targetBrand = document.getElementById('editCouponBrand')?.value || 'all';
+  const targetCategory = document.getElementById('editCouponCategory')?.value || 'all';
+  const minCartValue = parseFloat(document.getElementById('editCouponMinCart').value) || 0;
+  const usageLimit = parseInt(document.getElementById('editCouponLimit').value, 10) || null;
+  const perUserLimit = parseInt(document.getElementById('editCouponPerUserLimit').value, 10) || 1;
+  const expiresAt = document.getElementById('editCouponExpiry').value || null;
+
+  if (!id || !code || isNaN(discountValue)) {
+    return alert('Please enter code and discount value');
+  }
+
+  try {
+    const res = await adminFetch(`/api/admin/coupons/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        code,
+        discountType,
+        discountValue,
+        targetBrand,
+        targetCategory,
+        applicableBrand: targetBrand,
+        applicableCategory: targetCategory,
+        minCartValue,
+        usageLimit,
+        perUserLimit,
+        expiresAt
+      })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Coupon "${code}" updated successfully!`);
+      closeEditCouponModal();
+      loadCoupons();
+    } else {
+      alert(data.error || 'Failed to update coupon');
+    }
+  } catch (err) {
+    alert('Error updating coupon.');
+  }
+}
+
+window.loadCoupons = loadCoupons;
+window.handleCreateCoupon = handleCreateCoupon;
+window.toggleCoupon = toggleCoupon;
+window.deleteCoupon = deleteCoupon;
+window.openEditCoupon = openEditCoupon;
+window.closeEditCouponModal = closeEditCouponModal;
+window.handleUpdateCoupon = handleUpdateCoupon;
 
 // -------------------------------------------------------------
 // 6. ORDERS (CURRENT VS HISTORY)
@@ -2096,11 +2332,7 @@ function initAdminDashboardView(targetView) {
       viewToOpen = hash.replace('#', '').split('?')[0];
     }
   }
-  if (!viewToOpen) {
-    try {
-      viewToOpen = localStorage.getItem('audioking_admin_view');
-    } catch (e) {}
-  }
+  // Default strictly to 'dashboard' when returning to Admin Portal
   if (!viewToOpen || !document.getElementById(`view-${viewToOpen}`)) {
     viewToOpen = 'dashboard';
   }

@@ -25476,9 +25476,10 @@ Weight: 1.24 lbs (0.567 kg`,
   `;
   }
   function resolveProductImage(src) {
-    if (!src)
-      return "assets/images/placeholder.jpg";
-    if (/^https?:\/\//i.test(src) || src.startsWith("data:"))
+    if (!src || src === "assets/images/logo.jpg" || src === "assets/images/placeholder.jpg") {
+      return "assets/images/placeholder.svg";
+    }
+    if (/^https?:\/\//i.test(src) || src.startsWith("data:") || src.startsWith("blob:"))
       return src;
     if (src.startsWith("/uploads/"))
       return src.slice(1);
@@ -27526,32 +27527,25 @@ Weight: 1.24 lbs (0.567 kg`,
         if (res.ok) {
           const data = await res.json();
           serverSavedOrder = data.order;
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `Server returned error (${res.status}) while creating order.`);
         }
       } catch (err) {
-        console.warn("[OrdersService] Could not persist to backend directly, saving locally:", err.message);
+        console.error("[OrdersService] Failed to persist order to database:", err);
+        throw err;
       }
-      const finalOrder = serverSavedOrder || {
-        id: "ord_" + Date.now(),
-        orderNumber: orderData.orderId || "AK-" + Date.now(),
-        totalAmount: (orderData.items || []).reduce((sum, it) => sum + (Number(it.price) || 0) * (Number(it.qty || it.quantity) || 1), 0),
-        status: "Confirmed",
-        shippingAddress: orderData.customer || {},
-        paymentMethod: orderData.paymentMethod || "Cash on Delivery (COD)",
-        createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-        items: (orderData.items || []).map((it) => ({
-          id: "item_" + Math.random().toString(36).substr(2, 6),
-          name: it.name,
-          image: it.image || it.img || "assets/images/logo.jpg",
-          quantity: it.qty || it.quantity || 1,
-          unitPrice: it.price || 0,
-          subtotal: (Number(it.price) || 0) * (Number(it.qty || it.quantity) || 1)
-        }))
-      };
+      if (!serverSavedOrder) {
+        throw new Error("Order could not be saved to server database.");
+      }
       const currentList = getStorage(localKey, []);
-      currentList.unshift(finalOrder);
-      setStorage(localKey, currentList);
+      const exists = currentList.some((o) => o.id === serverSavedOrder.id);
+      if (!exists) {
+        currentList.unshift(serverSavedOrder);
+        setStorage(localKey, currentList);
+      }
       this.cachedOrders = currentList;
-      return finalOrder;
+      return serverSavedOrder;
     }
   };
   var ordersService = new OrdersService();
@@ -27972,7 +27966,7 @@ Weight: 1.24 lbs (0.567 kg`,
           ${items.map((item) => `
             <div class="ak-order-card-item-row" data-product-id="${item.productId || item.id || ""}" style="cursor: pointer;" title="Click to view product details">
               <div class="ak-order-item-img-box">
-                <img src="${item.image || "assets/images/logo.jpg"}" alt="${item.name}">
+                <img src="${item.image || "assets/images/placeholder.svg"}" alt="${item.name}">
               </div>
               <div class="ak-order-item-info">
                 <h4 class="ak-order-item-name">${item.name}</h4>
@@ -28639,7 +28633,7 @@ Weight: 1.24 lbs (0.567 kg`,
             const res = await fetch(apiUrl("/api/coupons/validate"), {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ code: codeVal, cartTotal: subtotal })
+              body: JSON.stringify({ code: codeVal, cartTotal: subtotal, items: checkoutItems })
             });
             const data = await res.json();
             if (res.ok && data.valid) {
@@ -28817,34 +28811,12 @@ Weight: 1.24 lbs (0.567 kg`,
   var cart = [];
   var loaded = getStorage(STORAGE_KEY, []);
   cart = Array.isArray(loaded) ? loaded : [];
-  var syncDebounceTimer = null;
-  function syncCartWithBackend() {
-    if (!authService.isAuthenticated())
-      return;
-    clearTimeout(syncDebounceTimer);
-    syncDebounceTimer = setTimeout(() => {
-      const payload = cart.map((item) => ({
-        id: item.id,
-        productId: item.id,
-        qty: item.qty,
-        quantity: item.qty
-      }));
-      authService.safeFetch("/api/user/cart", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: payload })
-      }).catch((e) => console.warn("[Cart Sync]", e));
-    }, 300);
-  }
-  function saveCart(sync = true) {
+  function saveCart(syncWithServer = false) {
     setStorage(STORAGE_KEY, cart);
     updateCartBadge();
     renderCartDrawer();
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent("ak:cart-updated", { detail: cart }));
-    }
-    if (sync) {
-      syncCartWithBackend();
     }
   }
   async function hydrateCartFromServer() {
@@ -28852,7 +28824,7 @@ Weight: 1.24 lbs (0.567 kg`,
       return;
     try {
       if (cart.length > 0) {
-        const mergePayload = cart.map((i) => ({ productId: i.id, qty: i.qty }));
+        const mergePayload = cart.map((i) => ({ productId: i.id || i.productId, qty: i.qty || i.quantity || 1 }));
         const mergeRes = await authService.safeFetch("/api/user/cart/merge", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -28868,14 +28840,28 @@ Weight: 1.24 lbs (0.567 kg`,
         hydrateFromList(res.data.cart);
       }
     } catch (e) {
-      console.warn("[Hydrate Cart]", e);
+      console.warn("[Hydrate Cart Error]", e);
     }
   }
   function hydrateFromList(serverItems) {
     const newCart = [];
     serverItems.forEach((it) => {
       const pId = it.productId || it.id;
-      const prod = (AUDIOKING_PRODUCTS || []).find((p) => p.id === pId);
+      if (it.name && it.price !== void 0) {
+        newCart.push({
+          id: pId,
+          brand: it.brand || "Pro Audio",
+          name: it.name,
+          category: it.category || "Pro Audio",
+          price: Number(it.price) || 0,
+          originalPrice: Number(it.originalPrice) || 0,
+          image: it.image || "assets/images/placeholder.svg",
+          qty: Number(it.qty || it.quantity) || 1
+        });
+        return;
+      }
+      const allProds = window._liveCatalogProducts || AUDIOKING_PRODUCTS || [];
+      const prod = allProds.find((p) => p && String(p.id) === String(pId));
       if (prod) {
         newCart.push({
           id: prod.id,
@@ -28883,7 +28869,8 @@ Weight: 1.24 lbs (0.567 kg`,
           name: prod.name,
           category: prod.category,
           price: prod.price,
-          image: prod.image,
+          originalPrice: prod.originalPrice || 0,
+          image: prod.image || "assets/images/placeholder.svg",
           qty: Number(it.qty || it.quantity) || 1
         });
       }
@@ -28909,7 +28896,8 @@ Weight: 1.24 lbs (0.567 kg`,
     return [...cart];
   }
   function getCartItemQuantity(productId) {
-    const item = cart.find((i) => i.id === productId);
+    const sId = String(productId);
+    const item = cart.find((i) => String(i.id) === sId);
     return item ? Number(item.qty) || 0 : 0;
   }
   function getCartCount() {
@@ -28941,16 +28929,14 @@ Weight: 1.24 lbs (0.567 kg`,
   if (typeof window !== "undefined") {
     window.animateCartButton = animateCartButton;
   }
-  function addToCart(product, qty = 1, silent = false) {
-    const user = getCurrentUser();
-    if (!user) {
-      openAuthModal("signin", "To proceed shopping you need to sign in");
-      showToast("Please sign in to add items to your cart");
+  async function addToCart(product, qty = 1, silent = false) {
+    if (!product)
       return false;
-    }
-    const existing = cart.find((item) => item.id === product.id);
+    const pId = String(product.id);
+    const quantity = Math.max(1, Number(qty) || 1);
+    const existing = cart.find((item) => String(item.id) === pId);
     if (existing) {
-      existing.qty += qty;
+      existing.qty += quantity;
     } else {
       cart.push({
         id: product.id,
@@ -28958,30 +28944,89 @@ Weight: 1.24 lbs (0.567 kg`,
         name: product.name,
         category: product.category,
         price: product.price,
-        image: product.image,
-        qty
+        originalPrice: product.originalPrice || 0,
+        image: product.image || "assets/images/placeholder.svg",
+        qty: quantity
       });
     }
-    saveCart();
+    saveCart(false);
     animateCartButton();
     if (!silent) {
       showToast(`Added ${product.name.substring(0, 26)}... to cart`, getIcon("check", "", 18));
     }
+    if (authService.isAuthenticated()) {
+      try {
+        const res = await authService.safeFetch("/api/user/cart/items", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId: pId, qty: quantity })
+        });
+        if (res.ok && Array.isArray(res.data?.cart)) {
+          hydrateFromList(res.data.cart);
+        } else if (!res.ok) {
+          showToast("Failed to save cart to server. Please check your connection.", "error");
+        }
+      } catch (e) {
+        showToast("Failed to save cart to server.", "error");
+      }
+    }
+    return true;
   }
-  function updateCartItemQty(productId, delta) {
-    const item = cart.find((i) => i.id === productId);
+  async function updateCartItemQty(productId, delta) {
+    const pId = String(productId);
+    const item = cart.find((i) => String(i.id) === pId);
     if (!item)
       return;
-    item.qty += delta;
-    if (item.qty <= 0) {
-      cart = cart.filter((i) => i.id !== productId);
+    const newQty = item.qty + delta;
+    if (newQty <= 0) {
+      cart = cart.filter((i) => String(i.id) !== pId);
+    } else {
+      item.qty = newQty;
     }
-    saveCart();
+    saveCart(false);
+    if (authService.isAuthenticated()) {
+      try {
+        let res;
+        if (newQty <= 0) {
+          res = await authService.safeFetch(`/api/user/cart/items/${encodeURIComponent(pId)}`, {
+            method: "DELETE"
+          });
+        } else {
+          res = await authService.safeFetch(`/api/user/cart/items/${encodeURIComponent(pId)}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ qty: newQty })
+          });
+        }
+        if (res.ok && Array.isArray(res.data?.cart)) {
+          hydrateFromList(res.data.cart);
+        } else if (!res.ok) {
+          showToast("Failed to update cart on server.", "error");
+        }
+      } catch (e) {
+        showToast("Failed to update cart on server.", "error");
+      }
+    }
   }
-  function removeCartItem(productId) {
-    cart = cart.filter((i) => i.id !== productId);
-    saveCart();
+  async function removeCartItem(productId) {
+    const pId = String(productId);
+    cart = cart.filter((i) => String(i.id) !== pId);
+    saveCart(false);
     showToast("Item removed from cart");
+    if (authService.isAuthenticated()) {
+      try {
+        const res = await authService.safeFetch(`/api/user/cart/items/${encodeURIComponent(pId)}`, {
+          method: "DELETE"
+        });
+        if (res.ok && Array.isArray(res.data?.cart)) {
+          hydrateFromList(res.data.cart);
+        } else if (!res.ok) {
+          showToast("Failed to remove item from server cart.", "error");
+        }
+      } catch (e) {
+        showToast("Failed to remove item from server cart.", "error");
+      }
+    }
   }
   function clearCart() {
     cart = [];
@@ -29032,66 +29077,74 @@ Weight: 1.24 lbs (0.567 kg`,
     const checkoutBtn = document.getElementById("akProceedCheckoutBtn");
     if (!container)
       return;
+    if (cart.length === 0) {
+      container.innerHTML = `
+      <div class="ak-cart-empty">
+        <svg class="ak-cart-empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <p class="ak-cart-empty-title">Your cart is empty</p>
+        <p class="ak-cart-empty-sub">Explore our studio pro audio gear and add products to your setup.</p>
+        <a href="#store" class="ak-cart-empty-btn" onclick="closeCartDrawer()">Start Shopping</a>
+      </div>
+    `;
+      if (subtotalEl)
+        subtotalEl.textContent = formatINR(0);
+      if (totalEl)
+        totalEl.textContent = formatINR(0);
+      if (checkoutBtn) {
+        checkoutBtn.disabled = true;
+        checkoutBtn.style.opacity = "0.5";
+        checkoutBtn.style.cursor = "not-allowed";
+      }
+      return;
+    }
+    if (checkoutBtn) {
+      checkoutBtn.disabled = false;
+      checkoutBtn.style.opacity = "1";
+      checkoutBtn.style.cursor = "pointer";
+    }
+    container.innerHTML = cart.map((item) => `
+    <div class="ak-cart-item" data-id="${item.id}">
+      <div class="ak-cart-item-img">
+        <img src="${item.image || "assets/images/placeholder.svg"}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
+      </div>
+      <div class="ak-cart-item-details">
+        <span class="ak-cart-item-brand">${item.brand || "Pro Audio"}</span>
+        <h4 class="ak-cart-item-title">${item.name}</h4>
+        <div class="ak-cart-item-price">${formatINR(item.price)}</div>
+        <div class="ak-cart-item-actions">
+          <div class="ak-cart-stepper">
+            <button type="button" class="ak-stepper-btn ak-cart-minus" data-id="${item.id}" aria-label="Decrease quantity">\u2212</button>
+            <span class="ak-stepper-val">${item.qty}</span>
+            <button type="button" class="ak-stepper-btn ak-cart-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
+          </div>
+          <button type="button" class="ak-cart-item-remove" data-id="${item.id}" aria-label="Remove item">Remove</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
     const subtotal = getCartSubtotal();
     if (subtotalEl)
       subtotalEl.textContent = formatINR(subtotal);
     if (totalEl)
       totalEl.textContent = formatINR(subtotal);
-    if (cart.length === 0) {
-      container.innerHTML = `
-      <div class="ak-cart-empty">
-        <div class="ak-cart-empty-icon">${getIcon("cart", "", 32)}</div>
-        <h4 style="font-size: 16px; color: var(--ak-navy); margin-bottom: 6px;">Your cart is empty</h4>
-        <p style="font-size: 13px;">Discover our collection of pro-audio equipment and instruments.</p>
-      </div>
-    `;
-      if (checkoutBtn)
-        checkoutBtn.disabled = true;
-      return;
-    }
-    if (checkoutBtn)
-      checkoutBtn.disabled = false;
-    container.innerHTML = cart.map((item) => `
-    <div class="ak-cart-item" data-id="${item.id}">
-      <div class="ak-cart-item-img">
-        ${item.image ? `<img src="${item.image}" alt="${item.name}" onerror="this.src=''; this.style.display='none'; this.nextElementSibling.style.display='flex';">` : ""}
-        <div class="ak-placeholder-thumb" style="${item.image ? "display:none;" : "display:flex;"}">
-          <span style="font-size: 10px; font-weight:800; color:var(--ak-orange);">${item.brand.substring(0, 6)}</span>
-        </div>
-      </div>
-      <div class="ak-cart-item-body">
-        <span class="ak-cart-item-brand">${item.brand}</span>
-        <h4 class="ak-cart-item-title">${item.name}</h4>
-        <div class="ak-cart-item-price">${formatINR(item.price * item.qty)}</div>
-        <div class="ak-cart-item-actions">
-          <div class="ak-qty-stepper">
-            <button class="ak-qty-btn ak-qty-minus" data-id="${item.id}" aria-label="Decrease quantity">\u2212</button>
-            <span class="ak-qty-val">${item.qty}</span>
-            <button class="ak-qty-btn ak-qty-plus" data-id="${item.id}" aria-label="Increase quantity">+</button>
-          </div>
-          <span class="ak-cart-item-remove" data-id="${item.id}">Remove</span>
-        </div>
-      </div>
-    </div>
-  `).join("");
-    container.querySelectorAll(".ak-qty-minus").forEach((btn) => {
-      btn.addEventListener("click", () => updateCartItemQty(btn.dataset.id, -1));
+    container.querySelectorAll(".ak-cart-minus").forEach((btn) => {
+      btn.onclick = () => updateCartItemQty(btn.dataset.id, -1);
     });
-    container.querySelectorAll(".ak-qty-plus").forEach((btn) => {
-      btn.addEventListener("click", () => updateCartItemQty(btn.dataset.id, 1));
+    container.querySelectorAll(".ak-cart-plus").forEach((btn) => {
+      btn.onclick = () => updateCartItemQty(btn.dataset.id, 1);
     });
     container.querySelectorAll(".ak-cart-item-remove").forEach((btn) => {
-      btn.addEventListener("click", () => removeCartItem(btn.dataset.id));
+      btn.onclick = () => removeCartItem(btn.dataset.id);
     });
   }
   function initCart() {
     updateCartBadge();
     const trigger = document.getElementById("akCartTrigger");
-    const closeBtn = document.getElementById("akCartClose");
+    const closeBtn = document.getElementById("akCartCloseBtn");
     const backdrop = document.getElementById("akCartBackdrop");
     const checkoutBtn = document.getElementById("akProceedCheckoutBtn");
     if (trigger)
-      trigger.addEventListener("click", openCartDrawer);
+      trigger.addEventListener("click", () => openCartDrawer(true));
     if (closeBtn)
       closeBtn.addEventListener("click", closeCartDrawer);
     if (backdrop) {
@@ -29122,6 +29175,9 @@ Weight: 1.24 lbs (0.567 kg`,
         }
       }
     });
+    if (authService.isAuthenticated()) {
+      hydrateCartFromServer();
+    }
   }
 
   // js/components/header.js
@@ -32186,17 +32242,19 @@ Message: ${message}`);
   async function showProduct(productOrId, updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash)))
       return;
-    let product = typeof productOrId === "string" ? getProductById(productOrId) : productOrId;
-    const productId = typeof productOrId === "string" ? productOrId : productOrId?.id;
+    const productId = productOrId && typeof productOrId === "object" ? productOrId.id : productOrId;
+    let product = productOrId && typeof productOrId === "object" ? productOrId : getProductById(productId);
     if (productId) {
       recordProductClick(productId);
+    }
+    if (!product && productId) {
       try {
         const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
         if (res.ok) {
           const data = await res.json();
           if (data.product) {
             product = data.product;
-            const idx = AUDIOKING_PRODUCTS.findIndex((p) => p.id === product.id);
+            const idx = AUDIOKING_PRODUCTS.findIndex((p) => String(p.id) === String(product.id));
             if (idx >= 0) {
               AUDIOKING_PRODUCTS[idx] = product;
             } else {
@@ -32207,6 +32265,18 @@ Message: ${message}`);
       } catch (e) {
         console.warn("[AUDIOKING] Could not fetch single product:", e);
       }
+    } else if (productId) {
+      fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`)).then((res) => res.ok ? res.json() : null).then((data) => {
+        if (data && data.product) {
+          const fresh = data.product;
+          const idx = AUDIOKING_PRODUCTS.findIndex((p) => String(p.id) === String(fresh.id));
+          if (idx >= 0)
+            AUDIOKING_PRODUCTS[idx] = fresh;
+          else
+            AUDIOKING_PRODUCTS.push(fresh);
+        }
+      }).catch(() => {
+      });
     }
     if (!product)
       return;
@@ -32243,7 +32313,7 @@ Message: ${message}`);
     const ppMainImage = document.getElementById("ppMainImage");
     const ppThumbnailsList = document.getElementById("ppThumbnailsList");
     if (ppBrandLink) {
-      ppBrandLink.textContent = product.brand.toUpperCase();
+      ppBrandLink.textContent = (product.brand || "Pro Audio").toUpperCase();
       ppBrandLink.onclick = (e) => {
         e.preventDefault();
         showCatalog(product.brand, "brand");
@@ -32254,7 +32324,7 @@ Message: ${message}`);
     if (ppCrumb)
       ppCrumb.textContent = product.name;
     if (ppCode)
-      ppCode.textContent = `SKU: AK-${product.id.toUpperCase()} \xB7 Category: ${product.category}`;
+      ppCode.textContent = `SKU: AK-${String(product.id).toUpperCase()} \xB7 Category: ${product.category || "Pro Audio"}`;
     if (ppPrice)
       ppPrice.textContent = formatINR(product.price);
     if (ppOrigPrice) {
@@ -33534,11 +33604,6 @@ Message: ${message}`);
         }
       } catch (e) {
       }
-      const activeTab = document.querySelector(".ak-tab-btn.active")?.dataset.tab || "best-sellers";
-      if (activeTab === "best-sellers") {
-        const currentList = FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS;
-        renderFeaturedProducts(currentList);
-      }
     } catch (e) {
     }
   }
@@ -33584,12 +33649,49 @@ Message: ${message}`);
         remainingProducts.push(p);
       }
     });
+    const now = /* @__PURE__ */ new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const weekNumber = Math.ceil(((now - startOfYear) / 864e5 + startOfYear.getDay() + 1) / 7);
+    const currentWeekKey = `${now.getFullYear()}-W${weekNumber}`;
+    let weeklyOrderMap = null;
+    try {
+      const rawSnapshot = localStorage.getItem("audioking_weekly_featured_snapshot");
+      if (rawSnapshot) {
+        const parsed = JSON.parse(rawSnapshot);
+        if (parsed && parsed.weekKey === currentWeekKey && Array.isArray(parsed.rankedIds)) {
+          weeklyOrderMap = /* @__PURE__ */ new Map();
+          parsed.rankedIds.forEach((id, index) => {
+            weeklyOrderMap.set(String(id), index);
+          });
+        }
+      }
+    } catch (e) {
+    }
+    if (!weeklyOrderMap) {
+      const sortedIds = [...remainingProducts].sort((a, b) => {
+        const clicksA = clicks[a.id] || 0;
+        const clicksB = clicks[b.id] || 0;
+        if (clicksB !== clicksA)
+          return clicksB - clicksA;
+        return 0;
+      }).map((p) => String(p.id));
+      try {
+        localStorage.setItem("audioking_weekly_featured_snapshot", JSON.stringify({
+          weekKey: currentWeekKey,
+          createdAt: now.toISOString(),
+          rankedIds: sortedIds
+        }));
+      } catch (e) {
+      }
+      weeklyOrderMap = /* @__PURE__ */ new Map();
+      sortedIds.forEach((id, index) => {
+        weeklyOrderMap.set(id, index);
+      });
+    }
     remainingProducts.sort((a, b) => {
-      const clicksA = clicks[a.id] || 0;
-      const clicksB = clicks[b.id] || 0;
-      if (clicksB !== clicksA)
-        return clicksB - clicksA;
-      return 0;
+      const rankA = weeklyOrderMap.has(String(a.id)) ? weeklyOrderMap.get(String(a.id)) : 9999;
+      const rankB = weeklyOrderMap.has(String(b.id)) ? weeklyOrderMap.get(String(b.id)) : 9999;
+      return rankA - rankB;
     });
     let displayItems = [...lockedProducts, ...remainingProducts];
     if (displayItems.length < 10 && allProds.length > 0) {
@@ -33725,9 +33827,11 @@ Message: ${message}`);
     });
   }
   function getProductById(pId) {
-    if (!pId)
+    if (!pId && pId !== 0)
       return null;
-    return AUDIOKING_PRODUCTS.find((p) => p.id === pId) || FEATURED_PRODUCTS.find((p) => p.id === pId) || null;
+    const sId = String(pId);
+    const liveList = window._liveCatalogProducts || [];
+    return liveList.find((p) => p && String(p.id) === sId) || AUDIOKING_PRODUCTS.find((p) => p && String(p.id) === sId) || FEATURED_PRODUCTS.find((p) => p && String(p.id) === sId) || null;
   }
   function attachProductCardListeners(container = document) {
     container.querySelectorAll(".ak-product-card").forEach((card) => {
@@ -33736,11 +33840,14 @@ Message: ${message}`);
         if (e.target.closest(".ak-add-btn") || e.target.closest(".ak-card-qty-control"))
           return;
         const pId = card.dataset.id;
-        if (pId)
-          recordProductClick(pId);
+        if (!pId)
+          return;
         const product = getProductById(pId);
-        if (product)
+        if (product) {
           showProduct(product);
+        } else {
+          showProduct(pId);
+        }
       };
     });
   }

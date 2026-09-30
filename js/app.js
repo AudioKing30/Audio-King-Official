@@ -891,17 +891,22 @@ function sendYtCommand(iframe, func, args = '') {
  */
 export async function showProduct(productOrId, updateHash = true) {
   if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash))) return;
-  let product = typeof productOrId === 'string' ? getProductById(productOrId) : productOrId;
-  const productId = typeof productOrId === 'string' ? productOrId : productOrId?.id;
+  const productId = (productOrId && typeof productOrId === 'object') ? productOrId.id : productOrId;
+  let product = (productOrId && typeof productOrId === 'object') ? productOrId : getProductById(productId);
+
   if (productId) {
     recordProductClick(productId);
+  }
+
+  // If not in memory, we must await fetch from server
+  if (!product && productId) {
     try {
       const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
       if (res.ok) {
         const data = await res.json();
         if (data.product) {
           product = data.product;
-          const idx = AUDIOKING_PRODUCTS.findIndex(p => p.id === product.id);
+          const idx = AUDIOKING_PRODUCTS.findIndex(p => String(p.id) === String(product.id));
           if (idx >= 0) {
             AUDIOKING_PRODUCTS[idx] = product;
           } else {
@@ -912,7 +917,21 @@ export async function showProduct(productOrId, updateHash = true) {
     } catch (e) {
       console.warn('[AUDIOKING] Could not fetch single product:', e);
     }
+  } else if (productId) {
+    // If product is already in memory, fetch fresh data in background without blocking UI
+    fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`))
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && data.product) {
+          const fresh = data.product;
+          const idx = AUDIOKING_PRODUCTS.findIndex(p => String(p.id) === String(fresh.id));
+          if (idx >= 0) AUDIOKING_PRODUCTS[idx] = fresh;
+          else AUDIOKING_PRODUCTS.push(fresh);
+        }
+      })
+      .catch(() => {});
   }
+
   if (!product) return;
   activeProduct = product;
   const hasProductVideo = Boolean(product.youtubeVideoId || product.videoUrl);
@@ -953,7 +972,7 @@ export async function showProduct(productOrId, updateHash = true) {
   const ppThumbnailsList = document.getElementById('ppThumbnailsList');
 
   if (ppBrandLink) {
-    ppBrandLink.textContent = product.brand.toUpperCase();
+    ppBrandLink.textContent = (product.brand || 'Pro Audio').toUpperCase();
     ppBrandLink.onclick = (e) => {
       e.preventDefault();
       showCatalog(product.brand, 'brand');
@@ -962,7 +981,7 @@ export async function showProduct(productOrId, updateHash = true) {
 
   if (ppTitle) ppTitle.textContent = product.name;
   if (ppCrumb) ppCrumb.textContent = product.name;
-  if (ppCode) ppCode.textContent = `SKU: AK-${product.id.toUpperCase()} · Category: ${product.category}`;
+  if (ppCode) ppCode.textContent = `SKU: AK-${String(product.id).toUpperCase()} · Category: ${product.category || 'Pro Audio'}`;
   if (ppPrice) ppPrice.textContent = formatINR(product.price);
   if (ppOrigPrice) {
     ppOrigPrice.textContent = product.originalPrice ? formatINR(product.originalPrice) : '';
@@ -2416,19 +2435,12 @@ export function recordProductClick(productId) {
         navigator.sendBeacon(apiUrl('/api/analytics/click'), JSON.stringify({ productId }));
       }
     } catch (e) {}
-
-    // Dynamically recurring update of featured products if on home page
-    const activeTab = document.querySelector('.ak-tab-btn.active')?.dataset.tab || 'best-sellers';
-    if (activeTab === 'best-sellers') {
-      const currentList = FEATURED_PRODUCTS.length ? FEATURED_PRODUCTS : AUDIOKING_PRODUCTS;
-      renderFeaturedProducts(currentList);
-    }
   } catch (e) {}
 }
 
 /**
  * Render Featured Products Grid (Strictly 5 cards per row, max 2 rows = 10 items total)
- * Dynamically recurring based on customer click popularity!
+ * Rotates on a weekly basis based on customer click popularity!
  */
 export function renderFeaturedProducts(items) {
   const grid = document.getElementById('akFeaturedProductsGrid');
@@ -2487,12 +2499,56 @@ export function renderFeaturedProducts(items) {
     }
   });
 
-  // Dynamically sort remaining products based on customer impressions/clicks:
+  // Weekly Rotation Snapshot Engine:
+  // Products rotate on a weekly basis based on accumulated clicks, rather than real-time reshuffling on every single click.
+  const now = new Date();
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const weekNumber = Math.ceil((((now - startOfYear) / 86400000) + startOfYear.getDay() + 1) / 7);
+  const currentWeekKey = `${now.getFullYear()}-W${weekNumber}`;
+
+  let weeklyOrderMap = null;
+  try {
+    const rawSnapshot = localStorage.getItem('audioking_weekly_featured_snapshot');
+    if (rawSnapshot) {
+      const parsed = JSON.parse(rawSnapshot);
+      if (parsed && parsed.weekKey === currentWeekKey && Array.isArray(parsed.rankedIds)) {
+        weeklyOrderMap = new Map();
+        parsed.rankedIds.forEach((id, index) => {
+          weeklyOrderMap.set(String(id), index);
+        });
+      }
+    }
+  } catch (e) {}
+
+  if (!weeklyOrderMap) {
+    const sortedIds = [...remainingProducts]
+      .sort((a, b) => {
+        const clicksA = clicks[a.id] || 0;
+        const clicksB = clicks[b.id] || 0;
+        if (clicksB !== clicksA) return clicksB - clicksA;
+        return 0;
+      })
+      .map(p => String(p.id));
+
+    try {
+      localStorage.setItem('audioking_weekly_featured_snapshot', JSON.stringify({
+        weekKey: currentWeekKey,
+        createdAt: now.toISOString(),
+        rankedIds: sortedIds
+      }));
+    } catch (e) {}
+
+    weeklyOrderMap = new Map();
+    sortedIds.forEach((id, index) => {
+      weeklyOrderMap.set(id, index);
+    });
+  }
+
+  // Sort remaining products strictly by this week's rotation snapshot
   remainingProducts.sort((a, b) => {
-    const clicksA = clicks[a.id] || 0;
-    const clicksB = clicks[b.id] || 0;
-    if (clicksB !== clicksA) return clicksB - clicksA;
-    return 0;
+    const rankA = weeklyOrderMap.has(String(a.id)) ? weeklyOrderMap.get(String(a.id)) : 9999;
+    const rankB = weeklyOrderMap.has(String(b.id)) ? weeklyOrderMap.get(String(b.id)) : 9999;
+    return rankA - rankB;
   });
 
   // Combine: Locked products stay firmly at the front, followed by impression-ranked products
@@ -2660,10 +2716,13 @@ function initProductTabs() {
   });
 }
 
-function getProductById(pId) {
-  if (!pId) return null;
-  return AUDIOKING_PRODUCTS.find(p => p.id === pId) || 
-         FEATURED_PRODUCTS.find(p => p.id === pId) || 
+export function getProductById(pId) {
+  if (!pId && pId !== 0) return null;
+  const sId = String(pId);
+  const liveList = window._liveCatalogProducts || [];
+  return liveList.find(p => p && String(p.id) === sId) ||
+         AUDIOKING_PRODUCTS.find(p => p && String(p.id) === sId) || 
+         FEATURED_PRODUCTS.find(p => p && String(p.id) === sId) || 
          null;
 }
 
@@ -2676,9 +2735,13 @@ function attachProductCardListeners(container = document) {
     card.onclick = (e) => {
       if (e.target.closest('.ak-add-btn') || e.target.closest('.ak-card-qty-control')) return;
       const pId = card.dataset.id;
-      if (pId) recordProductClick(pId);
+      if (!pId) return;
       const product = getProductById(pId);
-      if (product) showProduct(product);
+      if (product) {
+        showProduct(product);
+      } else {
+        showProduct(pId);
+      }
     };
   });
 }
