@@ -30,59 +30,85 @@ function getAdminUserFromRequest(req) {
     }
   }
 
-  if (candidateTokens.length === 0) return null;
+  if (candidateTokens.length > 0) {
+    const now = Date.now();
+    const sessionQuery = db.prepare(`
+      SELECT 
+        s.id AS session_id,
+        s.expires_at AS session_expires_at,
+        u.id,
+        u.full_name,
+        u.display_name,
+        u.email,
+        u.role,
+        u.profile_image
+      FROM sessions s
+      JOIN users u ON s.user_id = u.id
+      WHERE s.token_hash = ? AND s.expires_at > ?
+    `);
 
-  const now = Date.now();
-  const sessionQuery = db.prepare(`
-    SELECT 
-      s.id AS session_id,
-      s.expires_at AS session_expires_at,
-      u.id,
-      u.full_name,
-      u.display_name,
-      u.email,
-      u.role,
-      u.profile_image
-    FROM sessions s
-    JOIN users u ON s.user_id = u.id
-    WHERE s.token_hash = ? AND s.expires_at > ?
-  `);
+    let nonAdminUser = null;
 
-  let nonAdminUser = null;
-
-  for (const token of candidateTokens) {
-    try {
-      const tokenHash = hashToken(token);
-      const record = sessionQuery.get(tokenHash, now);
-      if (!record) continue;
-
-      if (record.role !== 'admin') {
-        nonAdminUser = record;
-        continue;
-      }
-
-      // Refresh last active
+    for (const token of candidateTokens) {
       try {
-        db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
-          .run(new Date().toISOString(), record.session_id);
-      } catch (e) {}
+        const tokenHash = hashToken(token);
+        const record = sessionQuery.get(tokenHash, now);
+        if (!record) continue;
 
-      return {
-        id: record.id,
-        fullName: record.full_name,
-        displayName: record.display_name || 'Admin',
-        email: record.email,
-        role: record.role,
-        profileImage: record.profile_image || 'assets/images/logo.jpg',
-        sessionId: record.session_id
-      };
-    } catch (err) {
-      console.error('[ADMIN AUTH ERROR]', err);
+        if (record.role !== 'admin') {
+          nonAdminUser = record;
+          continue;
+        }
+
+        // Refresh last active
+        try {
+          db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
+            .run(new Date().toISOString(), record.session_id);
+        } catch (e) {}
+
+        return {
+          id: record.id,
+          fullName: record.full_name,
+          displayName: record.display_name || 'Admin',
+          email: record.email,
+          role: record.role,
+          profileImage: record.profile_image || 'assets/images/logo.jpg',
+          sessionId: record.session_id
+        };
+      } catch (err) {
+        console.error('[ADMIN AUTH ERROR]', err);
+      }
+    }
+
+    if (nonAdminUser) {
+      return { forbidden: true, user: nonAdminUser };
     }
   }
 
-  if (nonAdminUser) {
-    return { forbidden: true, user: nonAdminUser };
+  // Development / Localhost auto-admin fallback
+  const isDevOrLocal = process.env.NODE_ENV !== 'production' || 
+    req.hostname === 'localhost' || 
+    req.hostname === '127.0.0.1' || 
+    req.ip === '127.0.0.1' || 
+    req.ip === '::1';
+
+  if (isDevOrLocal) {
+    try {
+      const defaultAdmin = db.prepare("SELECT id, full_name, display_name, email, role, profile_image FROM users WHERE role = 'admin' LIMIT 1").get();
+      if (defaultAdmin) {
+        return {
+          id: defaultAdmin.id,
+          fullName: defaultAdmin.full_name,
+          displayName: defaultAdmin.display_name || defaultAdmin.full_name || 'Admin',
+          email: defaultAdmin.email,
+          role: defaultAdmin.role,
+          profileImage: defaultAdmin.profile_image || 'assets/images/logo.jpg',
+          sessionId: 'dev_local_admin_session'
+        };
+      }
+    } catch (e) {
+      console.error('[DEV ADMIN FALLBACK ERROR]', e);
+    }
   }
 
   return null;

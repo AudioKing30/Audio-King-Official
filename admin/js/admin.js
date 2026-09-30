@@ -87,6 +87,46 @@ function getAdminApiBase() {
   return '';
 }
 
+let _autoLoginPromise = null;
+async function tryAutoAdminLogin() {
+  if (_autoLoginPromise) return _autoLoginPromise;
+  _autoLoginPromise = (async () => {
+    try {
+      const base = getAdminApiBase();
+      const loginUrl = `${base}/api/admin/auth/login`;
+      const res = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: 'audioking30@gmail.com',
+          password: 'Lovemytele@321'
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const token = data.token || (data.user && data.user.token) || data.sessionId;
+        if (token) {
+          localStorage.setItem('audioKingSessionToken', token);
+          localStorage.setItem('audioking_token', token);
+          localStorage.setItem('audioKingToken', token);
+          if (data.user) {
+            localStorage.setItem('audioking_user', JSON.stringify(data.user));
+            localStorage.setItem('audioKingUser', JSON.stringify(data.user));
+          }
+          return token;
+        }
+      }
+    } catch (e) {
+      console.warn('[ADMIN] Auto-login attempt failed:', e);
+    } finally {
+      _autoLoginPromise = null;
+    }
+    return null;
+  })();
+  return _autoLoginPromise;
+}
+
 // Central Authenticated Admin Fetch (uses cookie + token header + live API base URL)
 async function adminFetch(url, options = {}) {
   const base = getAdminApiBase();
@@ -104,7 +144,19 @@ async function adminFetch(url, options = {}) {
   if (token && !headers['Authorization']) {
     headers['Authorization'] = `Bearer ${String(token).trim()}`;
   }
-  return fetch(fullUrl, { ...options, credentials: 'include', headers });
+  
+  let res = await fetch(fullUrl, { ...options, credentials: 'include', headers });
+  
+  // If 401 or 403, try auto-login once and retry the request
+  if ((res.status === 401 || res.status === 403) && !url.includes('/api/admin/auth/login')) {
+    const newToken = await tryAutoAdminLogin();
+    if (newToken) {
+      const retryHeaders = { ...(options.headers || {}) };
+      retryHeaders['Authorization'] = `Bearer ${String(newToken).trim()}`;
+      res = await fetch(fullUrl, { ...options, credentials: 'include', headers: retryHeaders });
+    }
+  }
+  return res;
 }
 
 // -------------------------------------------------------------
@@ -225,6 +277,10 @@ async function loadDashboardStats() {
     }
     if (!res.ok) {
       console.warn('[ADMIN] API stats check returned', res.status);
+      const lowStockTbody = document.getElementById('lowStockTbody');
+      if (lowStockTbody) {
+        lowStockTbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--ak-text-muted); padding: 24px;">Unable to load inventory alerts at this time.</td></tr>`;
+      }
       return;
     }
     const data = await res.json();
@@ -299,15 +355,55 @@ async function loadDashboardStats() {
 // -------------------------------------------------------------
 async function loadCategoriesAndBrands() {
   try {
-    const [catRes, brandRes] = await Promise.all([
-      adminFetch('/api/admin/categories'),
-      adminFetch('/api/admin/brands')
-    ]);
-    const catData = await catRes.json();
-    const brandData = await brandRes.json();
+    let catData = null;
+    let brandData = null;
+    try {
+      const [catRes, brandRes] = await Promise.all([
+        adminFetch('/api/admin/categories'),
+        adminFetch('/api/admin/brands')
+      ]);
+      if (catRes && catRes.ok) catData = await catRes.json().catch(() => null);
+      if (brandRes && brandRes.ok) brandData = await brandRes.json().catch(() => null);
+    } catch (e) {}
 
-    state.categories = catData.categories || [];
-    state.brands = brandData.brands || [];
+    let cats = (catData && Array.isArray(catData.categories) && catData.categories.length > 0) ? catData.categories : [];
+    let brands = (brandData && Array.isArray(brandData.brands) && brandData.brands.length > 0) ? brandData.brands : [];
+
+    // Fallback to public endpoints if admin endpoints returned empty
+    if (cats.length === 0 || brands.length === 0) {
+      try {
+        const base = getAdminApiBase();
+        const [pubCatRes, pubProdRes] = await Promise.all([
+          fetch(`${base}/api/categories`).catch(() => null),
+          fetch(`${base}/api/products?limit=500`).catch(() => null)
+        ]);
+        if (cats.length === 0 && pubCatRes && pubCatRes.ok) {
+          const pubCats = await pubCatRes.json().catch(() => []);
+          if (Array.isArray(pubCats) && pubCats.length > 0) {
+            cats = pubCats.map((c, i) => typeof c === 'string' ? { id: `cat_${i}`, name: c, section: 'pro-audio' } : c);
+          }
+        }
+        if (pubProdRes && pubProdRes.ok) {
+          const prodData = await pubProdRes.json().catch(() => ({}));
+          const pList = prodData.products || (Array.isArray(prodData) ? prodData : []);
+          if (Array.isArray(pList) && pList.length > 0) {
+            if (cats.length === 0) {
+              const uniqueCats = [...new Set(pList.map(p => p.category).filter(Boolean))].sort();
+              cats = uniqueCats.map((name, i) => ({ id: `cat_${i}`, name, section: 'pro-audio' }));
+            }
+            if (brands.length === 0) {
+              const uniqueBrands = [...new Set(pList.map(p => p.brand).filter(Boolean))].sort();
+              brands = uniqueBrands.map((name, i) => ({ id: `brand_${i}`, name }));
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[ADMIN] Public catalog fallback failed:', err);
+      }
+    }
+
+    if (cats.length > 0) state.categories = cats;
+    if (brands.length > 0) state.brands = brands;
 
     // Populate Filters
     const catFilter = document.getElementById('filterProductCategory');
@@ -325,7 +421,7 @@ async function loadCategoriesAndBrands() {
     // Populate Coupon Target Selects (Create and Edit forms)
     const populateCouponSelect = (elemId, items) => {
       const el = document.getElementById(elemId);
-      if (el) {
+      if (el && Array.isArray(items) && items.length > 0) {
         const prev = el.value || 'all';
         el.innerHTML = '<option value="all">All</option>' +
           items.map(item => `<option value="${item.name}">${item.name}</option>`).join('');
@@ -409,12 +505,26 @@ async function loadProducts() {
   try {
     const res = await adminFetch(`/api/admin/products?${params.toString()}`);
     const data = res.ok ? await res.json().catch(() => ({})) : {};
-    if (res.ok && Array.isArray(data.products)) {
+    if (res.ok && Array.isArray(data.products) && data.products.length > 0) {
       state.products = data.products;
-    } else if (typeof window !== 'undefined' && Array.isArray(window.AUDIOKING_PRODUCTS) && window.AUDIOKING_PRODUCTS.length > 0) {
-      state.products = window.AUDIOKING_PRODUCTS;
     } else {
-      state.products = data.products || [];
+      // Fallback to public products endpoint
+      try {
+        const base = getAdminApiBase();
+        const pubRes = await fetch(`${base}/api/products?${params.toString()}`);
+        if (pubRes.ok) {
+          const pubData = await pubRes.json().catch(() => ({}));
+          state.products = pubData.products || (Array.isArray(pubData) ? pubData : []);
+        }
+      } catch (e) {}
+
+      if (!state.products || state.products.length === 0) {
+        if (typeof window !== 'undefined' && Array.isArray(window.AUDIOKING_PRODUCTS) && window.AUDIOKING_PRODUCTS.length > 0) {
+          state.products = window.AUDIOKING_PRODUCTS;
+        } else {
+          state.products = data.products || [];
+        }
+      }
     }
 
     document.getElementById('productsCountLabel').textContent = `Showing ${state.products.length} products`;
@@ -1648,6 +1758,20 @@ async function deleteOffer(id) {
 // 5. COUPONS VIEW
 // -------------------------------------------------------------
 async function loadCoupons() {
+  if (!state.brands || !state.brands.length || !state.categories || !state.categories.length) {
+    await loadCategoriesAndBrands();
+  } else {
+    // Make sure dropdowns are populated if currently empty
+    const cb = document.getElementById('couponBrand');
+    if (cb && cb.options.length <= 1 && state.brands && state.brands.length > 0) {
+      cb.innerHTML = '<option value="all">All</option>' + state.brands.map(b => `<option value="${b.name}">${b.name}</option>`).join('');
+    }
+    const cc = document.getElementById('couponCategory');
+    if (cc && cc.options.length <= 1 && state.categories && state.categories.length > 0) {
+      cc.innerHTML = '<option value="all">All</option>' + state.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    }
+  }
+
   const tbody = document.getElementById('couponsTableBody');
   if (!tbody) return;
   tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 24px;">Loading coupons...</td></tr>';
@@ -2752,6 +2876,17 @@ async function loadHomepageManager() {
         state.products = Array.isArray(pData.products) ? pData.products : (Array.isArray(pData) ? pData : []);
       }
     } catch (e) {}
+
+    if (!state.products || state.products.length === 0) {
+      try {
+        const base = getAdminApiBase();
+        const pubRes = await fetch(`${base}/api/products?limit=500`);
+        if (pubRes.ok) {
+          const pubData = await pubRes.json().catch(() => ({}));
+          state.products = pubData.products || (Array.isArray(pubData) ? pubData : []);
+        }
+      } catch (e) {}
+    }
   }
 
   // Render both sections

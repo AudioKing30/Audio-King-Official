@@ -190,9 +190,14 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
 
 const rootDir = path.resolve(__dirname, '..');
 
-// Unified Single-Site Admin Redirect: routes directly to the in-site admin dashboard
-app.get(['/admin', '/admin/', '/admin/login'], (req, res) => {
-  res.redirect('/#admin');
+// Dedicated Admin Login Route
+app.get('/admin/login', (req, res) => {
+  res.sendFile(path.join(rootDir, 'admin', 'login.html'));
+});
+
+// Dedicated Master Admin Portal
+app.get(['/admin', '/admin/'], requireAdminWeb, (req, res) => {
+  res.sendFile(path.join(rootDir, 'admin', 'index.html'));
 });
 
 // Unified Store & Catalog Redirect: routes directly to the storefront catalog
