@@ -3,6 +3,7 @@
  * Handles currency formatting (INR), order ID generation, and date formatting.
  */
 import { AUDIOKING_CONFIG } from '../config.js';
+import { getApiBaseUrl } from '../services/apiConfig.js';
 
 export function formatINR(amount) {
   if (amount === null || amount === undefined || isNaN(amount)) {
@@ -111,9 +112,21 @@ export function resolveProductImage(src) {
     return 'assets/images/placeholder.svg';
   }
   if (/^https?:\/\//i.test(src) || src.startsWith('data:') || src.startsWith('blob:')) return src;
-  if (src.startsWith('/uploads/')) return src.slice(1);
-  if (src.startsWith('/assets/')) return src.slice(1);
-  return src;
+
+  let clean = String(src).trim().replace(/^(\.\.\/|\.\/)+/, '').replace(/^\/+/, '');
+  const base = getApiBaseUrl();
+
+  if (clean.startsWith('uploads/')) {
+    return base ? `${base}/${clean}` : `/${clean}`;
+  }
+  if (clean.startsWith('products/')) {
+    return base ? `${base}/uploads/${clean}` : `/uploads/${clean}`;
+  }
+  if (clean.startsWith('assets/')) {
+    return clean;
+  }
+  return clean;
 }
+
 
 

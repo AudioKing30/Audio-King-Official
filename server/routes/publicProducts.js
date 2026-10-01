@@ -132,6 +132,111 @@ function formatProduct(row, activeOffers = []) {
 }
 
 /**
+ * Helper to attach variant groups, options, and combinations to a list of formatted products
+ */
+function attachVariantsToProducts(products) {
+  if (!products || !products.length) return products;
+
+  const productIds = products.map(p => p.id);
+  const placeholders = productIds.map(() => '?').join(',');
+
+  const allGroups = db.prepare(`
+    SELECT * FROM product_variant_groups 
+    WHERE product_id IN (${placeholders}) 
+    ORDER BY sort_order ASC
+  `).all(...productIds);
+
+  if (!allGroups.length) {
+    products.forEach(p => {
+      p.hasVariants = false;
+      p.variantGroups = [];
+      p.variants = [];
+    });
+    return products;
+  }
+
+  const groupIds = allGroups.map(g => g.id);
+  const groupPlaceholders = groupIds.map(() => '?').join(',');
+
+  const allOptions = db.prepare(`
+    SELECT * FROM product_variant_options 
+    WHERE group_id IN (${groupPlaceholders}) 
+    ORDER BY sort_order ASC
+  `).all(...groupIds);
+
+  const allVariants = db.prepare(`
+    SELECT * FROM product_variants 
+    WHERE product_id IN (${placeholders}) AND is_active = 1 
+    ORDER BY id ASC
+  `).all(...productIds);
+
+  const cleanImgPath = (src) => {
+    if (!src || typeof src !== 'string') return src;
+    if (src.startsWith('/uploads/')) return src.slice(1);
+    if (src.startsWith('/assets/')) return src.slice(1);
+    return src;
+  };
+
+  const optionsByGroup = {};
+  for (const opt of allOptions) {
+    if (!optionsByGroup[opt.group_id]) optionsByGroup[opt.group_id] = [];
+    optionsByGroup[opt.group_id].push({
+      id: opt.id,
+      label: opt.label,
+      colorHex: opt.color_hex,
+      variantImage: cleanImgPath(opt.variant_image)
+    });
+  }
+
+  const groupsByProduct = {};
+  for (const g of allGroups) {
+    if (!groupsByProduct[g.product_id]) groupsByProduct[g.product_id] = [];
+    groupsByProduct[g.product_id].push({
+      id: g.id,
+      name: g.group_name,
+      type: g.group_type,
+      options: optionsByGroup[g.id] || []
+    });
+  }
+
+  const variantsByProduct = {};
+  for (const v of allVariants) {
+    if (!variantsByProduct[v.product_id]) variantsByProduct[v.product_id] = [];
+    let optionIds = [];
+    try {
+      optionIds = JSON.parse(v.option_ids || '[]');
+    } catch (e) {
+      optionIds = [];
+    }
+    variantsByProduct[v.product_id].push({
+      id: v.id,
+      skuSuffix: v.sku_suffix,
+      optionIds: optionIds,
+      optionLabels: v.option_labels,
+      priceOverride: v.price_override != null ? Number(v.price_override) : null,
+      stock: Number(v.stock || 0),
+      isActive: Boolean(v.is_active)
+    });
+  }
+
+  for (const p of products) {
+    const pGroups = groupsByProduct[p.id] || [];
+    const pVariants = variantsByProduct[p.id] || [];
+    if (pGroups.length > 0) {
+      p.hasVariants = true;
+      p.variantGroups = pGroups;
+      p.variants = pVariants;
+    } else {
+      p.hasVariants = false;
+      p.variantGroups = [];
+      p.variants = [];
+    }
+  }
+
+  return products;
+}
+
+/**
  * 1. GET ALL PRODUCTS
  * GET /api/products
  */
@@ -171,6 +276,7 @@ router.get('/', (req, res) => {
     const rows = db.prepare(query).all(...params);
     const activeOffers = getActiveOffers();
     const products = rows.map(r => formatProduct(r, activeOffers));
+    attachVariantsToProducts(products);
 
     return res.json({
       success: true,
@@ -300,47 +406,7 @@ router.get('/:id', (req, res) => {
 
     const activeOffers = getActiveOffers();
     const product = formatProduct(row, activeOffers);
-
-    // Fetch variant data if any exist
-    const variantGroups = db.prepare(`
-      SELECT * FROM product_variant_groups WHERE product_id = ? ORDER BY sort_order ASC
-    `).all(row.id);
-
-    if (variantGroups.length > 0) {
-      const optionsQuery = db.prepare(`
-        SELECT * FROM product_variant_options WHERE group_id = ? ORDER BY sort_order ASC
-      `);
-
-      product.variantGroups = variantGroups.map(g => ({
-        id: g.id,
-        name: g.group_name,
-        type: g.group_type,
-        options: optionsQuery.all(g.id).map(o => ({
-          id: o.id,
-          label: o.label,
-          colorHex: o.color_hex,
-          variantImage: o.variant_image
-        }))
-      }));
-
-      product.variants = db.prepare(`
-        SELECT * FROM product_variants WHERE product_id = ? AND is_active = 1 ORDER BY id ASC
-      `).all(row.id).map(v => ({
-        id: v.id,
-        skuSuffix: v.sku_suffix,
-        optionIds: JSON.parse(v.option_ids || '[]'),
-        optionLabels: v.option_labels,
-        priceOverride: v.price_override,
-        stock: v.stock,
-        isActive: Boolean(v.is_active)
-      }));
-
-      product.hasVariants = true;
-    } else {
-      product.hasVariants = false;
-      product.variantGroups = [];
-      product.variants = [];
-    }
+    attachVariantsToProducts([product]);
 
     return res.json({
       success: true,

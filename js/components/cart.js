@@ -4,7 +4,7 @@
  * Guest cart seamlessly merges into customer DB cart upon signin without duplicating items.
  */
 import { AUDIOKING_CONFIG } from '../config.js';
-import { formatINR } from '../utils/formatters.js';
+import { formatINR, resolveProductImage } from '../utils/formatters.js';
 import { getStorage, setStorage } from '../utils/storage.js';
 import { getIcon } from '../../assets/icons/icons.js';
 import { showToast } from './toast.js';
@@ -360,7 +360,7 @@ export function renderCartDrawer() {
   container.innerHTML = cart.map(item => `
     <div class="ak-cart-item" data-id="${item.id}">
       <div class="ak-cart-item-img">
-        <img src="${item.image || 'assets/images/placeholder.svg'}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
+        <img src="${resolveProductImage(item.image)}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
       </div>
       <div class="ak-cart-item-details">
         <span class="ak-cart-item-brand">${item.brand || 'Pro Audio'}</span>

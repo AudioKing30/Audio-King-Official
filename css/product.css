@@ -1921,3 +1921,23 @@
   text-decoration: line-through;
 }
 
+@media (max-width: 640px) {
+  .pp-variants-wrap {
+    padding: 12px 14px;
+    margin: 14px 0;
+    gap: 12px;
+  }
+  .pp-variant-options {
+    gap: 8px;
+  }
+  .pp-text-option-btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+  }
+  .pp-color-swatch-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+

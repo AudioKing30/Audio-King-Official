@@ -887,6 +887,192 @@ function sendYtCommand(iframe, func, args = '') {
 }
 
 /**
+ * Render and control interactive product variants (color swatches, text options, price/stock sync)
+ */
+export function renderProductVariants(product) {
+  const ppVariantsWrap = document.getElementById('ppVariantsWrap');
+  if (!ppVariantsWrap) return;
+
+  if (!product || !product.hasVariants || !Array.isArray(product.variantGroups) || product.variantGroups.length === 0) {
+    ppVariantsWrap.style.display = 'none';
+    ppVariantsWrap.innerHTML = '';
+    activeVariant = null;
+    return;
+  }
+
+  ppVariantsWrap.style.display = 'flex';
+
+  const selectedOptions = {};
+  product.variantGroups.forEach(g => {
+    if (g.options && g.options.length > 0) {
+      selectedOptions[String(g.id)] = String(g.options[0].id);
+    }
+  });
+
+  const ppPrice = document.getElementById('ppPrice');
+  const ppInStockBadge = document.getElementById('ppInStockBadge');
+  const ppOutOfStockBadge = document.getElementById('ppOutOfStockBadge');
+  const ppAddToCartBtn = document.getElementById('ppAddToCartBtn');
+  const ppBuyNowBtn = document.getElementById('ppBuyNowBtn');
+  const isPreOrder = Boolean(product.isPreOrder || (product.badge && product.badge.toLowerCase().includes('pre-order')) || product.stockStatus === 'preorder');
+
+  function getSelectedVariant() {
+    if (!product.variants || product.variants.length === 0) return null;
+    const selectedIds = Object.values(selectedOptions).map(String);
+    return product.variants.find(v => {
+      if (!Array.isArray(v.optionIds)) return false;
+      const vOptIds = v.optionIds.map(String);
+      return selectedIds.length > 0 && selectedIds.every(id => vOptIds.includes(id));
+    }) || product.variants[0];
+  }
+
+  function updateVariantDisplay() {
+    const matched = getSelectedVariant();
+    activeVariant = matched;
+
+    // Update Price if variant has price override
+    if (ppPrice) {
+      const effectivePrice = (matched && matched.priceOverride != null) ? matched.priceOverride : product.price;
+      ppPrice.textContent = formatINR(effectivePrice);
+    }
+
+    // Check if any selected option has a variant image
+    let variantImg = null;
+    for (const g of product.variantGroups) {
+      const curOptId = selectedOptions[String(g.id)];
+      const foundOpt = g.options ? g.options.find(o => String(o.id) === String(curOptId)) : null;
+      if (foundOpt && foundOpt.variantImage) {
+        variantImg = foundOpt.variantImage;
+        break;
+      }
+    }
+
+    if (variantImg) {
+      const ppMainImage = document.getElementById('ppMainImage');
+      if (ppMainImage) {
+        ppMainImage.src = resolveProductImage(variantImg);
+      }
+    }
+
+    // Update Stock Status for selected variant
+    if (matched) {
+      const vOutOfStock = matched.stock === 0 || !matched.isActive;
+      if (ppInStockBadge) ppInStockBadge.style.display = (!vOutOfStock && !isPreOrder) ? 'inline-flex' : 'none';
+      if (ppOutOfStockBadge && !isPreOrder) {
+        ppOutOfStockBadge.style.display = vOutOfStock ? 'inline-flex' : 'none';
+      }
+
+      if (ppAddToCartBtn && !isPreOrder) {
+        if (vOutOfStock) {
+          ppAddToCartBtn.classList.add('disabled', 'is-out-of-stock');
+          ppAddToCartBtn.disabled = true;
+          ppAddToCartBtn.style.background = '#FEF2F2';
+          ppAddToCartBtn.style.color = '#DC2626';
+          ppAddToCartBtn.style.borderColor = '#FECACA';
+          ppAddToCartBtn.style.cursor = 'not-allowed';
+          const span = ppAddToCartBtn.querySelector('span');
+          if (span) {
+            span.textContent = 'Out of Stock';
+            span.style.color = '#DC2626';
+          }
+        } else {
+          ppAddToCartBtn.classList.remove('disabled', 'is-out-of-stock', 'is-preorder');
+          ppAddToCartBtn.disabled = false;
+          ppAddToCartBtn.style.background = '';
+          ppAddToCartBtn.style.color = '';
+          ppAddToCartBtn.style.borderColor = '';
+          ppAddToCartBtn.style.cursor = 'pointer';
+          const span = ppAddToCartBtn.querySelector('span');
+          if (span) {
+            span.textContent = 'Add to Cart';
+            span.style.color = '';
+          }
+        }
+      }
+
+      if (ppBuyNowBtn && !isPreOrder) {
+        if (vOutOfStock) {
+          ppBuyNowBtn.disabled = true;
+          ppBuyNowBtn.style.opacity = '0.5';
+          ppBuyNowBtn.style.cursor = 'not-allowed';
+          ppBuyNowBtn.textContent = 'Out of Stock';
+          ppBuyNowBtn.style.color = '#DC2626';
+          ppBuyNowBtn.style.background = '#FEF2F2';
+          ppBuyNowBtn.style.borderColor = '#FECACA';
+        } else {
+          ppBuyNowBtn.disabled = false;
+          ppBuyNowBtn.style.opacity = '1';
+          ppBuyNowBtn.style.cursor = 'pointer';
+          ppBuyNowBtn.textContent = 'Buy Now';
+          ppBuyNowBtn.style.color = '';
+          ppBuyNowBtn.style.background = '';
+          ppBuyNowBtn.style.borderColor = '';
+        }
+      }
+    }
+  }
+
+  function renderVariantsUI() {
+    ppVariantsWrap.innerHTML = product.variantGroups.map(g => {
+      const gIdStr = String(g.id);
+      const selectedOptId = selectedOptions[gIdStr];
+      const selectedOpt = (g.options && g.options.find(o => String(o.id) === String(selectedOptId))) || (g.options && g.options[0]);
+      const selectedLabel = selectedOpt ? selectedOpt.label : '';
+
+      const optionsHtml = (g.options || []).map(opt => {
+        const isSelected = String(opt.id) === String(selectedOptId);
+        if (g.type === 'color') {
+          return `
+            <button type="button" 
+              class="pp-color-swatch-btn ${isSelected ? 'active' : ''}" 
+              style="background-color: ${opt.colorHex || '#000000'};" 
+              data-group-id="${g.id}" 
+              data-option-id="${opt.id}" 
+              title="${opt.label}" 
+              aria-label="${opt.label}">
+            </button>
+          `;
+        } else {
+          return `
+            <button type="button" 
+              class="pp-text-option-btn ${isSelected ? 'active' : ''}" 
+              data-group-id="${g.id}" 
+              data-option-id="${opt.id}">
+              ${opt.label}
+            </button>
+          `;
+        }
+      }).join('');
+
+      return `
+        <div class="pp-variant-group">
+          <div class="pp-variant-group-title">
+            <span>${g.name}:</span>
+            <span class="pp-variant-selected-label" id="ppVariantLabel_${g.id}">${selectedLabel}</span>
+          </div>
+          <div class="pp-variant-options">
+            ${optionsHtml}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    ppVariantsWrap.querySelectorAll('[data-group-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const groupId = String(btn.dataset.groupId);
+        const optionId = String(btn.dataset.optionId);
+        selectedOptions[groupId] = optionId;
+        renderVariantsUI();
+        updateVariantDisplay();
+      });
+    });
+  }
+
+  renderVariantsUI();
+  updateVariantDisplay();
+}
+
+/**
  * View 3: Product Detail View
  */
 export async function showProduct(productOrId, updateHash = true) {
@@ -898,8 +1084,8 @@ export async function showProduct(productOrId, updateHash = true) {
     recordProductClick(productId);
   }
 
-  // If not in memory, we must await fetch from server
-  if (!product && productId) {
+  // If not in memory or missing variant data, await fetch from server
+  if ((!product || product.variantGroups === undefined) && productId) {
     try {
       const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
       if (res.ok) {
@@ -927,6 +1113,11 @@ export async function showProduct(productOrId, updateHash = true) {
           const idx = AUDIOKING_PRODUCTS.findIndex(p => String(p.id) === String(fresh.id));
           if (idx >= 0) AUDIOKING_PRODUCTS[idx] = fresh;
           else AUDIOKING_PRODUCTS.push(fresh);
+
+          if (activeProduct && String(activeProduct.id) === String(fresh.id)) {
+            activeProduct = fresh;
+            renderProductVariants(fresh);
+          }
         }
       })
       .catch(() => {});
@@ -1093,159 +1284,7 @@ export async function showProduct(productOrId, updateHash = true) {
   // =========================================================================
   // Product Variants Management & Interactive Selection
   // =========================================================================
-  const ppVariantsWrap = document.getElementById('ppVariantsWrap');
-  activeVariant = null;
-
-  if (ppVariantsWrap) {
-    if (product.hasVariants && Array.isArray(product.variantGroups) && product.variantGroups.length > 0) {
-      ppVariantsWrap.style.display = 'flex';
-
-      const selectedOptions = {};
-      product.variantGroups.forEach(g => {
-        if (g.options && g.options.length > 0) {
-          selectedOptions[g.id] = g.options[0].id;
-        }
-      });
-
-      function getSelectedVariant() {
-        if (!product.variants || product.variants.length === 0) return null;
-        const selectedIds = Object.values(selectedOptions);
-        return product.variants.find(v => {
-          if (!Array.isArray(v.optionIds)) return false;
-          return selectedIds.every(id => v.optionIds.includes(id));
-        }) || product.variants[0];
-      }
-
-      function updateVariantDisplay() {
-        const matched = getSelectedVariant();
-        activeVariant = matched;
-
-        // Update Price if variant has price override
-        if (ppPrice) {
-          const effectivePrice = (matched && matched.priceOverride != null) ? matched.priceOverride : product.price;
-          ppPrice.textContent = formatINR(effectivePrice);
-        }
-
-        // Update Stock Status for selected variant
-        if (matched) {
-          const vOutOfStock = matched.stock === 0 || !matched.isActive;
-          if (ppInStockBadge) ppInStockBadge.style.display = (!vOutOfStock && !isPreOrder) ? 'inline-flex' : 'none';
-          if (ppOutOfStockBadge && !isPreOrder) {
-            ppOutOfStockBadge.style.display = vOutOfStock ? 'inline-flex' : 'none';
-          }
-
-          if (ppAddToCartBtn && !isPreOrder) {
-            if (vOutOfStock) {
-              ppAddToCartBtn.classList.add('disabled', 'is-out-of-stock');
-              ppAddToCartBtn.disabled = true;
-              ppAddToCartBtn.style.background = '#FEF2F2';
-              ppAddToCartBtn.style.color = '#DC2626';
-              ppAddToCartBtn.style.borderColor = '#FECACA';
-              ppAddToCartBtn.style.cursor = 'not-allowed';
-              const span = ppAddToCartBtn.querySelector('span');
-              if (span) {
-                span.textContent = 'Out of Stock';
-                span.style.color = '#DC2626';
-              }
-            } else {
-              ppAddToCartBtn.classList.remove('disabled', 'is-out-of-stock', 'is-preorder');
-              ppAddToCartBtn.disabled = false;
-              ppAddToCartBtn.style.background = '';
-              ppAddToCartBtn.style.color = '';
-              ppAddToCartBtn.style.borderColor = '';
-              ppAddToCartBtn.style.cursor = 'pointer';
-              const span = ppAddToCartBtn.querySelector('span');
-              if (span) {
-                span.textContent = 'Add to Cart';
-                span.style.color = '';
-              }
-            }
-          }
-
-          if (ppBuyNowBtn && !isPreOrder) {
-            if (vOutOfStock) {
-              ppBuyNowBtn.disabled = true;
-              ppBuyNowBtn.style.opacity = '0.5';
-              ppBuyNowBtn.style.cursor = 'not-allowed';
-              ppBuyNowBtn.textContent = 'Out of Stock';
-              ppBuyNowBtn.style.color = '#DC2626';
-              ppBuyNowBtn.style.background = '#FEF2F2';
-              ppBuyNowBtn.style.borderColor = '#FECACA';
-            } else {
-              ppBuyNowBtn.disabled = false;
-              ppBuyNowBtn.style.opacity = '1';
-              ppBuyNowBtn.style.cursor = 'pointer';
-              ppBuyNowBtn.textContent = 'Buy Now';
-              ppBuyNowBtn.style.color = '';
-              ppBuyNowBtn.style.background = '';
-              ppBuyNowBtn.style.borderColor = '';
-            }
-          }
-        }
-      }
-
-      function renderVariantsUI() {
-        ppVariantsWrap.innerHTML = product.variantGroups.map(g => {
-          const selectedOptId = selectedOptions[g.id];
-          const selectedOpt = g.options.find(o => o.id === selectedOptId) || g.options[0];
-          const selectedLabel = selectedOpt ? selectedOpt.label : '';
-
-          const optionsHtml = g.options.map(opt => {
-            const isSelected = opt.id === selectedOptId;
-            if (g.type === 'color') {
-              return `
-                <button type="button" 
-                  class="pp-color-swatch-btn ${isSelected ? 'active' : ''}" 
-                  style="background-color: ${opt.colorHex || '#000000'};" 
-                  data-group-id="${g.id}" 
-                  data-option-id="${opt.id}" 
-                  title="${opt.label}" 
-                  aria-label="${opt.label}">
-                </button>
-              `;
-            } else {
-              return `
-                <button type="button" 
-                  class="pp-text-option-btn ${isSelected ? 'active' : ''}" 
-                  data-group-id="${g.id}" 
-                  data-option-id="${opt.id}">
-                  ${opt.label}
-                </button>
-              `;
-            }
-          }).join('');
-
-          return `
-            <div class="pp-variant-group">
-              <div class="pp-variant-group-title">
-                <span>${g.name}:</span>
-                <span class="pp-variant-selected-label" id="ppVariantLabel_${g.id}">${selectedLabel}</span>
-              </div>
-              <div class="pp-variant-options">
-                ${optionsHtml}
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        ppVariantsWrap.querySelectorAll('[data-group-id]').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const groupId = Number(btn.dataset.groupId) || btn.dataset.groupId;
-            const optionId = Number(btn.dataset.optionId) || btn.dataset.optionId;
-            selectedOptions[groupId] = optionId;
-            renderVariantsUI();
-            updateVariantDisplay();
-          });
-        });
-      }
-
-      renderVariantsUI();
-      updateVariantDisplay();
-    } else {
-      ppVariantsWrap.style.display = 'none';
-      ppVariantsWrap.innerHTML = '';
-    }
-  }
+  renderProductVariants(product);
 
   // Helper to extract concise introductory overview (1 concise paragraph, ~2-3 sentences)
   function getConciseOverview(prod) {
@@ -1861,7 +1900,7 @@ function renderRelatedProducts(product) {
   track.innerHTML = related.map(item => `
     <article class="pp-related-card ak-reveal-card" data-id="${item.id}" style="cursor:pointer;">
       <div class="pp-related-img-box">
-        <img src="${item.image || 'assets/images/placeholder.jpg'}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
+        <img src="${resolveProductImage(item.image || (item.images && item.images[0]))}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
       </div>
       <div class="pp-related-brand">${item.brand}</div>
       <h4 class="pp-related-card-title" title="${item.name}">${item.name}</h4>
@@ -2180,7 +2219,8 @@ function initProductDetailPage() {
         productId: activeProduct.id,
         variantId: activeVariant.id,
         name: `${activeProduct.name} - ${activeVariant.optionLabels}`,
-        price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price
+        price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+        image: (activeVariant && activeVariant.variantImage) || activeProduct.image
       } : activeProduct;
 
       addToCart(productToAdd, qty);
@@ -2204,9 +2244,11 @@ function initProductDetailPage() {
       const qty = parseInt(qtyInput?.value || 1, 10);
       const buyNowItem = {
         id: activeVariant ? `${activeProduct.id}_${activeVariant.id}` : activeProduct.id,
+        productId: activeProduct.id,
+        variantId: activeVariant ? activeVariant.id : null,
         name: activeVariant ? `${activeProduct.name} - ${activeVariant.optionLabels}` : activeProduct.name,
         price: activeVariant && activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
-        image: activeProduct.image,
+        image: (activeVariant && activeVariant.variantImage) || activeProduct.image,
         brand: activeProduct.brand,
         quantity: qty
       };

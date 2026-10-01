@@ -3,7 +3,7 @@
  * Faithfully matches user's uploaded receipt reference image (media_1789423751815.jpg)
  * and plays the standalone checkmark animation sequence.
  */
-import { formatINR, generateOrderId, formatDate } from '../utils/formatters.js';
+import { formatINR, generateOrderId, formatDate, resolveProductImage } from '../utils/formatters.js';
 
 export function triggerOrderAnimation(orderData) {
   const overlay = document.getElementById('akOrderAnimOverlay');
@@ -85,7 +85,7 @@ export function showOrderConfirmation(orderData) {
         return `
           <div class="ak-order-item-row">
             <div class="ak-order-item-thumb">
-              ${item.image ? `<img src="${item.image}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
+              ${item.image ? `<img src="${resolveProductImage(item.image)}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ''}
               <div class="ak-order-thumb-placeholder" style="${item.image ? 'display:none;' : 'display:block;'}">AK</div>
             </div>
             <div class="ak-order-item-info">

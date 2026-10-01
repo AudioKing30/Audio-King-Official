@@ -25978,6 +25978,41 @@ Weight: 1.24 lbs (0.567 kg`,
     }
   ];
 
+  // js/services/apiConfig.js
+  function getApiBaseUrl() {
+    if (typeof window !== "undefined") {
+      if (window.AUDIOKING_API_URL) {
+        return String(window.AUDIOKING_API_URL).trim().replace(/\/+$/, "");
+      }
+      try {
+        const saved = localStorage.getItem("audioking_api_url");
+        if (saved)
+          return String(saved).trim().replace(/\/+$/, "");
+      } catch (e) {
+      }
+      if (window.location.hostname.includes("github.io")) {
+        return "https://audioking-api.onrender.com";
+      }
+      if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
+        return "http://localhost:3000";
+      }
+    }
+    return "";
+  }
+  function apiUrl(endpoint = "") {
+    if (!endpoint)
+      return getApiBaseUrl();
+    if (/^https?:\/\//i.test(endpoint))
+      return endpoint;
+    const base = getApiBaseUrl();
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    return `${base}${cleanEndpoint}`;
+  }
+  if (typeof window !== "undefined") {
+    window.getAudioKingApiUrl = apiUrl;
+    window.getAudioKingApiBase = getApiBaseUrl;
+  }
+
   // js/utils/formatters.js
   function formatINR(amount) {
     if (amount === null || amount === void 0 || isNaN(amount)) {
@@ -26053,11 +26088,18 @@ Weight: 1.24 lbs (0.567 kg`,
     }
     if (/^https?:\/\//i.test(src) || src.startsWith("data:") || src.startsWith("blob:"))
       return src;
-    if (src.startsWith("/uploads/"))
-      return src.slice(1);
-    if (src.startsWith("/assets/"))
-      return src.slice(1);
-    return src;
+    let clean = String(src).trim().replace(/^(\.\.\/|\.\/)+/, "").replace(/^\/+/, "");
+    const base = getApiBaseUrl();
+    if (clean.startsWith("uploads/")) {
+      return base ? `${base}/${clean}` : `/${clean}`;
+    }
+    if (clean.startsWith("products/")) {
+      return base ? `${base}/uploads/${clean}` : `/uploads/${clean}`;
+    }
+    if (clean.startsWith("assets/")) {
+      return clean;
+    }
+    return clean;
   }
 
   // js/config.js
@@ -26275,41 +26317,6 @@ Weight: 1.24 lbs (0.567 kg`,
       toast.classList.remove("show");
       setTimeout(() => toast.remove(), 250);
     }, 2500);
-  }
-
-  // js/services/apiConfig.js
-  function getApiBaseUrl() {
-    if (typeof window !== "undefined") {
-      if (window.AUDIOKING_API_URL) {
-        return String(window.AUDIOKING_API_URL).trim().replace(/\/+$/, "");
-      }
-      try {
-        const saved = localStorage.getItem("audioking_api_url");
-        if (saved)
-          return String(saved).trim().replace(/\/+$/, "");
-      } catch (e) {
-      }
-      if (window.location.hostname.includes("github.io")) {
-        return "https://audioking-api.onrender.com";
-      }
-      if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
-        return "http://localhost:3000";
-      }
-    }
-    return "";
-  }
-  function apiUrl(endpoint = "") {
-    if (!endpoint)
-      return getApiBaseUrl();
-    if (/^https?:\/\//i.test(endpoint))
-      return endpoint;
-    const base = getApiBaseUrl();
-    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-    return `${base}${cleanEndpoint}`;
-  }
-  if (typeof window !== "undefined") {
-    window.getAudioKingApiUrl = apiUrl;
-    window.getAudioKingApiBase = getApiBaseUrl;
   }
 
   // js/components/cashfreeAdapter.js
@@ -26549,7 +26556,7 @@ Weight: 1.24 lbs (0.567 kg`,
           return `
           <div class="ak-order-item-row">
             <div class="ak-order-item-thumb">
-              ${item.image ? `<img src="${item.image}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ""}
+              ${item.image ? `<img src="${resolveProductImage(item.image)}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ""}
               <div class="ak-order-thumb-placeholder" style="${item.image ? "display:none;" : "display:block;"}">AK</div>
             </div>
             <div class="ak-order-item-info">
@@ -28676,7 +28683,7 @@ Weight: 1.24 lbs (0.567 kg`,
           ${items.map((item) => `
             <div class="ak-order-card-item-row" data-product-id="${item.productId || item.id || ""}" style="cursor: pointer;" title="Click to view product details">
               <div class="ak-order-item-img-box">
-                <img src="${item.image || "assets/images/placeholder.svg"}" alt="${item.name}">
+                <img src="${resolveProductImage(item.image)}" alt="${item.name}">
               </div>
               <div class="ak-order-item-info">
                 <h4 class="ak-order-item-name">${item.name}</h4>
@@ -29815,7 +29822,7 @@ Weight: 1.24 lbs (0.567 kg`,
     container.innerHTML = cart.map((item) => `
     <div class="ak-cart-item" data-id="${item.id}">
       <div class="ak-cart-item-img">
-        <img src="${item.image || "assets/images/placeholder.svg"}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
+        <img src="${resolveProductImage(item.image)}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
       </div>
       <div class="ak-cart-item-details">
         <span class="ak-cart-item-brand">${item.brand || "Pro Audio"}</span>
@@ -32150,7 +32157,12 @@ Message: ${message}`);
         </div>
       `;
       } else {
-        actionBtnHtml = `
+        actionBtnHtml = product.hasVariants ? `
+        <button type="button" class="ak-store-btn-add ak-store-btn-variants" data-id="${product.id}" title="Select options & configure">
+          <svg class="ak-btn-cart-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Select Options</span>
+        </button>
+      ` : `
         <button type="button" class="ak-store-btn-add" data-id="${product.id}">
           <svg class="ak-btn-cart-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
           <span>Add to Cart</span>
@@ -32161,7 +32173,7 @@ Message: ${message}`);
       const reviewsCount = product.reviewsCount || 18 + product.id.charCodeAt(product.id.length - 1) % 42;
       const stockWarningHtml = !isOutOfStock && product.stock > 0 && product.stock <= 3 ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>` : !isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : "";
       const offerStampHtml = getProductOfferStampHtml(product);
-      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing"><span class="ak-store-card-price">' + formatINR(product.price) + "</span>" + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
+      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing"><span class="ak-store-card-price">' + formatINR(product.price) + "</span>" + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
     });
     grid.innerHTML = gridHtml;
     grid.querySelectorAll(".ak-store-card").forEach((card) => {
@@ -32179,6 +32191,11 @@ Message: ${message}`);
         e.stopPropagation();
         const pid = btn.dataset.id;
         const product = allProducts.find((p) => p.id === pid);
+        if (product && product.hasVariants) {
+          if (onProductClickCallback)
+            onProductClickCallback(pid);
+          return;
+        }
         if (product && product.stock !== 0) {
           const added = addToCart(product, 1);
           if (added !== false) {
@@ -32979,6 +32996,172 @@ Message: ${message}`);
     } catch (e) {
     }
   }
+  function renderProductVariants(product) {
+    const ppVariantsWrap = document.getElementById("ppVariantsWrap");
+    if (!ppVariantsWrap)
+      return;
+    if (!product || !product.hasVariants || !Array.isArray(product.variantGroups) || product.variantGroups.length === 0) {
+      ppVariantsWrap.style.display = "none";
+      ppVariantsWrap.innerHTML = "";
+      activeVariant = null;
+      return;
+    }
+    ppVariantsWrap.style.display = "flex";
+    const selectedOptions = {};
+    product.variantGroups.forEach((g) => {
+      if (g.options && g.options.length > 0) {
+        selectedOptions[String(g.id)] = String(g.options[0].id);
+      }
+    });
+    const ppPrice = document.getElementById("ppPrice");
+    const ppInStockBadge = document.getElementById("ppInStockBadge");
+    const ppOutOfStockBadge = document.getElementById("ppOutOfStockBadge");
+    const ppAddToCartBtn = document.getElementById("ppAddToCartBtn");
+    const ppBuyNowBtn = document.getElementById("ppBuyNowBtn");
+    const isPreOrder = Boolean(product.isPreOrder || product.badge && product.badge.toLowerCase().includes("pre-order") || product.stockStatus === "preorder");
+    function getSelectedVariant() {
+      if (!product.variants || product.variants.length === 0)
+        return null;
+      const selectedIds = Object.values(selectedOptions).map(String);
+      return product.variants.find((v) => {
+        if (!Array.isArray(v.optionIds))
+          return false;
+        const vOptIds = v.optionIds.map(String);
+        return selectedIds.length > 0 && selectedIds.every((id) => vOptIds.includes(id));
+      }) || product.variants[0];
+    }
+    function updateVariantDisplay() {
+      const matched = getSelectedVariant();
+      activeVariant = matched;
+      if (ppPrice) {
+        const effectivePrice = matched && matched.priceOverride != null ? matched.priceOverride : product.price;
+        ppPrice.textContent = formatINR(effectivePrice);
+      }
+      let variantImg = null;
+      for (const g of product.variantGroups) {
+        const curOptId = selectedOptions[String(g.id)];
+        const foundOpt = g.options ? g.options.find((o) => String(o.id) === String(curOptId)) : null;
+        if (foundOpt && foundOpt.variantImage) {
+          variantImg = foundOpt.variantImage;
+          break;
+        }
+      }
+      if (variantImg) {
+        const ppMainImage = document.getElementById("ppMainImage");
+        if (ppMainImage) {
+          ppMainImage.src = resolveProductImage(variantImg);
+        }
+      }
+      if (matched) {
+        const vOutOfStock = matched.stock === 0 || !matched.isActive;
+        if (ppInStockBadge)
+          ppInStockBadge.style.display = !vOutOfStock && !isPreOrder ? "inline-flex" : "none";
+        if (ppOutOfStockBadge && !isPreOrder) {
+          ppOutOfStockBadge.style.display = vOutOfStock ? "inline-flex" : "none";
+        }
+        if (ppAddToCartBtn && !isPreOrder) {
+          if (vOutOfStock) {
+            ppAddToCartBtn.classList.add("disabled", "is-out-of-stock");
+            ppAddToCartBtn.disabled = true;
+            ppAddToCartBtn.style.background = "#FEF2F2";
+            ppAddToCartBtn.style.color = "#DC2626";
+            ppAddToCartBtn.style.borderColor = "#FECACA";
+            ppAddToCartBtn.style.cursor = "not-allowed";
+            const span = ppAddToCartBtn.querySelector("span");
+            if (span) {
+              span.textContent = "Out of Stock";
+              span.style.color = "#DC2626";
+            }
+          } else {
+            ppAddToCartBtn.classList.remove("disabled", "is-out-of-stock", "is-preorder");
+            ppAddToCartBtn.disabled = false;
+            ppAddToCartBtn.style.background = "";
+            ppAddToCartBtn.style.color = "";
+            ppAddToCartBtn.style.borderColor = "";
+            ppAddToCartBtn.style.cursor = "pointer";
+            const span = ppAddToCartBtn.querySelector("span");
+            if (span) {
+              span.textContent = "Add to Cart";
+              span.style.color = "";
+            }
+          }
+        }
+        if (ppBuyNowBtn && !isPreOrder) {
+          if (vOutOfStock) {
+            ppBuyNowBtn.disabled = true;
+            ppBuyNowBtn.style.opacity = "0.5";
+            ppBuyNowBtn.style.cursor = "not-allowed";
+            ppBuyNowBtn.textContent = "Out of Stock";
+            ppBuyNowBtn.style.color = "#DC2626";
+            ppBuyNowBtn.style.background = "#FEF2F2";
+            ppBuyNowBtn.style.borderColor = "#FECACA";
+          } else {
+            ppBuyNowBtn.disabled = false;
+            ppBuyNowBtn.style.opacity = "1";
+            ppBuyNowBtn.style.cursor = "pointer";
+            ppBuyNowBtn.textContent = "Buy Now";
+            ppBuyNowBtn.style.color = "";
+            ppBuyNowBtn.style.background = "";
+            ppBuyNowBtn.style.borderColor = "";
+          }
+        }
+      }
+    }
+    function renderVariantsUI() {
+      ppVariantsWrap.innerHTML = product.variantGroups.map((g) => {
+        const gIdStr = String(g.id);
+        const selectedOptId = selectedOptions[gIdStr];
+        const selectedOpt = g.options && g.options.find((o) => String(o.id) === String(selectedOptId)) || g.options && g.options[0];
+        const selectedLabel = selectedOpt ? selectedOpt.label : "";
+        const optionsHtml = (g.options || []).map((opt) => {
+          const isSelected = String(opt.id) === String(selectedOptId);
+          if (g.type === "color") {
+            return `
+            <button type="button" 
+              class="pp-color-swatch-btn ${isSelected ? "active" : ""}" 
+              style="background-color: ${opt.colorHex || "#000000"};" 
+              data-group-id="${g.id}" 
+              data-option-id="${opt.id}" 
+              title="${opt.label}" 
+              aria-label="${opt.label}">
+            </button>
+          `;
+          } else {
+            return `
+            <button type="button" 
+              class="pp-text-option-btn ${isSelected ? "active" : ""}" 
+              data-group-id="${g.id}" 
+              data-option-id="${opt.id}">
+              ${opt.label}
+            </button>
+          `;
+          }
+        }).join("");
+        return `
+        <div class="pp-variant-group">
+          <div class="pp-variant-group-title">
+            <span>${g.name}:</span>
+            <span class="pp-variant-selected-label" id="ppVariantLabel_${g.id}">${selectedLabel}</span>
+          </div>
+          <div class="pp-variant-options">
+            ${optionsHtml}
+          </div>
+        </div>
+      `;
+      }).join("");
+      ppVariantsWrap.querySelectorAll("[data-group-id]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const groupId = String(btn.dataset.groupId);
+          const optionId = String(btn.dataset.optionId);
+          selectedOptions[groupId] = optionId;
+          renderVariantsUI();
+          updateVariantDisplay();
+        });
+      });
+    }
+    renderVariantsUI();
+    updateVariantDisplay();
+  }
   async function showProduct(productOrId, updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash)))
       return;
@@ -32987,7 +33170,7 @@ Message: ${message}`);
     if (productId) {
       recordProductClick(productId);
     }
-    if (!product && productId) {
+    if ((!product || product.variantGroups === void 0) && productId) {
       try {
         const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
         if (res.ok) {
@@ -33014,6 +33197,10 @@ Message: ${message}`);
             AUDIOKING_PRODUCTS[idx] = fresh;
           else
             AUDIOKING_PRODUCTS.push(fresh);
+          if (activeProduct && String(activeProduct.id) === String(fresh.id)) {
+            activeProduct = fresh;
+            renderProductVariants(fresh);
+          }
         }
       }).catch(() => {
       });
@@ -33169,145 +33356,7 @@ Message: ${message}`);
         ppBuyNowBtn.style.borderColor = "";
       }
     }
-    const ppVariantsWrap = document.getElementById("ppVariantsWrap");
-    activeVariant = null;
-    if (ppVariantsWrap) {
-      if (product.hasVariants && Array.isArray(product.variantGroups) && product.variantGroups.length > 0) {
-        let getSelectedVariant = function() {
-          if (!product.variants || product.variants.length === 0)
-            return null;
-          const selectedIds = Object.values(selectedOptions);
-          return product.variants.find((v) => {
-            if (!Array.isArray(v.optionIds))
-              return false;
-            return selectedIds.every((id) => v.optionIds.includes(id));
-          }) || product.variants[0];
-        }, updateVariantDisplay = function() {
-          const matched = getSelectedVariant();
-          activeVariant = matched;
-          if (ppPrice) {
-            const effectivePrice = matched && matched.priceOverride != null ? matched.priceOverride : product.price;
-            ppPrice.textContent = formatINR(effectivePrice);
-          }
-          if (matched) {
-            const vOutOfStock = matched.stock === 0 || !matched.isActive;
-            if (ppInStockBadge)
-              ppInStockBadge.style.display = !vOutOfStock && !isPreOrder ? "inline-flex" : "none";
-            if (ppOutOfStockBadge && !isPreOrder) {
-              ppOutOfStockBadge.style.display = vOutOfStock ? "inline-flex" : "none";
-            }
-            if (ppAddToCartBtn && !isPreOrder) {
-              if (vOutOfStock) {
-                ppAddToCartBtn.classList.add("disabled", "is-out-of-stock");
-                ppAddToCartBtn.disabled = true;
-                ppAddToCartBtn.style.background = "#FEF2F2";
-                ppAddToCartBtn.style.color = "#DC2626";
-                ppAddToCartBtn.style.borderColor = "#FECACA";
-                ppAddToCartBtn.style.cursor = "not-allowed";
-                const span = ppAddToCartBtn.querySelector("span");
-                if (span) {
-                  span.textContent = "Out of Stock";
-                  span.style.color = "#DC2626";
-                }
-              } else {
-                ppAddToCartBtn.classList.remove("disabled", "is-out-of-stock", "is-preorder");
-                ppAddToCartBtn.disabled = false;
-                ppAddToCartBtn.style.background = "";
-                ppAddToCartBtn.style.color = "";
-                ppAddToCartBtn.style.borderColor = "";
-                ppAddToCartBtn.style.cursor = "pointer";
-                const span = ppAddToCartBtn.querySelector("span");
-                if (span) {
-                  span.textContent = "Add to Cart";
-                  span.style.color = "";
-                }
-              }
-            }
-            if (ppBuyNowBtn && !isPreOrder) {
-              if (vOutOfStock) {
-                ppBuyNowBtn.disabled = true;
-                ppBuyNowBtn.style.opacity = "0.5";
-                ppBuyNowBtn.style.cursor = "not-allowed";
-                ppBuyNowBtn.textContent = "Out of Stock";
-                ppBuyNowBtn.style.color = "#DC2626";
-                ppBuyNowBtn.style.background = "#FEF2F2";
-                ppBuyNowBtn.style.borderColor = "#FECACA";
-              } else {
-                ppBuyNowBtn.disabled = false;
-                ppBuyNowBtn.style.opacity = "1";
-                ppBuyNowBtn.style.cursor = "pointer";
-                ppBuyNowBtn.textContent = "Buy Now";
-                ppBuyNowBtn.style.color = "";
-                ppBuyNowBtn.style.background = "";
-                ppBuyNowBtn.style.borderColor = "";
-              }
-            }
-          }
-        }, renderVariantsUI = function() {
-          ppVariantsWrap.innerHTML = product.variantGroups.map((g) => {
-            const selectedOptId = selectedOptions[g.id];
-            const selectedOpt = g.options.find((o) => o.id === selectedOptId) || g.options[0];
-            const selectedLabel = selectedOpt ? selectedOpt.label : "";
-            const optionsHtml = g.options.map((opt) => {
-              const isSelected = opt.id === selectedOptId;
-              if (g.type === "color") {
-                return `
-                <button type="button" 
-                  class="pp-color-swatch-btn ${isSelected ? "active" : ""}" 
-                  style="background-color: ${opt.colorHex || "#000000"};" 
-                  data-group-id="${g.id}" 
-                  data-option-id="${opt.id}" 
-                  title="${opt.label}" 
-                  aria-label="${opt.label}">
-                </button>
-              `;
-              } else {
-                return `
-                <button type="button" 
-                  class="pp-text-option-btn ${isSelected ? "active" : ""}" 
-                  data-group-id="${g.id}" 
-                  data-option-id="${opt.id}">
-                  ${opt.label}
-                </button>
-              `;
-              }
-            }).join("");
-            return `
-            <div class="pp-variant-group">
-              <div class="pp-variant-group-title">
-                <span>${g.name}:</span>
-                <span class="pp-variant-selected-label" id="ppVariantLabel_${g.id}">${selectedLabel}</span>
-              </div>
-              <div class="pp-variant-options">
-                ${optionsHtml}
-              </div>
-            </div>
-          `;
-          }).join("");
-          ppVariantsWrap.querySelectorAll("[data-group-id]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              const groupId = Number(btn.dataset.groupId) || btn.dataset.groupId;
-              const optionId = Number(btn.dataset.optionId) || btn.dataset.optionId;
-              selectedOptions[groupId] = optionId;
-              renderVariantsUI();
-              updateVariantDisplay();
-            });
-          });
-        };
-        ppVariantsWrap.style.display = "flex";
-        const selectedOptions = {};
-        product.variantGroups.forEach((g) => {
-          if (g.options && g.options.length > 0) {
-            selectedOptions[g.id] = g.options[0].id;
-          }
-        });
-        renderVariantsUI();
-        updateVariantDisplay();
-      } else {
-        ppVariantsWrap.style.display = "none";
-        ppVariantsWrap.innerHTML = "";
-      }
-    }
+    renderProductVariants(product);
     function getConciseOverview(prod) {
       if (prod.shortDescription)
         return prod.shortDescription;
@@ -33865,7 +33914,7 @@ Message: ${message}`);
     track.innerHTML = related.map((item) => `
     <article class="pp-related-card ak-reveal-card" data-id="${item.id}" style="cursor:pointer;">
       <div class="pp-related-img-box">
-        <img src="${item.image || "assets/images/placeholder.jpg"}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">
+        <img src="${resolveProductImage(item.image || item.images && item.images[0])}" alt="${item.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
       </div>
       <div class="pp-related-brand">${item.brand}</div>
       <h4 class="pp-related-card-title" title="${item.name}">${item.name}</h4>
@@ -34127,7 +34176,8 @@ Message: ${message}`);
           productId: activeProduct.id,
           variantId: activeVariant.id,
           name: `${activeProduct.name} - ${activeVariant.optionLabels}`,
-          price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price
+          price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+          image: activeVariant && activeVariant.variantImage || activeProduct.image
         } : activeProduct;
         addToCart(productToAdd, qty);
       });
@@ -34150,9 +34200,11 @@ Message: ${message}`);
         const qty = parseInt(qtyInput?.value || 1, 10);
         const buyNowItem = {
           id: activeVariant ? `${activeProduct.id}_${activeVariant.id}` : activeProduct.id,
+          productId: activeProduct.id,
+          variantId: activeVariant ? activeVariant.id : null,
           name: activeVariant ? `${activeProduct.name} - ${activeVariant.optionLabels}` : activeProduct.name,
           price: activeVariant && activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
-          image: activeProduct.image,
+          image: activeVariant && activeVariant.variantImage || activeProduct.image,
           brand: activeProduct.brand,
           quantity: qty
         };
