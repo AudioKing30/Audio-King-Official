@@ -85,9 +85,8 @@
 .ak-tcard-track {
   display: flex;
   gap: 20px;
+  transition: transform 0.52s cubic-bezier(0.25, 0.85, 0.4, 1);
   will-change: transform;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 /* Each Card — exactly 3 visible at a time on desktop with generous width */
