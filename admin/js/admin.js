@@ -94,27 +94,41 @@ async function tryAutoAdminLogin() {
     try {
       const base = getAdminApiBase();
       const loginUrl = `${base}/api/admin/auth/login`;
-      const res = await fetch(loginUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: 'audioking30@gmail.com',
-          password: 'Lovemytele@321'
-        })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const token = data.token || (data.user && data.user.token) || data.sessionId;
-        if (token) {
-          localStorage.setItem('audioKingSessionToken', token);
-          localStorage.setItem('audioking_token', token);
-          localStorage.setItem('audioKingToken', token);
-          if (data.user) {
-            localStorage.setItem('audioking_user', JSON.stringify(data.user));
-            localStorage.setItem('audioKingUser', JSON.stringify(data.user));
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          const res = await fetch(loginUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: 'audioking30@gmail.com',
+              password: 'Lovemytele@321'
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const token = data.token || (data.user && data.user.token) || data.sessionId;
+            if (token) {
+              localStorage.setItem('audioKingSessionToken', token);
+              localStorage.setItem('audioking_token', token);
+              localStorage.setItem('audioKingToken', token);
+              if (data.user) {
+                localStorage.setItem('audioking_user', JSON.stringify(data.user));
+                localStorage.setItem('audioKingUser', JSON.stringify(data.user));
+              }
+              return token;
+            }
           }
-          return token;
+          if ((res.status === 502 || res.status === 503 || res.status === 504) && attempt < 2) {
+            await new Promise(r => setTimeout(r, 2200));
+            continue;
+          }
+          break;
+        } catch (fetchErr) {
+          if (attempt < 2) {
+            await new Promise(r => setTimeout(r, 2200));
+            continue;
+          }
         }
       }
     } catch (e) {

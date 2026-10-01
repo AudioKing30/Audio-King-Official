@@ -26627,6 +26627,46 @@ Weight: 1.24 lbs (0.567 kg`,
       this.isLoggingIn = false;
       this.currentUser = null;
       this.status = this.getToken() ? "loading" : "unauthenticated";
+      this._lastPrewarm = 0;
+      this._effectiveBaseUrl = null;
+      if (typeof window !== "undefined") {
+        setTimeout(() => this.prewarmServer(), 200);
+        setInterval(() => {
+          if (typeof document !== "undefined" && !document.hidden) {
+            this.prewarmServer();
+          }
+        }, 9 * 60 * 1e3);
+      }
+    }
+    /**
+     * Proactively ping backend health endpoint to ensure container is awake.
+     * Runs non-blockingly in the background.
+     */
+    prewarmServer() {
+      const now = Date.now();
+      if (this._lastPrewarm && now - this._lastPrewarm < 25e3) {
+        return;
+      }
+      this._lastPrewarm = now;
+      const base = this._effectiveBaseUrl || this.getBaseUrl();
+      const urls = [];
+      if (base)
+        urls.push(`${base}/api/health`);
+      else
+        urls.push("/api/health");
+      if (typeof window !== "undefined" && window.location.hostname.includes("github.io") && !base.includes("onrender.com")) {
+        urls.push("https://audioking-api.onrender.com/api/health");
+      }
+      urls.forEach((u) => {
+        try {
+          fetch(u, { method: "GET", keepalive: true, cache: "no-store" }).then((res) => {
+            if (res.ok)
+              console.log("[AUTH] Server is warm and ready:", u);
+          }).catch(() => {
+          });
+        } catch (e) {
+        }
+      });
     }
     getToken() {
       let token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
@@ -26673,42 +26713,107 @@ Weight: 1.24 lbs (0.567 kg`,
       }
     }
     /**
-     * Safe fetch wrapper with timeout and network failure resilience
+     * Safe fetch wrapper with adaptive timeouts, automatic cold-start retry,
+     * multi-host fallback, and network failure resilience.
      */
     async safeFetch(endpoint, options = {}) {
-      const baseUrl = this.getBaseUrl();
-      const url = `${baseUrl}${endpoint}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8e3);
-      const token = this.getToken();
-      const authHeaders = token ? { "Authorization": `Bearer ${token}` } : {};
-      try {
-        const res = await fetch(url, {
-          ...options,
-          signal: controller.signal,
-          credentials: "include",
-          headers: {
-            "Accept": "application/json",
-            ...authHeaders,
-            ...options.headers || {}
+      const primaryBase = this._effectiveBaseUrl || this.getBaseUrl();
+      const isPost = (options.method || "GET").toUpperCase() === "POST";
+      const defaultTimeout = isPost ? 35e3 : 15e3;
+      const timeoutMs = options.timeoutMs || defaultTimeout;
+      const maxRetries = options.retries !== void 0 ? options.retries : isPost ? 2 : 1;
+      let lastResult = null;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        const activeBase = this._effectiveBaseUrl || primaryBase;
+        const url = `${activeBase}${endpoint}`;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        const token = this.getToken();
+        const authHeaders = token ? { "Authorization": `Bearer ${token}` } : {};
+        try {
+          const res = await fetch(url, {
+            ...options,
+            signal: controller.signal,
+            credentials: "include",
+            headers: {
+              "Accept": "application/json",
+              ...authHeaders,
+              ...options.headers || {}
+            }
+          });
+          clearTimeout(timeoutId);
+          const contentType = res.headers.get("content-type") || "";
+          const isJson = contentType.includes("application/json");
+          const data = isJson ? await res.json().catch(() => ({})) : {};
+          const isStaticFallback = res.status === 404 || !isJson && res.status >= 400;
+          lastResult = {
+            ok: res.ok && isJson,
+            status: res.status,
+            data,
+            networkError: false,
+            isStaticFallback
+          };
+          const isColdStart = res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504;
+          if (!isColdStart) {
+            return lastResult;
           }
-        });
-        clearTimeout(timeoutId);
-        const contentType = res.headers.get("content-type") || "";
-        const isJson = contentType.includes("application/json");
-        const data = isJson ? await res.json().catch(() => ({})) : {};
-        const isStaticFallback = res.status === 404 || !isJson && res.status >= 400;
-        return {
-          ok: res.ok && isJson,
-          status: res.status,
-          data,
-          networkError: false,
-          isStaticFallback
-        };
-      } catch (err) {
-        clearTimeout(timeoutId);
-        return { ok: false, status: 0, data: null, networkError: true, isStaticFallback: true, error: err.message };
+          if (attempt < maxRetries) {
+            console.warn(`[AUTH] Gateway warming up (HTTP ${res.status}) on ${endpoint} (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in 2.2s...`);
+            if (typeof options.onRetry === "function") {
+              options.onRetry(attempt + 1, maxRetries + 1);
+            }
+            await new Promise((r) => setTimeout(r, 2200));
+            continue;
+          }
+          return lastResult;
+        } catch (err) {
+          clearTimeout(timeoutId);
+          lastResult = { ok: false, status: 0, data: null, networkError: true, isStaticFallback: true, error: err.message };
+          if (attempt < maxRetries) {
+            console.warn(`[AUTH] Connection waiting on ${endpoint} (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in 2.2s...`);
+            if (typeof options.onRetry === "function") {
+              options.onRetry(attempt + 1, maxRetries + 1);
+            }
+            await new Promise((r) => setTimeout(r, 2200));
+            continue;
+          }
+          if (primaryBase === "http://localhost:3000" && !endpoint.includes("health")) {
+            try {
+              console.warn("[AUTH] Local server unreachable. Attempting live cloud API fallback (audioking-api.onrender.com)...");
+              const fallbackUrl = `https://audioking-api.onrender.com${endpoint}`;
+              const fbController = new AbortController();
+              const fbTimeout = setTimeout(() => fbController.abort(), 3e4);
+              const fbRes = await fetch(fallbackUrl, {
+                ...options,
+                signal: fbController.signal,
+                credentials: "include",
+                headers: {
+                  "Accept": "application/json",
+                  ...authHeaders,
+                  ...options.headers || {}
+                }
+              });
+              clearTimeout(fbTimeout);
+              const fbContentType = fbRes.headers.get("content-type") || "";
+              const fbIsJson = fbContentType.includes("application/json");
+              const fbData = fbIsJson ? await fbRes.json().catch(() => ({})) : {};
+              if (fbRes.ok) {
+                this._effectiveBaseUrl = "https://audioking-api.onrender.com";
+              }
+              return {
+                ok: fbRes.ok && fbIsJson,
+                status: fbRes.status,
+                data: fbData,
+                networkError: false,
+                isStaticFallback: false
+              };
+            } catch (fbErr) {
+            }
+          }
+          return lastResult;
+        }
       }
+      return lastResult;
     }
     /**
      * Initialize and restore session from backend or persistent store on load.
@@ -26835,6 +26940,7 @@ Weight: 1.24 lbs (0.567 kg`,
      * 1. Sign Up (Send verification OTP)
      */
     async signup(data) {
+      this.prewarmServer();
       const res = await this.safeFetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -26843,8 +26949,8 @@ Weight: 1.24 lbs (0.567 kg`,
       if (res.ok) {
         return res.data;
       }
-      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
-        throw new Error("Unable to connect to registration server. Please wait a moment while the server wakes up and try again.");
+      if (res.networkError || res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error("Unable to reach the registration server. Please check your connection and try again.");
       }
       throw new Error(res.data?.error || "Registration failed. Please try again.");
     }
@@ -26894,16 +27000,24 @@ Weight: 1.24 lbs (0.567 kg`,
       throw new Error(res.data?.error || "Failed to resend code.");
     }
     /**
-     * 4. Login (Email + Password) - Always verifies with backend database
+     * 4. Login (Email + Password) - Resilient to Render cold-starts with automatic retries
      */
-    async login(email, password) {
+    async login(email, password, options = {}) {
       this.isLoggingIn = true;
       const cleanEmail = (email || "").trim().toLowerCase();
+      this.prewarmServer();
       try {
         const res = await this.safeFetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: cleanEmail, password })
+          body: JSON.stringify({ email: cleanEmail, password }),
+          timeoutMs: 35e3,
+          retries: 3,
+          onRetry: (attempt, total) => {
+            if (typeof options.onStatus === "function") {
+              options.onStatus(`Connecting to secure authentication server (${attempt}/${total})...`);
+            }
+          }
         });
         if (res.ok && res.data?.user) {
           this.currentUser = res.data.user;
@@ -26918,8 +27032,8 @@ Weight: 1.24 lbs (0.567 kg`,
           this.notify();
           return res.data;
         }
-        if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
-          throw new Error("Unable to connect to authentication server. Please wait a moment while the server wakes up and try again.");
+        if (res.networkError || res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504) {
+          throw new Error("Unable to reach the authentication server. Please check your internet connection and try again.");
         }
         const err = new Error(res.data?.error || "Invalid email or password.");
         err.requiresVerification = res.data?.requiresVerification;
@@ -27375,6 +27489,7 @@ Weight: 1.24 lbs (0.567 kg`,
   function openAuthModal(initialTab = "signin", message = "") {
     const modal = document.getElementById("akAuthModal");
     const msgEl = document.getElementById("akAuthPromptMessage");
+    authService.prewarmServer();
     clearAuthError();
     if (msgEl) {
       if (message) {
@@ -27643,6 +27758,12 @@ Weight: 1.24 lbs (0.567 kg`,
     });
     const signInForm = document.getElementById("akSignInForm");
     const signInBtn = document.getElementById("akSignInBtn");
+    const signInEmailInput = document.getElementById("akSignInEmail");
+    const signInPassInput = document.getElementById("akSignInPass");
+    if (signInEmailInput)
+      signInEmailInput.addEventListener("focus", () => authService.prewarmServer());
+    if (signInPassInput)
+      signInPassInput.addEventListener("focus", () => authService.prewarmServer());
     if (signInForm) {
       signInForm.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -27656,8 +27777,23 @@ Weight: 1.24 lbs (0.567 kg`,
           return;
         }
         setButtonLoading(signInBtn, true, "Signing in...");
+        const statusTimer1 = setTimeout(() => {
+          if (signInBtn?.disabled)
+            setButtonLoading(signInBtn, true, "Connecting to server...");
+        }, 2500);
+        const statusTimer2 = setTimeout(() => {
+          if (signInBtn?.disabled)
+            setButtonLoading(signInBtn, true, "Waking up secure server...");
+        }, 7e3);
         try {
-          await authService.login(email, pass);
+          await authService.login(email, pass, {
+            onStatus: (msg) => {
+              if (signInBtn?.disabled)
+                setButtonLoading(signInBtn, true, msg);
+            }
+          });
+          clearTimeout(statusTimer1);
+          clearTimeout(statusTimer2);
           closeAuthModal();
           const user = getCurrentUser();
           if (user && user.role === "admin") {
@@ -27681,6 +27817,8 @@ Weight: 1.24 lbs (0.567 kg`,
           }
           showToast(`Welcome back, ${user?.firstName || "Musician"}!`, getIcon("check-circle", "", 20));
         } catch (err) {
+          clearTimeout(statusTimer1);
+          clearTimeout(statusTimer2);
           if (err.requiresVerification) {
             showToast("Account verification required. A code was sent to your email.");
             showOtpVerification(err.email || email);

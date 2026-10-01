@@ -273,6 +273,11 @@
       return `${base}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
     }
 
+    // Proactively prewarm server on admin login page load
+    try {
+      fetch(getApiUrl('/api/health'), { method: 'GET', keepalive: true }).catch(() => {});
+    } catch (e) {}
+
     async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('adminEmail').value.trim();
@@ -284,41 +289,71 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Verifying credentials...</span>';
 
-      try {
-        const res = await fetch(getApiUrl('/api/admin/auth/login'), {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
+      const maxAttempts = 3;
 
-        const isJson = (res.headers.get('content-type') || '').includes('application/json');
-        const data = isJson ? await res.json().catch(() => ({})) : {};
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          if (attempt > 1) {
+            submitBtn.innerHTML = `<span>Server waking up (attempt ${attempt}/${maxAttempts})...</span>`;
+          }
+          const res = await fetch(getApiUrl('/api/admin/auth/login'), {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
 
-        if (res.ok && data.success) {
-          if (data.token) {
-            localStorage.setItem('audioKingSessionToken', data.token);
-            localStorage.setItem('audioking_token', data.token);
-            localStorage.setItem('audioKingToken', data.token);
+          const isJson = (res.headers.get('content-type') || '').includes('application/json');
+          const data = isJson ? await res.json().catch(() => ({})) : {};
+
+          if (res.ok && data.success) {
+            if (data.token) {
+              localStorage.setItem('audioKingSessionToken', data.token);
+              localStorage.setItem('audioking_token', data.token);
+              localStorage.setItem('audioKingToken', data.token);
+            }
+            if (data.user) {
+              localStorage.setItem('audioKingUser', JSON.stringify(data.user));
+              localStorage.setItem('audioking_user', JSON.stringify(data.user));
+            }
+            submitBtn.innerHTML = '<span>Success! Redirecting...</span>';
+            window.location.href = '../#admin';
+            return;
           }
-          if (data.user) {
-            localStorage.setItem('audioKingUser', JSON.stringify(data.user));
-            localStorage.setItem('audioking_user', JSON.stringify(data.user));
+
+          // Real credential errors (401, 400, 403) - do NOT retry
+          if (res.status === 401 || res.status === 400 || res.status === 403) {
+            alertBanner.textContent = data.error || 'Authentication failed. Please verify credentials.';
+            alertBanner.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>Sign In to Admin Panel</span>';
+            return;
           }
-          submitBtn.innerHTML = '<span>Success! Redirecting...</span>';
-          window.location.href = '../#admin';
+
+          // Cold start gateway responses (502, 503, 504) - retry
+          if (res.status === 502 || res.status === 503 || res.status === 504) {
+            if (attempt < maxAttempts) {
+              await new Promise(r => setTimeout(r, 2200));
+              continue;
+            }
+          }
+
+          alertBanner.textContent = data.error || 'Authentication failed. Please verify credentials.';
+          alertBanner.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Sign In to Admin Panel</span>';
+          return;
+        } catch (err) {
+          if (attempt < maxAttempts) {
+            await new Promise(r => setTimeout(r, 2200));
+            continue;
+          }
+          alertBanner.textContent = 'Unable to connect to authentication server. Please check your internet connection and try again.';
+          alertBanner.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Sign In to Admin Panel</span>';
           return;
         }
-
-        alertBanner.textContent = data.error || 'Authentication failed. Please verify credentials.';
-        alertBanner.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Sign In to Admin Panel</span>';
-      } catch (err) {
-        alertBanner.textContent = 'Server connecting. If the free-tier backend is spinning up, please wait ~30 seconds and try again.';
-        alertBanner.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Sign In to Admin Panel</span>';
       }
     }
 

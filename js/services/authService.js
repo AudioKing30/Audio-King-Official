@@ -17,6 +17,50 @@ class AuthService {
 
     this.currentUser = null;
     this.status = this.getToken() ? 'loading' : 'unauthenticated';
+
+    this._lastPrewarm = 0;
+    this._effectiveBaseUrl = null;
+
+    // Proactively pre-warm backend server in background on startup
+    if (typeof window !== 'undefined') {
+      setTimeout(() => this.prewarmServer(), 200);
+      setInterval(() => {
+        if (typeof document !== 'undefined' && !document.hidden) {
+          this.prewarmServer();
+        }
+      }, 9 * 60 * 1000); // 9 min keep-alive (Render sleeps after 15m)
+    }
+  }
+
+  /**
+   * Proactively ping backend health endpoint to ensure container is awake.
+   * Runs non-blockingly in the background.
+   */
+  prewarmServer() {
+    const now = Date.now();
+    if (this._lastPrewarm && (now - this._lastPrewarm < 25000)) {
+      return;
+    }
+    this._lastPrewarm = now;
+
+    const base = this._effectiveBaseUrl || this.getBaseUrl();
+    const urls = [];
+    if (base) urls.push(`${base}/api/health`);
+    else urls.push('/api/health');
+
+    if (typeof window !== 'undefined' && window.location.hostname.includes('github.io') && !base.includes('onrender.com')) {
+      urls.push('https://audioking-api.onrender.com/api/health');
+    }
+
+    urls.forEach(u => {
+      try {
+        fetch(u, { method: 'GET', keepalive: true, cache: 'no-store' })
+          .then(res => {
+            if (res.ok) console.log('[AUTH] Server is warm and ready:', u);
+          })
+          .catch(() => {});
+      } catch (e) {}
+    });
   }
 
   getToken() {
@@ -70,46 +114,126 @@ class AuthService {
   }
 
   /**
-   * Safe fetch wrapper with timeout and network failure resilience
+   * Safe fetch wrapper with adaptive timeouts, automatic cold-start retry,
+   * multi-host fallback, and network failure resilience.
    */
   async safeFetch(endpoint, options = {}) {
-    const baseUrl = this.getBaseUrl();
-    const url = `${baseUrl}${endpoint}`;
+    const primaryBase = this._effectiveBaseUrl || this.getBaseUrl();
+    const isPost = (options.method || 'GET').toUpperCase() === 'POST';
+    const defaultTimeout = isPost ? 35000 : 15000;
+    const timeoutMs = options.timeoutMs || defaultTimeout;
+    const maxRetries = options.retries !== undefined ? options.retries : (isPost ? 2 : 1);
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    let lastResult = null;
 
-    const token = this.getToken();
-    const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      const activeBase = this._effectiveBaseUrl || primaryBase;
+      const url = `${activeBase}${endpoint}`;
 
-    try {
-      const res = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          ...authHeaders,
-          ...(options.headers || {})
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+      const token = this.getToken();
+      const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      try {
+        const res = await fetch(url, {
+          ...options,
+          signal: controller.signal,
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            ...authHeaders,
+            ...(options.headers || {})
+          }
+        });
+        clearTimeout(timeoutId);
+
+        const contentType = res.headers.get('content-type') || '';
+        const isJson = contentType.includes('application/json');
+        const data = isJson ? await res.json().catch(() => ({})) : {};
+        const isStaticFallback = res.status === 404 || (!isJson && res.status >= 400);
+
+        lastResult = { 
+          ok: res.ok && isJson, 
+          status: res.status, 
+          data, 
+          networkError: false, 
+          isStaticFallback 
+        };
+
+        // Standard client responses (200, 400, 401, 403, 404, 409, 422, 429) return immediately
+        const isColdStart = res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504;
+        if (!isColdStart) {
+          return lastResult;
         }
-      });
-      clearTimeout(timeoutId);
-      const contentType = res.headers.get('content-type') || '';
-      const isJson = contentType.includes('application/json');
-      const data = isJson ? await res.json().catch(() => ({})) : {};
-      const isStaticFallback = res.status === 404 || (!isJson && res.status >= 400);
 
-      return { 
-        ok: res.ok && isJson, 
-        status: res.status, 
-        data, 
-        networkError: false, 
-        isStaticFallback 
-      };
-    } catch (err) {
-      clearTimeout(timeoutId);
-      return { ok: false, status: 0, data: null, networkError: true, isStaticFallback: true, error: err.message };
+        // 502/503/504 detected (Render container warming up)
+        if (attempt < maxRetries) {
+          console.warn(`[AUTH] Gateway warming up (HTTP ${res.status}) on ${endpoint} (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in 2.2s...`);
+          if (typeof options.onRetry === 'function') {
+            options.onRetry(attempt + 1, maxRetries + 1);
+          }
+          await new Promise(r => setTimeout(r, 2200));
+          continue;
+        }
+
+        return lastResult;
+      } catch (err) {
+        clearTimeout(timeoutId);
+        lastResult = { ok: false, status: 0, data: null, networkError: true, isStaticFallback: true, error: err.message };
+
+        // If network error / timeout and retries remaining, wait and retry
+        if (attempt < maxRetries) {
+          console.warn(`[AUTH] Connection waiting on ${endpoint} (attempt ${attempt + 1}/${maxRetries + 1}). Retrying in 2.2s...`);
+          if (typeof options.onRetry === 'function') {
+            options.onRetry(attempt + 1, maxRetries + 1);
+          }
+          await new Promise(r => setTimeout(r, 2200));
+          continue;
+        }
+
+        // Secondary fallback: if primaryBase was http://localhost:3000 and it completely failed with network error
+        if (primaryBase === 'http://localhost:3000' && !endpoint.includes('health')) {
+          try {
+            console.warn('[AUTH] Local server unreachable. Attempting live cloud API fallback (audioking-api.onrender.com)...');
+            const fallbackUrl = `https://audioking-api.onrender.com${endpoint}`;
+            const fbController = new AbortController();
+            const fbTimeout = setTimeout(() => fbController.abort(), 30000);
+            const fbRes = await fetch(fallbackUrl, {
+              ...options,
+              signal: fbController.signal,
+              credentials: 'include',
+              headers: {
+                'Accept': 'application/json',
+                ...authHeaders,
+                ...(options.headers || {})
+              }
+            });
+            clearTimeout(fbTimeout);
+            const fbContentType = fbRes.headers.get('content-type') || '';
+            const fbIsJson = fbContentType.includes('application/json');
+            const fbData = fbIsJson ? await fbRes.json().catch(() => ({})) : {};
+            if (fbRes.ok) {
+              this._effectiveBaseUrl = 'https://audioking-api.onrender.com';
+            }
+            return {
+              ok: fbRes.ok && fbIsJson,
+              status: fbRes.status,
+              data: fbData,
+              networkError: false,
+              isStaticFallback: false
+            };
+          } catch (fbErr) {
+            // Secondary also failed, return lastResult
+          }
+        }
+
+        return lastResult;
+      }
     }
+
+    return lastResult;
   }
 
   /**
@@ -264,6 +388,7 @@ class AuthService {
    * 1. Sign Up (Send verification OTP)
    */
   async signup(data) {
+    this.prewarmServer();
     const res = await this.safeFetch('/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -274,8 +399,8 @@ class AuthService {
       return res.data;
     }
 
-    if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
-      throw new Error('Unable to connect to registration server. Please wait a moment while the server wakes up and try again.');
+    if (res.networkError || res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504) {
+      throw new Error('Unable to reach the registration server. Please check your connection and try again.');
     }
 
     throw new Error(res.data?.error || 'Registration failed. Please try again.');
@@ -333,17 +458,27 @@ class AuthService {
   }
 
   /**
-   * 4. Login (Email + Password) - Always verifies with backend database
+   * 4. Login (Email + Password) - Resilient to Render cold-starts with automatic retries
    */
-  async login(email, password) {
+  async login(email, password, options = {}) {
     this.isLoggingIn = true;
     const cleanEmail = (email || '').trim().toLowerCase();
+
+    // Trigger immediate background wake-up ping
+    this.prewarmServer();
 
     try {
       const res = await this.safeFetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: cleanEmail, password })
+        body: JSON.stringify({ email: cleanEmail, password }),
+        timeoutMs: 35000,
+        retries: 3,
+        onRetry: (attempt, total) => {
+          if (typeof options.onStatus === 'function') {
+            options.onStatus(`Connecting to secure authentication server (${attempt}/${total})...`);
+          }
+        }
       });
 
       if (res.ok && res.data?.user) {
@@ -360,8 +495,8 @@ class AuthService {
         return res.data;
       }
 
-      if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
-        throw new Error('Unable to connect to authentication server. Please wait a moment while the server wakes up and try again.');
+      if (res.networkError || res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error('Unable to reach the authentication server. Please check your internet connection and try again.');
       }
 
       const err = new Error(res.data?.error || 'Invalid email or password.');

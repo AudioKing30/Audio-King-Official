@@ -147,6 +147,9 @@ export function openAuthModal(initialTab = 'signin', message = '') {
   const modal = document.getElementById('akAuthModal');
   const msgEl = document.getElementById('akAuthPromptMessage');
 
+  // Trigger background server pre-warm so backend is hot and ready
+  authService.prewarmServer();
+
   clearAuthError();
 
   if (msgEl) {
@@ -476,6 +479,10 @@ export function initAuth() {
   // -------------------------------------------------------------------------
   const signInForm = document.getElementById('akSignInForm');
   const signInBtn = document.getElementById('akSignInBtn');
+  const signInEmailInput = document.getElementById('akSignInEmail');
+  const signInPassInput = document.getElementById('akSignInPass');
+  if (signInEmailInput) signInEmailInput.addEventListener('focus', () => authService.prewarmServer());
+  if (signInPassInput) signInPassInput.addEventListener('focus', () => authService.prewarmServer());
 
   if (signInForm) {
     signInForm.addEventListener('submit', async (e) => {
@@ -493,8 +500,24 @@ export function initAuth() {
 
       setButtonLoading(signInBtn, true, 'Signing in...');
 
+      // Dynamic feedback timers if server takes a few seconds to spin up from sleep
+      const statusTimer1 = setTimeout(() => {
+        if (signInBtn?.disabled) setButtonLoading(signInBtn, true, 'Connecting to server...');
+      }, 2500);
+
+      const statusTimer2 = setTimeout(() => {
+        if (signInBtn?.disabled) setButtonLoading(signInBtn, true, 'Waking up secure server...');
+      }, 7000);
+
       try {
-        await authService.login(email, pass);
+        await authService.login(email, pass, {
+          onStatus: (msg) => {
+            if (signInBtn?.disabled) setButtonLoading(signInBtn, true, msg);
+          }
+        });
+        clearTimeout(statusTimer1);
+        clearTimeout(statusTimer2);
+
         closeAuthModal();
         const user = getCurrentUser();
         if (user && user.role === 'admin') {
@@ -517,6 +540,8 @@ export function initAuth() {
         }
         showToast(`Welcome back, ${user?.firstName || 'Musician'}!`, getIcon('check-circle', '', 20));
       } catch (err) {
+        clearTimeout(statusTimer1);
+        clearTimeout(statusTimer2);
         if (err.requiresVerification) {
           showToast('Account verification required. A code was sent to your email.');
           showOtpVerification(err.email || email);
