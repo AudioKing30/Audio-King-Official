@@ -48,10 +48,12 @@ function syncMasterFiles() {
         price: p.price,
         originalPrice: p.original_price,
         stock: p.stock,
-        inStock: Boolean(p.in_stock),
+        inStock: Boolean(p.in_stock === 1 && p.stock > 0),
+        isPreOrder: Boolean(p.in_stock === 2 || p.stock_status === 'preorder' || (p.badge && p.badge.toLowerCase().includes('pre-order'))),
+        stockStatus: (p.in_stock === 2 || p.stock_status === 'preorder' || (p.badge && p.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : ((p.in_stock === 0 || p.stock === 0) ? 'outofstock' : 'instock'),
         rating: p.rating || 5.0,
         reviewCount: p.review_count || 0,
-        badge: p.badge || '',
+        badge: (p.in_stock === 2 || p.stock_status === 'preorder') ? 'Pre-Order' : (p.badge || ''),
         sku: p.sku || '',
         description: p.description || '',
         image: p.image || (images[0] || 'assets/images/placeholder.svg'),
@@ -69,7 +71,7 @@ function syncMasterFiles() {
 
     const jsDataPath = path.resolve(__dirname, '..', '..', 'js', 'data', 'products.js');
     if (fs.existsSync(jsDataPath)) {
-      const jsContent = `export const AUDIOKING_PRODUCTS = ${JSON.stringify(formatted, null, 2)};\n`;
+      const jsContent = `export const AUDIOKING_PRODUCTS = ${JSON.stringify(formatted, null, 2)};\nexport const FEATURED_PRODUCTS = AUDIOKING_PRODUCTS.slice(0, 10);\n`;
       fs.writeFileSync(jsDataPath, jsContent, 'utf8');
     }
   } catch (err) {
@@ -603,12 +605,14 @@ router.get('/products', (req, res) => {
       params.push(brand);
     }
 
-    if (stockStatus === 'low') {
-      query += ' AND stock > 0 AND stock < 5';
+    if (stockStatus === 'preorder') {
+      query += " AND (in_stock = 2 OR (badge IS NOT NULL AND LOWER(badge) LIKE '%pre-order%') OR stock_status = 'preorder')";
+    } else if (stockStatus === 'low') {
+      query += " AND stock > 0 AND stock <= 5 AND in_stock != 2 AND (stock_status IS NULL OR stock_status != 'preorder')";
     } else if (stockStatus === 'out') {
-      query += ' AND (stock <= 0 OR in_stock = 0)';
+      query += " AND (stock <= 0 OR in_stock = 0 OR stock_status = 'outofstock') AND in_stock != 2 AND (stock_status IS NULL OR stock_status != 'preorder')";
     } else if (stockStatus === 'in') {
-      query += ' AND stock > 0 AND in_stock = 1';
+      query += " AND stock > 0 AND (in_stock = 1 OR stock_status = 'instock') AND in_stock != 2 AND (stock_status IS NULL OR stock_status != 'preorder') AND (badge IS NULL OR LOWER(badge) NOT LIKE '%pre-order%')";
     }
 
     query += ' ORDER BY created_at DESC';
@@ -623,6 +627,9 @@ router.get('/products', (req, res) => {
       const mrp = Number(r.original_price) || Number(r.price) || 0;
       const sellingPrice = Number(r.price) || mrp;
       const discountPercent = mrp > sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
+      const isPreOrder = Boolean(r.in_stock === 2 || r.stock_status === 'preorder' || (r.badge && r.badge.toLowerCase().includes('pre-order')));
+      const isOutOfStock = Boolean(!isPreOrder && (r.in_stock === 0 || r.stock <= 0 || r.stock_status === 'outofstock'));
+      const inStock = Boolean(!isPreOrder && !isOutOfStock && (r.in_stock === 1 || r.stock_status === 'instock') && r.stock > 0);
 
       return {
         id: r.id,
@@ -635,7 +642,11 @@ router.get('/products', (req, res) => {
         price: sellingPrice,
         discountPercent,
         stock: Number(r.stock ?? 0),
-        inStock: Boolean(r.in_stock && r.stock > 0),
+        inStock,
+        isPreOrder,
+        isOutOfStock,
+        stockStatus: isPreOrder ? 'preorder' : (isOutOfStock ? 'outofstock' : 'instock'),
+        badge: isPreOrder ? 'Pre-Order' : (r.badge || ''),
         image: r.image || images[0] || 'assets/images/placeholder.svg',
         images,
         videoType: r.video_type || null,
@@ -743,8 +754,26 @@ router.post('/products', (req, res) => {
 
     const numStock = parseInt(stock, 10);
     const validStock = isNaN(numStock) || numStock < 0 ? 0 : numStock;
-    // Auto-flip inStock if stock is 0, but allow manual toggle if stock > 0
-    const finalInStock = validStock === 0 ? 0 : (inStock !== false ? 1 : 0);
+    
+    // Support 3 availability statuses: 1 = In Stock, 2 = Pre Order, 0 = Out of Stock
+    let finalInStock = 1;
+    let finalStockStatus = 'instock';
+    let finalBadge = (req.body.badge || '').trim();
+
+    const rawInStock = inStock;
+    const rawStatus = String(req.body.stockStatus || '').toLowerCase();
+
+    if (rawInStock === 2 || rawInStock === '2' || rawStatus === 'preorder') {
+      finalInStock = 2;
+      finalStockStatus = 'preorder';
+      if (!finalBadge) finalBadge = 'Pre-Order';
+    } else if (rawInStock === 0 || rawInStock === '0' || rawInStock === false || rawStatus === 'outofstock' || validStock === 0) {
+      finalInStock = 0;
+      finalStockStatus = 'outofstock';
+    } else {
+      finalInStock = 1;
+      finalStockStatus = 'instock';
+    }
 
     const imageArray = Array.isArray(images) && images.length > 0 ? images : ['assets/images/placeholder.svg'];
     const mainImage = imageArray[0];
@@ -777,14 +806,14 @@ router.post('/products', (req, res) => {
     db.prepare(`
       INSERT INTO products (
         id, name, short_name, brand, category, subcategory, section,
-        price, original_price, stock, in_stock, rating, review_count,
+        price, original_price, stock, in_stock, stock_status, rating, review_count,
         badge, sku, description, image, images_json,
         video_type, video_url, youtube_video_id,
         specs_json, deep_specs_json, is_featured,
         created_at, updated_at
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?,
         ?, ?, ?,
         ?, ?, ?,
@@ -802,9 +831,10 @@ router.post('/products', (req, res) => {
       numMrp,
       validStock,
       finalInStock,
+      finalStockStatus,
       5.0,
       0,
-      '',
+      finalBadge,
       `AK-${id.toUpperCase()}`,
       description || '',
       mainImage,
@@ -853,8 +883,32 @@ router.put('/products/:id', (req, res) => {
       return res.status(400).json({ error: 'Selling Price (₹' + sellingPrice + ') cannot exceed MRP (₹' + mrp + ').' });
     }
 
-    const stock = body.stock !== undefined ? parseInt(body.stock, 10) : Number(existing.stock);
-    const inStock = stock === 0 ? 0 : (body.inStock !== undefined ? (body.inStock ? 1 : 0) : existing.in_stock);
+    const stock = body.stock !== undefined ? Math.max(0, parseInt(body.stock, 10) || 0) : Number(existing.stock);
+    let inStock = existing.in_stock;
+    let stockStatus = existing.stock_status || (existing.in_stock === 2 ? 'preorder' : (existing.in_stock === 0 ? 'outofstock' : 'instock'));
+    let badge = body.badge !== undefined ? body.badge : (existing.badge || '');
+
+    if (body.inStock !== undefined || body.stockStatus !== undefined) {
+      const rawInStock = body.inStock;
+      const rawStatus = String(body.stockStatus || '').toLowerCase();
+
+      if (rawInStock === 2 || rawInStock === '2' || rawStatus === 'preorder') {
+        inStock = 2;
+        stockStatus = 'preorder';
+        if (!badge || badge.toLowerCase() === 'out of stock') badge = 'Pre-Order';
+      } else if (rawInStock === 0 || rawInStock === '0' || rawInStock === false || rawStatus === 'outofstock') {
+        inStock = 0;
+        stockStatus = 'outofstock';
+        if (badge === 'Pre-Order') badge = '';
+      } else if (rawInStock === 1 || rawInStock === '1' || rawInStock === true || rawStatus === 'instock') {
+        inStock = stock === 0 ? 0 : 1;
+        stockStatus = stock === 0 ? 'outofstock' : 'instock';
+        if (badge === 'Pre-Order') badge = '';
+      }
+    } else if (stock === 0 && existing.in_stock !== 2) {
+      inStock = 0;
+      stockStatus = 'outofstock';
+    }
 
     let imagesJson = existing.images_json;
     let mainImage = existing.image;
@@ -888,7 +942,8 @@ router.put('/products/:id', (req, res) => {
     db.prepare(`
       UPDATE products SET
         name = ?, brand = ?, category = ?, section = ?,
-        price = ?, original_price = ?, stock = ?, in_stock = ?,
+        price = ?, original_price = ?, stock = ?, in_stock = ?, stock_status = ?,
+        badge = ?,
         image = ?, images_json = ?, video_type = ?, video_url = ?, youtube_video_id = ?,
         description = ?, updated_at = ?
       WHERE id = ?
@@ -901,6 +956,8 @@ router.put('/products/:id', (req, res) => {
       mrp,
       stock,
       inStock,
+      stockStatus,
+      badge,
       mainImage,
       imagesJson,
       videoType,

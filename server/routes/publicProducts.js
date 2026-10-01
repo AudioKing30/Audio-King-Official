@@ -109,13 +109,13 @@ function formatProduct(row, activeOffers = []) {
     offerDiscount: maxOfferDiscount,
     hasOffer: Boolean(activeOfferTitle || maxOfferDiscount > 0 || (originalPrice > sellingPrice && originalPrice > 0)),
     stock: Number(row.stock ?? 10),
-    inStock: Boolean(row.in_stock === 1 && row.stock > 0),
-    isOutOfStock: Boolean(row.in_stock === 0 || row.stock === 0),
-    isPreOrder: Boolean(row.in_stock === 2 || (row.badge && row.badge.toLowerCase().includes('pre-order'))),
-    stockStatus: (row.in_stock === 2 || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : ((row.in_stock === 0 || row.stock === 0) ? 'outofstock' : 'instock'),
+    inStock: Boolean((row.in_stock === 1 || row.stock_status === 'instock') && row.in_stock !== 2 && row.stock_status !== 'preorder' && !(row.badge && row.badge.toLowerCase().includes('pre-order')) && row.stock > 0),
+    isOutOfStock: Boolean(row.in_stock !== 2 && row.stock_status !== 'preorder' && !(row.badge && row.badge.toLowerCase().includes('pre-order')) && (row.in_stock === 0 || row.stock === 0 || row.stock_status === 'outofstock')),
+    isPreOrder: Boolean(row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))),
+    stockStatus: (row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : ((row.in_stock === 0 || row.stock === 0 || row.stock_status === 'outofstock') ? 'outofstock' : 'instock'),
     rating: Number(row.rating || 5.0),
     reviewCount: Number(row.review_count || 0),
-    badge: (row.in_stock === 2 || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'Pre-Order' : (activeOfferTitle ? `${maxOfferDiscount}% OFF · ${activeOfferTitle}` : (row.badge || (discountPercent > 0 ? `${discountPercent}% OFF` : ''))),
+    badge: (row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'Pre-Order' : (activeOfferTitle ? `${maxOfferDiscount}% OFF · ${activeOfferTitle}` : (row.badge || (discountPercent > 0 ? `${discountPercent}% OFF` : ''))),
     sku: row.sku || `AK-${row.id.toUpperCase()}`,
     description: row.description || '',
     image: mainImage,
@@ -137,7 +137,7 @@ function formatProduct(row, activeOffers = []) {
  */
 router.get('/', (req, res) => {
   try {
-    const { category, brand, search } = req.query || {};
+    const { category, brand, search, stockStatus, availability } = req.query || {};
     let query = 'SELECT * FROM products WHERE 1=1';
     const params = [];
 
@@ -155,6 +155,15 @@ router.get('/', (req, res) => {
       query += ' AND (name LIKE ? OR brand LIKE ? OR category LIKE ?)';
       const term = `%${search}%`;
       params.push(term, term, term);
+    }
+
+    const st = stockStatus || availability;
+    if (st === 'preorder') {
+      query += " AND (in_stock = 2 OR stock_status = 'preorder' OR (badge IS NOT NULL AND LOWER(badge) LIKE '%pre-order%'))";
+    } else if (st === 'in' || st === 'instock') {
+      query += " AND (in_stock = 1 OR stock_status = 'instock') AND stock > 0 AND in_stock != 2 AND (stock_status IS NULL OR stock_status != 'preorder') AND (badge IS NULL OR LOWER(badge) NOT LIKE '%pre-order%')";
+    } else if (st === 'out' || st === 'outofstock') {
+      query += " AND (in_stock = 0 OR stock <= 0 OR stock_status = 'outofstock') AND in_stock != 2 AND (stock_status IS NULL OR stock_status != 'preorder')";
     }
 
     query += ' ORDER BY created_at DESC';

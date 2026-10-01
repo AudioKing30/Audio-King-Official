@@ -373,6 +373,20 @@ function initDatabase() {
     if (!prodColNames.includes('section')) {
       db.exec("ALTER TABLE products ADD COLUMN section TEXT DEFAULT 'pro-audio';");
     }
+    if (!prodColNames.includes('stock_status')) {
+      db.exec("ALTER TABLE products ADD COLUMN stock_status TEXT DEFAULT 'instock';");
+    }
+
+    // Backfill stock_status based on in_stock and badge
+    db.prepare(`
+      UPDATE products 
+      SET stock_status = CASE 
+        WHEN in_stock = 2 OR (badge IS NOT NULL AND LOWER(badge) LIKE '%pre-order%') THEN 'preorder'
+        WHEN in_stock = 0 OR stock <= 0 THEN 'outofstock'
+        ELSE 'instock'
+      END
+      WHERE stock_status IS NULL OR stock_status = ''
+    `).run();
 
     const couponColumns = db.prepare("PRAGMA table_info(coupons)").all();
     const couponColNames = couponColumns.map(c => c.name);

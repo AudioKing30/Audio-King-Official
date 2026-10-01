@@ -525,6 +525,18 @@ async function loadProducts() {
           state.products = data.products || [];
         }
       }
+
+      if (stockStatus !== 'all' && Array.isArray(state.products)) {
+        if (stockStatus === 'preorder') {
+          state.products = state.products.filter(p => p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order')));
+        } else if (stockStatus === 'in') {
+          state.products = state.products.filter(p => !p.isPreOrder && p.stockStatus !== 'preorder' && p.in_stock !== 2 && (!p.badge || !p.badge.toLowerCase().includes('pre-order')) && p.inStock && p.stock > 0);
+        } else if (stockStatus === 'out') {
+          state.products = state.products.filter(p => !p.isPreOrder && p.stockStatus !== 'preorder' && p.in_stock !== 2 && (!p.inStock || p.stock <= 0));
+        } else if (stockStatus === 'low') {
+          state.products = state.products.filter(p => !p.isPreOrder && p.stockStatus !== 'preorder' && p.in_stock !== 2 && p.stock > 0 && p.stock <= 5);
+        }
+      }
     }
 
     document.getElementById('productsCountLabel').textContent = `Showing ${state.products.length} products`;
@@ -563,8 +575,8 @@ async function loadProducts() {
         </td>
         <td><strong>${p.stock}</strong></td>
         <td>
-          <span class="badge-stock ${p.inStock ? 'in' : 'out'}">
-            ${p.inStock ? 'In Stock' : 'Out of Stock'}
+          <span class="badge-stock ${(p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : (p.inStock ? 'in' : 'out')}">
+            ${(p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order'))) ? 'Pre-Order' : (p.inStock ? 'In Stock' : 'Out of Stock')}
           </span>
         </td>
         <td style="white-space: nowrap;">
@@ -614,7 +626,7 @@ async function loadProducts() {
             </div>
             <div class="ak-mpc-row">
               <span class="ak-mpc-label">Status</span>
-              <span class="ak-mpc-val"><span class="badge-stock ${p.inStock ? 'in' : 'out'}">${p.inStock ? 'In Stock' : 'Out of Stock'}</span></span>
+              <span class="ak-mpc-val"><span class="badge-stock ${(p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : (p.inStock ? 'in' : 'out')}">${(p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order'))) ? 'Pre-Order' : (p.inStock ? 'In Stock' : 'Out of Stock')}</span></span>
             </div>
           </div>
           <div class="ak-mpc-actions">
@@ -702,7 +714,8 @@ async function openEditProduct(productId) {
     document.getElementById('productMrp').value = p.originalPrice;
     document.getElementById('productSellingPrice').value = p.price;
     document.getElementById('productStock').value = p.stock;
-    document.getElementById('productAvailability').value = p.inStock ? '1' : '0';
+    const isPre = Boolean(p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order')));
+    document.getElementById('productAvailability').value = isPre ? '2' : (p.inStock ? '1' : '0');
     document.getElementById('productDescription').value = p.description || '';
 
     state.formImages = Array.isArray(p.images) && p.images.length > 0 ? [...p.images] : (p.image ? [p.image] : []);
@@ -1352,6 +1365,11 @@ function handleStockInputChange() {
   const availSelect = document.getElementById('productAvailability');
   const stock = parseInt(stockInput.value, 10) || 0;
 
+  if (availSelect.value === '2') {
+    // Preserve Pre-Order status
+    return;
+  }
+
   if (stock === 0) {
     availSelect.value = '0';
   } else if (availSelect.value === '0' && stock > 0) {
@@ -1371,7 +1389,9 @@ async function handleSaveProduct(e) {
   const mrp = parseFloat(document.getElementById('productMrp').value);
   const sellingPrice = parseFloat(document.getElementById('productSellingPrice').value);
   const stock = parseInt(document.getElementById('productStock').value, 10);
-  const inStock = document.getElementById('productAvailability').value === '1';
+  const availVal = document.getElementById('productAvailability').value;
+  const inStock = availVal === '2' ? 2 : (availVal === '1' ? 1 : 0);
+  const stockStatus = availVal === '2' ? 'preorder' : (availVal === '1' ? 'instock' : 'outofstock');
   const description = document.getElementById('productDescription').value.trim();
   const videoInput = document.getElementById('productVideoInput').value.trim();
 
@@ -1390,6 +1410,8 @@ async function handleSaveProduct(e) {
     sellingPrice,
     stock,
     inStock,
+    stockStatus,
+    badge: availVal === '2' ? 'Pre-Order' : '',
     description,
     images: state.formImages.length > 0 ? state.formImages : ['assets/images/placeholder.svg'],
     videoChoice: state.formVideoChoice,
@@ -2818,7 +2840,7 @@ function syncVariantStockToProduct() {
   const stockInput = document.getElementById('productStock');
   const availSelect = document.getElementById('productAvailability');
   if (stockInput) stockInput.value = totalStock;
-  if (availSelect) availSelect.value = totalStock > 0 ? '1' : '0';
+  if (availSelect && availSelect.value !== '2') availSelect.value = totalStock > 0 ? '1' : '0';
 }
 window.syncVariantStockToProduct = syncVariantStockToProduct;
 

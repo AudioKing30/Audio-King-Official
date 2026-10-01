@@ -2685,6 +2685,7 @@
             <select id="filterProductStock" class="form-select" onchange="loadProducts()">
               <option value="all">All Inventory</option>
               <option value="in">In Stock</option>
+              <option value="preorder">Pre-Order</option>
               <option value="low">Low Stock (&lt; 5)</option>
               <option value="out">Out of Stock</option>
             </select>
@@ -2875,6 +2876,7 @@
                 <label class="form-label" for="productAvailability">9. Availability Status *</label>
                 <select id="productAvailability" class="form-select">
                   <option value="1">In Stock (Available for Purchase)</option>
+                  <option value="2">Pre Order (Reserve / Advance Booking)</option>
                   <option value="0">Out of Stock</option>
                 </select>
                 <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Admin can manually override status at any time.</div>

@@ -644,6 +644,12 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.badge-stock.preorder {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0284C7;
+  border: 1px solid rgba(14, 165, 233, 0.35);
+}
+
 .badge-stock.low {
   background: var(--ak-warning-soft);
   color: #D97706;
