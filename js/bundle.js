@@ -30401,6 +30401,8 @@ Weight: 1.24 lbs (0.567 kg`,
   }
 
   // js/components/testimonials.js
+  var ADVANCE_INTERVAL = 1500;
+  var TRANSITION_DURATION = 520;
   function initTestimonials() {
     const track = document.getElementById("akTCardTrack");
     const viewport = document.getElementById("akTCardViewport");
@@ -30409,177 +30411,148 @@ Weight: 1.24 lbs (0.567 kg`,
     const nextBtn = document.getElementById("akTCardNextBtn");
     if (!track || !viewport)
       return;
+    track.querySelectorAll('[data-clone="true"]').forEach((el) => el.remove());
     const originalCards = Array.from(track.querySelectorAll('.ak-tcard:not([data-clone="true"])'));
     const originalCount = originalCards.length || 5;
-    track.querySelectorAll('[data-clone="true"]').forEach((el) => el.remove());
-    for (let s = 0; s < 2; s++) {
-      originalCards.forEach((card) => {
-        const clone = card.cloneNode(true);
-        clone.setAttribute("data-clone", "true");
-        clone.setAttribute("aria-hidden", "true");
-        track.appendChild(clone);
+    originalCards.forEach((card) => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute("data-clone", "true");
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+    });
+    let currentIndex = 0;
+    let isAnimating = false;
+    let autoTimer = null;
+    let safetyTimeout = null;
+    function getStep() {
+      const allCards = track.querySelectorAll(".ak-tcard");
+      if (allCards.length >= 2) {
+        const dist = allCards[1].offsetLeft - allCards[0].offsetLeft;
+        if (dist > 0)
+          return dist;
+      }
+      const firstCard = track.querySelector(".ak-tcard");
+      if (firstCard) {
+        const w = firstCard.getBoundingClientRect().width || firstCard.offsetWidth;
+        const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
+        if (w > 0)
+          return w + gap;
+      }
+      if (viewport && viewport.offsetWidth > 0) {
+        return (viewport.offsetWidth - 40) / 3 + 20;
+      }
+      return 400;
+    }
+    function updateDots() {
+      const activeDotIndex = (currentIndex % originalCount + originalCount) % originalCount;
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === activeDotIndex);
       });
     }
-    track.style.transition = "none";
-    track.style.willChange = "transform";
-    let currentX = 0;
-    let targetNudge = 0;
-    let step = 0;
-    let loopWidth = 0;
-    let lastTimestamp = 0;
-    let activeDotIndex = 0;
-    let isDragging = false;
-    let dragLastX = 0;
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let isHorizontalSwiping = false;
-    const SPEED_PPS = 38;
-    function measure() {
-      const allCards = track.querySelectorAll(".ak-tcard");
-      if (allCards.length > originalCount) {
-        const dist = allCards[originalCount].offsetLeft - allCards[0].offsetLeft;
-        if (dist > 0) {
-          loopWidth = dist;
-          step = loopWidth / originalCount;
-        }
-      }
-      if (loopWidth <= 0 && allCards.length >= 2) {
-        const cardStep = allCards[1].offsetLeft - allCards[0].offsetLeft;
-        if (cardStep > 0) {
-          step = cardStep;
-          loopWidth = step * originalCount;
-        }
-      }
-      if (step <= 0 && allCards[0]) {
-        const cardRect = allCards[0].getBoundingClientRect();
-        const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
-        step = cardRect.width + gap;
-        loopWidth = step * originalCount;
+    function applyTransform(index, animate = true) {
+      const step = getStep();
+      clearTimeout(safetyTimeout);
+      if (animate) {
+        isAnimating = true;
+        track.style.transition = `transform ${TRANSITION_DURATION}ms cubic-bezier(0.25, 0.85, 0.4, 1)`;
+        track.style.transform = `translateX(-${index * step}px)`;
+        safetyTimeout = setTimeout(() => {
+          onTransitionDone();
+        }, TRANSITION_DURATION + 60);
+      } else {
+        track.style.transition = "none";
+        track.style.transform = `translateX(-${index * step}px)`;
+        void track.offsetHeight;
+        isAnimating = false;
       }
     }
-    measure();
-    function updateDots() {
-      if (step <= 0 || dots.length === 0)
-        return;
-      const effectiveX = currentX + targetNudge;
-      let cardIdx = Math.round(effectiveX / step) % originalCount;
-      if (cardIdx < 0)
-        cardIdx = (cardIdx + originalCount) % originalCount;
-      if (cardIdx !== activeDotIndex) {
-        activeDotIndex = cardIdx;
-        dots.forEach((dot, idx) => {
-          dot.classList.toggle("active", idx === activeDotIndex);
-        });
+    function onTransitionDone() {
+      clearTimeout(safetyTimeout);
+      isAnimating = false;
+      if (currentIndex >= originalCount) {
+        currentIndex = currentIndex % originalCount;
+        applyTransform(currentIndex, false);
+      } else if (currentIndex < 0) {
+        currentIndex = originalCount + currentIndex % originalCount;
+        applyTransform(currentIndex, false);
       }
-    }
-    function frame(timestamp) {
-      if (!lastTimestamp)
-        lastTimestamp = timestamp;
-      const dt = Math.min((timestamp - lastTimestamp) / 1e3, 0.1);
-      lastTimestamp = timestamp;
-      if (step <= 0 || loopWidth <= 0) {
-        measure();
-      }
-      if (!isDragging) {
-        currentX += SPEED_PPS * dt;
-        if (Math.abs(targetNudge) > 0.2) {
-          const easeFactor = Math.min(1, dt * 9);
-          const delta = targetNudge * easeFactor;
-          currentX += delta;
-          targetNudge -= delta;
-        } else if (targetNudge !== 0) {
-          currentX += targetNudge;
-          targetNudge = 0;
-        }
-      }
-      if (loopWidth > 0) {
-        while (currentX >= loopWidth) {
-          currentX -= loopWidth;
-        }
-        while (currentX < 0) {
-          currentX += loopWidth;
-        }
-      }
-      track.style.transform = `translate3d(-${currentX.toFixed(2)}px, 0, 0)`;
       updateDots();
-      requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
+    track.addEventListener("transitionend", (e) => {
+      if (e.target === track && isAnimating) {
+        onTransitionDone();
+      }
+    });
+    function next() {
+      if (isAnimating)
+        return;
+      currentIndex++;
+      applyTransform(currentIndex, true);
+      updateDots();
+    }
+    function prev() {
+      if (isAnimating)
+        return;
+      if (currentIndex <= 0) {
+        currentIndex = originalCount;
+        applyTransform(currentIndex, false);
+      }
+      currentIndex--;
+      applyTransform(currentIndex, true);
+      updateDots();
+    }
+    function startAuto() {
+      stopAuto();
+      autoTimer = setInterval(next, ADVANCE_INTERVAL);
+    }
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+    }
     if (nextBtn) {
       nextBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        measure();
-        const shift = step || 400;
-        targetNudge = Math.min(targetNudge + shift, shift * 3);
+        next();
+        startAuto();
       });
     }
     if (prevBtn) {
       prevBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        measure();
-        const shift = step || 400;
-        targetNudge = Math.max(targetNudge - shift, -shift * 3);
+        prev();
+        startAuto();
       });
     }
-    dots.forEach((dot, targetIdx) => {
+    dots.forEach((dot, idx) => {
       dot.addEventListener("click", (e) => {
         e.preventDefault();
-        measure();
-        const shift = step || 400;
-        const curIdx = activeDotIndex;
-        let diff = targetIdx - curIdx;
-        if (diff > originalCount / 2)
-          diff -= originalCount;
-        if (diff < -originalCount / 2)
-          diff += originalCount;
-        targetNudge += diff * shift;
+        if (isAnimating)
+          return;
+        currentIndex = idx;
+        applyTransform(currentIndex, true);
+        updateDots();
+        startAuto();
       });
     });
-    viewport.addEventListener("touchstart", (e) => {
-      if (!e.touches || !e.touches[0])
-        return;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      dragLastX = touchStartX;
-      isHorizontalSwiping = false;
-    }, { passive: true });
-    viewport.addEventListener("touchmove", (e) => {
-      if (!e.touches || !e.touches[0])
-        return;
-      const curX = e.touches[0].clientX;
-      const curY = e.touches[0].clientY;
-      const dx = curX - touchStartX;
-      const dy = curY - touchStartY;
-      if (!isHorizontalSwiping) {
-        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
-          isHorizontalSwiping = true;
-          isDragging = true;
-        }
-      }
-      if (isHorizontalSwiping && isDragging) {
-        const deltaX = curX - dragLastX;
-        dragLastX = curX;
-        currentX -= deltaX;
-      }
-    }, { passive: true });
-    const endTouch = () => {
-      isDragging = false;
-      isHorizontalSwiping = false;
-    };
-    viewport.addEventListener("touchend", endTouch, { passive: true });
-    viewport.addEventListener("touchcancel", endTouch, { passive: true });
     let resizeTimer;
-    const onResize = () => {
+    window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        measure();
-      }, 60);
-    };
-    window.addEventListener("resize", onResize);
-    window.addEventListener("orientationchange", onResize);
-    document.addEventListener("visibilitychange", () => {
-      lastTimestamp = performance.now();
+        applyTransform(currentIndex, false);
+      }, 100);
     });
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        startAuto();
+      } else {
+        stopAuto();
+      }
+    });
+    applyTransform(0, false);
+    updateDots();
+    startAuto();
   }
 
   // js/data/legal.js
