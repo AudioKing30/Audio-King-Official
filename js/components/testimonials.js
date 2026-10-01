@@ -1,26 +1,29 @@
 /**
- * AudioKing Testimonials — Infinite Card Carousel Controller
- * Seamless infinite loop with NO backward rewind.
- * Arrow navigation + dots + auto-scroll with pause on hover.
+ * AudioKing Testimonials — Constant Smooth Infinite Carousel Controller
+ * Continuous, smooth linear motion throughout (no initial scroll stalling or freezing).
+ * Hardware-accelerated RAF translate3d, seamless multi-set wrap, responsive arrow nudging,
+ * dots navigation, and mobile touch swipe support.
  */
-
-const AUTO_ADVANCE_DELAY = 2800;
 
 export function initTestimonials() {
   const track = document.getElementById('akTCardTrack');
   const viewport = document.getElementById('akTCardViewport');
-  const section = document.getElementById('akTestimonialsSection');
-  const dots = document.querySelectorAll('.ak-tcard-dot');
+  const dots = Array.from(document.querySelectorAll('.ak-tcard-dot'));
   const prevBtn = document.getElementById('akTCardPrevBtn');
   const nextBtn = document.getElementById('akTCardNextBtn');
 
   if (!track || !viewport) return;
 
-  // 1. Clone cards for seamless infinite continuation
+  // 1. Identify original cards and clone 2 full sets for seamless infinite continuation
   const originalCards = Array.from(track.querySelectorAll('.ak-tcard:not([data-clone="true"])'));
   const originalCount = originalCards.length || 5;
 
-  if (!track.querySelector('[data-clone="true"]')) {
+  // Clean up any existing clones if reinitialized
+  track.querySelectorAll('[data-clone="true"]').forEach(el => el.remove());
+
+  // Append 2 complete duplicate sets (Total 15 cards = Set 1 [0..4], Set 2 [5..9], Set 3 [10..14])
+  // This guarantees ample track width so no gap or blank boundary is ever visible across all viewports
+  for (let s = 0; s < 2; s++) {
     originalCards.forEach(card => {
       const clone = card.cloneNode(true);
       clone.setAttribute('data-clone', 'true');
@@ -29,125 +32,197 @@ export function initTestimonials() {
     });
   }
 
-  let currentIndex = 0;
-  let isAnimating = false;
-  let autoTimer = null;
+  // Ensure hardware-accelerated transform without CSS transition conflict
+  track.style.transition = 'none';
+  track.style.willChange = 'transform';
 
-  function getGap() {
-    return 20;
+  let currentX = 0;
+  let targetNudge = 0;
+  let step = 0;
+  let loopWidth = 0;
+  let lastTimestamp = 0;
+  let activeDotIndex = 0;
+  let isDragging = false;
+  let dragLastX = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let isHorizontalSwiping = false;
+
+  // Constant speed: 38 pixels per second (smooth, elegant, and readable)
+  const SPEED_PPS = 38;
+
+  function measure() {
+    const allCards = track.querySelectorAll('.ak-tcard');
+    if (allCards.length > originalCount) {
+      const dist = allCards[originalCount].offsetLeft - allCards[0].offsetLeft;
+      if (dist > 0) {
+        loopWidth = dist;
+        step = loopWidth / originalCount;
+      }
+    }
+    if (loopWidth <= 0 && allCards.length >= 2) {
+      const cardStep = allCards[1].offsetLeft - allCards[0].offsetLeft;
+      if (cardStep > 0) {
+        step = cardStep;
+        loopWidth = step * originalCount;
+      }
+    }
+    if (step <= 0 && allCards[0]) {
+      const cardRect = allCards[0].getBoundingClientRect();
+      const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
+      step = cardRect.width + gap;
+      loopWidth = step * originalCount;
+    }
   }
 
-  function getStep() {
-    const firstCard = track.querySelector('.ak-tcard');
-    if (!firstCard) return 0;
-    return firstCard.offsetWidth + getGap();
-  }
+  // Initial measurement
+  measure();
 
   function updateDots() {
-    const activeDotIndex = currentIndex % originalCount;
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === activeDotIndex);
-    });
-  }
+    if (step <= 0 || dots.length === 0) return;
+    const effectiveX = currentX + targetNudge;
+    let cardIdx = Math.round(effectiveX / step) % originalCount;
+    if (cardIdx < 0) cardIdx = (cardIdx + originalCount) % originalCount;
 
-  function applyTransform(index, animate = true) {
-    const step = getStep();
-    if (animate) {
-      isAnimating = true;
-      track.style.transition = 'transform 0.52s cubic-bezier(0.25, 0.85, 0.4, 1)';
-    } else {
-      track.style.transition = 'none';
+    if (cardIdx !== activeDotIndex) {
+      activeDotIndex = cardIdx;
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === activeDotIndex);
+      });
     }
-    track.style.transform = `translateX(-${index * step}px)`;
   }
 
-  function next() {
-    if (isAnimating) return;
-    currentIndex++;
-    applyTransform(currentIndex, true);
+  function frame(timestamp) {
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+    lastTimestamp = timestamp;
+
+    // Recalculate measurement if layout was delayed or not ready
+    if (step <= 0 || loopWidth <= 0) {
+      measure();
+    }
+
+    if (!isDragging) {
+      // 1. Constant continuous forward movement throughout
+      currentX += SPEED_PPS * dt;
+
+      // 2. Smoothly ease navigation nudge (from arrows / dots) into currentX
+      if (Math.abs(targetNudge) > 0.2) {
+        const easeFactor = Math.min(1, dt * 9);
+        const delta = targetNudge * easeFactor;
+        currentX += delta;
+        targetNudge -= delta;
+      } else if (targetNudge !== 0) {
+        currentX += targetNudge;
+        targetNudge = 0;
+      }
+    }
+
+    // 3. Seamless infinite wrap
+    if (loopWidth > 0) {
+      while (currentX >= loopWidth) {
+        currentX -= loopWidth;
+      }
+      while (currentX < 0) {
+        currentX += loopWidth;
+      }
+    }
+
+    // 4. Hardware accelerated transform (sub-pixel precision)
+    track.style.transform = `translate3d(-${currentX.toFixed(2)}px, 0, 0)`;
+
+    // 5. Update dots indicator
     updateDots();
+
+    requestAnimationFrame(frame);
   }
 
-  function prev() {
-    if (isAnimating) return;
-    if (currentIndex <= 0) {
-      // Instantly jump to cloned counterpart, then animate backwards
-      currentIndex = originalCount;
-      applyTransform(currentIndex, false);
-      // Force reflow
-      void track.offsetHeight;
-    }
-    currentIndex--;
-    applyTransform(currentIndex, true);
-    updateDots();
-  }
+  // Start continuous RAF loop immediately — cards are already moving from the very beginning
+  requestAnimationFrame(frame);
 
-  // Handle transition end to achieve seamless infinite loop
-  track.addEventListener('transitionend', () => {
-    isAnimating = false;
-    // When we scroll past the last original card into the clones:
-    if (currentIndex >= originalCount) {
-      currentIndex = currentIndex % originalCount;
-      applyTransform(currentIndex, false);
-    }
-    updateDots();
-  });
-
-  function startAuto() {
-    stopAuto();
-    autoTimer = setInterval(next, AUTO_ADVANCE_DELAY);
-  }
-
-  function stopAuto() {
-    if (autoTimer) {
-      clearInterval(autoTimer);
-      autoTimer = null;
-    }
-  }
-
-  // Controls
+  // Arrow controls: smoothly advance / rewind by 1 card
   if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      next();
-      startAuto();
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      measure();
+      const shift = step || 400;
+      targetNudge = Math.min(targetNudge + shift, shift * 3);
     });
   }
 
   if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      prev();
-      startAuto();
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      measure();
+      const shift = step || 400;
+      targetNudge = Math.max(targetNudge - shift, -shift * 3);
     });
   }
 
-  dots.forEach((dot, idx) => {
-    dot.addEventListener('click', () => {
-      if (isAnimating) return;
-      currentIndex = idx;
-      applyTransform(currentIndex, true);
-      updateDots();
-      startAuto();
+  // Dots navigation: smoothly glide directly to selected testimonial
+  dots.forEach((dot, targetIdx) => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      measure();
+      const shift = step || 400;
+      const curIdx = activeDotIndex;
+      let diff = targetIdx - curIdx;
+      if (diff > originalCount / 2) diff -= originalCount;
+      if (diff < -originalCount / 2) diff += originalCount;
+      targetNudge += diff * shift;
     });
   });
 
-  // Keep slideshow running indefinitely without pause on hover per user requirement
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      startAuto();
-    }
-  });
+  // Touch swipe support (non-intrusive for vertical page scrolling)
+  viewport.addEventListener('touchstart', (e) => {
+    if (!e.touches || !e.touches[0]) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    dragLastX = touchStartX;
+    isHorizontalSwiping = false;
+  }, { passive: true });
 
-  // Window resize handler
+  viewport.addEventListener('touchmove', (e) => {
+    if (!e.touches || !e.touches[0]) return;
+    const curX = e.touches[0].clientX;
+    const curY = e.touches[0].clientY;
+    const dx = curX - touchStartX;
+    const dy = curY - touchStartY;
+
+    if (!isHorizontalSwiping) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+        isHorizontalSwiping = true;
+        isDragging = true;
+      }
+    }
+
+    if (isHorizontalSwiping && isDragging) {
+      const deltaX = curX - dragLastX;
+      dragLastX = curX;
+      currentX -= deltaX;
+    }
+  }, { passive: true });
+
+  const endTouch = () => {
+    isDragging = false;
+    isHorizontalSwiping = false;
+  };
+  viewport.addEventListener('touchend', endTouch, { passive: true });
+  viewport.addEventListener('touchcancel', endTouch, { passive: true });
+
+  // Recalculate dimensions on window resize and orientation change
   let resizeTimer;
-  window.addEventListener('resize', () => {
+  const onResize = () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      applyTransform(currentIndex, false);
-    }, 100);
-  });
+      measure();
+    }, 60);
+  };
+  window.addEventListener('resize', onResize);
+  window.addEventListener('orientationchange', onResize);
 
-  // Initial setup
-  applyTransform(0, false);
-  updateDots();
-  startAuto();
+  // Tab visibility handling: reset lastTimestamp to prevent frame jumps after tab switch
+  document.addEventListener('visibilitychange', () => {
+    lastTimestamp = performance.now();
+  });
 }

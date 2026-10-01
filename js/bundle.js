@@ -30401,19 +30401,18 @@ Weight: 1.24 lbs (0.567 kg`,
   }
 
   // js/components/testimonials.js
-  var AUTO_ADVANCE_DELAY = 2800;
   function initTestimonials() {
     const track = document.getElementById("akTCardTrack");
     const viewport = document.getElementById("akTCardViewport");
-    const section = document.getElementById("akTestimonialsSection");
-    const dots = document.querySelectorAll(".ak-tcard-dot");
+    const dots = Array.from(document.querySelectorAll(".ak-tcard-dot"));
     const prevBtn = document.getElementById("akTCardPrevBtn");
     const nextBtn = document.getElementById("akTCardNextBtn");
     if (!track || !viewport)
       return;
     const originalCards = Array.from(track.querySelectorAll('.ak-tcard:not([data-clone="true"])'));
     const originalCount = originalCards.length || 5;
-    if (!track.querySelector('[data-clone="true"]')) {
+    track.querySelectorAll('[data-clone="true"]').forEach((el) => el.remove());
+    for (let s = 0; s < 2; s++) {
       originalCards.forEach((card) => {
         const clone = card.cloneNode(true);
         clone.setAttribute("data-clone", "true");
@@ -30421,108 +30420,166 @@ Weight: 1.24 lbs (0.567 kg`,
         track.appendChild(clone);
       });
     }
-    let currentIndex = 0;
-    let isAnimating = false;
-    let autoTimer = null;
-    function getGap() {
-      return 20;
+    track.style.transition = "none";
+    track.style.willChange = "transform";
+    let currentX = 0;
+    let targetNudge = 0;
+    let step = 0;
+    let loopWidth = 0;
+    let lastTimestamp = 0;
+    let activeDotIndex = 0;
+    let isDragging = false;
+    let dragLastX = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isHorizontalSwiping = false;
+    const SPEED_PPS = 38;
+    function measure() {
+      const allCards = track.querySelectorAll(".ak-tcard");
+      if (allCards.length > originalCount) {
+        const dist = allCards[originalCount].offsetLeft - allCards[0].offsetLeft;
+        if (dist > 0) {
+          loopWidth = dist;
+          step = loopWidth / originalCount;
+        }
+      }
+      if (loopWidth <= 0 && allCards.length >= 2) {
+        const cardStep = allCards[1].offsetLeft - allCards[0].offsetLeft;
+        if (cardStep > 0) {
+          step = cardStep;
+          loopWidth = step * originalCount;
+        }
+      }
+      if (step <= 0 && allCards[0]) {
+        const cardRect = allCards[0].getBoundingClientRect();
+        const gap = parseFloat(window.getComputedStyle(track).gap) || 20;
+        step = cardRect.width + gap;
+        loopWidth = step * originalCount;
+      }
     }
-    function getStep() {
-      const firstCard = track.querySelector(".ak-tcard");
-      if (!firstCard)
-        return 0;
-      return firstCard.offsetWidth + getGap();
-    }
+    measure();
     function updateDots() {
-      const activeDotIndex = currentIndex % originalCount;
-      dots.forEach((dot, idx) => {
-        dot.classList.toggle("active", idx === activeDotIndex);
-      });
-    }
-    function applyTransform(index, animate = true) {
-      const step = getStep();
-      if (animate) {
-        isAnimating = true;
-        track.style.transition = "transform 0.52s cubic-bezier(0.25, 0.85, 0.4, 1)";
-      } else {
-        track.style.transition = "none";
-      }
-      track.style.transform = `translateX(-${index * step}px)`;
-    }
-    function next() {
-      if (isAnimating)
+      if (step <= 0 || dots.length === 0)
         return;
-      currentIndex++;
-      applyTransform(currentIndex, true);
-      updateDots();
-    }
-    function prev() {
-      if (isAnimating)
-        return;
-      if (currentIndex <= 0) {
-        currentIndex = originalCount;
-        applyTransform(currentIndex, false);
-        void track.offsetHeight;
-      }
-      currentIndex--;
-      applyTransform(currentIndex, true);
-      updateDots();
-    }
-    track.addEventListener("transitionend", () => {
-      isAnimating = false;
-      if (currentIndex >= originalCount) {
-        currentIndex = currentIndex % originalCount;
-        applyTransform(currentIndex, false);
-      }
-      updateDots();
-    });
-    function startAuto() {
-      stopAuto();
-      autoTimer = setInterval(next, AUTO_ADVANCE_DELAY);
-    }
-    function stopAuto() {
-      if (autoTimer) {
-        clearInterval(autoTimer);
-        autoTimer = null;
+      const effectiveX = currentX + targetNudge;
+      let cardIdx = Math.round(effectiveX / step) % originalCount;
+      if (cardIdx < 0)
+        cardIdx = (cardIdx + originalCount) % originalCount;
+      if (cardIdx !== activeDotIndex) {
+        activeDotIndex = cardIdx;
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle("active", idx === activeDotIndex);
+        });
       }
     }
+    function frame(timestamp) {
+      if (!lastTimestamp)
+        lastTimestamp = timestamp;
+      const dt = Math.min((timestamp - lastTimestamp) / 1e3, 0.1);
+      lastTimestamp = timestamp;
+      if (step <= 0 || loopWidth <= 0) {
+        measure();
+      }
+      if (!isDragging) {
+        currentX += SPEED_PPS * dt;
+        if (Math.abs(targetNudge) > 0.2) {
+          const easeFactor = Math.min(1, dt * 9);
+          const delta = targetNudge * easeFactor;
+          currentX += delta;
+          targetNudge -= delta;
+        } else if (targetNudge !== 0) {
+          currentX += targetNudge;
+          targetNudge = 0;
+        }
+      }
+      if (loopWidth > 0) {
+        while (currentX >= loopWidth) {
+          currentX -= loopWidth;
+        }
+        while (currentX < 0) {
+          currentX += loopWidth;
+        }
+      }
+      track.style.transform = `translate3d(-${currentX.toFixed(2)}px, 0, 0)`;
+      updateDots();
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
     if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        next();
-        startAuto();
+      nextBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        measure();
+        const shift = step || 400;
+        targetNudge = Math.min(targetNudge + shift, shift * 3);
       });
     }
     if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
-        prev();
-        startAuto();
+      prevBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        measure();
+        const shift = step || 400;
+        targetNudge = Math.max(targetNudge - shift, -shift * 3);
       });
     }
-    dots.forEach((dot, idx) => {
-      dot.addEventListener("click", () => {
-        if (isAnimating)
-          return;
-        currentIndex = idx;
-        applyTransform(currentIndex, true);
-        updateDots();
-        startAuto();
+    dots.forEach((dot, targetIdx) => {
+      dot.addEventListener("click", (e) => {
+        e.preventDefault();
+        measure();
+        const shift = step || 400;
+        const curIdx = activeDotIndex;
+        let diff = targetIdx - curIdx;
+        if (diff > originalCount / 2)
+          diff -= originalCount;
+        if (diff < -originalCount / 2)
+          diff += originalCount;
+        targetNudge += diff * shift;
       });
     });
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) {
-        startAuto();
+    viewport.addEventListener("touchstart", (e) => {
+      if (!e.touches || !e.touches[0])
+        return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      dragLastX = touchStartX;
+      isHorizontalSwiping = false;
+    }, { passive: true });
+    viewport.addEventListener("touchmove", (e) => {
+      if (!e.touches || !e.touches[0])
+        return;
+      const curX = e.touches[0].clientX;
+      const curY = e.touches[0].clientY;
+      const dx = curX - touchStartX;
+      const dy = curY - touchStartY;
+      if (!isHorizontalSwiping) {
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+          isHorizontalSwiping = true;
+          isDragging = true;
+        }
       }
-    });
+      if (isHorizontalSwiping && isDragging) {
+        const deltaX = curX - dragLastX;
+        dragLastX = curX;
+        currentX -= deltaX;
+      }
+    }, { passive: true });
+    const endTouch = () => {
+      isDragging = false;
+      isHorizontalSwiping = false;
+    };
+    viewport.addEventListener("touchend", endTouch, { passive: true });
+    viewport.addEventListener("touchcancel", endTouch, { passive: true });
     let resizeTimer;
-    window.addEventListener("resize", () => {
+    const onResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        applyTransform(currentIndex, false);
-      }, 100);
+        measure();
+      }, 60);
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    document.addEventListener("visibilitychange", () => {
+      lastTimestamp = performance.now();
     });
-    applyTransform(0, false);
-    updateDots();
-    startAuto();
   }
 
   // js/data/legal.js
