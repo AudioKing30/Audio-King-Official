@@ -233,13 +233,22 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Start Server
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`\n===========================================================`);
     console.log(`  🎵 AUDIOKING PRODUCTION SERVER ONLINE`);
     console.log(`  🌐 Website URL : http://localhost:${PORT}`);
     console.log(`  📦 Environment : ${process.env.NODE_ENV || 'development'}`);
     console.log(`  🗄️  Database    : ${path.resolve(process.env.DATABASE_PATH || './server/data/audioking.db')}`);
     console.log(`===========================================================\n`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`\n[PORT CONFLICT] Port ${PORT} is already in use by another application.`);
+      console.error(`If running another project on port ${PORT}, you can specify a different port via PORT environment variable (e.g. set PORT=3005).\n`);
+    } else {
+      console.error('[SERVER LISTEN ERROR]', err);
+    }
   });
 }
 
