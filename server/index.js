@@ -223,6 +223,14 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Process-level error protection
+process.on('uncaughtException', (err) => {
+  console.error('[UNCAUGHT EXCEPTION]', err);
+});
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[UNHANDLED REJECTION]', reason);
+});
+
 // Start Server
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {
@@ -237,3 +245,4 @@ if (process.env.NODE_ENV !== 'test') {
 
 module.exports = app;
 module.exports.app = app;
+
