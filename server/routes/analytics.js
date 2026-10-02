@@ -65,6 +65,45 @@ router.post('/pageview', (req, res) => {
   }
 });
 
+/**
+ * POST /api/analytics/click (Public — no auth required)
+ * Logs a product click beacon from frontend.
+ */
+router.post('/click', (req, res) => {
+  try {
+    let productId = null;
+    if (typeof req.body === 'string') {
+      try {
+        const parsed = JSON.parse(req.body);
+        productId = parsed.productId;
+      } catch (e) {}
+    } else if (req.body && req.body.productId) {
+      productId = req.body.productId;
+    }
+
+    if (productId) {
+      const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+      const ipHash = crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16);
+      const userAgent = (req.headers['user-agent'] || '').substring(0, 255);
+      const ref = (req.headers['referer'] || '').substring(0, 500);
+
+      db.prepare(`
+        INSERT INTO page_views (path, product_id, referrer, user_agent, ip_hash, created_at)
+        VALUES (?, ?, ?, ?, ?, datetime('now'))
+      `).run(
+        `/product?id=${productId}`,
+        productId,
+        ref || null,
+        userAgent || null,
+        ipHash
+      );
+    }
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    return res.status(200).json({ ok: true });
+  }
+});
+
 
 /**
  * GET /api/admin/analytics/summary  (Admin-only)
