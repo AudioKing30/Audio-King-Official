@@ -241,22 +241,36 @@ router.post('/', async (req, res) => {
   const processedItems = items.map(item => {
     const qty = Math.max(1, parseInt(item.quantity || item.qty, 10) || 1);
     const prodId = item.productId || item.id || null;
+    let baseProdId = item.productId || (item.id && String(item.id).includes('_') ? String(item.id).split('_')[0] : item.id) || null;
+    let variantId = item.variantId || (item.id && String(item.id).includes('_') ? String(item.id).split('_')[1] : null);
 
     let verifiedPrice = Math.max(0, parseFloat(item.unitPrice || item.price) || 0);
     let verifiedName = item.name || 'Pro Audio Equipment';
     let verifiedImage = item.image || item.img || 'assets/images/placeholder.svg';
 
     // Verify against database product catalog to prevent price tampering
-    if (prodId) {
+    if (baseProdId) {
       try {
-        const catalogProduct = db.prepare('SELECT id, name, price, image FROM products WHERE id = ?').get(prodId);
+        const catalogProduct = db.prepare('SELECT id, name, price, image FROM products WHERE id = ?').get(baseProdId);
         if (catalogProduct) {
           verifiedPrice = Number(catalogProduct.price);
           verifiedName = catalogProduct.name;
           verifiedImage = catalogProduct.image || verifiedImage;
         }
+        if (variantId) {
+          const v = db.prepare('SELECT * FROM product_variants WHERE id = ?').get(variantId);
+          if (v) {
+            const vPrice = v.selling_price != null ? Number(v.selling_price) : (v.price_override != null ? Number(v.price_override) : null);
+            if (vPrice != null) {
+              verifiedPrice = vPrice;
+            }
+            if (v.option_labels && !verifiedName.includes(v.option_labels)) {
+              verifiedName = `${verifiedName} - ${v.option_labels}`;
+            }
+          }
+        }
       } catch (e) {
-        console.warn(`[ORDER VERIFY] Could not cross-reference product ${prodId}:`, e.message);
+        console.warn(`[ORDER VERIFY] Could not cross-reference product ${baseProdId}:`, e.message);
       }
     }
 
