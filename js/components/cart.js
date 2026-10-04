@@ -65,6 +65,9 @@ function hydrateFromList(serverItems) {
     if (it.name && it.price !== undefined) {
       newCart.push({
         id: pId,
+        productId: it.productId || (String(pId).includes('_') ? String(pId).split('_')[0] : pId),
+        variantId: it.variantId || (String(pId).includes('_') ? String(pId).split('_')[1] : null),
+        optionLabels: it.optionLabels || '',
         brand: it.brand || 'Pro Audio',
         name: it.name,
         category: it.category || 'Pro Audio',
@@ -173,11 +176,14 @@ export async function addToCart(product, qty = 1, silent = false) {
   } else {
     cart.push({
       id: product.id,
+      productId: product.productId || product.id,
+      variantId: product.variantId || null,
+      optionLabels: product.optionLabels || '',
       brand: product.brand,
       name: product.name,
       category: product.category,
-      price: product.price,
-      originalPrice: product.originalPrice || 0,
+      price: Number(product.price) || 0,
+      originalPrice: product.originalPrice ? Number(product.originalPrice) : 0,
       image: product.image || 'assets/images/placeholder.svg',
       qty: quantity
     });
@@ -365,7 +371,11 @@ export function renderCartDrawer() {
       <div class="ak-cart-item-details">
         <span class="ak-cart-item-brand">${item.brand || 'Pro Audio'}</span>
         <h4 class="ak-cart-item-title">${item.name}</h4>
-        <div class="ak-cart-item-price">${formatINR(item.price)}</div>
+        ${item.optionLabels ? `<div style="font-size: 11px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;">Variant: ${item.optionLabels}</div>` : ''}
+        <div class="ak-cart-item-price">
+          ${formatINR(item.price)}
+          ${(item.originalPrice && item.originalPrice > item.price) ? `<span style="text-decoration: line-through; color: #94A3B8; font-size: 11px; margin-left: 6px;">${formatINR(item.originalPrice)}</span>` : ''}
+        </div>
         <div class="ak-cart-item-actions">
           <div class="ak-cart-stepper">
             <button type="button" class="ak-stepper-btn ak-cart-minus" data-id="${item.id}" aria-label="Decrease quantity">−</button>
