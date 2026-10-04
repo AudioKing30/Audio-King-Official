@@ -26,5 +26,5 @@ export const AUDIOKING_BRAND_NAME = AUDIOKING_CONFIG.brandName;
 export const AUDIOKING_TAGLINE = AUDIOKING_CONFIG.tagline;
 export const AUDIOKING_ADDRESS = AUDIOKING_CONFIG.address;
 
-// Legacy re-export of formatINR from formatters
-export { formatINR } from './utils/formatters.js';
+// Legacy re-export of formatINR and calculateDiscountPercent from formatters
+export { formatINR, calculateDiscountPercent } from './utils/formatters.js';

@@ -31,6 +31,28 @@ export function formatDate(date = new Date()) {
 }
 
 /**
+ * Shared discount percentage calculation helper used across storefront, admin, listings, and cart.
+ * Formula: Math.round(((mrp - sellingPrice) / mrp) * 100)
+ * Returns 0 if mrp <= sellingPrice, if non-positive, or if missing.
+ *
+ * @param {number|string} mrp
+ * @param {number|string} sellingPrice
+ * @returns {number}
+ */
+export function calculateDiscountPercent(mrp, sellingPrice) {
+  const m = Number(mrp);
+  const s = Number(sellingPrice);
+  if (!Number.isFinite(m) || !Number.isFinite(s) || m <= 0 || s <= 0 || s >= m) {
+    return 0;
+  }
+  return Math.round(((m - s) / m) * 100);
+}
+
+if (typeof window !== 'undefined') {
+  window.calculateDiscountPercent = calculateDiscountPercent;
+}
+
+/**
  * Checks whether a product has an active offer, blanket discount, or markdown price
  * @param {Object} product
  * @returns {boolean}
@@ -40,15 +62,15 @@ export function hasProductOffer(product) {
 
   const price = Number(product.price) || 0;
   const originalPrice = Number(product.originalPrice) || 0;
-  const hasDiscount = originalPrice > price && price > 0;
-  const discountPercent = hasDiscount
-    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+  const calcDiscount = calculateDiscountPercent(originalPrice, price);
+  const discountPercent = calcDiscount > 0
+    ? calcDiscount
     : (Number(product.discountPercent) || Number(product.offerDiscount) || 0);
 
   return Boolean(
     product.hasOffer ||
     product.activeOfferTitle ||
-    hasDiscount ||
+    calcDiscount > 0 ||
     discountPercent > 0 ||
     (product.badge && /(offer|sale|deal|discount|%\s*off)/i.test(product.badge) && !/pre-order/i.test(product.badge))
   );
@@ -63,9 +85,9 @@ export function getProductOfferPercent(product) {
   if (!product) return 10;
   const price = Number(product.price) || 0;
   const originalPrice = Number(product.originalPrice) || 0;
-  if (originalPrice > price && price > 0) {
-    return Math.round(((originalPrice - price) / originalPrice) * 100);
-  }
+  const calcDiscount = calculateDiscountPercent(originalPrice, price);
+  if (calcDiscount > 0) return calcDiscount;
+
   if (Number(product.discountPercent) > 0) return Number(product.discountPercent);
   if (Number(product.offerDiscount) > 0) return Number(product.offerDiscount);
   if (product.badge) {

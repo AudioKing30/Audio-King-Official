@@ -464,6 +464,71 @@
               <textarea id="productDescription" class="form-textarea" placeholder="Detailed product overview, audio engineering specs, and included items..."></textarea>
             </div>
 
+            <!-- 10. PRODUCT VARIANTS (Color, Size, Custom Options) -->
+            <div class="form-group" style="margin-top: 24px; border-top: 1px solid var(--ak-border); padding-top: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <label class="form-label" style="margin-bottom: 2px;">10. Product Variants (Color, Size, Custom Options)</label>
+                  <div style="font-size: 12px; color: var(--ak-text-muted);">Enable multiple options (e.g. Color finishes, instrument sizes, pickup configs) with individual stock and pricing.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="enableVariantsToggle" onchange="handleVariantToggleChange(this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <!-- Variant Builder Container (Hidden unless toggled) -->
+              <div id="variantBuilderSection" style="display: none; background: var(--ak-card-sub); border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 18px; margin-top: 12px;">
+                <!-- Group Add Controls -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                  <span style="font-size: 13px; font-weight: 700; color: var(--ak-text-primary);">Variant Option Groups</span>
+                  <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="addVariantGroup('Color', 'color')">+ Add Color Group</button>
+                    <button type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="addVariantGroup('Size', 'text')">+ Add Size / Custom Group</button>
+                  </div>
+                </div>
+
+                <!-- Variant Groups List -->
+                <div id="variantGroupsList" style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;"></div>
+
+                <!-- Variant Matrix Table Preview -->
+                <div id="variantMatrixContainer" style="display: none; border-top: 1px solid var(--ak-border); padding-top: 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <span style="font-size: 13px; font-weight: 700; color: var(--ak-text-primary);">Combination Stock &amp; Pricing Matrix</span>
+                      <span id="variantMatrixCount" style="font-size: 11px; color: var(--ak-orange); margin-left: 6px;">(0 combinations)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <input type="number" id="bulkVariantStockInput" placeholder="Stock" min="0" style="width: 70px; height: 30px; font-size: 12px;" class="form-input">
+                      <button type="button" class="btn-secondary" style="font-size: 11px; padding: 5px 10px;" onclick="applyBulkVariantStock()">Apply Stock to All</button>
+                    </div>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Combination</th>
+                          <th>SKU Suffix</th>
+                          <th>MRP (₹)</th>
+                          <th>Selling Price (₹)</th>
+                          <th style="text-align: center;">Discount</th>
+                          <th>Price Override (₹)</th>
+                          <th style="width: 85px;">Stock</th>
+                          <th style="width: 60px; text-align: center;">Active</th>
+                        </tr>
+                      </thead>
+                      <tbody id="variantMatrixTbody"></tbody>
+                    </table>
+                  </div>
+                  <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 8px; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Leave MRP / Selling Price empty to inherit product prices. Selling Price must be &le; MRP. Parent product stock auto-syncs to variant stock total.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- 11. Save / Submit Button -->
             <div style="display: flex; gap: 12px; margin-top: 28px; border-top: 1px solid var(--ak-border); padding-top: 20px;">
               <button type="submit" id="saveProductBtn" class="btn-primary" style="padding: 12px 28px; font-size: 15px;">

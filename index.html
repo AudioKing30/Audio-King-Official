@@ -2935,9 +2935,12 @@
                         <tr>
                           <th>Combination</th>
                           <th>SKU Suffix</th>
+                          <th>MRP (₹)</th>
+                          <th>Selling Price (₹)</th>
+                          <th style="text-align: center;">Discount</th>
                           <th>Price Override (₹)</th>
-                          <th style="width: 110px;">Stock</th>
-                          <th style="width: 70px;">Active</th>
+                          <th style="width: 85px;">Stock</th>
+                          <th style="width: 60px; text-align: center;">Active</th>
                         </tr>
                       </thead>
                       <tbody id="variantMatrixTbody"></tbody>
@@ -2945,7 +2948,7 @@
                   </div>
                   <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 8px; display: flex; align-items: center; gap: 6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    <span>Leave Price Override empty to inherit standard selling price. Parent product stock auto-syncs to the sum of variant stocks.</span>
+                    <span>Leave MRP / Selling Price empty to inherit product prices. Selling Price must be &le; MRP. Parent product stock auto-syncs to variant stock total.</span>
                   </div>
                 </div>
               </div>
