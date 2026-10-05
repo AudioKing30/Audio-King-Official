@@ -25993,7 +25993,7 @@ Weight: 1.24 lbs (0.567 kg`,
       if (window.location.hostname.includes("github.io")) {
         return "https://audioking-api.onrender.com";
       }
-      if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
+      if (window.location.protocol === "file:" || window.location.port === "5500" || window.location.port === "8080") {
         return "http://localhost:3000";
       }
     }
@@ -32800,6 +32800,14 @@ Message: ${message}`);
       for (const [k, v] of sp.entries()) {
         params[k] = v;
       }
+    }
+    if (path.startsWith("product-") && !path.includes("/")) {
+      return {
+        route: "product",
+        subRoute: pathPart.substring(8),
+        params,
+        raw
+      };
     }
     const parts = path.split("/");
     return {

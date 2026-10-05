@@ -241,8 +241,9 @@ router.post('/', async (req, res) => {
   const processedItems = items.map(item => {
     const qty = Math.max(1, parseInt(item.quantity || item.qty, 10) || 1);
     const prodId = item.productId || item.id || null;
-    let baseProdId = item.productId || (item.id && String(item.id).includes('_') ? String(item.id).split('_')[0] : item.id) || null;
-    let variantId = item.variantId || (item.id && String(item.id).includes('_') ? String(item.id).split('_')[1] : null);
+    const rawProdStr = String(item.productId || item.id || '');
+    let baseProdId = rawProdStr.includes('_') ? rawProdStr.split('_')[0] : (item.productId || item.id || null);
+    let variantId = item.variantId || (rawProdStr.includes('_') ? rawProdStr.split('_')[1] : null);
 
     let verifiedPrice = Math.max(0, parseFloat(item.unitPrice || item.price) || 0);
     let verifiedName = item.name || 'Pro Audio Equipment';
@@ -330,9 +331,10 @@ router.post('/', async (req, res) => {
         applicableBase = processedItems.reduce((sum, it) => {
           let b = '';
           let c = '';
-          if (it.productId) {
+          const pLookupId = it.productId ? (String(it.productId).includes('_') ? String(it.productId).split('_')[0] : String(it.productId)) : null;
+          if (pLookupId) {
             try {
-              const pRow = db.prepare('SELECT brand, category FROM products WHERE id = ?').get(it.productId);
+              const pRow = db.prepare('SELECT brand, category FROM products WHERE id = ?').get(pLookupId);
               if (pRow) {
                 b = pRow.brand || '';
                 c = pRow.category || '';

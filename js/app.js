@@ -585,6 +585,15 @@ function parseHashRoute(hashStr) {
     }
   }
 
+  if (path.startsWith('product-') && !path.includes('/')) {
+    return {
+      route: 'product',
+      subRoute: pathPart.substring(8),
+      params,
+      raw
+    };
+  }
+
   const parts = path.split('/');
   return {
     route: parts[0] || 'home',
