@@ -221,3 +221,195 @@
 .ak-proceed-btn:hover {
   background-color: var(--ak-orange-hover);
 }
+
+/* Visible Coupon Picker at Checkout */
+.ak-visible-coupons-box {
+  margin-top: 14px;
+  margin-bottom: 14px;
+  background: #FFFFFF;
+  padding: 14px;
+  border-radius: var(--ak-radius-md, 8px);
+  border: 1px solid var(--ak-border, #E2E8F0);
+}
+
+.ak-coupon-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ak-coupon-picker-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ak-text-primary, #0F172A);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ak-coupon-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.ak-coupon-picker-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  transition: all 0.15s ease;
+}
+
+.ak-coupon-picker-card.eligible {
+  border-color: #CBD5E1;
+  background: #FFFFFF;
+  opacity: 1;
+}
+
+.ak-coupon-picker-card.eligible:hover {
+  border-color: var(--ak-orange, #EA580C);
+  background: #FFFAF5;
+}
+
+.ak-coupon-picker-card.ineligible {
+  border-color: #E2E8F0;
+  background: #F8FAFC;
+  opacity: 0.65;
+}
+
+.ak-coupon-picker-card.applied {
+  border-color: var(--ak-orange, #EA580C);
+  background: #FFF7ED;
+  opacity: 1;
+}
+
+.ak-coupon-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ak-coupon-card-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+
+.ak-coupon-card-code {
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: var(--ak-navy, #0F172A);
+}
+
+.ak-coupon-card-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.ak-coupon-card-applied-pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--ak-orange, #EA580C);
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+.ak-coupon-card-terms {
+  font-size: 11.5px;
+  color: #64748B;
+  line-height: 1.35;
+}
+
+.ak-coupon-card-reason {
+  font-size: 11px;
+  font-weight: 600;
+  color: #DC2626;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ak-coupon-card-action {
+  flex-shrink: 0;
+}
+
+.ak-btn-pick-apply {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  border: none;
+  background: var(--ak-orange, #EA580C);
+  color: #FFFFFF;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.ak-btn-pick-apply:hover:not(:disabled) {
+  background: var(--ak-orange-hover, #C2410C);
+}
+
+.ak-btn-pick-apply:disabled {
+  background: #CBD5E1;
+  color: #94A3B8;
+  cursor: not-allowed;
+}
+
+.ak-btn-pick-remove {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid #DC2626;
+  background: #FFFFFF;
+  color: #DC2626;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ak-btn-pick-remove:hover {
+  background: #FEE2E2;
+}
+
+@media (max-width: 480px) {
+  .ak-checkout-box {
+    max-height: 96vh;
+    border-radius: 10px;
+  }
+  .ak-checkout-body {
+    padding: 16px 14px;
+  }
+  .ak-coupon-picker-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ak-coupon-card-action {
+    width: 100%;
+  }
+  .ak-btn-pick-apply,
+  .ak-btn-pick-remove {
+    width: 100%;
+    text-align: center;
+  }
+}
