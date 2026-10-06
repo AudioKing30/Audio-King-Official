@@ -51,7 +51,7 @@ const customOrigins = (process.env.ALLOWED_ORIGIN || process.env.ALLOWED_ORIGINS
   .map(s => s.trim().replace(/\/+$/, ''))
   .filter(Boolean);
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     // Allow server-to-server or local file requests
     if (!origin || origin === 'null') {
@@ -71,9 +71,11 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Session-Token', 'X-Admin-Token', 'Accept'],
   exposedHeaders: ['Set-Cookie']
-}));
-// Handle preflight for all routes
-app.options('*', cors());
+};
+const corsMiddleware = cors(corsOptions);
+app.use(corsMiddleware);
+// Handle preflight for all routes with matching cors options
+app.options('*', corsMiddleware);
 app.use(cookieParser(process.env.SESSION_SECRET || 'audioking_secret'));
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));

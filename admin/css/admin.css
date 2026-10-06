@@ -676,7 +676,8 @@
   color: #0369A1;
   border: 1px solid #BAE6FD;
 }
-.badge-visibility.hidden {
+.badge-visibility.hidden,
+.badge-visibility.invisible {
   background: #F1F5F9;
   color: #475569;
   border: 1px solid #CBD5E1;

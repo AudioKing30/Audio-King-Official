@@ -80,9 +80,11 @@ function getAdminApiBase() {
     if (window.location.hostname.includes('github.io')) {
       return 'https://audioking-api.onrender.com';
     }
-    if (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '3000')) {
+    if (window.location.protocol === 'file:') {
       return 'http://localhost:3000';
     }
+    // For any HTTP/HTTPS origin (localhost:3000, localhost:4500, or deployed domain), use relative path
+    return '';
   }
   return '';
 }
@@ -273,6 +275,7 @@ function switchView(viewName) {
   if (viewName === 'customers') loadCustomers();
   if (viewName === 'analytics') loadAnalytics();
 }
+window.switchView = switchView;
 
 // -------------------------------------------------------------
 // 1. DASHBOARD VIEW
@@ -768,6 +771,22 @@ async function openEditProduct(productId) {
           if (variantToggle) variantToggle.checked = true;
           const variantSection = document.getElementById('variantBuilderSection');
           if (variantSection) variantSection.style.display = 'block';
+
+          // Connect variant 0 MRP & SP with product prices
+          if (state.variantMatrix.length > 0 && state.variantMatrix[0]) {
+            const v0 = state.variantMatrix[0];
+            if (v0.mrp != null && v0.mrp > 0) {
+              document.getElementById('productMrp').value = v0.mrp;
+            } else if (p.originalPrice) {
+              v0.mrp = Number(p.originalPrice);
+            }
+            if (v0.sellingPrice != null && v0.sellingPrice > 0) {
+              document.getElementById('productSellingPrice').value = v0.sellingPrice;
+            } else if (p.price) {
+              v0.sellingPrice = Number(p.price);
+              v0.priceOverride = Number(p.price);
+            }
+          }
 
           renderVariantGroups();
           renderVariantMatrix();
@@ -1391,47 +1410,82 @@ function validateVariantMatrix() {
 window.validateVariantMatrix = validateVariantMatrix;
 
 // Pricing & Auto-Calculated Discount %
-function calculateDiscountAndValidate() {
+function updateProductDiscountDisplay() {
   const mrpInput = document.getElementById('productMrp');
   const sellingInput = document.getElementById('productSellingPrice');
   const errorBanner = document.getElementById('productPriceError');
   const badgePreview = document.getElementById('discountBadgePreview');
   const saveBtn = document.getElementById('saveProductBtn');
 
+  if (!mrpInput || !sellingInput) return true;
+
   const mrp = parseFloat(mrpInput.value) || 0;
   const selling = parseFloat(sellingInput.value) || 0;
 
   // Validation: Selling Price cannot exceed MRP
   if (mrp > 0 && selling > mrp) {
-    errorBanner.textContent = `Validation Error: Selling Price (${formatINR(selling)}) cannot exceed MRP (${formatINR(mrp)}).`;
-    errorBanner.style.display = 'block';
-    badgePreview.textContent = 'Invalid Price';
-    badgePreview.style.background = 'var(--ak-danger-soft)';
-    badgePreview.style.color = 'var(--ak-danger)';
-    saveBtn.disabled = true;
+    if (errorBanner) {
+      errorBanner.textContent = `Validation Error: Selling Price (${formatINR(selling)}) cannot exceed MRP (${formatINR(mrp)}).`;
+      errorBanner.style.display = 'block';
+    }
+    if (badgePreview) {
+      badgePreview.textContent = 'Invalid Price';
+      badgePreview.style.background = 'var(--ak-danger-soft)';
+      badgePreview.style.color = 'var(--ak-danger)';
+    }
+    if (saveBtn) saveBtn.disabled = true;
     return false;
   }
 
-  errorBanner.style.display = 'none';
-  saveBtn.disabled = false;
+  if (errorBanner) errorBanner.style.display = 'none';
+  if (saveBtn) saveBtn.disabled = false;
 
-  if (mrp > 0 && selling > 0 && selling < mrp) {
-    const discount = calculateDiscountPercent(mrp, selling);
-    badgePreview.textContent = `${discount}% OFF`;
-    badgePreview.style.background = 'var(--ak-success-soft)';
-    badgePreview.style.color = 'var(--ak-success)';
-  } else {
-    badgePreview.textContent = '0% OFF';
-    badgePreview.style.background = 'var(--ak-card-bg)';
-    badgePreview.style.color = 'var(--ak-text-muted)';
-  }
-
-  if (state.hasVariants && typeof renderVariantMatrix === 'function') {
-    renderVariantMatrix();
+  if (badgePreview) {
+    if (mrp > 0 && selling > 0 && selling < mrp) {
+      const discount = calculateDiscountPercent(mrp, selling);
+      badgePreview.textContent = `${discount}% OFF`;
+      badgePreview.style.background = 'var(--ak-success-soft)';
+      badgePreview.style.color = 'var(--ak-success)';
+    } else {
+      badgePreview.textContent = '0% OFF';
+      badgePreview.style.background = 'var(--ak-card-bg)';
+      badgePreview.style.color = 'var(--ak-text-muted)';
+    }
   }
 
   return true;
 }
+window.updateProductDiscountDisplay = updateProductDiscountDisplay;
+
+function calculateDiscountAndValidate() {
+  const valid = updateProductDiscountDisplay();
+  if (!valid) return false;
+
+  const mrp = parseFloat(document.getElementById('productMrp')?.value) || 0;
+  const selling = parseFloat(document.getElementById('productSellingPrice')?.value) || 0;
+
+  // Auto-connect first variant's MRP and SP to the main product price
+  if (state.hasVariants && state.variantMatrix && state.variantMatrix.length > 0) {
+    state.variantMatrix[0].mrp = mrp > 0 ? mrp : null;
+    state.variantMatrix[0].sellingPrice = selling > 0 ? selling : null;
+    state.variantMatrix[0].priceOverride = selling > 0 ? selling : null;
+
+    const firstRowMrpInput = document.getElementById('variantInputMrp_0');
+    if (firstRowMrpInput && document.activeElement !== firstRowMrpInput) {
+      firstRowMrpInput.value = mrp > 0 ? mrp : '';
+    }
+    const firstRowSpInput = document.getElementById('variantInputSp_0');
+    if (firstRowSpInput && document.activeElement !== firstRowSpInput) {
+      firstRowSpInput.value = selling > 0 ? selling : '';
+    }
+    if (typeof updateVariantRowDisplay === 'function') {
+      updateVariantRowDisplay(0);
+    }
+  }
+
+  return true;
+}
+window.calculateDiscountAndValidate = calculateDiscountAndValidate;
 
 // Stock input auto-flips availability
 function handleStockInputChange() {
@@ -1476,13 +1530,21 @@ async function handleSaveProduct(e) {
 
   const section = document.getElementById('productSection')?.value || 'pro-audio';
 
+  let finalMrp = mrp;
+  let finalSellingPrice = sellingPrice;
+  if (state.hasVariants && state.variantMatrix && state.variantMatrix.length > 0) {
+    const v0 = state.variantMatrix[0];
+    if (v0.mrp != null && v0.mrp > 0) finalMrp = Number(v0.mrp);
+    if (v0.sellingPrice != null && v0.sellingPrice > 0) finalSellingPrice = Number(v0.sellingPrice);
+  }
+
   const payload = {
     name,
     category,
     section,
     brand,
-    mrp,
-    sellingPrice,
+    mrp: finalMrp,
+    sellingPrice: finalSellingPrice,
     stock,
     inStock,
     stockStatus,
@@ -1869,15 +1931,28 @@ async function loadCoupons() {
     }
   }
 
+  try {
+    const res = await adminFetch('/api/admin/coupons');
+    if (res.ok) {
+      const data = await res.json();
+      state.coupons = data.coupons || [];
+    }
+  } catch (err) {
+    console.error('Failed to load coupons from API:', err);
+  }
+
   renderCouponsTable();
 }
 
 function setCouponFilter(filter) {
-  state.couponFilter = filter || 'all';
-  ['all', 'visible', 'hidden'].forEach(f => {
+  const normFilter = (filter === 'hidden' || filter === 'invisible') ? 'invisible' : (filter || 'all');
+  state.couponFilter = normFilter;
+  ['all', 'visible', 'invisible'].forEach(f => {
     const btn = document.getElementById('couponFilter' + f.charAt(0).toUpperCase() + f.slice(1));
     if (btn) btn.classList.toggle('active', f === state.couponFilter);
   });
+  const hiddenBtn = document.getElementById('couponFilterHidden');
+  if (hiddenBtn) hiddenBtn.classList.toggle('active', state.couponFilter === 'invisible');
   renderCouponsTable();
 }
 
@@ -1896,7 +1971,8 @@ function generateRandomCouponCode(inputId = 'couponCode') {
 function handleCouponVisibilityChange(selectEl, warningElId) {
   const warn = document.getElementById(warningElId);
   if (warn) {
-    warn.style.display = (selectEl && selectEl.value === 'hidden') ? 'block' : 'none';
+    const val = selectEl?.value;
+    warn.style.display = (val === 'hidden' || val === 'invisible') ? 'block' : 'none';
   }
 }
 
@@ -1908,8 +1984,9 @@ function renderCouponsTable() {
   const filter = state.couponFilter || 'all';
   const coupons = allCoupons.filter(c => {
     const vis = (c.visibility || 'visible').toLowerCase();
-    if (filter === 'visible') return vis === 'visible';
-    if (filter === 'hidden') return vis === 'hidden';
+    const isPrivate = (vis === 'hidden' || vis === 'invisible');
+    if (filter === 'visible') return !isPrivate;
+    if (filter === 'invisible' || filter === 'hidden') return isPrivate;
     return true;
   });
 
@@ -1962,9 +2039,10 @@ function renderCouponsTable() {
     const expiresAt = c.expiresAt || c.expires_at;
     const isActive = c.isActive != null ? c.isActive : (c.is_active !== 0 && c.is_active !== false);
     const vis = (c.visibility || 'visible').toLowerCase();
+    const isPrivate = (vis === 'hidden' || vis === 'invisible');
 
-    const visBadge = vis === 'hidden'
-      ? `<span class="badge-visibility hidden" title="Hidden: Only works when entered manually"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> Hidden</span>`
+    const visBadge = isPrivate
+      ? `<span class="badge-visibility invisible" title="Invisible: Private code, works only when typed manually"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> Invisible</span>`
       : `<span class="badge-visibility visible" title="Visible: Shown to customers at checkout"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Visible</span>`;
 
     return `
@@ -1997,7 +2075,8 @@ function renderCouponsTable() {
 async function handleCreateCoupon(e) {
   e.preventDefault();
   const code = document.getElementById('couponCode').value.trim().toUpperCase();
-  const visibility = document.getElementById('couponVisibility')?.value || 'visible';
+  const rawVis = document.getElementById('couponVisibility')?.value || 'visible';
+  const visibility = (rawVis === 'invisible' || rawVis === 'hidden') ? 'hidden' : 'visible';
   const discountType = document.getElementById('couponType').value;
   const discountValue = parseFloat(document.getElementById('couponValue').value);
   const minCartValue = parseFloat(document.getElementById('couponMinCart').value) || 0;
@@ -2114,7 +2193,8 @@ async function openEditCoupon(id) {
 
     const editVisEl = document.getElementById('editCouponVisibility');
     if (editVisEl) {
-      editVisEl.value = (c.visibility || 'visible').toLowerCase();
+      const vVal = (c.visibility || 'visible').toLowerCase();
+      editVisEl.value = (vVal === 'hidden' || vVal === 'invisible') ? 'invisible' : 'visible';
       handleCouponVisibilityChange(editVisEl, 'editCouponHiddenWarning');
     }
 
@@ -2135,7 +2215,8 @@ async function handleUpdateCoupon(e) {
   e.preventDefault();
   const id = document.getElementById('editCouponId').value.trim();
   const code = document.getElementById('editCouponCode').value.trim().toUpperCase();
-  const visibility = document.getElementById('editCouponVisibility')?.value || 'visible';
+  const rawVis = document.getElementById('editCouponVisibility')?.value || 'visible';
+  const visibility = (rawVis === 'invisible' || rawVis === 'hidden') ? 'hidden' : 'visible';
   const discountType = document.getElementById('editCouponType').value;
   const discountValue = parseFloat(document.getElementById('editCouponValue').value);
   const targetBrand = document.getElementById('editCouponBrand')?.value || 'all';
@@ -2903,17 +2984,28 @@ function generateVariantMatrix() {
     existingMap.set(v.optionLabels, v);
   });
 
-  state.variantMatrix = combinations.map(combo => {
+  const parentMrp = parseFloat(document.getElementById('productMrp')?.value) || null;
+  const parentSelling = parseFloat(document.getElementById('productSellingPrice')?.value) || null;
+
+  state.variantMatrix = combinations.map((combo, idx) => {
     const labelStr = combo.map(c => c.label).join(' / ');
     const existing = existingMap.get(labelStr);
+
+    let mrpVal = existing?.mrp != null ? existing.mrp : null;
+    let sellingVal = existing?.sellingPrice != null ? existing.sellingPrice : (existing?.priceOverride != null ? existing.priceOverride : null);
+
+    if (idx === 0) {
+      if (mrpVal == null && parentMrp) mrpVal = parentMrp;
+      if (sellingVal == null && parentSelling) sellingVal = parentSelling;
+    }
 
     return {
       skuSuffix: existing?.skuSuffix || '',
       optionIds: combo.map(c => c.id),
       optionLabels: labelStr,
-      mrp: existing?.mrp != null ? existing.mrp : null,
-      sellingPrice: existing?.sellingPrice != null ? existing.sellingPrice : null,
-      priceOverride: existing?.priceOverride != null ? existing.priceOverride : null,
+      mrp: mrpVal,
+      sellingPrice: sellingVal,
+      priceOverride: sellingVal,
       stock: existing?.stock != null ? existing.stock : 10,
       isActive: existing?.isActive !== false
     };
@@ -2925,12 +3017,72 @@ function generateVariantMatrix() {
 }
 window.generateVariantMatrix = generateVariantMatrix;
 
+function updateVariantRowDisplay(index) {
+  const v = state.variantMatrix[index];
+  if (!v) return;
+
+  const parentMrp = parseFloat(document.getElementById('productMrp')?.value) || 0;
+  const parentSelling = parseFloat(document.getElementById('productSellingPrice')?.value) || 0;
+
+  const effectiveMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : parentMrp;
+  const effectiveSelling = (v.sellingPrice != null && v.sellingPrice !== '') ? Number(v.sellingPrice) : ((v.priceOverride != null && v.priceOverride !== '') ? Number(v.priceOverride) : parentSelling);
+
+  const hasError = effectiveMrp > 0 && effectiveSelling > 0 && effectiveSelling > effectiveMrp;
+  const discountPct = calculateDiscountPercent(effectiveMrp, effectiveSelling);
+
+  const badgeEl = document.getElementById(`variantDiscount_${index}`);
+  if (badgeEl) {
+    if (hasError) {
+      badgeEl.innerHTML = '<span class="badge-discount" style="background:#FEE2E2; color:#DC2626; font-size:11px; padding:2px 6px; font-weight:700;">Invalid</span>';
+    } else if (discountPct > 0) {
+      badgeEl.innerHTML = `<span class="badge-discount" style="background:var(--ak-success-soft); color:var(--ak-success); font-size:11px; padding:2px 6px; font-weight:700;">${discountPct}% OFF</span>`;
+    } else {
+      badgeEl.innerHTML = '<span style="color:var(--ak-text-muted); font-size:11px;">—</span>';
+    }
+  }
+
+  const errEl = document.getElementById(`variantError_${index}`);
+  if (errEl) {
+    errEl.innerHTML = hasError ? '<div style="color:#DC2626; font-size:11px; font-weight:600; margin-top:3px;">Selling price exceeds MRP</div>' : '';
+  }
+
+  const rowEl = document.getElementById(`variantRow_${index}`);
+  if (rowEl) {
+    rowEl.style.background = hasError ? '#FEF2F2' : '';
+    if (hasError) {
+      rowEl.classList.add('variant-row-error');
+    } else {
+      rowEl.classList.remove('variant-row-error');
+    }
+  }
+}
+window.updateVariantRowDisplay = updateVariantRowDisplay;
+
 function handleVariantFieldChange(index, field, value) {
   if (!state.variantMatrix[index]) return;
   const trimmed = typeof value === 'string' ? value.trim() : value;
   const num = (trimmed !== '' && !isNaN(parseFloat(trimmed))) ? parseFloat(trimmed) : null;
   state.variantMatrix[index][field] = num;
-  renderVariantMatrix();
+
+  if (field === 'sellingPrice') {
+    state.variantMatrix[index].priceOverride = num;
+  }
+
+  // Auto-connect first variant's MRP and Selling Price directly to parent product
+  if (index === 0) {
+    if (field === 'mrp') {
+      const pMrp = document.getElementById('productMrp');
+      if (pMrp) pMrp.value = num != null ? num : '';
+    } else if (field === 'sellingPrice') {
+      const pSelling = document.getElementById('productSellingPrice');
+      if (pSelling) pSelling.value = num != null ? num : '';
+    }
+    if (typeof updateProductDiscountDisplay === 'function') {
+      updateProductDiscountDisplay();
+    }
+  }
+
+  updateVariantRowDisplay(index);
 }
 window.handleVariantFieldChange = handleVariantFieldChange;
 
@@ -2955,28 +3107,26 @@ function renderVariantMatrix() {
       discountBadgeHtml = `<span class="badge-discount" style="background:var(--ak-success-soft); color:var(--ak-success); font-size:11px; padding:2px 6px; font-weight:700;">${discountPct}% OFF</span>`;
     }
 
-    const rowErrorHtml = hasError ? `<div style="color:#DC2626; font-size:11px; font-weight:600; margin-top:3px;">Selling price exceeds MRP</div>` : '';
+    const rowErrorHtml = `<div id="variantError_${idx}">${hasError ? '<div style="color:#DC2626; font-size:11px; font-weight:600; margin-top:3px;">Selling price exceeds MRP</div>' : ''}</div>`;
 
     return `
-    <tr class="${hasError ? 'variant-row-error' : ''}" style="${hasError ? 'background: #FEF2F2;' : ''}">
+    <tr id="variantRow_${idx}" class="${hasError ? 'variant-row-error' : ''}" style="${hasError ? 'background: #FEF2F2;' : ''}">
       <td>
-        <strong>${v.optionLabels}</strong>
+        <strong>${escapeHtml(v.optionLabels)}</strong>
+        ${idx === 0 ? '<span style="display:inline-block; font-size:10px; background:#EFF6FF; color:#1D4ED8; padding:2px 6px; border-radius:3px; margin-left:6px; font-weight:700; border: 1px solid #BFDBFE;">Default / Main Product</span>' : ''}
         ${rowErrorHtml}
       </td>
       <td>
         <input type="text" class="form-input" style="height: 30px; font-size: 12px; width: 90px;" value="${v.skuSuffix || ''}" placeholder="e.g. -BLK" onchange="state.variantMatrix[${idx}].skuSuffix = this.value.trim();">
       </td>
       <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.mrp != null ? v.mrp : ''}" placeholder="${parentMrp ? '₹' + parentMrp : 'MRP'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'mrp', this.value)">
+        <input type="number" id="variantInputMrp_${idx}" class="form-input" style="height: 30px; font-size: 12px; width: 110px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.mrp != null ? v.mrp : ''}" placeholder="${parentMrp ? '₹' + parentMrp : 'MRP'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'mrp', this.value)">
       </td>
       <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.sellingPrice != null ? v.sellingPrice : ''}" placeholder="${parentSelling ? '₹' + parentSelling : 'Selling'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'sellingPrice', this.value)">
+        <input type="number" id="variantInputSp_${idx}" class="form-input" style="height: 30px; font-size: 12px; width: 110px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.sellingPrice != null ? v.sellingPrice : ''}" placeholder="${parentSelling ? '₹' + parentSelling : 'Selling'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'sellingPrice', this.value)">
       </td>
-      <td style="text-align: center; vertical-align: middle;">
+      <td id="variantDiscount_${idx}" style="text-align: center; vertical-align: middle;">
         ${discountBadgeHtml}
-      </td>
-      <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px;" value="${v.priceOverride != null ? v.priceOverride : ''}" placeholder="Override" min="1" step="1" onchange="handleVariantFieldChange(${idx}, 'priceOverride', this.value)">
       </td>
       <td>
         <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 75px;" value="${v.stock}" min="0" step="1" oninput="updateVariantStock(${idx}, this.value)">
@@ -3837,5 +3987,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // If directly accessing standalone admin page (/admin or /admin/index.html)
   if (window.location.pathname.includes('/admin')) {
     initAdminDashboardView();
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash || '';
+      let target = '';
+      if (hash.startsWith('#admin/')) {
+        target = hash.replace('#admin/', '').split('?')[0];
+      } else if (hash.startsWith('#')) {
+        target = hash.replace('#', '').split('?')[0];
+      }
+      if (target && document.getElementById(`view-${target}`)) {
+        switchView(target);
+      }
+    });
   }
 });

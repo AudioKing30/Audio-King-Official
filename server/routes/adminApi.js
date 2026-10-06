@@ -1118,7 +1118,7 @@ router.post('/coupons', (req, res) => {
     const rawCat = targetCategory ?? applicableCategory;
     const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
     const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
-    const cleanVisibility = (visibility && String(visibility).toLowerCase() === 'hidden') ? 'hidden' : 'visible';
+    const cleanVisibility = (visibility && (String(visibility).toLowerCase() === 'hidden' || String(visibility).toLowerCase() === 'invisible')) ? 'hidden' : 'visible';
 
     const id = `cpn_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
@@ -1205,7 +1205,7 @@ router.put('/coupons/:id', (req, res) => {
     const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
     const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
     const cleanVisibility = visibility !== undefined 
-      ? (String(visibility).toLowerCase() === 'hidden' ? 'hidden' : 'visible') 
+      ? ((String(visibility).toLowerCase() === 'hidden' || String(visibility).toLowerCase() === 'invisible') ? 'hidden' : 'visible') 
       : (existing.visibility || 'visible');
     const now = new Date().toISOString();
 
