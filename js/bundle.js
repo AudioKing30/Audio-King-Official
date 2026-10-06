@@ -25993,7 +25993,7 @@ Weight: 1.24 lbs (0.567 kg`,
       if (window.location.hostname.includes("github.io")) {
         return "https://audioking-api.onrender.com";
       }
-      if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
+      if (window.location.protocol === "file:" || window.location.port === "5500" || window.location.port === "8080") {
         return "http://localhost:3000";
       }
     }
@@ -26036,15 +26036,26 @@ Weight: 1.24 lbs (0.567 kg`,
       year: "numeric"
     });
   }
+  function calculateDiscountPercent(mrp, sellingPrice) {
+    const m = Number(mrp);
+    const s = Number(sellingPrice);
+    if (!Number.isFinite(m) || !Number.isFinite(s) || m <= 0 || s <= 0 || s >= m) {
+      return 0;
+    }
+    return Math.round((m - s) / m * 100);
+  }
+  if (typeof window !== "undefined") {
+    window.calculateDiscountPercent = calculateDiscountPercent;
+  }
   function hasProductOffer(product) {
     if (!product)
       return false;
     const price = Number(product.price) || 0;
     const originalPrice = Number(product.originalPrice) || 0;
-    const hasDiscount = originalPrice > price && price > 0;
-    const discountPercent = hasDiscount ? Math.round((originalPrice - price) / originalPrice * 100) : Number(product.discountPercent) || Number(product.offerDiscount) || 0;
+    const calcDiscount = calculateDiscountPercent(originalPrice, price);
+    const discountPercent = calcDiscount > 0 ? calcDiscount : Number(product.discountPercent) || Number(product.offerDiscount) || 0;
     return Boolean(
-      product.hasOffer || product.activeOfferTitle || hasDiscount || discountPercent > 0 || product.badge && /(offer|sale|deal|discount|%\s*off)/i.test(product.badge) && !/pre-order/i.test(product.badge)
+      product.hasOffer || product.activeOfferTitle || calcDiscount > 0 || discountPercent > 0 || product.badge && /(offer|sale|deal|discount|%\s*off)/i.test(product.badge) && !/pre-order/i.test(product.badge)
     );
   }
   function getProductOfferPercent(product) {
@@ -26052,9 +26063,9 @@ Weight: 1.24 lbs (0.567 kg`,
       return 10;
     const price = Number(product.price) || 0;
     const originalPrice = Number(product.originalPrice) || 0;
-    if (originalPrice > price && price > 0) {
-      return Math.round((originalPrice - price) / originalPrice * 100);
-    }
+    const calcDiscount = calculateDiscountPercent(originalPrice, price);
+    if (calcDiscount > 0)
+      return calcDiscount;
     if (Number(product.discountPercent) > 0)
       return Number(product.discountPercent);
     if (Number(product.offerDiscount) > 0)
@@ -29132,6 +29143,150 @@ Weight: 1.24 lbs (0.567 kg`,
       document.body.style.overflow = "";
     }
   }
+  function escapeHtml(str) {
+    if (!str)
+      return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  async function executeApplyCoupon(codeVal) {
+    const code = (codeVal || "").trim().toUpperCase();
+    const couponMsg = document.getElementById("akCouponMsg");
+    const couponBtn = document.getElementById("akApplyCouponBtn");
+    if (!code) {
+      if (couponMsg) {
+        couponMsg.textContent = "Please enter a coupon code.";
+        couponMsg.style.color = "#DC2626";
+        couponMsg.style.display = "block";
+      }
+      return;
+    }
+    if (couponBtn) {
+      couponBtn.disabled = true;
+      couponBtn.textContent = "Checking...";
+    }
+    const subtotal = getCartSubtotal();
+    try {
+      const res = await fetch(apiUrl("/api/coupons/validate"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, cartTotal: subtotal, items: checkoutItems })
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        appliedCoupon = data;
+        showToast(data.message || `Coupon "${code}" applied!`, "success");
+        renderCheckoutStep();
+      } else {
+        const errorMsg = data.message || data.error || "Invalid or expired coupon.";
+        if (couponMsg) {
+          couponMsg.textContent = errorMsg;
+          couponMsg.style.color = "#DC2626";
+          couponMsg.style.display = "block";
+        }
+        showToast(errorMsg, "error");
+        if (couponBtn) {
+          couponBtn.disabled = false;
+          couponBtn.textContent = "Apply";
+        }
+      }
+    } catch (err) {
+      if (couponMsg) {
+        couponMsg.textContent = "Failed to validate coupon. Please try again.";
+        couponMsg.style.color = "#DC2626";
+        couponMsg.style.display = "block";
+      }
+      if (couponBtn) {
+        couponBtn.disabled = false;
+        couponBtn.textContent = "Apply";
+      }
+    }
+  }
+  async function loadAndRenderVisibleCoupons(subtotal, items) {
+    const container = document.getElementById("akVisibleCouponsContainer");
+    if (!container)
+      return;
+    try {
+      const res = await fetch(apiUrl("/api/coupons/available"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartTotal: subtotal, items })
+      });
+      const data = await res.json();
+      const coupons = data.coupons || [];
+      if (!coupons || coupons.length === 0) {
+        container.innerHTML = `
+        <div style="font-size: 12px; color: #64748B; padding: 10px; background: #F8FAFC; border-radius: 6px; border: 1px dashed #E2E8F0; text-align: center;">
+          No public coupons available at this time.
+        </div>
+      `;
+        return;
+      }
+      container.innerHTML = `
+      <div class="ak-coupon-picker-header">
+        <span class="ak-coupon-picker-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          Available Coupons (${coupons.length})
+        </span>
+        <span style="font-size: 11px; color: #64748B;">Instant Checkout Discount</span>
+      </div>
+      <div class="ak-coupon-picker-list">
+        ${coupons.map((c) => {
+        const isApplied = appliedCoupon && appliedCoupon.code.toUpperCase() === c.code.toUpperCase();
+        const discountLabel = c.discountType === "percentage" ? `${c.discountValue}% OFF` : `${formatINR(c.discountValue)} OFF`;
+        return `
+            <div class="ak-coupon-picker-card ${isApplied ? "applied" : c.eligible ? "eligible" : "ineligible"}" data-code="${escapeHtml(c.code)}">
+              <div class="ak-coupon-card-main">
+                <div class="ak-coupon-card-top">
+                  <span class="ak-coupon-card-code">${escapeHtml(c.code)}</span>
+                  <span class="ak-coupon-card-badge">${discountLabel}</span>
+                  ${isApplied ? '<span class="ak-coupon-card-applied-pill">Applied</span>' : ""}
+                </div>
+                <div class="ak-coupon-card-terms">${escapeHtml(c.shortTerms || "")}</div>
+                ${!c.eligible && c.reason ? `
+                  <div class="ak-coupon-card-reason">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>${escapeHtml(c.reason)}</span>
+                  </div>
+                ` : ""}
+              </div>
+              <div class="ak-coupon-card-action">
+                ${isApplied ? `
+                  <button type="button" class="ak-btn-pick-remove" data-action="remove">Remove</button>
+                ` : `
+                  <button type="button" class="ak-btn-pick-apply" data-action="apply" data-code="${escapeHtml(c.code)}" ${c.eligible ? "" : "disabled"}>
+                    Apply
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+      }).join("")}
+      </div>
+    `;
+      container.querySelectorAll('button[data-action="apply"]').forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const code = btn.getAttribute("data-code");
+          if (code)
+            executeApplyCoupon(code);
+        });
+      });
+      container.querySelectorAll('button[data-action="remove"]').forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          appliedCoupon = null;
+          showToast("Coupon removed.", "info");
+          renderCheckoutStep();
+        });
+      });
+    } catch (err) {
+      container.innerHTML = `
+      <div style="font-size: 12px; color: #94A3B8; padding: 8px; text-align: center;">
+        Could not load coupons.
+      </div>
+    `;
+    }
+  }
   function renderCheckoutStep() {
     const titleEl = document.getElementById("akCheckoutStepTitle");
     const bodyEl = document.getElementById("akCheckoutBody");
@@ -29285,11 +29440,18 @@ Weight: 1.24 lbs (0.567 kg`,
         </label>
       </div>
 
+      <!-- Visible Coupons Picker Section -->
+      <div class="ak-visible-coupons-box" id="akVisibleCouponsContainer">
+        <div style="font-size: 12px; color: #64748B; padding: 12px; text-align: center;">
+          Loading available coupons...
+        </div>
+      </div>
+
       <!-- Coupon Promo Code Section -->
-      <div class="ak-coupon-box" style="margin-top: 14px; margin-bottom: 14px; background: #FFF; padding: 12px; border-radius: 6px; border: 1px dashed var(--ak-border);">
-        <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Have a Promo Code or Coupon?</label>
+      <div class="ak-coupon-box" style="margin-top: 10px; margin-bottom: 14px; background: #FFF; padding: 12px; border-radius: 6px; border: 1px dashed var(--ak-border);">
+        <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Have a Promo Code or Private Coupon?</label>
         <div style="display: flex; gap: 8px;">
-          <input type="text" id="akCouponInput" class="ak-form-input" placeholder="e.g. PROAUDIO500" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1;" value="${appliedCoupon ? appliedCoupon.code : ""}" ${appliedCoupon ? "disabled" : ""}>
+          <input type="text" id="akCouponInput" class="ak-form-input" placeholder="Enter coupon code" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1;" value="${appliedCoupon ? appliedCoupon.code : ""}" ${appliedCoupon ? "disabled" : ""}>
           <button type="button" id="akApplyCouponBtn" class="ak-btn" style="padding: 8px 16px; background: ${appliedCoupon ? "#DC2626" : "var(--ak-orange)"}; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
             ${appliedCoupon ? "Remove" : "Apply"}
           </button>
@@ -29324,9 +29486,9 @@ Weight: 1.24 lbs (0.567 kg`,
         </div>
       </div>
     `;
+      loadAndRenderVisibleCoupons(subtotal, checkoutItems);
       const couponBtn = bodyEl.querySelector("#akApplyCouponBtn");
       const couponInput = bodyEl.querySelector("#akCouponInput");
-      const couponMsg = bodyEl.querySelector("#akCouponMsg");
       if (couponBtn) {
         couponBtn.addEventListener("click", async () => {
           if (appliedCoupon) {
@@ -29336,46 +29498,7 @@ Weight: 1.24 lbs (0.567 kg`,
             return;
           }
           const codeVal = (couponInput?.value || "").trim();
-          if (!codeVal) {
-            if (couponMsg) {
-              couponMsg.textContent = "Please enter a coupon code.";
-              couponMsg.style.color = "#DC2626";
-              couponMsg.style.display = "block";
-            }
-            return;
-          }
-          couponBtn.disabled = true;
-          couponBtn.textContent = "Checking...";
-          try {
-            const res = await fetch(apiUrl("/api/coupons/validate"), {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ code: codeVal, cartTotal: subtotal, items: checkoutItems })
-            });
-            const data = await res.json();
-            if (res.ok && data.valid) {
-              appliedCoupon = data;
-              showToast(data.message, "success");
-              renderCheckoutStep();
-            } else {
-              if (couponMsg) {
-                couponMsg.textContent = data.message || "Invalid coupon code.";
-                couponMsg.style.color = "#DC2626";
-                couponMsg.style.display = "block";
-              }
-              showToast(data.message || "Invalid coupon code.", "error");
-              couponBtn.disabled = false;
-              couponBtn.textContent = "Apply";
-            }
-          } catch (err) {
-            if (couponMsg) {
-              couponMsg.textContent = "Failed to validate coupon. Please try again.";
-              couponMsg.style.color = "#DC2626";
-              couponMsg.style.display = "block";
-            }
-            couponBtn.disabled = false;
-            couponBtn.textContent = "Apply";
-          }
+          executeApplyCoupon(codeVal);
         });
       }
       bodyEl.querySelectorAll(".ak-payment-option").forEach((opt) => {
@@ -29567,6 +29690,9 @@ Weight: 1.24 lbs (0.567 kg`,
       if (it.name && it.price !== void 0) {
         newCart.push({
           id: pId,
+          productId: it.productId || (String(pId).includes("_") ? String(pId).split("_")[0] : pId),
+          variantId: it.variantId || (String(pId).includes("_") ? String(pId).split("_")[1] : null),
+          optionLabels: it.optionLabels || "",
           brand: it.brand || "Pro Audio",
           name: it.name,
           category: it.category || "Pro Audio",
@@ -29657,11 +29783,14 @@ Weight: 1.24 lbs (0.567 kg`,
     } else {
       cart.push({
         id: product.id,
+        productId: product.productId || product.id,
+        variantId: product.variantId || null,
+        optionLabels: product.optionLabels || "",
         brand: product.brand,
         name: product.name,
         category: product.category,
-        price: product.price,
-        originalPrice: product.originalPrice || 0,
+        price: Number(product.price) || 0,
+        originalPrice: product.originalPrice ? Number(product.originalPrice) : 0,
         image: product.image || "assets/images/placeholder.svg",
         qty: quantity
       });
@@ -29827,7 +29956,11 @@ Weight: 1.24 lbs (0.567 kg`,
       <div class="ak-cart-item-details">
         <span class="ak-cart-item-brand">${item.brand || "Pro Audio"}</span>
         <h4 class="ak-cart-item-title">${item.name}</h4>
-        <div class="ak-cart-item-price">${formatINR(item.price)}</div>
+        ${item.optionLabels ? `<div style="font-size: 11px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;">Variant: ${item.optionLabels}</div>` : ""}
+        <div class="ak-cart-item-price">
+          ${formatINR(item.price)}
+          ${item.originalPrice && item.originalPrice > item.price ? `<span style="text-decoration: line-through; color: #94A3B8; font-size: 11px; margin-left: 6px;">${formatINR(item.originalPrice)}</span>` : ""}
+        </div>
         <div class="ak-cart-item-actions">
           <div class="ak-cart-stepper">
             <button type="button" class="ak-stepper-btn ak-cart-minus" data-id="${item.id}" aria-label="Decrease quantity">\u2212</button>
@@ -32137,8 +32270,26 @@ Message: ${message}`);
       } else if (isOutOfStock) {
         stockBadge = '<span class="ak-store-badge ak-badge-out ak-badge-out-of-stock">Out of Stock</span>';
       }
-      const discountPercent = product.originalPrice && product.originalPrice > product.price ? Math.round((product.originalPrice - product.price) / product.originalPrice * 100) : 0;
-      const originalPriceHtml = product.originalPrice ? '<span class="ak-card-original-price">' + formatINR(product.originalPrice) + "</span>" : "";
+      const activeVariants = product.hasVariants && Array.isArray(product.variants) && product.variants.length > 0 ? product.variants.filter((v) => v.isActive !== false).length > 0 ? product.variants.filter((v) => v.isActive !== false) : product.variants : null;
+      let displayPriceHtml = "";
+      let originalPriceHtml = "";
+      let offerStampHtml = "";
+      if (activeVariants) {
+        const defaultVariant = activeVariants[0];
+        const selling = defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(product.price) || 0;
+        const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : product.originalPrice ? Number(product.originalPrice) : 0;
+        const hasDiscount = mrp > selling && selling > 0;
+        displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : "";
+        offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...product, price: selling, originalPrice: mrp }) : "";
+      } else {
+        const baseSelling = Number(product.price) || 0;
+        const baseMrp = Number(product.originalPrice) || 0;
+        const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+        displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : "";
+        offerStampHtml = getProductOfferStampHtml(product);
+      }
       const cartQty = getCartItemQuantity(product.id);
       let actionBtnHtml = "";
       if (isPreOrder) {
@@ -32172,8 +32323,7 @@ Message: ${message}`);
       const ratingVal = product.rating || (4.6 + product.id.charCodeAt(0) % 4 * 0.1).toFixed(1);
       const reviewsCount = product.reviewsCount || 18 + product.id.charCodeAt(product.id.length - 1) % 42;
       const stockWarningHtml = !isOutOfStock && product.stock > 0 && product.stock <= 3 ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>` : !isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : "";
-      const offerStampHtml = getProductOfferStampHtml(product);
-      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing"><span class="ak-store-card-price">' + formatINR(product.price) + "</span>" + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
+      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing">' + displayPriceHtml + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
     });
     grid.innerHTML = gridHtml;
     grid.querySelectorAll(".ak-store-card").forEach((card) => {
@@ -32753,6 +32903,14 @@ Message: ${message}`);
         params[k] = v;
       }
     }
+    if (path.startsWith("product-") && !path.includes("/")) {
+      return {
+        route: "product",
+        subRoute: pathPart.substring(8),
+        params,
+        raw
+      };
+    }
     const parts = path.split("/");
     return {
       route: parts[0] || "home",
@@ -33033,9 +33191,49 @@ Message: ${message}`);
     function updateVariantDisplay() {
       const matched = getSelectedVariant();
       activeVariant = matched;
+      const effectiveSelling = matched && matched.sellingPrice != null ? Number(matched.sellingPrice) : matched && matched.priceOverride != null ? Number(matched.priceOverride) : Number(product.price) || 0;
+      const effectiveMrp = matched && matched.mrp != null ? Number(matched.mrp) : product.originalPrice ? Number(product.originalPrice) : 0;
       if (ppPrice) {
-        const effectivePrice = matched && matched.priceOverride != null ? matched.priceOverride : product.price;
-        ppPrice.textContent = formatINR(effectivePrice);
+        ppPrice.textContent = formatINR(effectiveSelling);
+      }
+      const ppOrigPrice = document.getElementById("ppOrigPrice");
+      const ppDiscountBadge = document.getElementById("ppDiscountBadge");
+      const ppOfferStampContainer = document.getElementById("ppOfferStampContainer");
+      const hasDiscount = effectiveMrp > effectiveSelling && effectiveSelling > 0;
+      const discountPct = hasDiscount ? calculateDiscountPercent(effectiveMrp, effectiveSelling) : 0;
+      if (ppOrigPrice) {
+        if (hasDiscount && discountPct > 0) {
+          ppOrigPrice.textContent = formatINR(effectiveMrp);
+          ppOrigPrice.style.display = "inline";
+        } else {
+          ppOrigPrice.textContent = "";
+          ppOrigPrice.style.display = "none";
+        }
+      }
+      if (ppDiscountBadge) {
+        if (hasDiscount && discountPct > 0) {
+          ppDiscountBadge.textContent = `${discountPct}% OFF`;
+          ppDiscountBadge.style.display = "inline-flex";
+        } else {
+          ppDiscountBadge.textContent = "";
+          ppDiscountBadge.style.display = "none";
+        }
+      }
+      if (ppOfferStampContainer) {
+        if (hasDiscount && discountPct > 0) {
+          const variantOfferProd = {
+            ...product,
+            price: effectiveSelling,
+            originalPrice: effectiveMrp,
+            discountPercent: discountPct,
+            hasOffer: true
+          };
+          ppOfferStampContainer.innerHTML = getProductOfferStampHtml(variantOfferProd, "ak-offer-stamp-modal");
+          ppOfferStampContainer.style.display = "block";
+        } else {
+          ppOfferStampContainer.innerHTML = "";
+          ppOfferStampContainer.style.display = "none";
+        }
       }
       let variantImg = null;
       for (const g of product.variantGroups) {
@@ -33252,10 +33450,30 @@ Message: ${message}`);
       ppCrumb.textContent = product.name;
     if (ppCode)
       ppCode.textContent = `SKU: AK-${String(product.id).toUpperCase()} \xB7 Category: ${product.category || "Pro Audio"}`;
+    const prodSelling = Number(product.price) || 0;
+    const prodMrp = product.originalPrice ? Number(product.originalPrice) : 0;
+    const prodHasDiscount = prodMrp > prodSelling && prodSelling > 0;
+    const prodDiscountPct = prodHasDiscount ? calculateDiscountPercent(prodMrp, prodSelling) : 0;
     if (ppPrice)
-      ppPrice.textContent = formatINR(product.price);
+      ppPrice.textContent = formatINR(prodSelling);
     if (ppOrigPrice) {
-      ppOrigPrice.textContent = product.originalPrice ? formatINR(product.originalPrice) : "";
+      if (prodHasDiscount && prodDiscountPct > 0) {
+        ppOrigPrice.textContent = formatINR(prodMrp);
+        ppOrigPrice.style.display = "inline";
+      } else {
+        ppOrigPrice.textContent = "";
+        ppOrigPrice.style.display = "none";
+      }
+    }
+    const ppDiscountBadge = document.getElementById("ppDiscountBadge");
+    if (ppDiscountBadge) {
+      if (prodHasDiscount && prodDiscountPct > 0) {
+        ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
+        ppDiscountBadge.style.display = "inline-flex";
+      } else {
+        ppDiscountBadge.textContent = "";
+        ppDiscountBadge.style.display = "none";
+      }
     }
     const isPreOrder = Boolean(product.isPreOrder || product.badge && product.badge.toLowerCase().includes("pre-order") || product.stockStatus === "preorder");
     const isOutOfStock = Boolean(!isPreOrder && (product.stock === 0 || product.inStock === false || product.isOutOfStock === true || product.stockStatus === "outofstock"));
@@ -34170,13 +34388,17 @@ Message: ${message}`);
         if (!activeVariant && activeProduct.stock === 0)
           return;
         const qty = parseInt(qtyInput?.value || 1, 10);
+        const effectiveSelling = activeVariant ? activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0 : Number(activeProduct.price) || 0;
+        const effectiveMrp = activeVariant ? activeVariant.mrp != null ? Number(activeVariant.mrp) : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0 : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0;
         const productToAdd = activeVariant ? {
           ...activeProduct,
           id: `${activeProduct.id}_${activeVariant.id}`,
           productId: activeProduct.id,
           variantId: activeVariant.id,
+          optionLabels: activeVariant.optionLabels || "",
           name: `${activeProduct.name} - ${activeVariant.optionLabels}`,
-          price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+          price: effectiveSelling,
+          originalPrice: effectiveMrp,
           image: activeVariant && activeVariant.variantImage || activeProduct.image
         } : activeProduct;
         addToCart(productToAdd, qty);
@@ -34198,12 +34420,16 @@ Message: ${message}`);
           return;
         }
         const qty = parseInt(qtyInput?.value || 1, 10);
+        const effectiveSelling = activeVariant ? activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0 : Number(activeProduct.price) || 0;
+        const effectiveMrp = activeVariant ? activeVariant.mrp != null ? Number(activeVariant.mrp) : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0 : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0;
         const buyNowItem = {
           id: activeVariant ? `${activeProduct.id}_${activeVariant.id}` : activeProduct.id,
           productId: activeProduct.id,
           variantId: activeVariant ? activeVariant.id : null,
+          optionLabels: activeVariant ? activeVariant.optionLabels || "" : "",
           name: activeVariant ? `${activeProduct.name} - ${activeVariant.optionLabels}` : activeProduct.name,
-          price: activeVariant && activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+          price: effectiveSelling,
+          originalPrice: effectiveMrp,
           image: activeVariant && activeVariant.variantImage || activeProduct.image,
           brand: activeProduct.brand,
           quantity: qty
@@ -34522,10 +34748,26 @@ Message: ${message}`);
         <span class="ak-btn-text">Add to Cart</span>
       </button>
     `;
-      const origPrice = Number(p.originalPrice) || 0;
-      const hasDiscount = origPrice > Number(p.price);
-      const originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>` : "";
-      const offerStampHtml = getProductOfferStampHtml(p);
+      const activeVariants = p.hasVariants && Array.isArray(p.variants) && p.variants.length > 0 ? p.variants.filter((v) => v.isActive !== false).length > 0 ? p.variants.filter((v) => v.isActive !== false) : p.variants : null;
+      let displayPriceHtml = "";
+      let originalPriceHtml = "";
+      let offerStampHtml = "";
+      if (activeVariants) {
+        const defaultVariant = activeVariants[0];
+        const selling = defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(p.price) || 0;
+        const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : p.originalPrice ? Number(p.originalPrice) : 0;
+        const hasDiscount = mrp > selling && selling > 0;
+        displayPriceHtml = `<span>${formatINR(selling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : "";
+        offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : "";
+      } else {
+        const baseSelling = Number(p.price) || 0;
+        const baseMrp = Number(p.originalPrice) || 0;
+        const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+        displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : "";
+        offerStampHtml = getProductOfferStampHtml(p);
+      }
       return `
       <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
@@ -34537,7 +34779,7 @@ Message: ${message}`);
           <span class="ak-product-brand">${p.brand}</span>
           <h3 class="ak-product-name" title="${p.name}">${p.name}</h3>
           <div class="ak-product-price" style="display:flex; align-items:baseline; gap:6px;">
-            <span>${formatINR(p.price)}</span>
+            ${displayPriceHtml}
             ${originalPriceHtml}
           </div>
           ${actionHtml}

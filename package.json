@@ -22,7 +22,8 @@
     "nodemailer": "^10.0.10"
   },
   "devDependencies": {
-    "esbuild": "^0.20.0"
+    "esbuild": "^0.20.0",
+    "playwright": "^1.63.0"
   },
   "keywords": [
     "pro-audio",

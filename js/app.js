@@ -7,7 +7,7 @@ import { AUDIOKING_PRODUCTS, FEATURED_PRODUCTS } from './data/products.js';
 import { AUDIOKING_BRANDS } from './data/brands.js';
 import { QUICK_CATEGORIES } from './data/categories.js';
 import { AUDIOKING_CONFIG } from './config.js';
-import { formatINR, getProductOfferStampHtml, resolveProductImage } from './utils/formatters.js';
+import { formatINR, calculateDiscountPercent, getProductOfferStampHtml, resolveProductImage } from './utils/formatters.js';
 import { getIcon } from '../assets/icons/icons.js';
 import { initCart, addToCart, openCartDrawer, getCartItems, getCartSubtotal, clearCart, getCartItemQuantity, updateCartItemQty } from './components/cart.js';
 import { initCheckout, openCheckoutModal } from './components/checkout.js';
@@ -585,6 +585,15 @@ function parseHashRoute(hashStr) {
     }
   }
 
+  if (path.startsWith('product-') && !path.includes('/')) {
+    return {
+      route: 'product',
+      subRoute: pathPart.substring(8),
+      params,
+      raw
+    };
+  }
+
   const parts = path.split('/');
   return {
     route: parts[0] || 'home',
@@ -930,10 +939,68 @@ export function renderProductVariants(product) {
     const matched = getSelectedVariant();
     activeVariant = matched;
 
-    // Update Price if variant has price override
+    // Resolve variant selling price with fallback hierarchy:
+    // variant.sellingPrice -> variant.priceOverride -> product.price
+    const effectiveSelling = (matched && matched.sellingPrice != null)
+      ? Number(matched.sellingPrice)
+      : ((matched && matched.priceOverride != null)
+          ? Number(matched.priceOverride)
+          : Number(product.price) || 0);
+
+    // Resolve variant MRP with fallback hierarchy:
+    // variant.mrp -> product.originalPrice -> 0
+    const effectiveMrp = (matched && matched.mrp != null)
+      ? Number(matched.mrp)
+      : (product.originalPrice ? Number(product.originalPrice) : 0);
+
+    // 1. Selling Price
     if (ppPrice) {
-      const effectivePrice = (matched && matched.priceOverride != null) ? matched.priceOverride : product.price;
-      ppPrice.textContent = formatINR(effectivePrice);
+      ppPrice.textContent = formatINR(effectiveSelling);
+    }
+
+    // 2. Struck-through MRP and Discount % Badge
+    const ppOrigPrice = document.getElementById('ppOrigPrice');
+    const ppDiscountBadge = document.getElementById('ppDiscountBadge');
+    const ppOfferStampContainer = document.getElementById('ppOfferStampContainer');
+
+    const hasDiscount = effectiveMrp > effectiveSelling && effectiveSelling > 0;
+    const discountPct = hasDiscount ? calculateDiscountPercent(effectiveMrp, effectiveSelling) : 0;
+
+    if (ppOrigPrice) {
+      if (hasDiscount && discountPct > 0) {
+        ppOrigPrice.textContent = formatINR(effectiveMrp);
+        ppOrigPrice.style.display = 'inline';
+      } else {
+        ppOrigPrice.textContent = '';
+        ppOrigPrice.style.display = 'none';
+      }
+    }
+
+    if (ppDiscountBadge) {
+      if (hasDiscount && discountPct > 0) {
+        ppDiscountBadge.textContent = `${discountPct}% OFF`;
+        ppDiscountBadge.style.display = 'inline-flex';
+      } else {
+        ppDiscountBadge.textContent = '';
+        ppDiscountBadge.style.display = 'none';
+      }
+    }
+
+    if (ppOfferStampContainer) {
+      if (hasDiscount && discountPct > 0) {
+        const variantOfferProd = {
+          ...product,
+          price: effectiveSelling,
+          originalPrice: effectiveMrp,
+          discountPercent: discountPct,
+          hasOffer: true
+        };
+        ppOfferStampContainer.innerHTML = getProductOfferStampHtml(variantOfferProd, 'ak-offer-stamp-modal');
+        ppOfferStampContainer.style.display = 'block';
+      } else {
+        ppOfferStampContainer.innerHTML = '';
+        ppOfferStampContainer.style.display = 'none';
+      }
     }
 
     // Check if any selected option has a variant image
@@ -1173,9 +1240,30 @@ export async function showProduct(productOrId, updateHash = true) {
   if (ppTitle) ppTitle.textContent = product.name;
   if (ppCrumb) ppCrumb.textContent = product.name;
   if (ppCode) ppCode.textContent = `SKU: AK-${String(product.id).toUpperCase()} · Category: ${product.category || 'Pro Audio'}`;
-  if (ppPrice) ppPrice.textContent = formatINR(product.price);
+  const prodSelling = Number(product.price) || 0;
+  const prodMrp = product.originalPrice ? Number(product.originalPrice) : 0;
+  const prodHasDiscount = prodMrp > prodSelling && prodSelling > 0;
+  const prodDiscountPct = prodHasDiscount ? calculateDiscountPercent(prodMrp, prodSelling) : 0;
+
+  if (ppPrice) ppPrice.textContent = formatINR(prodSelling);
   if (ppOrigPrice) {
-    ppOrigPrice.textContent = product.originalPrice ? formatINR(product.originalPrice) : '';
+    if (prodHasDiscount && prodDiscountPct > 0) {
+      ppOrigPrice.textContent = formatINR(prodMrp);
+      ppOrigPrice.style.display = 'inline';
+    } else {
+      ppOrigPrice.textContent = '';
+      ppOrigPrice.style.display = 'none';
+    }
+  }
+  const ppDiscountBadge = document.getElementById('ppDiscountBadge');
+  if (ppDiscountBadge) {
+    if (prodHasDiscount && prodDiscountPct > 0) {
+      ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
+      ppDiscountBadge.style.display = 'inline-flex';
+    } else {
+      ppDiscountBadge.textContent = '';
+      ppDiscountBadge.style.display = 'none';
+    }
   }
 
   // Stock status (supports in-stock, out-of-stock, and pre-order / coming soon)
@@ -2213,13 +2301,23 @@ function initProductDetailPage() {
       if (!activeVariant && activeProduct.stock === 0) return;
 
       const qty = parseInt(qtyInput?.value || 1, 10);
+      const effectiveSelling = activeVariant
+        ? (activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : (activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0))
+        : Number(activeProduct.price) || 0;
+
+      const effectiveMrp = activeVariant
+        ? (activeVariant.mrp != null ? Number(activeVariant.mrp) : (activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0))
+        : (activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0);
+
       const productToAdd = activeVariant ? {
         ...activeProduct,
         id: `${activeProduct.id}_${activeVariant.id}`,
         productId: activeProduct.id,
         variantId: activeVariant.id,
+        optionLabels: activeVariant.optionLabels || '',
         name: `${activeProduct.name} - ${activeVariant.optionLabels}`,
-        price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+        price: effectiveSelling,
+        originalPrice: effectiveMrp,
         image: (activeVariant && activeVariant.variantImage) || activeProduct.image
       } : activeProduct;
 
@@ -2242,12 +2340,22 @@ function initProductDetailPage() {
         return;
       }
       const qty = parseInt(qtyInput?.value || 1, 10);
+      const effectiveSelling = activeVariant
+        ? (activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : (activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0))
+        : Number(activeProduct.price) || 0;
+
+      const effectiveMrp = activeVariant
+        ? (activeVariant.mrp != null ? Number(activeVariant.mrp) : (activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0))
+        : (activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0);
+
       const buyNowItem = {
         id: activeVariant ? `${activeProduct.id}_${activeVariant.id}` : activeProduct.id,
         productId: activeProduct.id,
         variantId: activeVariant ? activeVariant.id : null,
+        optionLabels: activeVariant ? (activeVariant.optionLabels || '') : '',
         name: activeVariant ? `${activeProduct.name} - ${activeVariant.optionLabels}` : activeProduct.name,
-        price: activeVariant && activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+        price: effectiveSelling,
+        originalPrice: effectiveMrp,
         image: (activeVariant && activeVariant.variantImage) || activeProduct.image,
         brand: activeProduct.brand,
         quantity: qty
@@ -2636,12 +2744,30 @@ export function renderFeaturedProducts(items) {
       </button>
     `;
 
-    const origPrice = Number(p.originalPrice) || 0;
-    const hasDiscount = origPrice > Number(p.price);
-    const originalPriceHtml = hasDiscount
-      ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>`
-      : '';
-    const offerStampHtml = getProductOfferStampHtml(p);
+    const activeVariants = (p.hasVariants && Array.isArray(p.variants) && p.variants.length > 0)
+      ? (p.variants.filter(v => v.isActive !== false).length > 0 ? p.variants.filter(v => v.isActive !== false) : p.variants)
+      : null;
+
+    let displayPriceHtml = '';
+    let originalPriceHtml = '';
+    let offerStampHtml = '';
+
+    if (activeVariants) {
+      const defaultVariant = activeVariants[0];
+      const selling = (defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : (defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(p.price) || 0));
+      const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : (p.originalPrice ? Number(p.originalPrice) : 0);
+      const hasDiscount = mrp > selling && selling > 0;
+      displayPriceHtml = `<span>${formatINR(selling)}</span>`;
+      originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : '';
+      offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : '';
+    } else {
+      const baseSelling = Number(p.price) || 0;
+      const baseMrp = Number(p.originalPrice) || 0;
+      const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+      displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
+      originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : '';
+      offerStampHtml = getProductOfferStampHtml(p);
+    }
 
     return `
       <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
@@ -2654,7 +2780,7 @@ export function renderFeaturedProducts(items) {
           <span class="ak-product-brand">${p.brand}</span>
           <h3 class="ak-product-name" title="${p.name}">${p.name}</h3>
           <div class="ak-product-price" style="display:flex; align-items:baseline; gap:6px;">
-            <span>${formatINR(p.price)}</span>
+            ${displayPriceHtml}
             ${originalPriceHtml}
           </div>
           ${actionHtml}

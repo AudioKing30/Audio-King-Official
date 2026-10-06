@@ -84,8 +84,42 @@ function checkRateLimit(key, maxRequests = 5, windowMs = 60000) {
   return { allowed: true, remaining: maxRequests - bucket.length };
 }
 
+/**
+ * Check whether a key is currently rate-limited without incrementing counter
+ */
+function isRateLimited(key, maxRequests = 10, windowMs = 60000) {
+  const now = Date.now();
+  let bucket = rateLimitBuckets.get(key);
+  if (!bucket) return { allowed: true, remaining: maxRequests };
+
+  bucket = bucket.filter(time => now - time < windowMs);
+  rateLimitBuckets.set(key, bucket);
+
+  if (bucket.length >= maxRequests) {
+    const oldest = bucket[0];
+    const retryAfterSec = Math.ceil((windowMs - (now - oldest)) / 1000);
+    return { allowed: false, retryAfterSec };
+  }
+  return { allowed: true, remaining: maxRequests - bucket.length };
+}
+
+/**
+ * Record a failed attempt against the rate limit bucket for the given key
+ */
+function recordRateLimitFailure(key, windowMs = 60000) {
+  const now = Date.now();
+  let bucket = rateLimitBuckets.get(key);
+  if (!bucket) {
+    bucket = [];
+    rateLimitBuckets.set(key, bucket);
+  }
+  bucket = bucket.filter(time => now - time < windowMs);
+  bucket.push(now);
+  rateLimitBuckets.set(key, bucket);
+}
+
 // Clean up stale buckets every 5 minutes
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   for (const [key, bucket] of rateLimitBuckets.entries()) {
     const fresh = bucket.filter(time => now - time < 300000);
@@ -96,6 +130,7 @@ setInterval(() => {
     }
   }
 }, 300000);
+if (cleanupInterval.unref) cleanupInterval.unref();
 
 module.exports = {
   hashPassword,
@@ -104,5 +139,7 @@ module.exports = {
   hashToken,
   generateSessionToken,
   generateResetToken,
-  checkRateLimit
+  checkRateLimit,
+  isRateLimited,
+  recordRateLimitFailure
 };

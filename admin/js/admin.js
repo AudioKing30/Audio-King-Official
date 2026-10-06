@@ -1334,6 +1334,62 @@ function updateInlineVideoPreview(type, source) {
   }
 }
 
+// Shared discount calculation helper
+function calculateDiscountPercent(mrp, sellingPrice) {
+  const m = Number(mrp);
+  const s = Number(sellingPrice);
+  if (!Number.isFinite(m) || !Number.isFinite(s) || m <= 0 || s <= 0 || s >= m) {
+    return 0;
+  }
+  return Math.round(((m - s) / m) * 100);
+}
+window.calculateDiscountPercent = calculateDiscountPercent;
+
+// Validation for variant pricing
+function validateVariantMatrix() {
+  if (!state.hasVariants || !state.variantMatrix || state.variantMatrix.length === 0) {
+    return true;
+  }
+
+  const parentMrp = parseFloat(document.getElementById('productMrp')?.value) || 0;
+  const parentSelling = parseFloat(document.getElementById('productSellingPrice')?.value) || 0;
+
+  for (let i = 0; i < state.variantMatrix.length; i++) {
+    const v = state.variantMatrix[i];
+    if (v.isActive === false) continue;
+
+    const vMrpVal = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : null;
+    const vSellingVal = (v.sellingPrice != null && v.sellingPrice !== '') ? Number(v.sellingPrice) : null;
+    const vOverrideVal = (v.priceOverride != null && v.priceOverride !== '') ? Number(v.priceOverride) : null;
+
+    if (vMrpVal !== null && (!Number.isFinite(vMrpVal) || vMrpVal <= 0)) {
+      alert(`Validation Error: Variant "${v.optionLabels}" MRP must be a positive number.`);
+      return false;
+    }
+
+    if (vSellingVal !== null && (!Number.isFinite(vSellingVal) || vSellingVal <= 0)) {
+      alert(`Validation Error: Variant "${v.optionLabels}" Selling Price must be a positive number.`);
+      return false;
+    }
+
+    if (vOverrideVal !== null && (!Number.isFinite(vOverrideVal) || vOverrideVal <= 0)) {
+      alert(`Validation Error: Variant "${v.optionLabels}" Price Override must be a positive number.`);
+      return false;
+    }
+
+    const effectiveMrp = vMrpVal !== null ? vMrpVal : parentMrp;
+    const effectiveSelling = vSellingVal !== null ? vSellingVal : (vOverrideVal !== null ? vOverrideVal : parentSelling);
+
+    if (effectiveMrp > 0 && effectiveSelling > 0 && effectiveSelling > effectiveMrp) {
+      alert(`Validation Error: Selling Price (${formatINR(effectiveSelling)}) cannot exceed MRP (${formatINR(effectiveMrp)}) for variant "${v.optionLabels}".`);
+      return false;
+    }
+  }
+
+  return true;
+}
+window.validateVariantMatrix = validateVariantMatrix;
+
 // Pricing & Auto-Calculated Discount %
 function calculateDiscountAndValidate() {
   const mrpInput = document.getElementById('productMrp');
@@ -1360,7 +1416,7 @@ function calculateDiscountAndValidate() {
   saveBtn.disabled = false;
 
   if (mrp > 0 && selling > 0 && selling < mrp) {
-    const discount = Math.round(((mrp - selling) / mrp) * 100);
+    const discount = calculateDiscountPercent(mrp, selling);
     badgePreview.textContent = `${discount}% OFF`;
     badgePreview.style.background = 'var(--ak-success-soft)';
     badgePreview.style.color = 'var(--ak-success)';
@@ -1368,6 +1424,10 @@ function calculateDiscountAndValidate() {
     badgePreview.textContent = '0% OFF';
     badgePreview.style.background = 'var(--ak-card-bg)';
     badgePreview.style.color = 'var(--ak-text-muted)';
+  }
+
+  if (state.hasVariants && typeof renderVariantMatrix === 'function') {
+    renderVariantMatrix();
   }
 
   return true;
@@ -1396,6 +1456,7 @@ async function handleSaveProduct(e) {
   e.preventDefault();
 
   if (!calculateDiscountAndValidate()) return;
+  if (!validateVariantMatrix()) return;
 
   const name = document.getElementById('productName').value.trim();
   const category = document.getElementById('productCategory').value;
@@ -1808,68 +1869,108 @@ async function loadCoupons() {
     }
   }
 
+  renderCouponsTable();
+}
+
+function setCouponFilter(filter) {
+  state.couponFilter = filter || 'all';
+  ['all', 'visible', 'hidden'].forEach(f => {
+    const btn = document.getElementById('couponFilter' + f.charAt(0).toUpperCase() + f.slice(1));
+    if (btn) btn.classList.toggle('active', f === state.couponFilter);
+  });
+  renderCouponsTable();
+}
+
+function generateRandomCouponCode(inputId = 'couponCode') {
+  const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let rand = '';
+  for (let i = 0; i < 4; i++) {
+    rand += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  const code = `VIP-${rand}`;
+  const el = document.getElementById(inputId);
+  if (el) el.value = code;
+  return code;
+}
+
+function handleCouponVisibilityChange(selectEl, warningElId) {
+  const warn = document.getElementById(warningElId);
+  if (warn) {
+    warn.style.display = (selectEl && selectEl.value === 'hidden') ? 'block' : 'none';
+  }
+}
+
+function renderCouponsTable() {
   const tbody = document.getElementById('couponsTableBody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 24px;">Loading coupons...</td></tr>';
 
-  try {
-    const res = await adminFetch('/api/admin/coupons');
-    const data = await res.json();
-    const coupons = data.coupons || [];
-    state.coupons = coupons;
+  const allCoupons = state.coupons || [];
+  const filter = state.couponFilter || 'all';
+  const coupons = allCoupons.filter(c => {
+    const vis = (c.visibility || 'visible').toLowerCase();
+    if (filter === 'visible') return vis === 'visible';
+    if (filter === 'hidden') return vis === 'hidden';
+    return true;
+  });
 
-    if (coupons.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="10" style="padding: 0; border: none;">
-        <div class="admin-empty-state-box">
-          <svg class="admin-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
-          <div class="admin-empty-title">No coupons found.</div>
-          <div class="admin-empty-sub">Create your first coupon code above.</div>
-        </div>
-      </td></tr>`;
-      return;
+  if (coupons.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11" style="padding: 0; border: none;">
+      <div class="admin-empty-state-box">
+        <svg class="admin-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+        <div class="admin-empty-title">${allCoupons.length === 0 ? 'No coupons found.' : `No ${filter} coupons found.`}</div>
+        <div class="admin-empty-sub">${allCoupons.length === 0 ? 'Create your first coupon code above.' : 'Try changing your visibility filter.'}</div>
+      </div>
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = coupons.map(c => {
+    const targetBrand = (c.targetBrand || c.target_brand || c.applicable_brand || 'all').trim();
+    const targetCategory = (c.targetCategory || c.target_category || c.applicable_category || 'all').trim();
+
+    // Brand display with deleted check
+    let brandDisplay;
+    if (!targetBrand || targetBrand.toLowerCase() === 'all') {
+      brandDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Brands</span>';
+    } else {
+      const brandExists = (state.brands || []).some(b => b.name && b.name.toLowerCase() === targetBrand.toLowerCase());
+      if (brandExists) {
+        brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #E0F2FE; color: #0369A1; font-weight: 700;">${escapeHtml(targetBrand)}</span>`;
+      } else {
+        brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">⚠️ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
+      }
     }
 
-    tbody.innerHTML = coupons.map(c => {
-      const targetBrand = (c.targetBrand || c.target_brand || c.applicable_brand || 'all').trim();
-      const targetCategory = (c.targetCategory || c.target_category || c.applicable_category || 'all').trim();
-
-      // Brand display with deleted check
-      let brandDisplay;
-      if (!targetBrand || targetBrand.toLowerCase() === 'all') {
-        brandDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Brands</span>';
+    // Category display with deleted check
+    let categoryDisplay;
+    if (!targetCategory || targetCategory.toLowerCase() === 'all') {
+      categoryDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Categories</span>';
+    } else {
+      const catExists = (state.categories || []).some(cat => cat.name && cat.name.toLowerCase() === targetCategory.toLowerCase());
+      if (catExists) {
+        categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #F3E8FF; color: #6B21A8; font-weight: 700;">${escapeHtml(targetCategory)}</span>`;
       } else {
-        const brandExists = (state.brands || []).some(b => b.name && b.name.toLowerCase() === targetBrand.toLowerCase());
-        if (brandExists) {
-          brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #E0F2FE; color: #0369A1; font-weight: 700;">${escapeHtml(targetBrand)}</span>`;
-        } else {
-          brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">⚠️ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
-        }
+        categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">⚠️ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
       }
+    }
 
-      // Category display with deleted check
-      let categoryDisplay;
-      if (!targetCategory || targetCategory.toLowerCase() === 'all') {
-        categoryDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Categories</span>';
-      } else {
-        const catExists = (state.categories || []).some(cat => cat.name && cat.name.toLowerCase() === targetCategory.toLowerCase());
-        if (catExists) {
-          categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #F3E8FF; color: #6B21A8; font-weight: 700;">${escapeHtml(targetCategory)}</span>`;
-        } else {
-          categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">⚠️ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
-        }
-      }
+    const discType = c.discountType || c.discount_type;
+    const discVal = c.discountValue != null ? c.discountValue : c.discount_value;
+    const minCart = c.minCartValue != null ? c.minCartValue : c.min_cart_value;
+    const usedCount = c.usedCount != null ? c.usedCount : (c.used_count || 0);
+    const usageLimit = c.usageLimit != null ? c.usageLimit : c.usage_limit;
+    const expiresAt = c.expiresAt || c.expires_at;
+    const isActive = c.isActive != null ? c.isActive : (c.is_active !== 0 && c.is_active !== false);
+    const vis = (c.visibility || 'visible').toLowerCase();
 
-      const discType = c.discountType || c.discount_type;
-      const discVal = c.discountValue != null ? c.discountValue : c.discount_value;
-      const minCart = c.minCartValue != null ? c.minCartValue : c.min_cart_value;
-      const usedCount = c.usedCount != null ? c.usedCount : (c.used_count || 0);
-      const usageLimit = c.usageLimit != null ? c.usageLimit : c.usage_limit;
-      const expiresAt = c.expiresAt || c.expires_at;
-      const isActive = c.isActive != null ? c.isActive : (c.is_active !== 0 && c.is_active !== false);
+    const visBadge = vis === 'hidden'
+      ? `<span class="badge-visibility hidden" title="Hidden: Only works when entered manually"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> Hidden</span>`
+      : `<span class="badge-visibility visible" title="Visible: Shown to customers at checkout"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Visible</span>`;
 
-      return `
+    return `
       <tr>
         <td><strong style="color: var(--ak-orange); font-size: 15px; letter-spacing: 0.5px;">${escapeHtml(c.code)}</strong></td>
+        <td>${visBadge}</td>
         <td>${discType === 'flat' ? 'Flat Amount' : 'Percentage'}</td>
         <td><strong>${discType === 'flat' ? formatINR(discVal) : `${discVal}%`}</strong></td>
         <td>${brandDisplay}</td>
@@ -1890,15 +1991,13 @@ async function loadCoupons() {
         </td>
       </tr>
     `;
-    }).join('');
-  } catch (err) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color: var(--ak-danger);">Failed to load coupons.</td></tr>';
-  }
+  }).join('');
 }
 
 async function handleCreateCoupon(e) {
   e.preventDefault();
   const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  const visibility = document.getElementById('couponVisibility')?.value || 'visible';
   const discountType = document.getElementById('couponType').value;
   const discountValue = parseFloat(document.getElementById('couponValue').value);
   const minCartValue = parseFloat(document.getElementById('couponMinCart').value) || 0;
@@ -1915,6 +2014,7 @@ async function handleCreateCoupon(e) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code,
+        visibility,
         discountType,
         discountValue,
         minCartValue,
@@ -1930,6 +2030,11 @@ async function handleCreateCoupon(e) {
     if (res.ok) {
       alert(`Coupon "${code}" created successfully!`);
       document.getElementById('couponForm').reset();
+      const visSel = document.getElementById('couponVisibility');
+      if (visSel) {
+        visSel.value = 'visible';
+        handleCouponVisibilityChange(visSel, 'createCouponHiddenWarning');
+      }
       const brandSel = document.getElementById('couponBrand');
       if (brandSel) brandSel.value = 'all';
       const catSel = document.getElementById('couponCategory');
@@ -2007,6 +2112,12 @@ async function openEditCoupon(id) {
     const exp = c.expiresAt || c.expires_at;
     document.getElementById('editCouponExpiry').value = exp ? String(exp).slice(0, 10) : '';
 
+    const editVisEl = document.getElementById('editCouponVisibility');
+    if (editVisEl) {
+      editVisEl.value = (c.visibility || 'visible').toLowerCase();
+      handleCouponVisibilityChange(editVisEl, 'editCouponHiddenWarning');
+    }
+
     openModal('editCouponModal');
   } catch (err) {
     console.error('Error opening edit coupon modal:', err);
@@ -2024,6 +2135,7 @@ async function handleUpdateCoupon(e) {
   e.preventDefault();
   const id = document.getElementById('editCouponId').value.trim();
   const code = document.getElementById('editCouponCode').value.trim().toUpperCase();
+  const visibility = document.getElementById('editCouponVisibility')?.value || 'visible';
   const discountType = document.getElementById('editCouponType').value;
   const discountValue = parseFloat(document.getElementById('editCouponValue').value);
   const targetBrand = document.getElementById('editCouponBrand')?.value || 'all';
@@ -2043,6 +2155,7 @@ async function handleUpdateCoupon(e) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code,
+        visibility,
         discountType,
         discountValue,
         targetBrand,
@@ -2075,6 +2188,9 @@ window.deleteCoupon = deleteCoupon;
 window.openEditCoupon = openEditCoupon;
 window.closeEditCouponModal = closeEditCouponModal;
 window.handleUpdateCoupon = handleUpdateCoupon;
+window.generateRandomCouponCode = generateRandomCouponCode;
+window.handleCouponVisibilityChange = handleCouponVisibilityChange;
+window.setCouponFilter = setCouponFilter;
 
 // -------------------------------------------------------------
 // 6. ORDERS (CURRENT VS HISTORY)
@@ -2795,6 +2911,8 @@ function generateVariantMatrix() {
       skuSuffix: existing?.skuSuffix || '',
       optionIds: combo.map(c => c.id),
       optionLabels: labelStr,
+      mrp: existing?.mrp != null ? existing.mrp : null,
+      sellingPrice: existing?.sellingPrice != null ? existing.sellingPrice : null,
       priceOverride: existing?.priceOverride != null ? existing.priceOverride : null,
       stock: existing?.stock != null ? existing.stock : 10,
       isActive: existing?.isActive !== false
@@ -2807,27 +2925,68 @@ function generateVariantMatrix() {
 }
 window.generateVariantMatrix = generateVariantMatrix;
 
+function handleVariantFieldChange(index, field, value) {
+  if (!state.variantMatrix[index]) return;
+  const trimmed = typeof value === 'string' ? value.trim() : value;
+  const num = (trimmed !== '' && !isNaN(parseFloat(trimmed))) ? parseFloat(trimmed) : null;
+  state.variantMatrix[index][field] = num;
+  renderVariantMatrix();
+}
+window.handleVariantFieldChange = handleVariantFieldChange;
+
 function renderVariantMatrix() {
   const tbody = document.getElementById('variantMatrixTbody');
   if (!tbody) return;
 
-  tbody.innerHTML = state.variantMatrix.map((v, idx) => `
-    <tr>
-      <td><strong>${v.optionLabels}</strong></td>
+  const parentMrp = parseFloat(document.getElementById('productMrp')?.value) || 0;
+  const parentSelling = parseFloat(document.getElementById('productSellingPrice')?.value) || 0;
+
+  tbody.innerHTML = state.variantMatrix.map((v, idx) => {
+    const effectiveMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : parentMrp;
+    const effectiveSelling = (v.sellingPrice != null && v.sellingPrice !== '') ? Number(v.sellingPrice) : ((v.priceOverride != null && v.priceOverride !== '') ? Number(v.priceOverride) : parentSelling);
+
+    const hasError = effectiveMrp > 0 && effectiveSelling > 0 && effectiveSelling > effectiveMrp;
+    const discountPct = calculateDiscountPercent(effectiveMrp, effectiveSelling);
+
+    let discountBadgeHtml = '<span style="color:var(--ak-text-muted); font-size:11px;">—</span>';
+    if (hasError) {
+      discountBadgeHtml = '<span class="badge-discount" style="background:#FEE2E2; color:#DC2626; font-size:11px; padding:2px 6px; font-weight:700;">Invalid</span>';
+    } else if (discountPct > 0) {
+      discountBadgeHtml = `<span class="badge-discount" style="background:var(--ak-success-soft); color:var(--ak-success); font-size:11px; padding:2px 6px; font-weight:700;">${discountPct}% OFF</span>`;
+    }
+
+    const rowErrorHtml = hasError ? `<div style="color:#DC2626; font-size:11px; font-weight:600; margin-top:3px;">Selling price exceeds MRP</div>` : '';
+
+    return `
+    <tr class="${hasError ? 'variant-row-error' : ''}" style="${hasError ? 'background: #FEF2F2;' : ''}">
       <td>
-        <input type="text" class="form-input" style="height: 30px; font-size: 12px; width: 110px;" value="${v.skuSuffix || ''}" placeholder="e.g. -BLK" onchange="state.variantMatrix[${idx}].skuSuffix = this.value.trim();">
+        <strong>${v.optionLabels}</strong>
+        ${rowErrorHtml}
       </td>
       <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 110px;" value="${v.priceOverride != null ? v.priceOverride : ''}" placeholder="Standard" min="1" step="1" onchange="state.variantMatrix[${idx}].priceOverride = this.value ? parseFloat(this.value) : null;">
+        <input type="text" class="form-input" style="height: 30px; font-size: 12px; width: 90px;" value="${v.skuSuffix || ''}" placeholder="e.g. -BLK" onchange="state.variantMatrix[${idx}].skuSuffix = this.value.trim();">
       </td>
       <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 85px;" value="${v.stock}" min="0" step="1" oninput="updateVariantStock(${idx}, this.value)">
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.mrp != null ? v.mrp : ''}" placeholder="${parentMrp ? '₹' + parentMrp : 'MRP'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'mrp', this.value)">
       </td>
       <td>
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.sellingPrice != null ? v.sellingPrice : ''}" placeholder="${parentSelling ? '₹' + parentSelling : 'Selling'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'sellingPrice', this.value)">
+      </td>
+      <td style="text-align: center; vertical-align: middle;">
+        ${discountBadgeHtml}
+      </td>
+      <td>
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px;" value="${v.priceOverride != null ? v.priceOverride : ''}" placeholder="Override" min="1" step="1" onchange="handleVariantFieldChange(${idx}, 'priceOverride', this.value)">
+      </td>
+      <td>
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 75px;" value="${v.stock}" min="0" step="1" oninput="updateVariantStock(${idx}, this.value)">
+      </td>
+      <td style="text-align: center; vertical-align: middle;">
         <input type="checkbox" ${v.isActive ? 'checked' : ''} onchange="state.variantMatrix[${idx}].isActive = this.checked; syncVariantStockToProduct();">
       </td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 }
 window.renderVariantMatrix = renderVariantMatrix;
 

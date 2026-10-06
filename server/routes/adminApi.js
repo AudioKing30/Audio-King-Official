@@ -1094,7 +1094,7 @@ router.post('/coupons', (req, res) => {
   try {
     const { 
       code, discountType, discountValue, minCartValue, usageLimit, perUserLimit, expiresAt, isActive, 
-      targetBrand, targetCategory, applicableBrand, applicableCategory 
+      targetBrand, targetCategory, applicableBrand, applicableCategory, visibility
     } = req.body || {};
 
     if (!code || !code.trim()) return res.status(400).json({ error: 'Coupon code is required.' });
@@ -1118,6 +1118,7 @@ router.post('/coupons', (req, res) => {
     const rawCat = targetCategory ?? applicableCategory;
     const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
     const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
+    const cleanVisibility = (visibility && String(visibility).toLowerCase() === 'hidden') ? 'hidden' : 'visible';
 
     const id = `cpn_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
@@ -1128,8 +1129,8 @@ router.post('/coupons', (req, res) => {
     db.prepare(`
       INSERT INTO coupons (
         id, code, discount_type, discount_value, min_cart_value, usage_limit, used_count, per_user_limit, expires_at, is_active, 
-        target_brand, target_category, applicable_brand, applicable_category, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        visibility, target_brand, target_category, applicable_brand, applicable_category, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       id,
       cleanCode,
@@ -1140,6 +1141,7 @@ router.post('/coupons', (req, res) => {
       userLimit,
       expiresAt || null,
       isActive !== false ? 1 : 0,
+      cleanVisibility,
       cleanBrand,
       cleanCat,
       cleanBrand,
@@ -1175,7 +1177,7 @@ router.put('/coupons/:id', (req, res) => {
 
     const { 
       code, discountType, discountValue, minCartValue, usageLimit, perUserLimit, expiresAt, isActive, 
-      targetBrand, targetCategory, applicableBrand, applicableCategory 
+      targetBrand, targetCategory, applicableBrand, applicableCategory, visibility
     } = req.body || {};
 
     if (!code || !code.trim()) return res.status(400).json({ error: 'Coupon code is required.' });
@@ -1202,13 +1204,16 @@ router.put('/coupons/:id', (req, res) => {
     const rawCat = targetCategory !== undefined ? targetCategory : (applicableCategory !== undefined ? applicableCategory : existing.target_category);
     const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
     const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
+    const cleanVisibility = visibility !== undefined 
+      ? (String(visibility).toLowerCase() === 'hidden' ? 'hidden' : 'visible') 
+      : (existing.visibility || 'visible');
     const now = new Date().toISOString();
 
     db.prepare(`
       UPDATE coupons SET
         code = ?, discount_type = ?, discount_value = ?, min_cart_value = ?,
         usage_limit = ?, per_user_limit = ?, expires_at = ?, is_active = ?,
-        target_brand = ?, target_category = ?, applicable_brand = ?, applicable_category = ?,
+        visibility = ?, target_brand = ?, target_category = ?, applicable_brand = ?, applicable_category = ?,
         updated_at = ?
       WHERE id = ?
     `).run(
@@ -1220,6 +1225,7 @@ router.put('/coupons/:id', (req, res) => {
       userLimit,
       expiresAt !== undefined ? expiresAt : existing.expires_at,
       isActive !== undefined ? (isActive ? 1 : 0) : existing.is_active,
+      cleanVisibility,
       cleanBrand,
       cleanCat,
       cleanBrand,
@@ -1573,7 +1579,9 @@ router.get('/products/:id/variants', (req, res) => {
       skuSuffix: v.sku_suffix,
       optionIds: JSON.parse(v.option_ids || '[]'),
       optionLabels: v.option_labels,
-      priceOverride: v.price_override,
+      mrp: v.mrp != null ? Number(v.mrp) : null,
+      sellingPrice: v.selling_price != null ? Number(v.selling_price) : null,
+      priceOverride: v.price_override != null ? Number(v.price_override) : null,
       stock: v.stock,
       isActive: Boolean(v.is_active)
     }));
@@ -1601,6 +1609,22 @@ router.post('/products/:id/variants', (req, res) => {
     if (!product) return res.status(404).json({ error: 'Product not found.' });
 
     const { groups = [], variants = [] } = req.body || {};
+
+    // Validate variant MRP and selling price
+    for (const v of variants) {
+      const vMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : null;
+      const vSelling = (v.sellingPrice ?? v.selling_price) != null && (v.sellingPrice ?? v.selling_price) !== '' ? Number(v.sellingPrice ?? v.selling_price) : null;
+
+      if (vMrp !== null && (!Number.isFinite(vMrp) || vMrp <= 0)) {
+        return res.status(400).json({ error: `Variant MRP must be a positive number for ${v.optionLabels || 'variant'}.` });
+      }
+      if (vSelling !== null && (!Number.isFinite(vSelling) || vSelling <= 0)) {
+        return res.status(400).json({ error: `Variant Selling Price must be a positive number for ${v.optionLabels || 'variant'}.` });
+      }
+      if (vMrp !== null && vSelling !== null && vSelling > vMrp) {
+        return res.status(400).json({ error: `Selling Price cannot exceed MRP for variant: ${v.optionLabels || 'Variant'}.` });
+      }
+    }
 
     // Delete existing variant data for this product (cascade handles options)
     db.prepare('DELETE FROM product_variants WHERE product_id = ?').run(productId);
@@ -1644,8 +1668,8 @@ router.post('/products/:id/variants', (req, res) => {
 
     // Insert variant combinations
     const insertVariant = db.prepare(`
-      INSERT INTO product_variants (product_id, sku_suffix, option_ids, option_labels, price_override, stock, is_active, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO product_variants (product_id, sku_suffix, option_ids, option_labels, mrp, selling_price, price_override, stock, is_active, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     let totalVariantStock = 0;
@@ -1656,23 +1680,54 @@ router.post('/products/:id/variants', (req, res) => {
       const stock = Math.max(0, parseInt(v.stock) || 0);
       totalVariantStock += stock;
 
+      const vMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : null;
+      const vSelling = (v.sellingPrice ?? v.selling_price) != null && (v.sellingPrice ?? v.selling_price) !== '' ? Number(v.sellingPrice ?? v.selling_price) : null;
+      const vOverride = (v.priceOverride ?? v.price_override) != null && (v.priceOverride ?? v.price_override) !== '' ? Number(v.priceOverride ?? v.price_override) : null;
+
       insertVariant.run(
         productId,
         v.skuSuffix || null,
         JSON.stringify(remappedIds),
         v.optionLabels || '',
-        v.priceOverride != null ? Number(v.priceOverride) : null,
+        vMrp,
+        vSelling,
+        vOverride,
         stock,
         v.isActive !== false ? 1 : 0,
         now
       );
     }
 
-    // Update parent product stock to sum of variant stocks
+    // Update parent product stock and auto-sync prices from first variant
     if (variants.length > 0) {
       const inStock = totalVariantStock > 0 ? 1 : 0;
-      db.prepare('UPDATE products SET stock = ?, in_stock = ?, updated_at = ? WHERE id = ?')
-        .run(totalVariantStock, inStock, now, productId);
+      const firstV = variants[0];
+      const firstSelling = (firstV.sellingPrice ?? firstV.selling_price) != null && (firstV.sellingPrice ?? firstV.selling_price) !== ''
+        ? Number(firstV.sellingPrice ?? firstV.selling_price)
+        : ((firstV.priceOverride ?? firstV.price_override) != null && (firstV.priceOverride ?? firstV.price_override) !== '' ? Number(firstV.priceOverride ?? firstV.price_override) : null);
+      const firstMrp = (firstV.mrp != null && firstV.mrp !== '') ? Number(firstV.mrp) : null;
+
+      const currentProd = db.prepare('SELECT price, original_price, badge FROM products WHERE id = ?').get(productId);
+      let newPrice = currentProd ? currentProd.price : null;
+      let newOriginalPrice = currentProd ? currentProd.original_price : null;
+      let newBadge = currentProd ? currentProd.badge : null;
+
+      if (firstSelling != null && !isNaN(firstSelling) && firstSelling > 0) {
+        newPrice = firstSelling;
+      }
+      if (firstMrp != null && !isNaN(firstMrp) && firstMrp > 0) {
+        newOriginalPrice = firstMrp;
+      }
+      if (newOriginalPrice != null && newPrice != null && newOriginalPrice > newPrice && newPrice > 0) {
+        const discount = Math.round(((newOriginalPrice - newPrice) / newOriginalPrice) * 100);
+        newBadge = `${discount}% OFF`;
+      }
+
+      db.prepare(`
+        UPDATE products 
+        SET stock = ?, in_stock = ?, price = COALESCE(?, price), original_price = COALESCE(?, original_price), badge = COALESCE(?, badge), updated_at = ? 
+        WHERE id = ?
+      `).run(totalVariantStock, inStock, newPrice, newOriginalPrice, newBadge, now, productId);
     }
 
     res.json({

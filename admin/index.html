@@ -464,6 +464,71 @@
               <textarea id="productDescription" class="form-textarea" placeholder="Detailed product overview, audio engineering specs, and included items..."></textarea>
             </div>
 
+            <!-- 10. PRODUCT VARIANTS (Color, Size, Custom Options) -->
+            <div class="form-group" style="margin-top: 24px; border-top: 1px solid var(--ak-border); padding-top: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div>
+                  <label class="form-label" style="margin-bottom: 2px;">10. Product Variants (Color, Size, Custom Options)</label>
+                  <div style="font-size: 12px; color: var(--ak-text-muted);">Enable multiple options (e.g. Color finishes, instrument sizes, pickup configs) with individual stock and pricing.</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="enableVariantsToggle" onchange="handleVariantToggleChange(this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <!-- Variant Builder Container (Hidden unless toggled) -->
+              <div id="variantBuilderSection" style="display: none; background: var(--ak-card-sub); border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 18px; margin-top: 12px;">
+                <!-- Group Add Controls -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                  <span style="font-size: 13px; font-weight: 700; color: var(--ak-text-primary);">Variant Option Groups</span>
+                  <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="addVariantGroup('Color', 'color')">+ Add Color Group</button>
+                    <button type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="addVariantGroup('Size', 'text')">+ Add Size / Custom Group</button>
+                  </div>
+                </div>
+
+                <!-- Variant Groups List -->
+                <div id="variantGroupsList" style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;"></div>
+
+                <!-- Variant Matrix Table Preview -->
+                <div id="variantMatrixContainer" style="display: none; border-top: 1px solid var(--ak-border); padding-top: 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                      <span style="font-size: 13px; font-weight: 700; color: var(--ak-text-primary);">Combination Stock &amp; Pricing Matrix</span>
+                      <span id="variantMatrixCount" style="font-size: 11px; color: var(--ak-orange); margin-left: 6px;">(0 combinations)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <input type="number" id="bulkVariantStockInput" placeholder="Stock" min="0" style="width: 70px; height: 30px; font-size: 12px;" class="form-input">
+                      <button type="button" class="btn-secondary" style="font-size: 11px; padding: 5px 10px;" onclick="applyBulkVariantStock()">Apply Stock to All</button>
+                    </div>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Combination</th>
+                          <th>SKU Suffix</th>
+                          <th>MRP (₹)</th>
+                          <th>Selling Price (₹)</th>
+                          <th style="text-align: center;">Discount</th>
+                          <th>Price Override (₹)</th>
+                          <th style="width: 85px;">Stock</th>
+                          <th style="width: 60px; text-align: center;">Active</th>
+                        </tr>
+                      </thead>
+                      <tbody id="variantMatrixTbody"></tbody>
+                    </table>
+                  </div>
+                  <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 8px; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Leave MRP / Selling Price empty to inherit product prices. Selling Price must be &le; MRP. Parent product stock auto-syncs to variant stock total.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- 11. Save / Submit Button -->
             <div style="display: flex; gap: 12px; margin-top: 28px; border-top: 1px solid var(--ak-border); padding-top: 20px;">
               <button type="submit" id="saveProductBtn" class="btn-primary" style="padding: 12px 28px; font-size: 15px;">
@@ -806,8 +871,22 @@
 
           <form id="couponForm" onsubmit="handleCreateCoupon(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: end;">
             <div>
-              <label class="form-label">Coupon Code *</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                <label class="form-label" style="margin-bottom: 0;">Coupon Code *</label>
+                <button type="button" class="btn-text" style="font-size: 11px; color: var(--ak-orange); cursor: pointer; background: none; border: none; padding: 0; font-weight: 700;" onclick="generateRandomCouponCode('couponCode')">🎲 Random Code</button>
+              </div>
               <input type="text" id="couponCode" class="form-input" required placeholder="e.g. TUNE500" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
+              <div id="createCouponHiddenWarning" style="display: none; font-size: 11px; color: #DC2626; margin-top: 4px; font-weight: 600;">
+                ⚠️ Private code: Ensure code is hard to guess (e.g. VIP-7K3Q) so customers cannot guess it.
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="couponVisibility">Visibility *</label>
+              <select id="couponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'createCouponHiddenWarning')">
+                <option value="visible" selected>Visible (shown at checkout)</option>
+                <option value="hidden">Hidden (manual code only)</option>
+              </select>
+              <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Hidden coupons never appear at checkout. Use for influencer/celebrity/private codes.</div>
             </div>
             <div>
               <label class="form-label">Discount Type *</label>
@@ -852,10 +931,16 @@
 
         <!-- Coupons Table with Live Usage Count -->
         <div class="admin-card">
-          <div class="card-header-bar">
+          <div class="card-header-bar" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
             <div>
               <h2 class="card-heading">Coupons Directory</h2>
               <p class="card-desc">Track real-time redemptions, brand/category targets, and coupon status</p>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span style="font-size: 12px; font-weight: 600; color: var(--ak-text-muted); margin-right: 4px;">Visibility:</span>
+              <button type="button" class="coupon-filter-btn active" id="couponFilterAll" onclick="setCouponFilter('all')">All</button>
+              <button type="button" class="coupon-filter-btn" id="couponFilterVisible" onclick="setCouponFilter('visible')">Visible</button>
+              <button type="button" class="coupon-filter-btn" id="couponFilterHidden" onclick="setCouponFilter('hidden')">Hidden</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -863,6 +948,7 @@
               <thead>
                 <tr>
                   <th>Code</th>
+                  <th>Visibility</th>
                   <th>Type</th>
                   <th>Discount</th>
                   <th>Target Brand</th>
@@ -875,7 +961,7 @@
                 </tr>
               </thead>
               <tbody id="couponsTableBody">
-                <tr><td colspan="10" style="text-align: center; padding: 24px;">Loading coupons...</td></tr>
+                <tr><td colspan="11" style="text-align: center; padding: 24px;">Loading coupons...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1164,8 +1250,22 @@
       <form id="editCouponForm" onsubmit="handleUpdateCoupon(event)">
         <input type="hidden" id="editCouponId">
         <div class="form-group" style="margin-bottom: 12px;">
-          <label class="form-label" for="editCouponCode">Coupon Code *</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+            <label class="form-label" for="editCouponCode" style="margin-bottom: 0;">Coupon Code *</label>
+            <button type="button" class="btn-text" style="font-size: 11px; color: var(--ak-orange); cursor: pointer; background: none; border: none; padding: 0; font-weight: 700;" onclick="generateRandomCouponCode('editCouponCode')">🎲 Random Code</button>
+          </div>
           <input type="text" id="editCouponCode" class="form-input" required style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
+          <div id="editCouponHiddenWarning" style="display: none; font-size: 11px; color: #DC2626; margin-top: 4px; font-weight: 600;">
+            ⚠️ Private code: Ensure code is hard to guess (e.g. VIP-7K3Q) so customers cannot guess it.
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" for="editCouponVisibility">Visibility *</label>
+          <select id="editCouponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'editCouponHiddenWarning')">
+            <option value="visible">Visible (shown at checkout)</option>
+            <option value="hidden">Hidden (manual code only)</option>
+          </select>
+          <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Hidden coupons never appear at checkout. Use for influencer/celebrity/private codes.</div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
           <div class="form-group">
@@ -1291,6 +1391,6 @@
     </div>
   </div>
 
-  <script src="/admin/js/admin.js?v=202609270625"></script>
+  <script src="/admin/js/admin.js?v=20261006_prelaunch"></script>
 </body>
 </html>

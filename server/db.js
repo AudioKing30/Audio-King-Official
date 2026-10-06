@@ -235,6 +235,7 @@ function initDatabase() {
       per_user_limit INTEGER NOT NULL DEFAULT 1,
       expires_at TEXT,
       is_active INTEGER NOT NULL DEFAULT 1,
+      visibility TEXT NOT NULL DEFAULT 'visible',
       target_brand TEXT DEFAULT 'all',
       target_category TEXT DEFAULT 'all',
       applicable_brand TEXT DEFAULT 'all',
@@ -305,6 +306,8 @@ function initDatabase() {
       sku_suffix TEXT,
       option_ids TEXT NOT NULL DEFAULT '[]',
       option_labels TEXT NOT NULL DEFAULT '',
+      mrp REAL,
+      selling_price REAL,
       price_override REAL,
       stock INTEGER NOT NULL DEFAULT 0,
       is_active INTEGER DEFAULT 1,
@@ -377,6 +380,15 @@ function initDatabase() {
       db.exec("ALTER TABLE products ADD COLUMN stock_status TEXT DEFAULT 'instock';");
     }
 
+    const variantColumns = db.prepare("PRAGMA table_info(product_variants)").all();
+    const variantColNames = variantColumns.map(c => c.name);
+    if (!variantColNames.includes('mrp')) {
+      db.exec('ALTER TABLE product_variants ADD COLUMN mrp REAL;');
+    }
+    if (!variantColNames.includes('selling_price')) {
+      db.exec('ALTER TABLE product_variants ADD COLUMN selling_price REAL;');
+    }
+
     // Backfill stock_status based on in_stock and badge
     db.prepare(`
       UPDATE products 
@@ -408,6 +420,10 @@ function initDatabase() {
     if (!couponColNames.includes('updated_at')) {
       db.exec("ALTER TABLE coupons ADD COLUMN updated_at TEXT;");
     }
+    if (!couponColNames.includes('visibility')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN visibility TEXT NOT NULL DEFAULT 'visible';");
+    }
+    db.prepare("UPDATE coupons SET visibility = 'visible' WHERE visibility IS NULL OR visibility = ''").run();
 
     // Backfill existing coupons to 'all' so nothing breaks
     db.prepare(`
@@ -510,6 +526,54 @@ function initDatabase() {
     const featRow = db.prepare("SELECT key FROM featured_settings WHERE key = 'locked_product_ids'").get();
     if (!featRow) {
       db.prepare("INSERT INTO featured_settings (key, value_json, updated_at) VALUES ('locked_product_ids', '[]', datetime('now'))").run();
+    }
+
+    // Idempotent auto-sync: default variant's selling price & MRP to parent product
+    const prodsWithVariants = db.prepare('SELECT DISTINCT product_id FROM product_variants').all();
+    for (const { product_id } of prodsWithVariants) {
+      const firstVariant = db.prepare(`
+        SELECT * FROM product_variants
+        WHERE product_id = ?
+        ORDER BY is_active DESC, id ASC
+        LIMIT 1
+      `).get(product_id);
+
+      if (!firstVariant) continue;
+      const sellingPrice = firstVariant.selling_price ?? firstVariant.price_override;
+      const mrp = firstVariant.mrp;
+      if (sellingPrice == null && mrp == null) continue;
+
+      const currentProd = db.prepare('SELECT price, original_price, badge FROM products WHERE id = ?').get(product_id);
+      if (!currentProd) continue;
+
+      let newPrice = currentProd.price;
+      let newOriginalPrice = currentProd.original_price;
+      let newBadge = currentProd.badge;
+      let needsUpdate = false;
+
+      if (sellingPrice != null && Number(currentProd.price) !== Number(sellingPrice)) {
+        newPrice = Number(sellingPrice);
+        needsUpdate = true;
+      }
+      if (mrp != null && Number(currentProd.original_price) !== Number(mrp)) {
+        newOriginalPrice = Number(mrp);
+        needsUpdate = true;
+      }
+      if (newOriginalPrice > newPrice && newPrice > 0) {
+        const discount = Math.round(((newOriginalPrice - newPrice) / newOriginalPrice) * 100);
+        const computedBadge = `${discount}% OFF`;
+        if (newBadge !== computedBadge) {
+          newBadge = computedBadge;
+          needsUpdate = true;
+        }
+      }
+      if (needsUpdate) {
+        db.prepare(`
+          UPDATE products
+          SET price = ?, original_price = ?, badge = ?, updated_at = datetime('now')
+          WHERE id = ?
+        `).run(newPrice, newOriginalPrice, newBadge, product_id);
+      }
     }
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);

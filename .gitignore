@@ -8,6 +8,8 @@ node_modules/
 
 # SQLite Database & Session Logs (Created dynamically on startup)
 server/data/*.db
+server/data/**/*.db
+server/data/backups/
 server/data/*.db-journal
 server/data/*.db-wal
 server/data/*.db-shm

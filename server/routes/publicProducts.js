@@ -213,6 +213,8 @@ function attachVariantsToProducts(products) {
       skuSuffix: v.sku_suffix,
       optionIds: optionIds,
       optionLabels: v.option_labels,
+      mrp: v.mrp != null ? Number(v.mrp) : null,
+      sellingPrice: v.selling_price != null ? Number(v.selling_price) : null,
       priceOverride: v.price_override != null ? Number(v.price_override) : null,
       stock: Number(v.stock || 0),
       isActive: Boolean(v.is_active)
