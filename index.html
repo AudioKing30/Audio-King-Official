@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="css/contact.css">
   <link rel="stylesheet" href="css/checkout-page.css">
   <link rel="stylesheet" href="css/account-settings.css?v=202609271405">
-  <link rel="stylesheet" href="admin/css/admin.css?v=202609271405">
+  <link rel="stylesheet" href="admin/css/admin.css?v=20261006_v2">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     // Early route preloader: completely eliminates the flash of Home view on refresh for deep routes
@@ -3324,15 +3324,6 @@
               </div>
             </div>
             <div>
-              <label class="form-label" for="couponVisibility">Visibility *</label>
-              <select id="couponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'createCouponHiddenWarning')">
-                <option value="visible" selected>Visible (shown to customers at checkout)</option>
-                <option value="invisible">Invisible (private / celebrity code)</option>
-                <option value="hidden" style="display:none;">Invisible</option>
-              </select>
-              <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Invisible coupons never appear at checkout. Use for influencer/celebrity/private codes.</div>
-            </div>
-            <div>
               <label class="form-label">Discount Type *</label>
               <select id="couponType" class="form-select">
                 <option value="flat">Flat Amount (₹)</option>
@@ -3354,6 +3345,15 @@
               <select id="couponCategory" class="form-select">
                 <option value="all">All</option>
               </select>
+            </div>
+            <div>
+              <label class="form-label" for="couponVisibility">Visibility *</label>
+              <select id="couponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'createCouponHiddenWarning')">
+                <option value="visible" selected>Visible coupon</option>
+                <option value="invisible">Invisible coupon</option>
+                <option value="hidden" style="display:none;">Invisible coupon</option>
+              </select>
+              <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Visible = in checkout list. Invisible = private code.</div>
             </div>
             <div>
               <label class="form-label" for="couponMinCart">Min Cart Value (₹)</label>
@@ -3887,15 +3887,6 @@
             ⚠️ Private code: Ensure code is hard to guess (e.g. VIP-7K3Q) so customers cannot guess it.
           </div>
         </div>
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label class="form-label" for="editCouponVisibility">Visibility *</label>
-          <select id="editCouponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'editCouponHiddenWarning')">
-            <option value="visible">Visible (shown to customers at checkout)</option>
-            <option value="invisible">Invisible (private / celebrity code)</option>
-            <option value="hidden" style="display:none;">Invisible</option>
-          </select>
-          <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Invisible coupons never appear at checkout. Use for influencer/celebrity/private codes.</div>
-        </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
           <div class="form-group">
             <label class="form-label" for="editCouponType">Discount Type *</label>
@@ -3909,7 +3900,7 @@
             <input type="number" id="editCouponValue" class="form-input" required min="1" step="1">
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
           <div class="form-group">
             <label class="form-label" for="editCouponBrand">Target Brand</label>
             <select id="editCouponBrand" class="form-select">
@@ -3920,6 +3911,14 @@
             <label class="form-label" for="editCouponCategory">Target Category</label>
             <select id="editCouponCategory" class="form-select">
               <option value="all">All</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="editCouponVisibility">Visibility *</label>
+            <select id="editCouponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'editCouponHiddenWarning')">
+              <option value="visible">Visible coupon</option>
+              <option value="invisible">Invisible coupon</option>
+              <option value="hidden" style="display:none;">Invisible coupon</option>
             </select>
           </div>
         </div>
@@ -4184,7 +4183,7 @@
   </a>
 
   <!-- ==================== APPLICATION SCRIPTS ==================== -->
-  <script src="js/bundle.js?v=20261006_prelaunch"></script>
-  <script src="admin/js/admin.js?v=20261006_prelaunch"></script>
+  <script src="js/bundle.js?v=20261006_v2"></script>
+  <script src="admin/js/admin.js?v=20261006_v2"></script>
 </body>
 </html>

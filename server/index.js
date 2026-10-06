@@ -199,11 +199,13 @@ const rootDir = path.resolve(__dirname, '..');
 
 // Dedicated Admin Login Route
 app.get('/admin/login', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(rootDir, 'admin', 'login.html'));
 });
 
 // Dedicated Master Admin Portal
 app.get(['/admin', '/admin/'], requireAdminWeb, (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(rootDir, 'admin', 'index.html'));
 });
 
@@ -212,12 +214,19 @@ app.get(['/store', '/store/*', '/catalog', '/catalog/*'], (req, res) => {
   res.redirect('/#store');
 });
 
-// Static Asset Serving (Frontend & Storefront)
-app.use(express.static(rootDir));
+// Static Asset Serving (Frontend & Storefront) with no-cache for code assets
+app.use(express.static(rootDir, {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // SPA Fallback (Serve index.html for all non-API and non-admin GET requests)
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api/') || req.path.startsWith('/admin')) return next();
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(rootDir, 'index.html'));
 });
 
