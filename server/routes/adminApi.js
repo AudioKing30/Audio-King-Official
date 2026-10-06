@@ -1698,11 +1698,36 @@ router.post('/products/:id/variants', (req, res) => {
       );
     }
 
-    // Update parent product stock to sum of variant stocks
+    // Update parent product stock and auto-sync prices from first variant
     if (variants.length > 0) {
       const inStock = totalVariantStock > 0 ? 1 : 0;
-      db.prepare('UPDATE products SET stock = ?, in_stock = ?, updated_at = ? WHERE id = ?')
-        .run(totalVariantStock, inStock, now, productId);
+      const firstV = variants[0];
+      const firstSelling = (firstV.sellingPrice ?? firstV.selling_price) != null && (firstV.sellingPrice ?? firstV.selling_price) !== ''
+        ? Number(firstV.sellingPrice ?? firstV.selling_price)
+        : ((firstV.priceOverride ?? firstV.price_override) != null && (firstV.priceOverride ?? firstV.price_override) !== '' ? Number(firstV.priceOverride ?? firstV.price_override) : null);
+      const firstMrp = (firstV.mrp != null && firstV.mrp !== '') ? Number(firstV.mrp) : null;
+
+      const currentProd = db.prepare('SELECT price, original_price, badge FROM products WHERE id = ?').get(productId);
+      let newPrice = currentProd ? currentProd.price : null;
+      let newOriginalPrice = currentProd ? currentProd.original_price : null;
+      let newBadge = currentProd ? currentProd.badge : null;
+
+      if (firstSelling != null && !isNaN(firstSelling) && firstSelling > 0) {
+        newPrice = firstSelling;
+      }
+      if (firstMrp != null && !isNaN(firstMrp) && firstMrp > 0) {
+        newOriginalPrice = firstMrp;
+      }
+      if (newOriginalPrice != null && newPrice != null && newOriginalPrice > newPrice && newPrice > 0) {
+        const discount = Math.round(((newOriginalPrice - newPrice) / newOriginalPrice) * 100);
+        newBadge = `${discount}% OFF`;
+      }
+
+      db.prepare(`
+        UPDATE products 
+        SET stock = ?, in_stock = ?, price = COALESCE(?, price), original_price = COALESCE(?, original_price), badge = COALESCE(?, badge), updated_at = ? 
+        WHERE id = ?
+      `).run(totalVariantStock, inStock, newPrice, newOriginalPrice, newBadge, now, productId);
     }
 
     res.json({

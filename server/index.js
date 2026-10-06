@@ -33,6 +33,9 @@ seedAdminAndCatalog().catch(err => console.error('[STARTUP SEED ERROR]', err));
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust reverse proxies (Render, Railway, Cloudflare, Nginx) for accurate client IP
+app.set('trust proxy', 1);
+
 // Security & Parsing Middlewares
 app.use((req, res, next) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -88,8 +91,8 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
-// Health Check Endpoint
-app.get('/api/health', (req, res) => {
+// Health Check Endpoint (/health and /api/health)
+const healthHandler = (req, res) => {
   try {
     const userCount = db.prepare('SELECT COUNT(*) AS count FROM users').get().count;
     res.json({
@@ -101,7 +104,9 @@ app.get('/api/health', (req, res) => {
   } catch (err) {
     res.status(500).json({ status: 'unhealthy', error: err.message });
   }
-});
+};
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
 
 // Public Customer APIs
 app.use('/api/products', publicProductsRoutes);

@@ -7,7 +7,7 @@
 
 const express = require('express');
 const { db } = require('../db');
-const { checkRateLimit, hashToken } = require('../security');
+const { checkRateLimit, isRateLimited, recordRateLimitFailure, hashToken } = require('../security');
 
 const router = express.Router();
 
@@ -228,11 +228,11 @@ router.get('/visible', handleListVisibleCoupons);
  */
 router.post('/validate', (req, res) => {
   try {
-    // 1. Rate Limiting Check (10 attempts / minute)
-    const clientIp = req.ip || req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown_ip';
+    // 1. Rate Limiting Check on Real Client IP (counts failed attempts only)
+    const clientIp = req.ip || (req.headers['x-forwarded-for'] ? String(req.headers['x-forwarded-for']).split(',')[0].trim() : null) || req.socket?.remoteAddress || 'unknown_ip';
     const sessionToken = req.cookies?.audioking_session || req.cookies?.audioKingToken || '';
     const rateLimitKey = `coupon_validate_${clientIp}_${sessionToken}`;
-    const rl = checkRateLimit(rateLimitKey, 10, 60000);
+    const rl = isRateLimited(rateLimitKey, 10, 60000);
 
     if (!rl.allowed) {
       return res.status(429).json({
@@ -242,15 +242,20 @@ router.post('/validate', (req, res) => {
       });
     }
 
+    const fail = (status, message) => {
+      recordRateLimitFailure(rateLimitKey, 60000);
+      return res.status(status).json({ valid: false, message, error: message });
+    };
+
     const { code, cartTotal, items } = req.body || {};
 
     if (!code || typeof code !== 'string') {
-      return res.status(400).json({ valid: false, message: 'Please enter a coupon code.' });
+      return fail(400, 'Please enter a coupon code.');
     }
 
     const numericTotal = Number(cartTotal);
     if (isNaN(numericTotal) || numericTotal <= 0) {
-      return res.status(400).json({ valid: false, message: 'Invalid cart total.' });
+      return fail(400, 'Invalid cart total.');
     }
 
     const cleanCode = code.trim().toUpperCase();
@@ -267,21 +272,21 @@ router.post('/validate', (req, res) => {
     const genericInvalidMsg = 'Invalid or expired coupon.';
 
     if (!coupon || !coupon.is_active) {
-      return res.status(400).json({ valid: false, message: genericInvalidMsg, error: genericInvalidMsg });
+      return fail(400, genericInvalidMsg);
     }
 
     // Expiry check
     if (coupon.expires_at) {
       const today = new Date().toISOString().split('T')[0];
       if (coupon.expires_at < today) {
-        return res.status(400).json({ valid: false, message: genericInvalidMsg, error: genericInvalidMsg });
+        return fail(400, genericInvalidMsg);
       }
     }
 
     // Global usage limit check
     if (coupon.usage_limit !== null && coupon.usage_limit !== undefined && coupon.usage_limit > 0) {
       if (coupon.used_count >= coupon.usage_limit) {
-        return res.status(400).json({ valid: false, message: genericInvalidMsg, error: genericInvalidMsg });
+        return fail(400, genericInvalidMsg);
       }
     }
 
@@ -292,11 +297,7 @@ router.post('/validate', (req, res) => {
         const userUsage = db.prepare('SELECT COUNT(*) AS count FROM coupon_usages WHERE user_id = ? AND coupon_id = ?').get(userId, coupon.id);
         if (userUsage && userUsage.count >= coupon.per_user_limit) {
           const msg = `You have already reached the maximum usage limit (${coupon.per_user_limit}) for coupon "${cleanCode}".`;
-          return res.status(400).json({
-            valid: false,
-            message: msg,
-            error: msg
-          });
+          return fail(400, msg);
         }
       } catch (e) {}
     }
@@ -308,12 +309,7 @@ router.post('/validate', (req, res) => {
 
     if (hasBrandScope || hasCatScope) {
       if (!items || !Array.isArray(items) || items.length === 0) {
-        const msg = 'This coupon is not applicable to items in your cart.';
-        return res.status(400).json({
-          valid: false,
-          message: msg,
-          error: msg
-        });
+        return fail(400, 'This coupon is not applicable to items in your cart.');
       }
 
       applicableBase = items.reduce((sum, item) => {
@@ -355,12 +351,7 @@ router.post('/validate', (req, res) => {
       }, 0);
 
       if (applicableBase <= 0) {
-        const msg = 'This coupon is not applicable to items in your cart.';
-        return res.status(400).json({
-          valid: false,
-          message: msg,
-          error: msg
-        });
+        return fail(400, 'This coupon is not applicable to items in your cart.');
       }
     }
 
@@ -368,11 +359,7 @@ router.post('/validate', (req, res) => {
     if (coupon.min_cart_value && numericTotal < coupon.min_cart_value) {
       const diff = coupon.min_cart_value - numericTotal;
       const msg = `Coupon "${cleanCode}" requires a minimum cart value of ₹${coupon.min_cart_value.toLocaleString('en-IN')}. Add ₹${diff.toLocaleString('en-IN')} more to qualify!`;
-      return res.status(400).json({
-        valid: false,
-        message: msg,
-        error: msg
-      });
+      return fail(400, msg);
     }
 
     // Calculate discount amount (applied ONLY to qualifying line items)

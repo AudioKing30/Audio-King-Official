@@ -2753,24 +2753,13 @@ export function renderFeaturedProducts(items) {
     let offerStampHtml = '';
 
     if (activeVariants) {
-      const variantSellingPrices = activeVariants.map(v => (v.sellingPrice != null ? Number(v.sellingPrice) : (v.priceOverride != null ? Number(v.priceOverride) : Number(p.price) || 0)));
-      const minPrice = Math.min(...variantSellingPrices);
-      const maxPrice = Math.max(...variantSellingPrices);
-      const hasDifferentPrices = minPrice !== maxPrice;
-
-      if (hasDifferentPrices) {
-        displayPriceHtml = `<span>From ${formatINR(minPrice)}</span>`;
-        originalPriceHtml = '';
-        offerStampHtml = '';
-      } else {
-        const defaultVariant = activeVariants[0];
-        const selling = variantSellingPrices[0];
-        const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : (p.originalPrice ? Number(p.originalPrice) : 0);
-        const hasDiscount = mrp > selling && selling > 0;
-        displayPriceHtml = `<span>${formatINR(selling)}</span>`;
-        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : '';
-        offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : '';
-      }
+      const defaultVariant = activeVariants[0];
+      const selling = (defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : (defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(p.price) || 0));
+      const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : (p.originalPrice ? Number(p.originalPrice) : 0);
+      const hasDiscount = mrp > selling && selling > 0;
+      displayPriceHtml = `<span>${formatINR(selling)}</span>`;
+      originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : '';
+      offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : '';
     } else {
       const baseSelling = Number(p.price) || 0;
       const baseMrp = Number(p.originalPrice) || 0;

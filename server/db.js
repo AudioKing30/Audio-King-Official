@@ -527,6 +527,54 @@ function initDatabase() {
     if (!featRow) {
       db.prepare("INSERT INTO featured_settings (key, value_json, updated_at) VALUES ('locked_product_ids', '[]', datetime('now'))").run();
     }
+
+    // Idempotent auto-sync: default variant's selling price & MRP to parent product
+    const prodsWithVariants = db.prepare('SELECT DISTINCT product_id FROM product_variants').all();
+    for (const { product_id } of prodsWithVariants) {
+      const firstVariant = db.prepare(`
+        SELECT * FROM product_variants
+        WHERE product_id = ?
+        ORDER BY is_active DESC, id ASC
+        LIMIT 1
+      `).get(product_id);
+
+      if (!firstVariant) continue;
+      const sellingPrice = firstVariant.selling_price ?? firstVariant.price_override;
+      const mrp = firstVariant.mrp;
+      if (sellingPrice == null && mrp == null) continue;
+
+      const currentProd = db.prepare('SELECT price, original_price, badge FROM products WHERE id = ?').get(product_id);
+      if (!currentProd) continue;
+
+      let newPrice = currentProd.price;
+      let newOriginalPrice = currentProd.original_price;
+      let newBadge = currentProd.badge;
+      let needsUpdate = false;
+
+      if (sellingPrice != null && Number(currentProd.price) !== Number(sellingPrice)) {
+        newPrice = Number(sellingPrice);
+        needsUpdate = true;
+      }
+      if (mrp != null && Number(currentProd.original_price) !== Number(mrp)) {
+        newOriginalPrice = Number(mrp);
+        needsUpdate = true;
+      }
+      if (newOriginalPrice > newPrice && newPrice > 0) {
+        const discount = Math.round(((newOriginalPrice - newPrice) / newOriginalPrice) * 100);
+        const computedBadge = `${discount}% OFF`;
+        if (newBadge !== computedBadge) {
+          newBadge = computedBadge;
+          needsUpdate = true;
+        }
+      }
+      if (needsUpdate) {
+        db.prepare(`
+          UPDATE products
+          SET price = ?, original_price = ?, badge = ?, updated_at = datetime('now')
+          WHERE id = ?
+        `).run(newPrice, newOriginalPrice, newBadge, product_id);
+      }
+    }
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);
   }
