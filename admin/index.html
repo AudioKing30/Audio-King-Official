@@ -870,7 +870,7 @@
             </div>
           </div>
 
-          <form id="couponForm" onsubmit="handleCreateCoupon(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: end;">
+          <form id="couponForm" class="admin-coupon-form" onsubmit="handleCreateCoupon(event)">
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
                 <label class="form-label" style="margin-bottom: 0;">Coupon Code *</label>
@@ -925,7 +925,7 @@
               <label class="form-label" for="couponExpiry">Expiry Date</label>
               <input type="date" id="couponExpiry" class="form-input">
             </div>
-            <div style="grid-column: 1 / -1; margin-top: 8px;">
+            <div class="admin-form-submit-row">
               <button type="submit" class="btn-primary">Generate Coupon Code</button>
             </div>
           </form>
