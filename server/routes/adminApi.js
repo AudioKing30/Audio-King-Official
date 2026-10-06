@@ -1094,7 +1094,7 @@ router.post('/coupons', (req, res) => {
   try {
     const { 
       code, discountType, discountValue, minCartValue, usageLimit, perUserLimit, expiresAt, isActive, 
-      targetBrand, targetCategory, applicableBrand, applicableCategory 
+      targetBrand, targetCategory, applicableBrand, applicableCategory, visibility
     } = req.body || {};
 
     if (!code || !code.trim()) return res.status(400).json({ error: 'Coupon code is required.' });
@@ -1118,6 +1118,7 @@ router.post('/coupons', (req, res) => {
     const rawCat = targetCategory ?? applicableCategory;
     const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
     const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
+    const cleanVisibility = (visibility && String(visibility).toLowerCase() === 'hidden') ? 'hidden' : 'visible';
 
     const id = `cpn_${Date.now().toString(36)}`;
     const now = new Date().toISOString();
@@ -1128,8 +1129,8 @@ router.post('/coupons', (req, res) => {
     db.prepare(`
       INSERT INTO coupons (
         id, code, discount_type, discount_value, min_cart_value, usage_limit, used_count, per_user_limit, expires_at, is_active, 
-        target_brand, target_category, applicable_brand, applicable_category, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        visibility, target_brand, target_category, applicable_brand, applicable_category, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
       id,
       cleanCode,
@@ -1140,6 +1141,7 @@ router.post('/coupons', (req, res) => {
       userLimit,
       expiresAt || null,
       isActive !== false ? 1 : 0,
+      cleanVisibility,
       cleanBrand,
       cleanCat,
       cleanBrand,
@@ -1175,7 +1177,7 @@ router.put('/coupons/:id', (req, res) => {
 
     const { 
       code, discountType, discountValue, minCartValue, usageLimit, perUserLimit, expiresAt, isActive, 
-      targetBrand, targetCategory, applicableBrand, applicableCategory 
+      targetBrand, targetCategory, applicableBrand, applicableCategory, visibility
     } = req.body || {};
 
     if (!code || !code.trim()) return res.status(400).json({ error: 'Coupon code is required.' });
@@ -1202,13 +1204,16 @@ router.put('/coupons/:id', (req, res) => {
     const rawCat = targetCategory !== undefined ? targetCategory : (applicableCategory !== undefined ? applicableCategory : existing.target_category);
     const cleanBrand = (rawBrand && rawBrand.trim()) ? rawBrand.trim() : 'all';
     const cleanCat = (rawCat && rawCat.trim()) ? rawCat.trim() : 'all';
+    const cleanVisibility = visibility !== undefined 
+      ? (String(visibility).toLowerCase() === 'hidden' ? 'hidden' : 'visible') 
+      : (existing.visibility || 'visible');
     const now = new Date().toISOString();
 
     db.prepare(`
       UPDATE coupons SET
         code = ?, discount_type = ?, discount_value = ?, min_cart_value = ?,
         usage_limit = ?, per_user_limit = ?, expires_at = ?, is_active = ?,
-        target_brand = ?, target_category = ?, applicable_brand = ?, applicable_category = ?,
+        visibility = ?, target_brand = ?, target_category = ?, applicable_brand = ?, applicable_category = ?,
         updated_at = ?
       WHERE id = ?
     `).run(
@@ -1220,6 +1225,7 @@ router.put('/coupons/:id', (req, res) => {
       userLimit,
       expiresAt !== undefined ? expiresAt : existing.expires_at,
       isActive !== undefined ? (isActive ? 1 : 0) : existing.is_active,
+      cleanVisibility,
       cleanBrand,
       cleanCat,
       cleanBrand,

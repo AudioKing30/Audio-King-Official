@@ -235,6 +235,7 @@ function initDatabase() {
       per_user_limit INTEGER NOT NULL DEFAULT 1,
       expires_at TEXT,
       is_active INTEGER NOT NULL DEFAULT 1,
+      visibility TEXT NOT NULL DEFAULT 'visible',
       target_brand TEXT DEFAULT 'all',
       target_category TEXT DEFAULT 'all',
       applicable_brand TEXT DEFAULT 'all',
@@ -419,6 +420,10 @@ function initDatabase() {
     if (!couponColNames.includes('updated_at')) {
       db.exec("ALTER TABLE coupons ADD COLUMN updated_at TEXT;");
     }
+    if (!couponColNames.includes('visibility')) {
+      db.exec("ALTER TABLE coupons ADD COLUMN visibility TEXT NOT NULL DEFAULT 'visible';");
+    }
+    db.prepare("UPDATE coupons SET visibility = 'visible' WHERE visibility IS NULL OR visibility = ''").run();
 
     // Backfill existing coupons to 'all' so nothing breaks
     db.prepare(`

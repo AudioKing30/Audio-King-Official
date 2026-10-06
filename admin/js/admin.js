@@ -1869,68 +1869,108 @@ async function loadCoupons() {
     }
   }
 
+  renderCouponsTable();
+}
+
+function setCouponFilter(filter) {
+  state.couponFilter = filter || 'all';
+  ['all', 'visible', 'hidden'].forEach(f => {
+    const btn = document.getElementById('couponFilter' + f.charAt(0).toUpperCase() + f.slice(1));
+    if (btn) btn.classList.toggle('active', f === state.couponFilter);
+  });
+  renderCouponsTable();
+}
+
+function generateRandomCouponCode(inputId = 'couponCode') {
+  const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let rand = '';
+  for (let i = 0; i < 4; i++) {
+    rand += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  const code = `VIP-${rand}`;
+  const el = document.getElementById(inputId);
+  if (el) el.value = code;
+  return code;
+}
+
+function handleCouponVisibilityChange(selectEl, warningElId) {
+  const warn = document.getElementById(warningElId);
+  if (warn) {
+    warn.style.display = (selectEl && selectEl.value === 'hidden') ? 'block' : 'none';
+  }
+}
+
+function renderCouponsTable() {
   const tbody = document.getElementById('couponsTableBody');
   if (!tbody) return;
-  tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding: 24px;">Loading coupons...</td></tr>';
 
-  try {
-    const res = await adminFetch('/api/admin/coupons');
-    const data = await res.json();
-    const coupons = data.coupons || [];
-    state.coupons = coupons;
+  const allCoupons = state.coupons || [];
+  const filter = state.couponFilter || 'all';
+  const coupons = allCoupons.filter(c => {
+    const vis = (c.visibility || 'visible').toLowerCase();
+    if (filter === 'visible') return vis === 'visible';
+    if (filter === 'hidden') return vis === 'hidden';
+    return true;
+  });
 
-    if (coupons.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="10" style="padding: 0; border: none;">
-        <div class="admin-empty-state-box">
-          <svg class="admin-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
-          <div class="admin-empty-title">No coupons found.</div>
-          <div class="admin-empty-sub">Create your first coupon code above.</div>
-        </div>
-      </td></tr>`;
-      return;
+  if (coupons.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11" style="padding: 0; border: none;">
+      <div class="admin-empty-state-box">
+        <svg class="admin-empty-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+        <div class="admin-empty-title">${allCoupons.length === 0 ? 'No coupons found.' : `No ${filter} coupons found.`}</div>
+        <div class="admin-empty-sub">${allCoupons.length === 0 ? 'Create your first coupon code above.' : 'Try changing your visibility filter.'}</div>
+      </div>
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = coupons.map(c => {
+    const targetBrand = (c.targetBrand || c.target_brand || c.applicable_brand || 'all').trim();
+    const targetCategory = (c.targetCategory || c.target_category || c.applicable_category || 'all').trim();
+
+    // Brand display with deleted check
+    let brandDisplay;
+    if (!targetBrand || targetBrand.toLowerCase() === 'all') {
+      brandDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Brands</span>';
+    } else {
+      const brandExists = (state.brands || []).some(b => b.name && b.name.toLowerCase() === targetBrand.toLowerCase());
+      if (brandExists) {
+        brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #E0F2FE; color: #0369A1; font-weight: 700;">${escapeHtml(targetBrand)}</span>`;
+      } else {
+        brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">⚠️ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
+      }
     }
 
-    tbody.innerHTML = coupons.map(c => {
-      const targetBrand = (c.targetBrand || c.target_brand || c.applicable_brand || 'all').trim();
-      const targetCategory = (c.targetCategory || c.target_category || c.applicable_category || 'all').trim();
-
-      // Brand display with deleted check
-      let brandDisplay;
-      if (!targetBrand || targetBrand.toLowerCase() === 'all') {
-        brandDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Brands</span>';
+    // Category display with deleted check
+    let categoryDisplay;
+    if (!targetCategory || targetCategory.toLowerCase() === 'all') {
+      categoryDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Categories</span>';
+    } else {
+      const catExists = (state.categories || []).some(cat => cat.name && cat.name.toLowerCase() === targetCategory.toLowerCase());
+      if (catExists) {
+        categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #F3E8FF; color: #6B21A8; font-weight: 700;">${escapeHtml(targetCategory)}</span>`;
       } else {
-        const brandExists = (state.brands || []).some(b => b.name && b.name.toLowerCase() === targetBrand.toLowerCase());
-        if (brandExists) {
-          brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #E0F2FE; color: #0369A1; font-weight: 700;">${escapeHtml(targetBrand)}</span>`;
-        } else {
-          brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">⚠️ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
-        }
+        categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">⚠️ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
       }
+    }
 
-      // Category display with deleted check
-      let categoryDisplay;
-      if (!targetCategory || targetCategory.toLowerCase() === 'all') {
-        categoryDisplay = '<span style="color: var(--ak-text-muted); font-size: 12px; font-weight: 500;">All Categories</span>';
-      } else {
-        const catExists = (state.categories || []).some(cat => cat.name && cat.name.toLowerCase() === targetCategory.toLowerCase());
-        if (catExists) {
-          categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #F3E8FF; color: #6B21A8; font-weight: 700;">${escapeHtml(targetCategory)}</span>`;
-        } else {
-          categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">⚠️ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
-        }
-      }
+    const discType = c.discountType || c.discount_type;
+    const discVal = c.discountValue != null ? c.discountValue : c.discount_value;
+    const minCart = c.minCartValue != null ? c.minCartValue : c.min_cart_value;
+    const usedCount = c.usedCount != null ? c.usedCount : (c.used_count || 0);
+    const usageLimit = c.usageLimit != null ? c.usageLimit : c.usage_limit;
+    const expiresAt = c.expiresAt || c.expires_at;
+    const isActive = c.isActive != null ? c.isActive : (c.is_active !== 0 && c.is_active !== false);
+    const vis = (c.visibility || 'visible').toLowerCase();
 
-      const discType = c.discountType || c.discount_type;
-      const discVal = c.discountValue != null ? c.discountValue : c.discount_value;
-      const minCart = c.minCartValue != null ? c.minCartValue : c.min_cart_value;
-      const usedCount = c.usedCount != null ? c.usedCount : (c.used_count || 0);
-      const usageLimit = c.usageLimit != null ? c.usageLimit : c.usage_limit;
-      const expiresAt = c.expiresAt || c.expires_at;
-      const isActive = c.isActive != null ? c.isActive : (c.is_active !== 0 && c.is_active !== false);
+    const visBadge = vis === 'hidden'
+      ? `<span class="badge-visibility hidden" title="Hidden: Only works when entered manually"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> Hidden</span>`
+      : `<span class="badge-visibility visible" title="Visible: Shown to customers at checkout"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Visible</span>`;
 
-      return `
+    return `
       <tr>
         <td><strong style="color: var(--ak-orange); font-size: 15px; letter-spacing: 0.5px;">${escapeHtml(c.code)}</strong></td>
+        <td>${visBadge}</td>
         <td>${discType === 'flat' ? 'Flat Amount' : 'Percentage'}</td>
         <td><strong>${discType === 'flat' ? formatINR(discVal) : `${discVal}%`}</strong></td>
         <td>${brandDisplay}</td>
@@ -1951,15 +1991,13 @@ async function loadCoupons() {
         </td>
       </tr>
     `;
-    }).join('');
-  } catch (err) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color: var(--ak-danger);">Failed to load coupons.</td></tr>';
-  }
+  }).join('');
 }
 
 async function handleCreateCoupon(e) {
   e.preventDefault();
   const code = document.getElementById('couponCode').value.trim().toUpperCase();
+  const visibility = document.getElementById('couponVisibility')?.value || 'visible';
   const discountType = document.getElementById('couponType').value;
   const discountValue = parseFloat(document.getElementById('couponValue').value);
   const minCartValue = parseFloat(document.getElementById('couponMinCart').value) || 0;
@@ -1976,6 +2014,7 @@ async function handleCreateCoupon(e) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code,
+        visibility,
         discountType,
         discountValue,
         minCartValue,
@@ -1991,6 +2030,11 @@ async function handleCreateCoupon(e) {
     if (res.ok) {
       alert(`Coupon "${code}" created successfully!`);
       document.getElementById('couponForm').reset();
+      const visSel = document.getElementById('couponVisibility');
+      if (visSel) {
+        visSel.value = 'visible';
+        handleCouponVisibilityChange(visSel, 'createCouponHiddenWarning');
+      }
       const brandSel = document.getElementById('couponBrand');
       if (brandSel) brandSel.value = 'all';
       const catSel = document.getElementById('couponCategory');
@@ -2068,6 +2112,12 @@ async function openEditCoupon(id) {
     const exp = c.expiresAt || c.expires_at;
     document.getElementById('editCouponExpiry').value = exp ? String(exp).slice(0, 10) : '';
 
+    const editVisEl = document.getElementById('editCouponVisibility');
+    if (editVisEl) {
+      editVisEl.value = (c.visibility || 'visible').toLowerCase();
+      handleCouponVisibilityChange(editVisEl, 'editCouponHiddenWarning');
+    }
+
     openModal('editCouponModal');
   } catch (err) {
     console.error('Error opening edit coupon modal:', err);
@@ -2085,6 +2135,7 @@ async function handleUpdateCoupon(e) {
   e.preventDefault();
   const id = document.getElementById('editCouponId').value.trim();
   const code = document.getElementById('editCouponCode').value.trim().toUpperCase();
+  const visibility = document.getElementById('editCouponVisibility')?.value || 'visible';
   const discountType = document.getElementById('editCouponType').value;
   const discountValue = parseFloat(document.getElementById('editCouponValue').value);
   const targetBrand = document.getElementById('editCouponBrand')?.value || 'all';
@@ -2104,6 +2155,7 @@ async function handleUpdateCoupon(e) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         code,
+        visibility,
         discountType,
         discountValue,
         targetBrand,
@@ -2136,6 +2188,9 @@ window.deleteCoupon = deleteCoupon;
 window.openEditCoupon = openEditCoupon;
 window.closeEditCouponModal = closeEditCouponModal;
 window.handleUpdateCoupon = handleUpdateCoupon;
+window.generateRandomCouponCode = generateRandomCouponCode;
+window.handleCouponVisibilityChange = handleCouponVisibilityChange;
+window.setCouponFilter = setCouponFilter;
 
 // -------------------------------------------------------------
 // 6. ORDERS (CURRENT VS HISTORY)

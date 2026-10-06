@@ -3315,8 +3315,22 @@
 
           <form id="couponForm" class="admin-coupon-form" onsubmit="handleCreateCoupon(event)">
             <div>
-              <label class="form-label">Coupon Code *</label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                <label class="form-label" style="margin-bottom: 0;">Coupon Code *</label>
+                <button type="button" class="btn-text" style="font-size: 11px; color: var(--ak-orange); cursor: pointer; background: none; border: none; padding: 0; font-weight: 700;" onclick="generateRandomCouponCode('couponCode')">🎲 Random Code</button>
+              </div>
               <input type="text" id="couponCode" class="form-input" required placeholder="e.g. TUNE500" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
+              <div id="createCouponHiddenWarning" style="display: none; font-size: 11px; color: #DC2626; margin-top: 4px; font-weight: 600;">
+                ⚠️ Private code: Ensure code is hard to guess (e.g. VIP-7K3Q) so customers cannot guess it.
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="couponVisibility">Visibility *</label>
+              <select id="couponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'createCouponHiddenWarning')">
+                <option value="visible" selected>Visible (shown at checkout)</option>
+                <option value="hidden">Hidden (manual code only)</option>
+              </select>
+              <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Hidden coupons never appear at checkout. Use for influencer/celebrity/private codes.</div>
             </div>
             <div>
               <label class="form-label">Discount Type *</label>
@@ -3361,10 +3375,16 @@
 
         <!-- Coupons Table with Live Usage Count -->
         <div class="admin-card">
-          <div class="card-header-bar">
+          <div class="card-header-bar" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
             <div>
               <h2 class="card-heading">Coupons Directory</h2>
               <p class="card-desc">Track real-time redemptions, brand/category targets, and coupon status</p>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <span style="font-size: 12px; font-weight: 600; color: var(--ak-text-muted); margin-right: 4px;">Visibility:</span>
+              <button type="button" class="coupon-filter-btn active" id="couponFilterAll" onclick="setCouponFilter('all')">All</button>
+              <button type="button" class="coupon-filter-btn" id="couponFilterVisible" onclick="setCouponFilter('visible')">Visible</button>
+              <button type="button" class="coupon-filter-btn" id="couponFilterHidden" onclick="setCouponFilter('hidden')">Hidden</button>
             </div>
           </div>
           <div class="table-responsive">
@@ -3372,6 +3392,7 @@
               <thead>
                 <tr>
                   <th>Code</th>
+                  <th>Visibility</th>
                   <th>Type</th>
                   <th>Discount</th>
                   <th>Target Brand</th>
@@ -3384,7 +3405,7 @@
                 </tr>
               </thead>
               <tbody id="couponsTableBody">
-                <tr><td colspan="10" style="text-align: center; padding: 24px;">Loading coupons...</td></tr>
+                <tr><td colspan="11" style="text-align: center; padding: 24px;">Loading coupons...</td></tr>
               </tbody>
             </table>
           </div>
@@ -3857,8 +3878,22 @@
       <form id="editCouponForm" onsubmit="handleUpdateCoupon(event)">
         <input type="hidden" id="editCouponId">
         <div class="form-group" style="margin-bottom: 12px;">
-          <label class="form-label" for="editCouponCode">Coupon Code *</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+            <label class="form-label" for="editCouponCode" style="margin-bottom: 0;">Coupon Code *</label>
+            <button type="button" class="btn-text" style="font-size: 11px; color: var(--ak-orange); cursor: pointer; background: none; border: none; padding: 0; font-weight: 700;" onclick="generateRandomCouponCode('editCouponCode')">🎲 Random Code</button>
+          </div>
           <input type="text" id="editCouponCode" class="form-input" required style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">
+          <div id="editCouponHiddenWarning" style="display: none; font-size: 11px; color: #DC2626; margin-top: 4px; font-weight: 600;">
+            ⚠️ Private code: Ensure code is hard to guess (e.g. VIP-7K3Q) so customers cannot guess it.
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" for="editCouponVisibility">Visibility *</label>
+          <select id="editCouponVisibility" class="form-select" onchange="handleCouponVisibilityChange(this, 'editCouponHiddenWarning')">
+            <option value="visible">Visible (shown at checkout)</option>
+            <option value="hidden">Hidden (manual code only)</option>
+          </select>
+          <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Hidden coupons never appear at checkout. Use for influencer/celebrity/private codes.</div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
           <div class="form-group">

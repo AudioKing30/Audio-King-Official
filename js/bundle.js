@@ -29143,6 +29143,150 @@ Weight: 1.24 lbs (0.567 kg`,
       document.body.style.overflow = "";
     }
   }
+  function escapeHtml(str) {
+    if (!str)
+      return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  async function executeApplyCoupon(codeVal) {
+    const code = (codeVal || "").trim().toUpperCase();
+    const couponMsg = document.getElementById("akCouponMsg");
+    const couponBtn = document.getElementById("akApplyCouponBtn");
+    if (!code) {
+      if (couponMsg) {
+        couponMsg.textContent = "Please enter a coupon code.";
+        couponMsg.style.color = "#DC2626";
+        couponMsg.style.display = "block";
+      }
+      return;
+    }
+    if (couponBtn) {
+      couponBtn.disabled = true;
+      couponBtn.textContent = "Checking...";
+    }
+    const subtotal = getCartSubtotal();
+    try {
+      const res = await fetch(apiUrl("/api/coupons/validate"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, cartTotal: subtotal, items: checkoutItems })
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        appliedCoupon = data;
+        showToast(data.message || `Coupon "${code}" applied!`, "success");
+        renderCheckoutStep();
+      } else {
+        const errorMsg = data.message || data.error || "Invalid or expired coupon.";
+        if (couponMsg) {
+          couponMsg.textContent = errorMsg;
+          couponMsg.style.color = "#DC2626";
+          couponMsg.style.display = "block";
+        }
+        showToast(errorMsg, "error");
+        if (couponBtn) {
+          couponBtn.disabled = false;
+          couponBtn.textContent = "Apply";
+        }
+      }
+    } catch (err) {
+      if (couponMsg) {
+        couponMsg.textContent = "Failed to validate coupon. Please try again.";
+        couponMsg.style.color = "#DC2626";
+        couponMsg.style.display = "block";
+      }
+      if (couponBtn) {
+        couponBtn.disabled = false;
+        couponBtn.textContent = "Apply";
+      }
+    }
+  }
+  async function loadAndRenderVisibleCoupons(subtotal, items) {
+    const container = document.getElementById("akVisibleCouponsContainer");
+    if (!container)
+      return;
+    try {
+      const res = await fetch(apiUrl("/api/coupons/available"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartTotal: subtotal, items })
+      });
+      const data = await res.json();
+      const coupons = data.coupons || [];
+      if (!coupons || coupons.length === 0) {
+        container.innerHTML = `
+        <div style="font-size: 12px; color: #64748B; padding: 10px; background: #F8FAFC; border-radius: 6px; border: 1px dashed #E2E8F0; text-align: center;">
+          No public coupons available at this time.
+        </div>
+      `;
+        return;
+      }
+      container.innerHTML = `
+      <div class="ak-coupon-picker-header">
+        <span class="ak-coupon-picker-title">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          Available Coupons (${coupons.length})
+        </span>
+        <span style="font-size: 11px; color: #64748B;">Instant Checkout Discount</span>
+      </div>
+      <div class="ak-coupon-picker-list">
+        ${coupons.map((c) => {
+        const isApplied = appliedCoupon && appliedCoupon.code.toUpperCase() === c.code.toUpperCase();
+        const discountLabel = c.discountType === "percentage" ? `${c.discountValue}% OFF` : `${formatINR(c.discountValue)} OFF`;
+        return `
+            <div class="ak-coupon-picker-card ${isApplied ? "applied" : c.eligible ? "eligible" : "ineligible"}" data-code="${escapeHtml(c.code)}">
+              <div class="ak-coupon-card-main">
+                <div class="ak-coupon-card-top">
+                  <span class="ak-coupon-card-code">${escapeHtml(c.code)}</span>
+                  <span class="ak-coupon-card-badge">${discountLabel}</span>
+                  ${isApplied ? '<span class="ak-coupon-card-applied-pill">Applied</span>' : ""}
+                </div>
+                <div class="ak-coupon-card-terms">${escapeHtml(c.shortTerms || "")}</div>
+                ${!c.eligible && c.reason ? `
+                  <div class="ak-coupon-card-reason">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>${escapeHtml(c.reason)}</span>
+                  </div>
+                ` : ""}
+              </div>
+              <div class="ak-coupon-card-action">
+                ${isApplied ? `
+                  <button type="button" class="ak-btn-pick-remove" data-action="remove">Remove</button>
+                ` : `
+                  <button type="button" class="ak-btn-pick-apply" data-action="apply" data-code="${escapeHtml(c.code)}" ${c.eligible ? "" : "disabled"}>
+                    Apply
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+      }).join("")}
+      </div>
+    `;
+      container.querySelectorAll('button[data-action="apply"]').forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const code = btn.getAttribute("data-code");
+          if (code)
+            executeApplyCoupon(code);
+        });
+      });
+      container.querySelectorAll('button[data-action="remove"]').forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          appliedCoupon = null;
+          showToast("Coupon removed.", "info");
+          renderCheckoutStep();
+        });
+      });
+    } catch (err) {
+      container.innerHTML = `
+      <div style="font-size: 12px; color: #94A3B8; padding: 8px; text-align: center;">
+        Could not load coupons.
+      </div>
+    `;
+    }
+  }
   function renderCheckoutStep() {
     const titleEl = document.getElementById("akCheckoutStepTitle");
     const bodyEl = document.getElementById("akCheckoutBody");
@@ -29296,11 +29440,18 @@ Weight: 1.24 lbs (0.567 kg`,
         </label>
       </div>
 
+      <!-- Visible Coupons Picker Section -->
+      <div class="ak-visible-coupons-box" id="akVisibleCouponsContainer">
+        <div style="font-size: 12px; color: #64748B; padding: 12px; text-align: center;">
+          Loading available coupons...
+        </div>
+      </div>
+
       <!-- Coupon Promo Code Section -->
-      <div class="ak-coupon-box" style="margin-top: 14px; margin-bottom: 14px; background: #FFF; padding: 12px; border-radius: 6px; border: 1px dashed var(--ak-border);">
-        <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Have a Promo Code or Coupon?</label>
+      <div class="ak-coupon-box" style="margin-top: 10px; margin-bottom: 14px; background: #FFF; padding: 12px; border-radius: 6px; border: 1px dashed var(--ak-border);">
+        <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Have a Promo Code or Private Coupon?</label>
         <div style="display: flex; gap: 8px;">
-          <input type="text" id="akCouponInput" class="ak-form-input" placeholder="e.g. PROAUDIO500" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1;" value="${appliedCoupon ? appliedCoupon.code : ""}" ${appliedCoupon ? "disabled" : ""}>
+          <input type="text" id="akCouponInput" class="ak-form-input" placeholder="Enter coupon code" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1;" value="${appliedCoupon ? appliedCoupon.code : ""}" ${appliedCoupon ? "disabled" : ""}>
           <button type="button" id="akApplyCouponBtn" class="ak-btn" style="padding: 8px 16px; background: ${appliedCoupon ? "#DC2626" : "var(--ak-orange)"}; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
             ${appliedCoupon ? "Remove" : "Apply"}
           </button>
@@ -29335,9 +29486,9 @@ Weight: 1.24 lbs (0.567 kg`,
         </div>
       </div>
     `;
+      loadAndRenderVisibleCoupons(subtotal, checkoutItems);
       const couponBtn = bodyEl.querySelector("#akApplyCouponBtn");
       const couponInput = bodyEl.querySelector("#akCouponInput");
-      const couponMsg = bodyEl.querySelector("#akCouponMsg");
       if (couponBtn) {
         couponBtn.addEventListener("click", async () => {
           if (appliedCoupon) {
@@ -29347,46 +29498,7 @@ Weight: 1.24 lbs (0.567 kg`,
             return;
           }
           const codeVal = (couponInput?.value || "").trim();
-          if (!codeVal) {
-            if (couponMsg) {
-              couponMsg.textContent = "Please enter a coupon code.";
-              couponMsg.style.color = "#DC2626";
-              couponMsg.style.display = "block";
-            }
-            return;
-          }
-          couponBtn.disabled = true;
-          couponBtn.textContent = "Checking...";
-          try {
-            const res = await fetch(apiUrl("/api/coupons/validate"), {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ code: codeVal, cartTotal: subtotal, items: checkoutItems })
-            });
-            const data = await res.json();
-            if (res.ok && data.valid) {
-              appliedCoupon = data;
-              showToast(data.message, "success");
-              renderCheckoutStep();
-            } else {
-              if (couponMsg) {
-                couponMsg.textContent = data.message || "Invalid coupon code.";
-                couponMsg.style.color = "#DC2626";
-                couponMsg.style.display = "block";
-              }
-              showToast(data.message || "Invalid coupon code.", "error");
-              couponBtn.disabled = false;
-              couponBtn.textContent = "Apply";
-            }
-          } catch (err) {
-            if (couponMsg) {
-              couponMsg.textContent = "Failed to validate coupon. Please try again.";
-              couponMsg.style.color = "#DC2626";
-              couponMsg.style.display = "block";
-            }
-            couponBtn.disabled = false;
-            couponBtn.textContent = "Apply";
-          }
+          executeApplyCoupon(codeVal);
         });
       }
       bodyEl.querySelectorAll(".ak-payment-option").forEach((opt) => {

@@ -85,7 +85,7 @@ function checkRateLimit(key, maxRequests = 5, windowMs = 60000) {
 }
 
 // Clean up stale buckets every 5 minutes
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   for (const [key, bucket] of rateLimitBuckets.entries()) {
     const fresh = bucket.filter(time => now - time < 300000);
@@ -96,6 +96,7 @@ setInterval(() => {
     }
   }
 }, 300000);
+if (cleanupInterval.unref) cleanupInterval.unref();
 
 module.exports = {
   hashPassword,
