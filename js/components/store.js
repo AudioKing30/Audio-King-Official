@@ -6,7 +6,7 @@
 
 import { AUDIOKING_PRODUCTS } from '../data/products.js';
 import { AUDIOKING_BRANDS } from '../data/brands.js';
-import { formatINR, getProductOfferStampHtml, resolveProductImage } from '../utils/formatters.js';
+import { formatINR, calculateDiscountPercent, getProductOfferStampHtml, resolveProductImage } from '../utils/formatters.js';
 import { addToCart, getCartItemQuantity, updateCartItemQty } from './cart.js';
 
 let allProducts = [];
@@ -656,13 +656,41 @@ function renderStorePage() {
       stockBadge = '<span class="ak-store-badge ak-badge-out ak-badge-out-of-stock">Out of Stock</span>';
     }
 
-    const discountPercent = (product.originalPrice && product.originalPrice > product.price)
-      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-      : 0;
+    const activeVariants = (product.hasVariants && Array.isArray(product.variants) && product.variants.length > 0)
+      ? (product.variants.filter(v => v.isActive !== false).length > 0 ? product.variants.filter(v => v.isActive !== false) : product.variants)
+      : null;
 
-    const originalPriceHtml = product.originalPrice
-      ? '<span class="ak-card-original-price">' + formatINR(product.originalPrice) + '</span>'
-      : '';
+    let displayPriceHtml = '';
+    let originalPriceHtml = '';
+    let offerStampHtml = '';
+
+    if (activeVariants) {
+      const variantSellingPrices = activeVariants.map(v => (v.sellingPrice != null ? Number(v.sellingPrice) : (v.priceOverride != null ? Number(v.priceOverride) : Number(product.price) || 0)));
+      const minPrice = Math.min(...variantSellingPrices);
+      const maxPrice = Math.max(...variantSellingPrices);
+      const hasDifferentPrices = minPrice !== maxPrice;
+
+      if (hasDifferentPrices) {
+        displayPriceHtml = `<span class="ak-store-card-price">From ${formatINR(minPrice)}</span>`;
+        originalPriceHtml = '';
+        offerStampHtml = '';
+      } else {
+        const defaultVariant = activeVariants[0];
+        const selling = variantSellingPrices[0];
+        const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : (product.originalPrice ? Number(product.originalPrice) : 0);
+        const hasDiscount = mrp > selling && selling > 0;
+        displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : '';
+        offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...product, price: selling, originalPrice: mrp }) : '';
+      }
+    } else {
+      const baseSelling = Number(product.price) || 0;
+      const baseMrp = Number(product.originalPrice) || 0;
+      const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+      displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
+      originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : '';
+      offerStampHtml = getProductOfferStampHtml(product);
+    }
 
     const cartQty = getCartItemQuantity(product.id);
     let actionBtnHtml = '';
@@ -702,8 +730,6 @@ function renderStorePage() {
       ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>`
       : (!isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : '');
 
-    const offerStampHtml = getProductOfferStampHtml(product);
-
     gridHtml += '<article class="ak-store-card' + (isOutOfStock ? ' ak-card-out-of-stock' : '') + '" data-product-id="' + product.id + '">' +
       '<div class="ak-store-card-img-wrap">' +
       '<img src="' + resolveProductImage(product.image || (product.images && product.images[0])) + '" alt="' + product.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'assets/images/placeholder.svg\';">' +
@@ -721,7 +747,7 @@ function renderStorePage() {
       '</div>' +
       '<div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map(s => (typeof s === 'object' && s !== null) ? (s.label ? `${s.label}: ${s.value}` : s.value) : s).join(' • ') : (product.category || '')) + '</div>' +
       '<div class="ak-store-card-pricing">' +
-      '<span class="ak-store-card-price">' + formatINR(product.price) + '</span>' +
+      displayPriceHtml +
       originalPriceHtml +
       '</div>' +
       '<div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' +

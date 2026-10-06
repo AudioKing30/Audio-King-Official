@@ -15,30 +15,55 @@ const router = express.Router();
  */
 function queryUserCart(userId) {
   const rows = db.prepare(`
-    SELECT c.id AS cart_item_id, c.product_id, c.quantity, c.created_at, c.updated_at,
-           p.name, p.brand, p.category, p.price, p.original_price, p.image, p.stock, p.in_stock
+    SELECT c.id AS cart_item_id, c.product_id, c.quantity, c.created_at, c.updated_at
     FROM cart_items c
-    LEFT JOIN products p ON c.product_id = p.id
     WHERE c.user_id = ?
     ORDER BY c.created_at ASC
   `).all(userId);
 
-  return rows.map(r => ({
-    id: r.product_id,
-    productId: r.product_id,
-    name: r.name || 'Pro Audio Product',
-    brand: r.brand || 'Pro Audio',
-    category: r.category || 'Pro Audio',
-    price: r.price != null ? Number(r.price) : 0,
-    originalPrice: r.original_price != null ? Number(r.original_price) : 0,
-    image: r.image || 'assets/images/placeholder.svg',
-    stock: r.stock != null ? Number(r.stock) : 10,
-    inStock: r.in_stock !== 0,
-    qty: r.quantity,
-    quantity: r.quantity,
-    createdAt: r.created_at,
-    updatedAt: r.updated_at
-  }));
+  return rows.map(r => {
+    let baseProductId = r.product_id;
+    let variantId = null;
+    if (r.product_id && r.product_id.includes('_')) {
+      const parts = r.product_id.split('_');
+      baseProductId = parts[0];
+      variantId = parts[1];
+    }
+    const p = db.prepare('SELECT * FROM products WHERE id = ?').get(baseProductId);
+    let variant = null;
+    if (variantId) {
+      variant = db.prepare('SELECT * FROM product_variants WHERE id = ?').get(variantId);
+    }
+
+    const price = variant
+      ? (variant.selling_price != null ? Number(variant.selling_price) : (variant.price_override != null ? Number(variant.price_override) : (p ? Number(p.price) : 0)))
+      : (p && p.price != null ? Number(p.price) : 0);
+
+    const originalPrice = variant
+      ? (variant.mrp != null ? Number(variant.mrp) : (p ? Number(p.original_price) : 0))
+      : (p && p.original_price != null ? Number(p.original_price) : 0);
+
+    const name = (p ? p.name : 'Pro Audio Product') + (variant && variant.option_labels ? ` - ${variant.option_labels}` : '');
+
+    return {
+      id: r.product_id,
+      productId: baseProductId,
+      variantId: variantId,
+      optionLabels: variant ? variant.option_labels : '',
+      name: name,
+      brand: p ? p.brand : 'Pro Audio',
+      category: p ? p.category : 'Pro Audio',
+      price: price,
+      originalPrice: originalPrice,
+      image: p ? p.image : 'assets/images/placeholder.svg',
+      stock: variant ? Number(variant.stock) : (p && p.stock != null ? Number(p.stock) : 10),
+      inStock: variant ? (variant.stock > 0 && variant.is_active) : (p ? p.in_stock !== 0 : true),
+      qty: r.quantity,
+      quantity: r.quantity,
+      createdAt: r.created_at,
+      updatedAt: r.updated_at
+    };
+  });
 }
 
 function getCartResponse(userId, res) {

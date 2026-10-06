@@ -392,6 +392,18 @@
   font-weight: var(--ak-price-weight, 500);
 }
 
+.pp-discount-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--ak-success-soft, #DCFCE7);
+  color: var(--ak-success, #16A34A);
+  vertical-align: middle;
+}
+
 .pp-tax-inclusive {
   font-size: 12px;
   color: #16A34A;

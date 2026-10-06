@@ -1573,7 +1573,9 @@ router.get('/products/:id/variants', (req, res) => {
       skuSuffix: v.sku_suffix,
       optionIds: JSON.parse(v.option_ids || '[]'),
       optionLabels: v.option_labels,
-      priceOverride: v.price_override,
+      mrp: v.mrp != null ? Number(v.mrp) : null,
+      sellingPrice: v.selling_price != null ? Number(v.selling_price) : null,
+      priceOverride: v.price_override != null ? Number(v.price_override) : null,
       stock: v.stock,
       isActive: Boolean(v.is_active)
     }));
@@ -1601,6 +1603,22 @@ router.post('/products/:id/variants', (req, res) => {
     if (!product) return res.status(404).json({ error: 'Product not found.' });
 
     const { groups = [], variants = [] } = req.body || {};
+
+    // Validate variant MRP and selling price
+    for (const v of variants) {
+      const vMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : null;
+      const vSelling = (v.sellingPrice ?? v.selling_price) != null && (v.sellingPrice ?? v.selling_price) !== '' ? Number(v.sellingPrice ?? v.selling_price) : null;
+
+      if (vMrp !== null && (!Number.isFinite(vMrp) || vMrp <= 0)) {
+        return res.status(400).json({ error: `Variant MRP must be a positive number for ${v.optionLabels || 'variant'}.` });
+      }
+      if (vSelling !== null && (!Number.isFinite(vSelling) || vSelling <= 0)) {
+        return res.status(400).json({ error: `Variant Selling Price must be a positive number for ${v.optionLabels || 'variant'}.` });
+      }
+      if (vMrp !== null && vSelling !== null && vSelling > vMrp) {
+        return res.status(400).json({ error: `Selling Price cannot exceed MRP for variant: ${v.optionLabels || 'Variant'}.` });
+      }
+    }
 
     // Delete existing variant data for this product (cascade handles options)
     db.prepare('DELETE FROM product_variants WHERE product_id = ?').run(productId);
@@ -1644,8 +1662,8 @@ router.post('/products/:id/variants', (req, res) => {
 
     // Insert variant combinations
     const insertVariant = db.prepare(`
-      INSERT INTO product_variants (product_id, sku_suffix, option_ids, option_labels, price_override, stock, is_active, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO product_variants (product_id, sku_suffix, option_ids, option_labels, mrp, selling_price, price_override, stock, is_active, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     let totalVariantStock = 0;
@@ -1656,12 +1674,18 @@ router.post('/products/:id/variants', (req, res) => {
       const stock = Math.max(0, parseInt(v.stock) || 0);
       totalVariantStock += stock;
 
+      const vMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : null;
+      const vSelling = (v.sellingPrice ?? v.selling_price) != null && (v.sellingPrice ?? v.selling_price) !== '' ? Number(v.sellingPrice ?? v.selling_price) : null;
+      const vOverride = (v.priceOverride ?? v.price_override) != null && (v.priceOverride ?? v.price_override) !== '' ? Number(v.priceOverride ?? v.price_override) : null;
+
       insertVariant.run(
         productId,
         v.skuSuffix || null,
         JSON.stringify(remappedIds),
         v.optionLabels || '',
-        v.priceOverride != null ? Number(v.priceOverride) : null,
+        vMrp,
+        vSelling,
+        vOverride,
         stock,
         v.isActive !== false ? 1 : 0,
         now

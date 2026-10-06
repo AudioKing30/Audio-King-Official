@@ -1334,6 +1334,62 @@ function updateInlineVideoPreview(type, source) {
   }
 }
 
+// Shared discount calculation helper
+function calculateDiscountPercent(mrp, sellingPrice) {
+  const m = Number(mrp);
+  const s = Number(sellingPrice);
+  if (!Number.isFinite(m) || !Number.isFinite(s) || m <= 0 || s <= 0 || s >= m) {
+    return 0;
+  }
+  return Math.round(((m - s) / m) * 100);
+}
+window.calculateDiscountPercent = calculateDiscountPercent;
+
+// Validation for variant pricing
+function validateVariantMatrix() {
+  if (!state.hasVariants || !state.variantMatrix || state.variantMatrix.length === 0) {
+    return true;
+  }
+
+  const parentMrp = parseFloat(document.getElementById('productMrp')?.value) || 0;
+  const parentSelling = parseFloat(document.getElementById('productSellingPrice')?.value) || 0;
+
+  for (let i = 0; i < state.variantMatrix.length; i++) {
+    const v = state.variantMatrix[i];
+    if (v.isActive === false) continue;
+
+    const vMrpVal = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : null;
+    const vSellingVal = (v.sellingPrice != null && v.sellingPrice !== '') ? Number(v.sellingPrice) : null;
+    const vOverrideVal = (v.priceOverride != null && v.priceOverride !== '') ? Number(v.priceOverride) : null;
+
+    if (vMrpVal !== null && (!Number.isFinite(vMrpVal) || vMrpVal <= 0)) {
+      alert(`Validation Error: Variant "${v.optionLabels}" MRP must be a positive number.`);
+      return false;
+    }
+
+    if (vSellingVal !== null && (!Number.isFinite(vSellingVal) || vSellingVal <= 0)) {
+      alert(`Validation Error: Variant "${v.optionLabels}" Selling Price must be a positive number.`);
+      return false;
+    }
+
+    if (vOverrideVal !== null && (!Number.isFinite(vOverrideVal) || vOverrideVal <= 0)) {
+      alert(`Validation Error: Variant "${v.optionLabels}" Price Override must be a positive number.`);
+      return false;
+    }
+
+    const effectiveMrp = vMrpVal !== null ? vMrpVal : parentMrp;
+    const effectiveSelling = vSellingVal !== null ? vSellingVal : (vOverrideVal !== null ? vOverrideVal : parentSelling);
+
+    if (effectiveMrp > 0 && effectiveSelling > 0 && effectiveSelling > effectiveMrp) {
+      alert(`Validation Error: Selling Price (${formatINR(effectiveSelling)}) cannot exceed MRP (${formatINR(effectiveMrp)}) for variant "${v.optionLabels}".`);
+      return false;
+    }
+  }
+
+  return true;
+}
+window.validateVariantMatrix = validateVariantMatrix;
+
 // Pricing & Auto-Calculated Discount %
 function calculateDiscountAndValidate() {
   const mrpInput = document.getElementById('productMrp');
@@ -1360,7 +1416,7 @@ function calculateDiscountAndValidate() {
   saveBtn.disabled = false;
 
   if (mrp > 0 && selling > 0 && selling < mrp) {
-    const discount = Math.round(((mrp - selling) / mrp) * 100);
+    const discount = calculateDiscountPercent(mrp, selling);
     badgePreview.textContent = `${discount}% OFF`;
     badgePreview.style.background = 'var(--ak-success-soft)';
     badgePreview.style.color = 'var(--ak-success)';
@@ -1368,6 +1424,10 @@ function calculateDiscountAndValidate() {
     badgePreview.textContent = '0% OFF';
     badgePreview.style.background = 'var(--ak-card-bg)';
     badgePreview.style.color = 'var(--ak-text-muted)';
+  }
+
+  if (state.hasVariants && typeof renderVariantMatrix === 'function') {
+    renderVariantMatrix();
   }
 
   return true;
@@ -1396,6 +1456,7 @@ async function handleSaveProduct(e) {
   e.preventDefault();
 
   if (!calculateDiscountAndValidate()) return;
+  if (!validateVariantMatrix()) return;
 
   const name = document.getElementById('productName').value.trim();
   const category = document.getElementById('productCategory').value;
@@ -2795,6 +2856,8 @@ function generateVariantMatrix() {
       skuSuffix: existing?.skuSuffix || '',
       optionIds: combo.map(c => c.id),
       optionLabels: labelStr,
+      mrp: existing?.mrp != null ? existing.mrp : null,
+      sellingPrice: existing?.sellingPrice != null ? existing.sellingPrice : null,
       priceOverride: existing?.priceOverride != null ? existing.priceOverride : null,
       stock: existing?.stock != null ? existing.stock : 10,
       isActive: existing?.isActive !== false
@@ -2807,27 +2870,68 @@ function generateVariantMatrix() {
 }
 window.generateVariantMatrix = generateVariantMatrix;
 
+function handleVariantFieldChange(index, field, value) {
+  if (!state.variantMatrix[index]) return;
+  const trimmed = typeof value === 'string' ? value.trim() : value;
+  const num = (trimmed !== '' && !isNaN(parseFloat(trimmed))) ? parseFloat(trimmed) : null;
+  state.variantMatrix[index][field] = num;
+  renderVariantMatrix();
+}
+window.handleVariantFieldChange = handleVariantFieldChange;
+
 function renderVariantMatrix() {
   const tbody = document.getElementById('variantMatrixTbody');
   if (!tbody) return;
 
-  tbody.innerHTML = state.variantMatrix.map((v, idx) => `
-    <tr>
-      <td><strong>${v.optionLabels}</strong></td>
+  const parentMrp = parseFloat(document.getElementById('productMrp')?.value) || 0;
+  const parentSelling = parseFloat(document.getElementById('productSellingPrice')?.value) || 0;
+
+  tbody.innerHTML = state.variantMatrix.map((v, idx) => {
+    const effectiveMrp = (v.mrp != null && v.mrp !== '') ? Number(v.mrp) : parentMrp;
+    const effectiveSelling = (v.sellingPrice != null && v.sellingPrice !== '') ? Number(v.sellingPrice) : ((v.priceOverride != null && v.priceOverride !== '') ? Number(v.priceOverride) : parentSelling);
+
+    const hasError = effectiveMrp > 0 && effectiveSelling > 0 && effectiveSelling > effectiveMrp;
+    const discountPct = calculateDiscountPercent(effectiveMrp, effectiveSelling);
+
+    let discountBadgeHtml = '<span style="color:var(--ak-text-muted); font-size:11px;">—</span>';
+    if (hasError) {
+      discountBadgeHtml = '<span class="badge-discount" style="background:#FEE2E2; color:#DC2626; font-size:11px; padding:2px 6px; font-weight:700;">Invalid</span>';
+    } else if (discountPct > 0) {
+      discountBadgeHtml = `<span class="badge-discount" style="background:var(--ak-success-soft); color:var(--ak-success); font-size:11px; padding:2px 6px; font-weight:700;">${discountPct}% OFF</span>`;
+    }
+
+    const rowErrorHtml = hasError ? `<div style="color:#DC2626; font-size:11px; font-weight:600; margin-top:3px;">Selling price exceeds MRP</div>` : '';
+
+    return `
+    <tr class="${hasError ? 'variant-row-error' : ''}" style="${hasError ? 'background: #FEF2F2;' : ''}">
       <td>
-        <input type="text" class="form-input" style="height: 30px; font-size: 12px; width: 110px;" value="${v.skuSuffix || ''}" placeholder="e.g. -BLK" onchange="state.variantMatrix[${idx}].skuSuffix = this.value.trim();">
+        <strong>${v.optionLabels}</strong>
+        ${rowErrorHtml}
       </td>
       <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 110px;" value="${v.priceOverride != null ? v.priceOverride : ''}" placeholder="Standard" min="1" step="1" onchange="state.variantMatrix[${idx}].priceOverride = this.value ? parseFloat(this.value) : null;">
+        <input type="text" class="form-input" style="height: 30px; font-size: 12px; width: 90px;" value="${v.skuSuffix || ''}" placeholder="e.g. -BLK" onchange="state.variantMatrix[${idx}].skuSuffix = this.value.trim();">
       </td>
       <td>
-        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 85px;" value="${v.stock}" min="0" step="1" oninput="updateVariantStock(${idx}, this.value)">
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.mrp != null ? v.mrp : ''}" placeholder="${parentMrp ? '₹' + parentMrp : 'MRP'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'mrp', this.value)">
       </td>
       <td>
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.sellingPrice != null ? v.sellingPrice : ''}" placeholder="${parentSelling ? '₹' + parentSelling : 'Selling'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'sellingPrice', this.value)">
+      </td>
+      <td style="text-align: center; vertical-align: middle;">
+        ${discountBadgeHtml}
+      </td>
+      <td>
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 95px;" value="${v.priceOverride != null ? v.priceOverride : ''}" placeholder="Override" min="1" step="1" onchange="handleVariantFieldChange(${idx}, 'priceOverride', this.value)">
+      </td>
+      <td>
+        <input type="number" class="form-input" style="height: 30px; font-size: 12px; width: 75px;" value="${v.stock}" min="0" step="1" oninput="updateVariantStock(${idx}, this.value)">
+      </td>
+      <td style="text-align: center; vertical-align: middle;">
         <input type="checkbox" ${v.isActive ? 'checked' : ''} onchange="state.variantMatrix[${idx}].isActive = this.checked; syncVariantStockToProduct();">
       </td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 }
 window.renderVariantMatrix = renderVariantMatrix;
 

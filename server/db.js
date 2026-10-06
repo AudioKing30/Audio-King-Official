@@ -305,6 +305,8 @@ function initDatabase() {
       sku_suffix TEXT,
       option_ids TEXT NOT NULL DEFAULT '[]',
       option_labels TEXT NOT NULL DEFAULT '',
+      mrp REAL,
+      selling_price REAL,
       price_override REAL,
       stock INTEGER NOT NULL DEFAULT 0,
       is_active INTEGER DEFAULT 1,
@@ -375,6 +377,15 @@ function initDatabase() {
     }
     if (!prodColNames.includes('stock_status')) {
       db.exec("ALTER TABLE products ADD COLUMN stock_status TEXT DEFAULT 'instock';");
+    }
+
+    const variantColumns = db.prepare("PRAGMA table_info(product_variants)").all();
+    const variantColNames = variantColumns.map(c => c.name);
+    if (!variantColNames.includes('mrp')) {
+      db.exec('ALTER TABLE product_variants ADD COLUMN mrp REAL;');
+    }
+    if (!variantColNames.includes('selling_price')) {
+      db.exec('ALTER TABLE product_variants ADD COLUMN selling_price REAL;');
     }
 
     // Backfill stock_status based on in_stock and badge

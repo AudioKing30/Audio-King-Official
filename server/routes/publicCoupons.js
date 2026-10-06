@@ -110,7 +110,8 @@ router.post('/validate', (req, res) => {
       applicableBase = items.reduce((sum, item) => {
         let b = (item.brand || item.product?.brand || '').trim();
         let c = (item.category || item.product?.category || '').trim();
-        const pId = item.id || item.productId || item.product?.id;
+        const rawId = item.productId || item.id || item.product?.id;
+        const pId = (rawId && String(rawId).includes('_')) ? String(rawId).split('_')[0] : rawId;
         if ((!b || !c) && pId) {
           try {
             const dbProd = db.prepare('SELECT brand, category FROM products WHERE id = ?').get(pId);

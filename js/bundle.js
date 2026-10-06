@@ -25993,7 +25993,7 @@ Weight: 1.24 lbs (0.567 kg`,
       if (window.location.hostname.includes("github.io")) {
         return "https://audioking-api.onrender.com";
       }
-      if (window.location.protocol === "file:" || window.location.port && window.location.port !== "3000") {
+      if (window.location.protocol === "file:" || window.location.port === "5500" || window.location.port === "8080") {
         return "http://localhost:3000";
       }
     }
@@ -26036,15 +26036,26 @@ Weight: 1.24 lbs (0.567 kg`,
       year: "numeric"
     });
   }
+  function calculateDiscountPercent(mrp, sellingPrice) {
+    const m = Number(mrp);
+    const s = Number(sellingPrice);
+    if (!Number.isFinite(m) || !Number.isFinite(s) || m <= 0 || s <= 0 || s >= m) {
+      return 0;
+    }
+    return Math.round((m - s) / m * 100);
+  }
+  if (typeof window !== "undefined") {
+    window.calculateDiscountPercent = calculateDiscountPercent;
+  }
   function hasProductOffer(product) {
     if (!product)
       return false;
     const price = Number(product.price) || 0;
     const originalPrice = Number(product.originalPrice) || 0;
-    const hasDiscount = originalPrice > price && price > 0;
-    const discountPercent = hasDiscount ? Math.round((originalPrice - price) / originalPrice * 100) : Number(product.discountPercent) || Number(product.offerDiscount) || 0;
+    const calcDiscount = calculateDiscountPercent(originalPrice, price);
+    const discountPercent = calcDiscount > 0 ? calcDiscount : Number(product.discountPercent) || Number(product.offerDiscount) || 0;
     return Boolean(
-      product.hasOffer || product.activeOfferTitle || hasDiscount || discountPercent > 0 || product.badge && /(offer|sale|deal|discount|%\s*off)/i.test(product.badge) && !/pre-order/i.test(product.badge)
+      product.hasOffer || product.activeOfferTitle || calcDiscount > 0 || discountPercent > 0 || product.badge && /(offer|sale|deal|discount|%\s*off)/i.test(product.badge) && !/pre-order/i.test(product.badge)
     );
   }
   function getProductOfferPercent(product) {
@@ -26052,9 +26063,9 @@ Weight: 1.24 lbs (0.567 kg`,
       return 10;
     const price = Number(product.price) || 0;
     const originalPrice = Number(product.originalPrice) || 0;
-    if (originalPrice > price && price > 0) {
-      return Math.round((originalPrice - price) / originalPrice * 100);
-    }
+    const calcDiscount = calculateDiscountPercent(originalPrice, price);
+    if (calcDiscount > 0)
+      return calcDiscount;
     if (Number(product.discountPercent) > 0)
       return Number(product.discountPercent);
     if (Number(product.offerDiscount) > 0)
@@ -29567,6 +29578,9 @@ Weight: 1.24 lbs (0.567 kg`,
       if (it.name && it.price !== void 0) {
         newCart.push({
           id: pId,
+          productId: it.productId || (String(pId).includes("_") ? String(pId).split("_")[0] : pId),
+          variantId: it.variantId || (String(pId).includes("_") ? String(pId).split("_")[1] : null),
+          optionLabels: it.optionLabels || "",
           brand: it.brand || "Pro Audio",
           name: it.name,
           category: it.category || "Pro Audio",
@@ -29657,11 +29671,14 @@ Weight: 1.24 lbs (0.567 kg`,
     } else {
       cart.push({
         id: product.id,
+        productId: product.productId || product.id,
+        variantId: product.variantId || null,
+        optionLabels: product.optionLabels || "",
         brand: product.brand,
         name: product.name,
         category: product.category,
-        price: product.price,
-        originalPrice: product.originalPrice || 0,
+        price: Number(product.price) || 0,
+        originalPrice: product.originalPrice ? Number(product.originalPrice) : 0,
         image: product.image || "assets/images/placeholder.svg",
         qty: quantity
       });
@@ -29827,7 +29844,11 @@ Weight: 1.24 lbs (0.567 kg`,
       <div class="ak-cart-item-details">
         <span class="ak-cart-item-brand">${item.brand || "Pro Audio"}</span>
         <h4 class="ak-cart-item-title">${item.name}</h4>
-        <div class="ak-cart-item-price">${formatINR(item.price)}</div>
+        ${item.optionLabels ? `<div style="font-size: 11px; color: var(--ak-orange); font-weight: 600; margin-top: 2px;">Variant: ${item.optionLabels}</div>` : ""}
+        <div class="ak-cart-item-price">
+          ${formatINR(item.price)}
+          ${item.originalPrice && item.originalPrice > item.price ? `<span style="text-decoration: line-through; color: #94A3B8; font-size: 11px; margin-left: 6px;">${formatINR(item.originalPrice)}</span>` : ""}
+        </div>
         <div class="ak-cart-item-actions">
           <div class="ak-cart-stepper">
             <button type="button" class="ak-stepper-btn ak-cart-minus" data-id="${item.id}" aria-label="Decrease quantity">\u2212</button>
@@ -32137,8 +32158,36 @@ Message: ${message}`);
       } else if (isOutOfStock) {
         stockBadge = '<span class="ak-store-badge ak-badge-out ak-badge-out-of-stock">Out of Stock</span>';
       }
-      const discountPercent = product.originalPrice && product.originalPrice > product.price ? Math.round((product.originalPrice - product.price) / product.originalPrice * 100) : 0;
-      const originalPriceHtml = product.originalPrice ? '<span class="ak-card-original-price">' + formatINR(product.originalPrice) + "</span>" : "";
+      const activeVariants = product.hasVariants && Array.isArray(product.variants) && product.variants.length > 0 ? product.variants.filter((v) => v.isActive !== false).length > 0 ? product.variants.filter((v) => v.isActive !== false) : product.variants : null;
+      let displayPriceHtml = "";
+      let originalPriceHtml = "";
+      let offerStampHtml = "";
+      if (activeVariants) {
+        const variantSellingPrices = activeVariants.map((v) => v.sellingPrice != null ? Number(v.sellingPrice) : v.priceOverride != null ? Number(v.priceOverride) : Number(product.price) || 0);
+        const minPrice2 = Math.min(...variantSellingPrices);
+        const maxPrice2 = Math.max(...variantSellingPrices);
+        const hasDifferentPrices = minPrice2 !== maxPrice2;
+        if (hasDifferentPrices) {
+          displayPriceHtml = `<span class="ak-store-card-price">From ${formatINR(minPrice2)}</span>`;
+          originalPriceHtml = "";
+          offerStampHtml = "";
+        } else {
+          const defaultVariant = activeVariants[0];
+          const selling = variantSellingPrices[0];
+          const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : product.originalPrice ? Number(product.originalPrice) : 0;
+          const hasDiscount = mrp > selling && selling > 0;
+          displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
+          originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : "";
+          offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...product, price: selling, originalPrice: mrp }) : "";
+        }
+      } else {
+        const baseSelling = Number(product.price) || 0;
+        const baseMrp = Number(product.originalPrice) || 0;
+        const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+        displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : "";
+        offerStampHtml = getProductOfferStampHtml(product);
+      }
       const cartQty = getCartItemQuantity(product.id);
       let actionBtnHtml = "";
       if (isPreOrder) {
@@ -32172,8 +32221,7 @@ Message: ${message}`);
       const ratingVal = product.rating || (4.6 + product.id.charCodeAt(0) % 4 * 0.1).toFixed(1);
       const reviewsCount = product.reviewsCount || 18 + product.id.charCodeAt(product.id.length - 1) % 42;
       const stockWarningHtml = !isOutOfStock && product.stock > 0 && product.stock <= 3 ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>` : !isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : "";
-      const offerStampHtml = getProductOfferStampHtml(product);
-      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing"><span class="ak-store-card-price">' + formatINR(product.price) + "</span>" + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
+      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing">' + displayPriceHtml + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
     });
     grid.innerHTML = gridHtml;
     grid.querySelectorAll(".ak-store-card").forEach((card) => {
@@ -32753,6 +32801,14 @@ Message: ${message}`);
         params[k] = v;
       }
     }
+    if (path.startsWith("product-") && !path.includes("/")) {
+      return {
+        route: "product",
+        subRoute: pathPart.substring(8),
+        params,
+        raw
+      };
+    }
     const parts = path.split("/");
     return {
       route: parts[0] || "home",
@@ -33033,9 +33089,49 @@ Message: ${message}`);
     function updateVariantDisplay() {
       const matched = getSelectedVariant();
       activeVariant = matched;
+      const effectiveSelling = matched && matched.sellingPrice != null ? Number(matched.sellingPrice) : matched && matched.priceOverride != null ? Number(matched.priceOverride) : Number(product.price) || 0;
+      const effectiveMrp = matched && matched.mrp != null ? Number(matched.mrp) : product.originalPrice ? Number(product.originalPrice) : 0;
       if (ppPrice) {
-        const effectivePrice = matched && matched.priceOverride != null ? matched.priceOverride : product.price;
-        ppPrice.textContent = formatINR(effectivePrice);
+        ppPrice.textContent = formatINR(effectiveSelling);
+      }
+      const ppOrigPrice = document.getElementById("ppOrigPrice");
+      const ppDiscountBadge = document.getElementById("ppDiscountBadge");
+      const ppOfferStampContainer = document.getElementById("ppOfferStampContainer");
+      const hasDiscount = effectiveMrp > effectiveSelling && effectiveSelling > 0;
+      const discountPct = hasDiscount ? calculateDiscountPercent(effectiveMrp, effectiveSelling) : 0;
+      if (ppOrigPrice) {
+        if (hasDiscount && discountPct > 0) {
+          ppOrigPrice.textContent = formatINR(effectiveMrp);
+          ppOrigPrice.style.display = "inline";
+        } else {
+          ppOrigPrice.textContent = "";
+          ppOrigPrice.style.display = "none";
+        }
+      }
+      if (ppDiscountBadge) {
+        if (hasDiscount && discountPct > 0) {
+          ppDiscountBadge.textContent = `${discountPct}% OFF`;
+          ppDiscountBadge.style.display = "inline-flex";
+        } else {
+          ppDiscountBadge.textContent = "";
+          ppDiscountBadge.style.display = "none";
+        }
+      }
+      if (ppOfferStampContainer) {
+        if (hasDiscount && discountPct > 0) {
+          const variantOfferProd = {
+            ...product,
+            price: effectiveSelling,
+            originalPrice: effectiveMrp,
+            discountPercent: discountPct,
+            hasOffer: true
+          };
+          ppOfferStampContainer.innerHTML = getProductOfferStampHtml(variantOfferProd, "ak-offer-stamp-modal");
+          ppOfferStampContainer.style.display = "block";
+        } else {
+          ppOfferStampContainer.innerHTML = "";
+          ppOfferStampContainer.style.display = "none";
+        }
       }
       let variantImg = null;
       for (const g of product.variantGroups) {
@@ -33252,10 +33348,30 @@ Message: ${message}`);
       ppCrumb.textContent = product.name;
     if (ppCode)
       ppCode.textContent = `SKU: AK-${String(product.id).toUpperCase()} \xB7 Category: ${product.category || "Pro Audio"}`;
+    const prodSelling = Number(product.price) || 0;
+    const prodMrp = product.originalPrice ? Number(product.originalPrice) : 0;
+    const prodHasDiscount = prodMrp > prodSelling && prodSelling > 0;
+    const prodDiscountPct = prodHasDiscount ? calculateDiscountPercent(prodMrp, prodSelling) : 0;
     if (ppPrice)
-      ppPrice.textContent = formatINR(product.price);
+      ppPrice.textContent = formatINR(prodSelling);
     if (ppOrigPrice) {
-      ppOrigPrice.textContent = product.originalPrice ? formatINR(product.originalPrice) : "";
+      if (prodHasDiscount && prodDiscountPct > 0) {
+        ppOrigPrice.textContent = formatINR(prodMrp);
+        ppOrigPrice.style.display = "inline";
+      } else {
+        ppOrigPrice.textContent = "";
+        ppOrigPrice.style.display = "none";
+      }
+    }
+    const ppDiscountBadge = document.getElementById("ppDiscountBadge");
+    if (ppDiscountBadge) {
+      if (prodHasDiscount && prodDiscountPct > 0) {
+        ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
+        ppDiscountBadge.style.display = "inline-flex";
+      } else {
+        ppDiscountBadge.textContent = "";
+        ppDiscountBadge.style.display = "none";
+      }
     }
     const isPreOrder = Boolean(product.isPreOrder || product.badge && product.badge.toLowerCase().includes("pre-order") || product.stockStatus === "preorder");
     const isOutOfStock = Boolean(!isPreOrder && (product.stock === 0 || product.inStock === false || product.isOutOfStock === true || product.stockStatus === "outofstock"));
@@ -34170,13 +34286,17 @@ Message: ${message}`);
         if (!activeVariant && activeProduct.stock === 0)
           return;
         const qty = parseInt(qtyInput?.value || 1, 10);
+        const effectiveSelling = activeVariant ? activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0 : Number(activeProduct.price) || 0;
+        const effectiveMrp = activeVariant ? activeVariant.mrp != null ? Number(activeVariant.mrp) : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0 : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0;
         const productToAdd = activeVariant ? {
           ...activeProduct,
           id: `${activeProduct.id}_${activeVariant.id}`,
           productId: activeProduct.id,
           variantId: activeVariant.id,
+          optionLabels: activeVariant.optionLabels || "",
           name: `${activeProduct.name} - ${activeVariant.optionLabels}`,
-          price: activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+          price: effectiveSelling,
+          originalPrice: effectiveMrp,
           image: activeVariant && activeVariant.variantImage || activeProduct.image
         } : activeProduct;
         addToCart(productToAdd, qty);
@@ -34198,12 +34318,16 @@ Message: ${message}`);
           return;
         }
         const qty = parseInt(qtyInput?.value || 1, 10);
+        const effectiveSelling = activeVariant ? activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0 : Number(activeProduct.price) || 0;
+        const effectiveMrp = activeVariant ? activeVariant.mrp != null ? Number(activeVariant.mrp) : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0 : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0;
         const buyNowItem = {
           id: activeVariant ? `${activeProduct.id}_${activeVariant.id}` : activeProduct.id,
           productId: activeProduct.id,
           variantId: activeVariant ? activeVariant.id : null,
+          optionLabels: activeVariant ? activeVariant.optionLabels || "" : "",
           name: activeVariant ? `${activeProduct.name} - ${activeVariant.optionLabels}` : activeProduct.name,
-          price: activeVariant && activeVariant.priceOverride != null ? activeVariant.priceOverride : activeProduct.price,
+          price: effectiveSelling,
+          originalPrice: effectiveMrp,
           image: activeVariant && activeVariant.variantImage || activeProduct.image,
           brand: activeProduct.brand,
           quantity: qty
@@ -34522,10 +34646,36 @@ Message: ${message}`);
         <span class="ak-btn-text">Add to Cart</span>
       </button>
     `;
-      const origPrice = Number(p.originalPrice) || 0;
-      const hasDiscount = origPrice > Number(p.price);
-      const originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(origPrice)}</span>` : "";
-      const offerStampHtml = getProductOfferStampHtml(p);
+      const activeVariants = p.hasVariants && Array.isArray(p.variants) && p.variants.length > 0 ? p.variants.filter((v) => v.isActive !== false).length > 0 ? p.variants.filter((v) => v.isActive !== false) : p.variants : null;
+      let displayPriceHtml = "";
+      let originalPriceHtml = "";
+      let offerStampHtml = "";
+      if (activeVariants) {
+        const variantSellingPrices = activeVariants.map((v) => v.sellingPrice != null ? Number(v.sellingPrice) : v.priceOverride != null ? Number(v.priceOverride) : Number(p.price) || 0);
+        const minPrice2 = Math.min(...variantSellingPrices);
+        const maxPrice2 = Math.max(...variantSellingPrices);
+        const hasDifferentPrices = minPrice2 !== maxPrice2;
+        if (hasDifferentPrices) {
+          displayPriceHtml = `<span>From ${formatINR(minPrice2)}</span>`;
+          originalPriceHtml = "";
+          offerStampHtml = "";
+        } else {
+          const defaultVariant = activeVariants[0];
+          const selling = variantSellingPrices[0];
+          const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : p.originalPrice ? Number(p.originalPrice) : 0;
+          const hasDiscount = mrp > selling && selling > 0;
+          displayPriceHtml = `<span>${formatINR(selling)}</span>`;
+          originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : "";
+          offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : "";
+        }
+      } else {
+        const baseSelling = Number(p.price) || 0;
+        const baseMrp = Number(p.originalPrice) || 0;
+        const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+        displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
+        originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : "";
+        offerStampHtml = getProductOfferStampHtml(p);
+      }
       return `
       <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${trendingBadge}
@@ -34537,7 +34687,7 @@ Message: ${message}`);
           <span class="ak-product-brand">${p.brand}</span>
           <h3 class="ak-product-name" title="${p.name}">${p.name}</h3>
           <div class="ak-product-price" style="display:flex; align-items:baseline; gap:6px;">
-            <span>${formatINR(p.price)}</span>
+            ${displayPriceHtml}
             ${originalPriceHtml}
           </div>
           ${actionHtml}
