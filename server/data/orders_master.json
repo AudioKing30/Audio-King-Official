@@ -1,0 +1,169 @@
+{
+  "updatedAt": "2026-10-07T23:50:28.462Z",
+  "count": 7,
+  "orders": [
+    {
+      "id": "aad7050d-29ad-4fa7-8478-dd2a4394345a",
+      "user_id": "7a6bee76-cbce-442c-9875-1304735d43ff",
+      "order_number": "AK-20260929-E6XAQ",
+      "total_amount": 19999,
+      "status": "Cancelled",
+      "shipping_address": "{\"line1\":\"Studio 4, Bandra West\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pin\":\"400050\",\"phone\":\"+91 9876543210\"}",
+      "payment_method": "UPI / Razorpay",
+      "created_at": "2026-09-28T19:21:28.319Z",
+      "updated_at": "2026-09-28T20:16:47.759Z",
+      "coupon_code": null,
+      "discount_amount": 0
+    },
+    {
+      "id": "0d512618-0886-42a3-8202-3b4c8b1677a6",
+      "user_id": "a216d793-8d4a-415d-bc48-acfb13978d35",
+      "order_number": "AK-20260929-P3TJK",
+      "total_amount": 19999,
+      "status": "Delivered",
+      "shipping_address": "{\"line1\":\"Studio 4, Bandra West\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pin\":\"400050\",\"phone\":\"+91 9876543210\"}",
+      "payment_method": "UPI / Razorpay",
+      "created_at": "2026-09-28T19:24:22.878Z",
+      "updated_at": "2026-09-28T19:24:23.293Z",
+      "coupon_code": null,
+      "discount_amount": 0
+    },
+    {
+      "id": "10634fc3-e719-42b0-b806-32cf84633ee1",
+      "user_id": "70ee6e50-2421-4217-8459-3541730df732",
+      "order_number": "AK-20260929-W7VE5",
+      "total_amount": 19999,
+      "status": "Delivered",
+      "shipping_address": "{\"fullName\":\"Vikram SoundEngineer\",\"email\":\"musician_1790623688965@audioking-test.com\",\"phone\":\"+91 9876543210\",\"line1\":\"Studio 4, Bandra West\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pin\":\"400050\"}",
+      "payment_method": "UPI / Razorpay",
+      "created_at": "2026-09-28T19:28:08.987Z",
+      "updated_at": "2026-09-28T19:28:09.224Z",
+      "coupon_code": null,
+      "discount_amount": 0
+    },
+    {
+      "id": "fa26755a-b609-4a19-aeb7-2bafa7efa02b",
+      "user_id": "89b90072-85a4-43a1-aaf0-ab662c37b2bb",
+      "order_number": "AK-TEST-1790792996301",
+      "total_amount": 22050,
+      "status": "Confirmed",
+      "shipping_address": "{\"fullName\":\"AudioKing E2E Tester\",\"email\":\"audioking_tester_1790792995140@example.com\",\"phone\":\"9876543210\",\"addressLine1\":\"Test Studio Suite 101\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400001\"}",
+      "payment_method": "Cash on Delivery (COD)",
+      "created_at": "2026-09-30T18:29:56.301Z",
+      "updated_at": "2026-09-30T18:29:56.301Z",
+      "coupon_code": "ALL_1790792996150",
+      "discount_amount": 2450
+    },
+    {
+      "id": "32417c18-8127-47bf-9025-59b4e76fc843",
+      "user_id": "d855ceb9-e5a3-4cf9-a01c-c25ec3c0aee9",
+      "order_number": "AK-TEST-1790793378728",
+      "total_amount": 22050,
+      "status": "Confirmed",
+      "shipping_address": "{\"fullName\":\"AudioKing E2E Tester\",\"email\":\"audioking_tester_1790793377961@example.com\",\"phone\":\"9876543210\",\"addressLine1\":\"Test Studio Suite 101\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400001\"}",
+      "payment_method": "Cash on Delivery (COD)",
+      "created_at": "2026-09-30T18:36:18.729Z",
+      "updated_at": "2026-09-30T18:36:18.729Z",
+      "coupon_code": "ALL_1790793378602",
+      "discount_amount": 2450
+    },
+    {
+      "id": "3aad3ab7-fb04-46c4-bd69-808e841f24e9",
+      "user_id": "7253605d-7287-4da9-8028-7f024ef0f3fa",
+      "order_number": "AK-TEST-1790796894523",
+      "total_amount": 22050,
+      "status": "Confirmed",
+      "shipping_address": "{\"fullName\":\"AudioKing E2E Tester\",\"email\":\"audioking_tester_1790796893472@example.com\",\"phone\":\"9876543210\",\"addressLine1\":\"Test Studio Suite 101\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400001\"}",
+      "payment_method": "Cash on Delivery (COD)",
+      "created_at": "2026-09-30T19:34:54.523Z",
+      "updated_at": "2026-09-30T19:34:54.523Z",
+      "coupon_code": "ALL_1790796894429",
+      "discount_amount": 2450
+    },
+    {
+      "id": "b1eae6b4-c48c-460b-b23b-801ce15aa903",
+      "user_id": "7b8f0a18-1f09-4037-b955-fbf35e0c43e6",
+      "order_number": "AK-TEST-1790817327242",
+      "total_amount": 22050,
+      "status": "Confirmed",
+      "shipping_address": "{\"fullName\":\"AudioKing E2E Tester\",\"email\":\"audioking_tester_1790817326189@example.com\",\"phone\":\"9876543210\",\"addressLine1\":\"Test Studio Suite 101\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400001\"}",
+      "payment_method": "Cash on Delivery (COD)",
+      "created_at": "2026-10-01T01:15:27.243Z",
+      "updated_at": "2026-10-01T01:15:27.243Z",
+      "coupon_code": "ALL_1790817327114",
+      "discount_amount": 2450
+    }
+  ],
+  "orderItems": [
+    {
+      "id": "c6eb478d-2d69-4fb2-b9ed-d65ef4e289b8",
+      "order_id": "aad7050d-29ad-4fa7-8478-dd2a4394345a",
+      "product_id": "focusrite-scarlett-2i2-4th-gen",
+      "product_name": "Focusrite Scarlett 2i2 4th Gen",
+      "product_image": "assets/images/logo.jpg",
+      "quantity": 1,
+      "unit_price": 19999,
+      "subtotal": 19999
+    },
+    {
+      "id": "2269b4e9-26b0-4f14-926b-55aff06cd3a0",
+      "order_id": "0d512618-0886-42a3-8202-3b4c8b1677a6",
+      "product_id": "focusrite-scarlett-2i2-4th-gen",
+      "product_name": "Focusrite Scarlett 2i2 4th Gen",
+      "product_image": "assets/images/logo.jpg",
+      "quantity": 1,
+      "unit_price": 19999,
+      "subtotal": 19999
+    },
+    {
+      "id": "70315f36-86fc-41c9-8777-32f9e476bff4",
+      "order_id": "10634fc3-e719-42b0-b806-32cf84633ee1",
+      "product_id": "focusrite-scarlett-2i2-4th-gen",
+      "product_name": "Focusrite Scarlett 2i2 4th Gen",
+      "product_image": "assets/images/logo.jpg",
+      "quantity": 1,
+      "unit_price": 19999,
+      "subtotal": 19999
+    },
+    {
+      "id": "7c4dadf1-ed83-496c-9986-07d254b959ef",
+      "order_id": "fa26755a-b609-4a19-aeb7-2bafa7efa02b",
+      "product_id": "donner-ded-70-electric-drum-set-quiet-electronic-drum-kit-for-beginner-with-mesh-pad-portable-drum-set-support-portable-charger-supply-drum-throne-sticks-headphone-muh98uzq",
+      "product_name": "Donner DED-70 Electric Drum Set, Quiet Electronic Drum Kit for Beginner with Mesh Pad, Portable Drum Set Support Portable Charger Supply, Drum Throne, Sticks Headphone",
+      "product_image": "uploads/products/1790358512322_a3d908ae349d.jpg",
+      "quantity": 1,
+      "unit_price": 24500,
+      "subtotal": 24500
+    },
+    {
+      "id": "fdaf529d-c396-4dac-b77e-ff54642c69ff",
+      "order_id": "32417c18-8127-47bf-9025-59b4e76fc843",
+      "product_id": "donner-ded-70-electric-drum-set-quiet-electronic-drum-kit-for-beginner-with-mesh-pad-portable-drum-set-support-portable-charger-supply-drum-throne-sticks-headphone-muh98uzq",
+      "product_name": "Donner DED-70 Electric Drum Set, Quiet Electronic Drum Kit for Beginner with Mesh Pad, Portable Drum Set Support Portable Charger Supply, Drum Throne, Sticks Headphone",
+      "product_image": "uploads/products/1790358512322_a3d908ae349d.jpg",
+      "quantity": 1,
+      "unit_price": 24500,
+      "subtotal": 24500
+    },
+    {
+      "id": "9a7ffeb4-a69e-40d5-bd45-b72623b04f95",
+      "order_id": "3aad3ab7-fb04-46c4-bd69-808e841f24e9",
+      "product_id": "donner-ded-70-electric-drum-set-quiet-electronic-drum-kit-for-beginner-with-mesh-pad-portable-drum-set-support-portable-charger-supply-drum-throne-sticks-headphone-muh98uzq",
+      "product_name": "Donner DED-70 Electric Drum Set, Quiet Electronic Drum Kit for Beginner with Mesh Pad, Portable Drum Set Support Portable Charger Supply, Drum Throne, Sticks Headphone",
+      "product_image": "uploads/products/1790358512322_a3d908ae349d.jpg",
+      "quantity": 1,
+      "unit_price": 24500,
+      "subtotal": 24500
+    },
+    {
+      "id": "b30e2c99-2925-422b-a01f-f059baee848e",
+      "order_id": "b1eae6b4-c48c-460b-b23b-801ce15aa903",
+      "product_id": "donner-ded-70-electric-drum-set-quiet-electronic-drum-kit-for-beginner-with-mesh-pad-portable-drum-set-support-portable-charger-supply-drum-throne-sticks-headphone-muh98uzq",
+      "product_name": "Donner DED-70 Electric Drum Set, Quiet Electronic Drum Kit for Beginner with Mesh Pad, Portable Drum Set Support Portable Charger Supply, Drum Throne, Sticks Headphone",
+      "product_image": "uploads/products/1790358512322_a3d908ae349d.jpg",
+      "quantity": 1,
+      "unit_price": 24500,
+      "subtotal": 24500
+    }
+  ]
+}

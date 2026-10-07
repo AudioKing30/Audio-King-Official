@@ -579,6 +579,14 @@ function initDatabase() {
     console.warn('[DB Migration Warning]', e.message);
   }
 
+  // Auto-hydrate persistent master records (customers, orders, coupons)
+  try {
+    const { hydrateDatabaseFromMaster } = require('./dataSync');
+    hydrateDatabaseFromMaster(db);
+  } catch (e) {
+    console.warn('[HYDRATION WARNING]', e.message);
+  }
+
   console.log(`[DB] Database initialized successfully at: ${path.resolve(dbPath)}`);
 }
 

@@ -26934,6 +26934,9 @@ Weight: 1.24 lbs (0.567 kg`,
         this.status = "authenticated";
         setStorage(this.localUserKey, this.currentUser);
         setStorage("audioKingUser", this.currentUser);
+        if (this.currentUser?.role === "admin" && token) {
+          setStorage("audioking_admin_token", token);
+        }
       } else if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
         const local = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
         if (local && local.email && local.id) {
@@ -27035,6 +27038,9 @@ Weight: 1.24 lbs (0.567 kg`,
           setStorage("audioKingSessionToken", res.data.token);
           setStorage("audioking_token", res.data.token);
           setStorage("audioKingToken", res.data.token);
+          if (this.currentUser?.role === "admin") {
+            setStorage("audioking_admin_token", res.data.token);
+          }
         }
         setStorage(this.localUserKey, this.currentUser);
         setStorage("audioKingUser", this.currentUser);
@@ -27089,6 +27095,9 @@ Weight: 1.24 lbs (0.567 kg`,
             setStorage("audioKingSessionToken", res.data.token);
             setStorage("audioking_token", res.data.token);
             setStorage("audioKingToken", res.data.token);
+            if (this.currentUser?.role === "admin") {
+              setStorage("audioking_admin_token", res.data.token);
+            }
           }
           setStorage(this.localUserKey, this.currentUser);
           setStorage("audioKingUser", this.currentUser);

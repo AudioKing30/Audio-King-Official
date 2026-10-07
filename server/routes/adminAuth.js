@@ -13,7 +13,7 @@ const { adminLoginRateLimiter, recordFailedLogin, resetLoginRateLimit } = requir
 const { requireAdminApi } = require('../middleware/adminMiddleware');
 
 const router = express.Router();
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const SESSION_TTL_MS = 10 * 365 * 24 * 60 * 60 * 1000; // 10 years permanent admin session (No arbitrary TTL)
 
 /**
  * 1. ADMIN LOGIN

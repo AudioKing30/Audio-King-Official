@@ -310,6 +310,9 @@ class AuthService {
       this.status = 'authenticated';
       setStorage(this.localUserKey, this.currentUser);
       setStorage('audioKingUser', this.currentUser);
+      if (this.currentUser?.role === 'admin' && token) {
+        setStorage('audioking_admin_token', token);
+      }
     } else if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
       // Server unreachable or warming up — keep existing cached session for this token temporarily
       const local = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
@@ -426,6 +429,9 @@ class AuthService {
         setStorage('audioKingSessionToken', res.data.token);
         setStorage('audioking_token', res.data.token);
         setStorage('audioKingToken', res.data.token);
+        if (this.currentUser?.role === 'admin') {
+          setStorage('audioking_admin_token', res.data.token);
+        }
       }
       setStorage(this.localUserKey, this.currentUser);
       setStorage('audioKingUser', this.currentUser);
@@ -488,6 +494,9 @@ class AuthService {
           setStorage('audioKingSessionToken', res.data.token);
           setStorage('audioking_token', res.data.token);
           setStorage('audioKingToken', res.data.token);
+          if (this.currentUser?.role === 'admin') {
+            setStorage('audioking_admin_token', res.data.token);
+          }
         }
         setStorage(this.localUserKey, this.currentUser);
         setStorage('audioKingUser', this.currentUser);

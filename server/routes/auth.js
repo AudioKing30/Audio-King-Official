@@ -23,11 +23,12 @@ const {
   sendPasswordChangedEmail
 } = require('../email');
 const { requireAuth } = require('../middleware/authMiddleware');
+const { syncCustomersMaster } = require('../dataSync');
 
 const router = express.Router();
 
 const googleCodeExchanges = new Map();
-const SESSION_EXPIRY_MS = Number(process.env.SESSION_EXPIRY_MS) || (30 * 24 * 60 * 60 * 1000); // 30 days
+const SESSION_EXPIRY_MS = Number(process.env.SESSION_EXPIRY_MS) || (10 * 365 * 24 * 60 * 60 * 1000); // 10 years permanent sessions (No arbitrary TTL)
 const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
 
 /**
@@ -332,6 +333,9 @@ router.post('/verify-signup-otp', async (req, res) => {
 
     // Create authenticated session
     const sessionToken = createSessionForUser(res, user.id, req);
+
+    // Auto-mirror new user to customers_master.json for permanent persistence
+    syncCustomersMaster(db);
 
     return res.json({
       success: true,
@@ -759,6 +763,7 @@ router.get('/google/callback', async (req, res) => {
 
     // 4. Create real authenticated session & cookie
     const sessionToken = createSessionForUser(res, user.id, req);
+    syncCustomersMaster(db);
     const sanitized = sanitizeUser(user);
     const hashRedirectUrl = `${targetRedirectUrl}#auth_token=${encodeURIComponent(sessionToken)}`;
 
@@ -935,6 +940,7 @@ router.post('/google', async (req, res) => {
     }
 
     const sessionToken = createSessionForUser(res, user.id, req);
+    syncCustomersMaster(db);
 
     return res.json({
       success: true,

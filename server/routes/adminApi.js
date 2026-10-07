@@ -18,6 +18,7 @@ const crypto = require('crypto');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
 const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
+const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, exportAllMasterData } = require('../dataSync');
 
 const router = express.Router();
 
@@ -1151,6 +1152,7 @@ router.post('/coupons', (req, res) => {
     );
 
     const createdCoupon = db.prepare('SELECT * FROM coupons WHERE id = ?').get(id);
+    syncCouponsMaster(db);
     return res.status(201).json({ 
       success: true, 
       message: `Coupon "${cleanCode}" created successfully.`, 
@@ -1235,6 +1237,7 @@ router.put('/coupons/:id', (req, res) => {
     );
 
     const updatedCoupon = db.prepare('SELECT * FROM coupons WHERE id = ?').get(existing.id);
+    syncCouponsMaster(db);
     return res.json({ 
       success: true, 
       message: `Coupon "${cleanCode}" updated successfully.`,
@@ -1260,6 +1263,7 @@ router.patch('/coupons/:id', (req, res) => {
 
     const newActive = req.body.isActive !== undefined ? (req.body.isActive ? 1 : 0) : (coupon.is_active ? 0 : 1);
     db.prepare('UPDATE coupons SET is_active = ?, updated_at = ? WHERE id = ?').run(newActive, new Date().toISOString(), coupon.id);
+    syncCouponsMaster(db);
 
     return res.json({ success: true, isActive: Boolean(newActive) });
   } catch (err) {
@@ -1270,6 +1274,7 @@ router.patch('/coupons/:id', (req, res) => {
 router.delete('/coupons/:id', (req, res) => {
   try {
     db.prepare('DELETE FROM coupons WHERE id = ?').run(req.params.id);
+    syncCouponsMaster(db);
     return res.json({ success: true, message: 'Coupon deleted successfully.' });
   } catch (err) {
     return res.status(500).json({ error: 'Failed to delete coupon.' });
@@ -1410,6 +1415,7 @@ router.patch('/orders/:id/status', async (req, res) => {
 
     const now = new Date().toISOString();
     db.prepare('UPDATE orders SET status = ?, updated_at = ? WHERE id = ?').run(status, now, req.params.id);
+    syncOrdersMaster(db);
 
     // Fetch items for email template
     const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(ord.id);
@@ -1928,6 +1934,86 @@ router.put('/featured-settings', (req, res) => {
   } catch (err) {
     console.error('[ADMIN SAVE FEATURED SETTINGS ERROR]', err);
     return res.status(500).json({ error: 'Failed to save featured settings.' });
+  }
+});
+
+// -------------------------------------------------------------
+// 10. DATABASE PERSISTENCE & DATA SNAPSHOT BACKUP / RESTORE
+// -------------------------------------------------------------
+router.get('/backup/export', (req, res) => {
+  try {
+    const users = db.prepare('SELECT * FROM users').all();
+    const orders = db.prepare('SELECT * FROM orders').all();
+    const orderItems = db.prepare('SELECT * FROM order_items').all();
+    const coupons = db.prepare('SELECT * FROM coupons').all();
+    let usages = [];
+    try { usages = db.prepare('SELECT * FROM coupon_usages').all(); } catch (_) {}
+    const addresses = db.prepare('SELECT * FROM addresses').all();
+    const identities = db.prepare('SELECT * FROM auth_identities').all();
+
+    // Trigger auto-mirror to JSON files as well
+    exportAllMasterData(db);
+
+    const snapshot = {
+      exportedAt: new Date().toISOString(),
+      counts: {
+        users: users.length,
+        orders: orders.length,
+        orderItems: orderItems.length,
+        coupons: coupons.length,
+        couponUsages: usages.length,
+        addresses: addresses.length
+      },
+      users,
+      orders,
+      orderItems,
+      coupons,
+      usages,
+      addresses,
+      identities
+    };
+
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="audioking_backup_${Date.now()}.json"`);
+    return res.json(snapshot);
+  } catch (err) {
+    console.error('[BACKUP EXPORT ERROR]', err);
+    return res.status(500).json({ error: 'Failed to generate backup export: ' + err.message });
+  }
+});
+
+router.post('/backup/import', (req, res) => {
+  try {
+    const data = req.body;
+    if (!data || (!data.users && !data.orders && !data.coupons)) {
+      return res.status(400).json({ error: 'Invalid backup file format. Missing data arrays.' });
+    }
+
+    const { hydrateDatabaseFromMaster } = require('../dataSync');
+    
+    // Save to master JSON files and hydrate
+    if (Array.isArray(data.users)) {
+      const p = path.resolve(__dirname, '..', 'data', 'customers_master.json');
+      fs.writeFileSync(p, JSON.stringify({ updatedAt: new Date().toISOString(), count: data.users.length, users: data.users, identities: data.identities || [], addresses: data.addresses || [] }, null, 2), 'utf8');
+    }
+    if (Array.isArray(data.orders)) {
+      const p = path.resolve(__dirname, '..', 'data', 'orders_master.json');
+      fs.writeFileSync(p, JSON.stringify({ updatedAt: new Date().toISOString(), count: data.orders.length, orders: data.orders, orderItems: data.orderItems || [] }, null, 2), 'utf8');
+    }
+    if (Array.isArray(data.coupons)) {
+      const p = path.resolve(__dirname, '..', 'data', 'coupons_master.json');
+      fs.writeFileSync(p, JSON.stringify({ updatedAt: new Date().toISOString(), count: data.coupons.length, coupons: data.coupons, usages: data.usages || [] }, null, 2), 'utf8');
+    }
+
+    hydrateDatabaseFromMaster(db);
+
+    return res.json({
+      success: true,
+      message: 'Backup restored and synchronized into database successfully!'
+    });
+  } catch (err) {
+    console.error('[BACKUP IMPORT ERROR]', err);
+    return res.status(500).json({ error: 'Failed to import backup: ' + err.message });
   }
 });
 

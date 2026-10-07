@@ -50,7 +50,7 @@ function getAdminUserFromRequest(req) {
         u.profile_image
       FROM sessions s
       JOIN users u ON s.user_id = u.id
-      WHERE s.token_hash = ? AND s.expires_at > ?
+      WHERE s.token_hash = ?
     `);
 
     let nonAdminUser = null;
@@ -58,14 +58,15 @@ function getAdminUserFromRequest(req) {
     for (const token of candidateTokens) {
       try {
         const tokenHash = hashToken(token);
-        const record = sessionQuery.get(tokenHash, now);
+        const record = sessionQuery.get(tokenHash);
         if (!record) continue;
 
         if (record.role === 'admin') {
-          // Refresh last active
+          // Permanent lifetime admin session: auto-extend by 10 years and update last active
           try {
-            db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
-              .run(new Date().toISOString(), record.session_id);
+            const tenYearsLater = Date.now() + (10 * 365 * 24 * 60 * 60 * 1000);
+            db.prepare('UPDATE sessions SET expires_at = ?, last_active_at = ? WHERE id = ?')
+              .run(tenYearsLater, new Date().toISOString(), record.session_id);
           } catch (e) {}
 
           return {
@@ -78,7 +79,10 @@ function getAdminUserFromRequest(req) {
             sessionId: record.session_id
           };
         } else {
-          nonAdminUser = record;
+          // For non-admin, respect expiration
+          if (record.session_expires_at && record.session_expires_at > Date.now()) {
+            nonAdminUser = record;
+          }
         }
       } catch (err) {
         console.error('[ADMIN AUTH ERROR]', err);

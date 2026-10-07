@@ -3755,6 +3755,38 @@
             </button>
           </form>
         </div>
+
+        <div class="admin-card" style="max-width: 600px; margin: 24px auto 0 auto;">
+          <div class="card-header-bar">
+            <div>
+              <h2 class="card-heading">Database &amp; Data Persistence</h2>
+              <p class="card-desc">Permanent snapshot storage for customers, orders &amp; coupons</p>
+            </div>
+          </div>
+
+          <div style="background: var(--ak-card-sub); padding: 16px; border-radius: var(--ak-radius); border: 1px solid var(--ak-border); margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 13px; color: var(--ak-text-secondary);">Auto-Persistence Engine:</span>
+              <span style="font-size: 11.5px; font-weight: 700; color: #16A34A; background: #DCFCE7; padding: 2px 8px; border-radius: 4px;">ACTIVE (WAL + Master JSON)</span>
+            </div>
+            <div style="font-size: 12.5px; color: var(--ak-text-muted); line-height: 1.5;">
+              All registered customers, orders, and coupons are permanently saved to disk and synchronized in real time with version-controlled master snapshots. Data will never vanish upon restart.
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="button" class="btn-primary" onclick="handleExportDataBackup()" style="flex: 1; min-width: 200px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Download Full Backup (JSON)</span>
+            </button>
+            <label class="btn-secondary" style="flex: 1; min-width: 200px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; text-align: center;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span>Restore Backup from File</span>
+              <input type="file" id="backupFileInputIndex" accept=".json" onchange="handleImportDataBackup(event)" style="display: none;">
+            </label>
+          </div>
+          <div id="backupStatusMsgIndex" style="margin-top: 12px; font-size: 13px; display: none;"></div>
+        </div>
       </section>
 
     </div>

@@ -6,13 +6,13 @@ node_modules/
 .env.local
 .env.*.local
 
-# SQLite Database & Session Logs (Created dynamically on startup)
-server/data/*.db
-server/data/**/*.db
-server/data/backups/
+# SQLite Database (Preserve production database, ignore WAL/lock/temp test DBs)
 server/data/*.db-journal
 server/data/*.db-wal
 server/data/*.db-shm
+server/data/*_e2e_*.db
+server/data/test_*.db
+server/data/backups/
 server/data/email_log.json
 
 # Scratch Files, Automation Profiles & Test Artifacts

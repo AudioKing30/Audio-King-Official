@@ -2639,6 +2639,73 @@ function openConfirmModal(title, message, onConfirm) {
   openModal('confirmModal');
 }
 
+// -------------------------------------------------------------
+// DATABASE PERSISTENCE & DATA BACKUP / RESTORE
+// -------------------------------------------------------------
+async function handleExportDataBackup() {
+  try {
+    const res = await adminFetch('/api/admin/backup/export');
+    if (!res.ok) throw new Error('Backup generation failed');
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `audioking_backup_${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    if (typeof showToast === 'function') showToast('Database backup downloaded successfully!');
+  } catch (err) {
+    alert('Failed to export backup: ' + err.message);
+  }
+}
+window.handleExportDataBackup = handleExportDataBackup;
+
+async function handleImportDataBackup(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (!confirm(`Are you sure you want to restore data from "${file.name}"? This will synchronize all customers, orders, and coupons.`)) {
+    event.target.value = '';
+    return;
+  }
+  const msgEl = document.getElementById('backupStatusMsg') || document.getElementById('backupStatusMsgIndex');
+  if (msgEl) {
+    msgEl.textContent = 'Restoring and synchronizing database...';
+    msgEl.style.color = 'var(--ak-orange)';
+    msgEl.style.display = 'block';
+  }
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const res = await adminFetch('/api/admin/backup/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Failed to restore');
+    if (msgEl) {
+      msgEl.textContent = 'Data successfully restored and synchronized!';
+      msgEl.style.color = '#16A34A';
+    }
+    alert('Data backup successfully restored! Refreshing views...');
+    loadDashboardStats();
+    loadCustomers();
+    loadOrders();
+    loadCoupons();
+  } catch (err) {
+    if (msgEl) {
+      msgEl.textContent = 'Restore failed: ' + err.message;
+      msgEl.style.color = '#EF4444';
+    }
+    alert('Failed to restore backup: ' + err.message);
+  } finally {
+    event.target.value = '';
+  }
+}
+window.handleImportDataBackup = handleImportDataBackup;
+
 // Logout
 async function handleLogout() {
   if (!confirm('Sign out of the admin panel?')) return;

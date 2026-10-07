@@ -430,6 +430,16 @@ router.post('/', async (req, res) => {
       console.error('[ORDER EMAIL DISPATCH ERROR]:', emailErr.message);
     });
 
+    // Auto-mirror order, customer, and coupon stats to master JSON files for permanent persistence
+    try {
+      const { syncOrdersMaster, syncCustomersMaster, syncCouponsMaster } = require('../dataSync');
+      syncOrdersMaster(db);
+      syncCustomersMaster(db);
+      syncCouponsMaster(db);
+    } catch (e) {
+      console.warn('[ORDER SYNC WARN]', e.message);
+    }
+
     return res.status(201).json({
       success: true,
       message: 'Order created and persisted successfully.',
