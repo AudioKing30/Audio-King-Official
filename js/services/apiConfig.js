@@ -24,8 +24,8 @@ export function getApiBaseUrl() {
       return 'https://audioking-api.onrender.com';
     }
 
-    // 4. Local filesystem or live server development (e.g. VS Code Live Server 5500/8080)
-    if (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '8080') {
+    // 4. Local filesystem or live server development (e.g. VS Code Live Server 5500/8080 or other dev ports)
+    if (window.location.protocol === 'file:' || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '3000')) {
       return 'http://localhost:3000';
     }
   }

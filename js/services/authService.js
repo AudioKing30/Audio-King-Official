@@ -499,9 +499,11 @@ class AuthService {
         throw new Error('Unable to reach the authentication server. Please check your internet connection and try again.');
       }
 
-      const err = new Error(res.data?.error || 'Invalid email or password.');
+      const err = new Error(res.data?.error || (res.status === 404 ? 'This user is not registered yet. Please register your account first.' : 'Invalid email or password.'));
       err.requiresVerification = res.data?.requiresVerification;
-      err.email = res.data?.email;
+      err.notRegistered = Boolean(res.data?.notRegistered || res.status === 404);
+      err.email = res.data?.email || cleanEmail;
+      err.status = res.status;
       throw err;
     } finally {
       this.isLoggingIn = false;

@@ -9,10 +9,10 @@ const { hashToken } = require('../security');
 
 function getAdminUserFromRequest(req) {
   const rawCandidates = [
-    req.headers['authorization']?.replace(/^Bearer\s+/i, ''),
     req.headers['x-admin-token'],
-    req.headers['x-session-token'],
     req.cookies?.audioking_admin_session,
+    req.headers['authorization']?.replace(/^Bearer\s+/i, ''),
+    req.headers['x-session-token'],
     req.cookies?.audioking_session,
     req.cookies?.audioKingToken,
     req.cookies?.audioKingSessionToken
@@ -29,6 +29,12 @@ function getAdminUserFromRequest(req) {
       candidateTokens.push(c);
     }
   }
+
+  const isDevOrLocal = process.env.NODE_ENV !== 'production' || 
+    req.hostname === 'localhost' || 
+    req.hostname === '127.0.0.1' || 
+    req.ip === '127.0.0.1' || 
+    req.ip === '::1';
 
   if (candidateTokens.length > 0) {
     const now = Date.now();
@@ -55,43 +61,37 @@ function getAdminUserFromRequest(req) {
         const record = sessionQuery.get(tokenHash, now);
         if (!record) continue;
 
-        if (record.role !== 'admin') {
+        if (record.role === 'admin') {
+          // Refresh last active
+          try {
+            db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
+              .run(new Date().toISOString(), record.session_id);
+          } catch (e) {}
+
+          return {
+            id: record.id,
+            fullName: record.full_name,
+            displayName: record.display_name || 'Admin',
+            email: record.email,
+            role: record.role,
+            profileImage: record.profile_image || 'assets/images/logo.jpg',
+            sessionId: record.session_id
+          };
+        } else {
           nonAdminUser = record;
-          continue;
         }
-
-        // Refresh last active
-        try {
-          db.prepare('UPDATE sessions SET last_active_at = ? WHERE id = ?')
-            .run(new Date().toISOString(), record.session_id);
-        } catch (e) {}
-
-        return {
-          id: record.id,
-          fullName: record.full_name,
-          displayName: record.display_name || 'Admin',
-          email: record.email,
-          role: record.role,
-          profileImage: record.profile_image || 'assets/images/logo.jpg',
-          sessionId: record.session_id
-        };
       } catch (err) {
         console.error('[ADMIN AUTH ERROR]', err);
       }
     }
 
-    if (nonAdminUser) {
+    // In production, if only non-admin user tokens were provided, deny access
+    if (nonAdminUser && !isDevOrLocal) {
       return { forbidden: true, user: nonAdminUser };
     }
   }
 
   // Development / Localhost auto-admin fallback
-  const isDevOrLocal = process.env.NODE_ENV !== 'production' || 
-    req.hostname === 'localhost' || 
-    req.hostname === '127.0.0.1' || 
-    req.ip === '127.0.0.1' || 
-    req.ip === '::1';
-
   if (isDevOrLocal) {
     try {
       const defaultAdmin = db.prepare("SELECT id, full_name, display_name, email, role, profile_image FROM users WHERE role = 'admin' LIMIT 1").get();

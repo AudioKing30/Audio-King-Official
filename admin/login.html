@@ -308,6 +308,7 @@
 
           if (res.ok && data.success) {
             if (data.token) {
+              localStorage.setItem('audioking_admin_token', data.token);
               localStorage.setItem('audioKingSessionToken', data.token);
               localStorage.setItem('audioking_token', data.token);
               localStorage.setItem('audioKingToken', data.token);
@@ -321,9 +322,9 @@
             return;
           }
 
-          // Real credential errors (401, 400, 403) - do NOT retry
-          if (res.status === 401 || res.status === 400 || res.status === 403) {
-            alertBanner.textContent = data.error || 'Authentication failed. Please verify credentials.';
+          // Real credential errors (404, 401, 400, 403) - do NOT retry
+          if (res.status === 404 || res.status === 401 || res.status === 400 || res.status === 403) {
+            alertBanner.textContent = data.error || (res.status === 404 ? 'This user is not registered yet. Please register your account first.' : 'Authentication failed. Please verify credentials.');
             alertBanner.style.display = 'block';
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<span>Sign In to Admin Panel</span>';

@@ -1213,6 +1213,9 @@
               Buy Now
             </button>
           </div>
+
+          <!-- Visible Coupon Notice (Static Label) -->
+          <div id="ppVisibleCouponNotice" class="ak-product-coupon-notice" style="display:none;"></div>
         </div>
       </div>
       <!-- ==================== DEDICATED CONTENT FRAME / TABBED PANELS ==================== -->
@@ -1854,10 +1857,32 @@
             <div class="ak-summary-items" id="akCheckoutItemsList">
               <!-- Dynamically populated -->
             </div>
+
+            <!-- Apply Promo Coupon Box -->
+            <div class="ak-checkout-promo-box" style="margin: 16px 0; padding: 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px;">
+              <div style="font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ak-orange, #EA580C)" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                <span>Apply Coupon Code</span>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" id="akCoCouponInput" class="ak-form-input" placeholder="ENTER COUPON CODE" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1; height: 38px; padding: 0 12px; background: #FFFFFF; border: 1px solid #CBD5E1; color: #0F172A; border-radius: 6px; font-size: 13px;">
+                <button type="button" id="akCoApplyCouponBtn" class="ak-btn" style="padding: 0 16px; height: 38px; background: var(--ak-orange, #EA580C); color: #FFF; font-weight: 700; font-size: 13px; border-radius: 6px; border: none; cursor: pointer; white-space: nowrap;">
+                  Apply
+                </button>
+              </div>
+              <div id="akCoCouponMsg" style="font-size: 12px; margin-top: 6px; display: none; line-height: 1.4;"></div>
+              <!-- Available Public Coupons Container -->
+              <div id="akCoVisibleCouponsContainer" style="margin-top: 10px;"></div>
+            </div>
+
             <div class="ak-summary-totals">
               <div class="ak-total-row">
                 <span>Subtotal</span>
                 <span id="akCoSubtotal">₹0</span>
+              </div>
+              <div class="ak-total-row discount" id="akCoDiscountRow" style="display: none; color: #16A34A; font-weight: 600;">
+                <span>Coupon Discount (<span id="akCoDiscountCode"></span>)</span>
+                <span id="akCoDiscountAmount" style="font-family: var(--ak-font-price); font-weight: var(--ak-price-weight, 500);">-₹0</span>
               </div>
               <div class="ak-total-row">
                 <span>Pan-India Express Shipping</span>

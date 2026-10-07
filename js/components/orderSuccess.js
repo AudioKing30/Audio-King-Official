@@ -70,7 +70,9 @@ export function showOrderConfirmation(orderData) {
       qty: 1
     }];
 
-    const totalAmount = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty) || 1), 0);
+    const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1), 0);
+    const discount = Number(orderData.discountAmount) || 0;
+    const totalAmount = orderData.total != null ? Number(orderData.total) : Math.max(0, itemsSubtotal - discount);
 
     // 1. Order ID Header
     const orderIdEl = document.getElementById('akOrderIdVal');
@@ -80,7 +82,7 @@ export function showOrderConfirmation(orderData) {
     const itemsContainer = document.getElementById('akOrderItemsContainer');
     if (itemsContainer) {
       itemsContainer.innerHTML = items.map(item => {
-        const qty = item.qty || 1;
+        const qty = item.qty || item.quantity || 1;
         const linePrice = (Number(item.price) || 0) * qty;
         return `
           <div class="ak-order-item-row">
@@ -89,9 +91,9 @@ export function showOrderConfirmation(orderData) {
               <div class="ak-order-thumb-placeholder" style="${item.image ? 'display:none;' : 'display:block;'}">AK</div>
             </div>
             <div class="ak-order-item-info">
-              <span class="ak-order-item-brand">${item.brand}</span>
+              <span class="ak-order-item-brand">${item.brand || 'Pro Audio'}</span>
               <h3 class="ak-order-item-name">${item.name}</h3>
-              <div class="ak-order-item-meta">${item.category} · Qty ${qty}</div>
+              <div class="ak-order-item-meta">${item.category || 'Gear'} · Qty ${qty}</div>
               <div class="ak-order-item-price">${formatINR(linePrice)}</div>
             </div>
           </div>
@@ -122,13 +124,13 @@ export function showOrderConfirmation(orderData) {
     if (cityEl) cityEl.textContent = `${cust.city}, ${cust.state || ''}`;
 
     const addrEl = document.getElementById('akOrderAddressVal');
-    if (addrEl) addrEl.textContent = `${cust.line1}${cust.line2 ? ', ' + cust.line2 : ''}${cust.pin ? ', ' + cust.pin : ''}`;
+    if (addrEl) addrEl.textContent = `${cust.line1 || cust.address || ''}${cust.line2 ? ', ' + cust.line2 : ''}${cust.pin || cust.pincode ? ', ' + (cust.pin || cust.pincode) : ''}`;
 
     // 5. Order Summary Card (Right Column)
     const sumItemsContainer = document.getElementById('akSumItemsContainer');
     if (sumItemsContainer) {
-      sumItemsContainer.innerHTML = items.map(item => {
-        const qty = item.qty || 1;
+      let linesHtml = items.map(item => {
+        const qty = item.qty || item.quantity || 1;
         const linePrice = (Number(item.price) || 0) * qty;
         return `
           <div class="ak-sum-line">
@@ -137,6 +139,16 @@ export function showOrderConfirmation(orderData) {
           </div>
         `;
       }).join('');
+
+      if (discount > 0) {
+        linesHtml += `
+          <div class="ak-sum-line" style="color: #10B981; font-weight: 600;">
+            <span>Coupon Discount (${orderData.couponCode || 'APPLIED'})</span>
+            <strong>-${formatINR(discount)}</strong>
+          </div>
+        `;
+      }
+      sumItemsContainer.innerHTML = linesHtml;
     }
 
     const totalEl = document.getElementById('akSumTotalVal');

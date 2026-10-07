@@ -228,7 +228,7 @@ router.post('/upload/video', videoUpload.single('video'), (req, res) => {
 // -------------------------------------------------------------
 router.get('/dashboard/stats', (req, res) => {
   try {
-    const totalCustomers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE role != 'admin'").get().count;
+    const totalCustomers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE COALESCE(role, 'customer') != 'admin'").get().count;
     const totalOrders = db.prepare('SELECT COUNT(*) AS count FROM orders').get().count;
     const currentOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status IN ('Confirmed', 'Dispatched', 'Pending', 'Shipped')").get().count;
     const completedOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status = 'Delivered'").get().count;
@@ -1479,7 +1479,7 @@ router.get('/customers', (req, res) => {
       FROM users u
       LEFT JOIN auth_identities ai ON u.id = ai.user_id
       LEFT JOIN orders o ON u.id = o.user_id AND o.status NOT IN ('Cancelled', 'Returned')
-      WHERE u.role != 'admin'
+      WHERE COALESCE(u.role, 'customer') != 'admin'
       GROUP BY u.id
       ORDER BY u.created_at DESC
     `).all();

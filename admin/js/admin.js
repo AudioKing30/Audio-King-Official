@@ -77,13 +77,13 @@ function getAdminApiBase() {
       const saved = localStorage.getItem('audioking_api_url');
       if (saved) return String(saved).trim().replace(/\/+$/, '');
     } catch (e) {}
+    if (window.location.protocol === 'file:' || ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '3000')) {
+      return 'http://localhost:3000';
+    }
     if (window.location.hostname.includes('github.io')) {
       return 'https://audioking-api.onrender.com';
     }
-    if (window.location.protocol === 'file:') {
-      return 'http://localhost:3000';
-    }
-    // For any HTTP/HTTPS origin (localhost:3000, localhost:4500, or deployed domain), use relative path
+    // For any HTTP/HTTPS origin (localhost:3000 or deployed domain), use relative path
     return '';
   }
   return '';
@@ -111,6 +111,7 @@ async function tryAutoAdminLogin() {
             const data = await res.json();
             const token = data.token || (data.user && data.user.token) || data.sessionId;
             if (token) {
+              localStorage.setItem('audioking_admin_token', token);
               localStorage.setItem('audioKingSessionToken', token);
               localStorage.setItem('audioking_token', token);
               localStorage.setItem('audioKingToken', token);
@@ -147,7 +148,8 @@ async function tryAutoAdminLogin() {
 async function adminFetch(url, options = {}) {
   const base = getAdminApiBase();
   const fullUrl = (/^https?:\/\//i.test(url) || !base) ? url : `${base}${url.startsWith('/') ? url : '/' + url}`;
-  let token = localStorage.getItem('audioKingSessionToken') || 
+  let token = localStorage.getItem('audioking_admin_token') || 
+              localStorage.getItem('audioKingSessionToken') || 
               localStorage.getItem('audioking_token') || 
               localStorage.getItem('audioKingToken');
   if (token) {
@@ -157,8 +159,13 @@ async function adminFetch(url, options = {}) {
     } catch (e) {}
   }
   const headers = { ...(options.headers || {}) };
-  if (token && !headers['Authorization']) {
-    headers['Authorization'] = `Bearer ${String(token).trim()}`;
+  if (token) {
+    if (!headers['Authorization']) {
+      headers['Authorization'] = `Bearer ${String(token).trim()}`;
+    }
+    if (!headers['x-admin-token']) {
+      headers['x-admin-token'] = String(token).trim();
+    }
   }
   
   let res = await fetch(fullUrl, { ...options, credentials: 'include', headers });
@@ -169,6 +176,7 @@ async function adminFetch(url, options = {}) {
     if (newToken) {
       const retryHeaders = { ...(options.headers || {}) };
       retryHeaders['Authorization'] = `Bearer ${String(newToken).trim()}`;
+      retryHeaders['x-admin-token'] = String(newToken).trim();
       res = await fetch(fullUrl, { ...options, credentials: 'include', headers: retryHeaders });
     }
   }
@@ -2289,6 +2297,10 @@ async function loadOrders() {
 
   try {
     const res = await adminFetch(`/api/admin/orders?tab=${state.ordersTab}`);
+    if (!res.ok) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color: var(--ak-danger); padding: 24px;">Failed to load orders (${res.status}). Retrying...</td></tr>`;
+      return;
+    }
     const data = await res.json();
     const orders = data.orders || [];
 
@@ -2493,6 +2505,10 @@ async function loadCustomers() {
 
   try {
     const res = await adminFetch('/api/admin/customers');
+    if (!res.ok) {
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--ak-danger); padding: 24px;">Failed to load customers (${res.status}). Retrying...</td></tr>`;
+      return;
+    }
     const data = await res.json();
     const customers = data.customers || [];
 

@@ -542,7 +542,17 @@ export function initAuth() {
       } catch (err) {
         clearTimeout(statusTimer1);
         clearTimeout(statusTimer2);
-        if (err.requiresVerification) {
+        if (err.notRegistered) {
+          showAuthError(err.message || 'This user is not registered yet. Please register your account first.');
+          showToast('This user is not registered yet. Please register your account first.', 'info');
+          setTimeout(() => {
+            switchAuthTab('signup');
+            const signUpEmail = document.getElementById('akSignUpEmail');
+            if (signUpEmail && !signUpEmail.value) {
+              signUpEmail.value = err.email || email;
+            }
+          }, 1400);
+        } else if (err.requiresVerification) {
           showToast('Account verification required. A code was sent to your email.');
           showOtpVerification(err.email || email);
         } else {

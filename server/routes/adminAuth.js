@@ -28,17 +28,24 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
     }
 
     const cleanInput = String(email).trim().toLowerCase();
-    const user = db.prepare(`
+    const existingUser = db.prepare(`
       SELECT id, full_name, display_name, email, role, password_hash, profile_image
       FROM users
-      WHERE role = 'admin' AND (
-        email = ? COLLATE NOCASE OR 
-        display_name = ? COLLATE NOCASE OR 
-        full_name = ? COLLATE NOCASE
-      )
+      WHERE email = ? COLLATE NOCASE OR display_name = ? COLLATE NOCASE OR full_name = ? COLLATE NOCASE
     `).get(cleanInput, cleanInput, cleanInput);
 
-    if (!user || user.role !== 'admin' || !user.password_hash) {
+    if (!existingUser) {
+      recordFailedLogin(req);
+      return res.status(404).json({ error: 'This user is not registered yet. Please register your account first.', notRegistered: true });
+    }
+
+    if (existingUser.role !== 'admin') {
+      recordFailedLogin(req);
+      return res.status(403).json({ error: 'Access denied. Administrator privileges required.' });
+    }
+
+    const user = existingUser;
+    if (!user.password_hash) {
       recordFailedLogin(req);
       return res.status(401).json({ error: 'Invalid admin credentials.' });
     }

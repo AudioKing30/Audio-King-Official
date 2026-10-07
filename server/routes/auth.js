@@ -415,8 +415,28 @@ router.post('/login', async (req, res) => {
   try {
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(cleanEmail);
 
-    if (!user || !user.password_hash) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
+    if (!user) {
+      return res.status(404).json({
+        error: 'This user is not registered yet. Please register your account first.',
+        notRegistered: true,
+        email: cleanEmail
+      });
+    }
+
+    if (!user.password_hash) {
+      const googleIdentity = db.prepare("SELECT id FROM auth_identities WHERE user_id = ? AND provider = 'google'").get(user.id);
+      if (googleIdentity) {
+        return res.status(400).json({
+          error: 'This email is linked to Google Sign-In. Please click "Continue with Google" to log in.',
+          isGoogleUser: true,
+          email: cleanEmail
+        });
+      }
+      return res.status(404).json({
+        error: 'This user is not registered yet. Please register your account first.',
+        notRegistered: true,
+        email: cleanEmail
+      });
     }
 
     if (user.email_verified === 0) {
@@ -429,7 +449,7 @@ router.post('/login', async (req, res) => {
 
     const match = await comparePassword(password, user.password_hash);
     if (!match) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
+      return res.status(401).json({ error: 'Incorrect password. Please check your password and try again.' });
     }
 
     // Success: Update last login

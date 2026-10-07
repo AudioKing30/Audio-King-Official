@@ -25993,7 +25993,7 @@ Weight: 1.24 lbs (0.567 kg`,
       if (window.location.hostname.includes("github.io")) {
         return "https://audioking-api.onrender.com";
       }
-      if (window.location.protocol === "file:" || window.location.port === "5500" || window.location.port === "8080") {
+      if (window.location.protocol === "file:" || (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") && window.location.port !== "3000") {
         return "http://localhost:3000";
       }
     }
@@ -26583,14 +26583,16 @@ Weight: 1.24 lbs (0.567 kg`,
         price: 34900,
         qty: 1
       }];
-      const totalAmount = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty) || 1), 0);
+      const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1), 0);
+      const discount = Number(orderData.discountAmount) || 0;
+      const totalAmount = orderData.total != null ? Number(orderData.total) : Math.max(0, itemsSubtotal - discount);
       const orderIdEl = document.getElementById("akOrderIdVal");
       if (orderIdEl)
         orderIdEl.textContent = orderId;
       const itemsContainer = document.getElementById("akOrderItemsContainer");
       if (itemsContainer) {
         itemsContainer.innerHTML = items.map((item) => {
-          const qty = item.qty || 1;
+          const qty = item.qty || item.quantity || 1;
           const linePrice = (Number(item.price) || 0) * qty;
           return `
           <div class="ak-order-item-row">
@@ -26599,9 +26601,9 @@ Weight: 1.24 lbs (0.567 kg`,
               <div class="ak-order-thumb-placeholder" style="${item.image ? "display:none;" : "display:block;"}">AK</div>
             </div>
             <div class="ak-order-item-info">
-              <span class="ak-order-item-brand">${item.brand}</span>
+              <span class="ak-order-item-brand">${item.brand || "Pro Audio"}</span>
               <h3 class="ak-order-item-name">${item.name}</h3>
-              <div class="ak-order-item-meta">${item.category} \xB7 Qty ${qty}</div>
+              <div class="ak-order-item-meta">${item.category || "Gear"} \xB7 Qty ${qty}</div>
               <div class="ak-order-item-price">${formatINR(linePrice)}</div>
             </div>
           </div>
@@ -26629,11 +26631,11 @@ Weight: 1.24 lbs (0.567 kg`,
         cityEl.textContent = `${cust.city}, ${cust.state || ""}`;
       const addrEl = document.getElementById("akOrderAddressVal");
       if (addrEl)
-        addrEl.textContent = `${cust.line1}${cust.line2 ? ", " + cust.line2 : ""}${cust.pin ? ", " + cust.pin : ""}`;
+        addrEl.textContent = `${cust.line1 || cust.address || ""}${cust.line2 ? ", " + cust.line2 : ""}${cust.pin || cust.pincode ? ", " + (cust.pin || cust.pincode) : ""}`;
       const sumItemsContainer = document.getElementById("akSumItemsContainer");
       if (sumItemsContainer) {
-        sumItemsContainer.innerHTML = items.map((item) => {
-          const qty = item.qty || 1;
+        let linesHtml = items.map((item) => {
+          const qty = item.qty || item.quantity || 1;
           const linePrice = (Number(item.price) || 0) * qty;
           return `
           <div class="ak-sum-line">
@@ -26642,6 +26644,15 @@ Weight: 1.24 lbs (0.567 kg`,
           </div>
         `;
         }).join("");
+        if (discount > 0) {
+          linesHtml += `
+          <div class="ak-sum-line" style="color: #10B981; font-weight: 600;">
+            <span>Coupon Discount (${orderData.couponCode || "APPLIED"})</span>
+            <strong>-${formatINR(discount)}</strong>
+          </div>
+        `;
+        }
+        sumItemsContainer.innerHTML = linesHtml;
       }
       const totalEl = document.getElementById("akSumTotalVal");
       if (totalEl)
@@ -27081,9 +27092,11 @@ Weight: 1.24 lbs (0.567 kg`,
         if (res.networkError || res.status === 0 || res.status === 502 || res.status === 503 || res.status === 504) {
           throw new Error("Unable to reach the authentication server. Please check your internet connection and try again.");
         }
-        const err = new Error(res.data?.error || "Invalid email or password.");
+        const err = new Error(res.data?.error || (res.status === 404 ? "This user is not registered yet. Please register your account first." : "Invalid email or password."));
         err.requiresVerification = res.data?.requiresVerification;
-        err.email = res.data?.email;
+        err.notRegistered = Boolean(res.data?.notRegistered || res.status === 404);
+        err.email = res.data?.email || cleanEmail;
+        err.status = res.status;
         throw err;
       } finally {
         this.isLoggingIn = false;
@@ -27865,7 +27878,17 @@ Weight: 1.24 lbs (0.567 kg`,
         } catch (err) {
           clearTimeout(statusTimer1);
           clearTimeout(statusTimer2);
-          if (err.requiresVerification) {
+          if (err.notRegistered) {
+            showAuthError(err.message || "This user is not registered yet. Please register your account first.");
+            showToast("This user is not registered yet. Please register your account first.", "info");
+            setTimeout(() => {
+              switchAuthTab("signup");
+              const signUpEmail = document.getElementById("akSignUpEmail");
+              if (signUpEmail && !signUpEmail.value) {
+                signUpEmail.value = err.email || email;
+              }
+            }, 1400);
+          } else if (err.requiresVerification) {
             showToast("Account verification required. A code was sent to your email.");
             showOtpVerification(err.email || email);
           } else {
@@ -32465,6 +32488,59 @@ Message: ${message}`);
   var activeProduct = null;
   var activeVariant = null;
   var currentCheckoutItems = [];
+  var appliedDedicatedCoupon = null;
+  function escapeHtml2(str) {
+    if (!str)
+      return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  var _cachedVisibleCoupons = null;
+  var _lastCouponsFetchTime = 0;
+  async function getVisibleCoupons() {
+    const now = Date.now();
+    if (_cachedVisibleCoupons && now - _lastCouponsFetchTime < 6e4) {
+      return _cachedVisibleCoupons;
+    }
+    try {
+      const res = await fetch(apiUrl("/api/coupons/visible"));
+      if (res.ok) {
+        const data = await res.json();
+        _cachedVisibleCoupons = data.coupons || [];
+        _lastCouponsFetchTime = now;
+        return _cachedVisibleCoupons;
+      }
+    } catch (e) {
+    }
+    return _cachedVisibleCoupons || [];
+  }
+  async function updateProductVisibleCouponNotice(product) {
+    const noticeEl = document.getElementById("ppVisibleCouponNotice");
+    if (!noticeEl)
+      return;
+    if (!product) {
+      noticeEl.style.display = "none";
+      return;
+    }
+    const coupons = await getVisibleCoupons();
+    const prodBrand = (product.brand || "").trim().toLowerCase();
+    const prodCat = (product.category || "").trim().toLowerCase();
+    const matching = coupons.find((c) => {
+      const targetB = (c.targetBrand || c.target_brand || "all").trim().toLowerCase();
+      const targetC = (c.targetCategory || c.target_category || "all").trim().toLowerCase();
+      const brandMatches = targetB === "all" || targetB === prodBrand;
+      const catMatches = targetC === "all" || targetC === prodCat;
+      return brandMatches && catMatches;
+    });
+    if (matching && matching.code) {
+      noticeEl.innerHTML = `
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml2(matching.code)}</span> code to discover flat discount on this product</span>
+    `;
+      noticeEl.style.display = "flex";
+    } else {
+      noticeEl.style.display = "none";
+    }
+  }
   function trackPageView(hash, productId = null) {
     try {
       const rawPath = hash || window.location.hash || "#home";
@@ -33603,6 +33679,7 @@ Message: ${message}`);
       }
     }
     renderProductVariants(product);
+    updateProductVisibleCouponNotice(product);
     function getConciseOverview(prod) {
       if (prod.shortDescription)
         return prod.shortDescription;
@@ -34369,20 +34446,200 @@ Message: ${message}`);
       return `
       <div class="ak-summary-item-row">
         <div class="ak-summary-item-left">
-          <span class="ak-summary-item-title">${item.name}</span>
+          <span class="ak-summary-item-title">${escapeHtml2(item.name)}</span>
           <span class="ak-summary-item-qty">Qty: ${item.quantity || item.qty || 1} \xD7 ${formatINR(item.price)}</span>
         </div>
         <div class="ak-summary-item-price">${formatINR(itemTotal)}</div>
       </div>
     `;
     }).join("");
-    const gstAmount = Math.round(subtotal * 0.18 / 1.18);
+    let discountAmount = 0;
+    if (appliedDedicatedCoupon) {
+      if (appliedDedicatedCoupon.discountType === "percentage") {
+        discountAmount = Math.round(subtotal * Number(appliedDedicatedCoupon.discountValue) / 100);
+      } else {
+        discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal);
+      }
+    }
+    const grandTotal = Math.max(0, subtotal - discountAmount);
+    const gstAmount = Math.round(grandTotal * 0.18 / 1.18);
     if (subtotalEl)
       subtotalEl.textContent = formatINR(subtotal);
     if (gstEl)
       gstEl.textContent = formatINR(gstAmount);
     if (totalEl)
-      totalEl.textContent = formatINR(subtotal);
+      totalEl.textContent = formatINR(grandTotal);
+    const discountRow = document.getElementById("akCoDiscountRow");
+    const discountCodeEl = document.getElementById("akCoDiscountCode");
+    const discountAmountEl = document.getElementById("akCoDiscountAmount");
+    if (discountRow) {
+      if (appliedDedicatedCoupon && discountAmount > 0) {
+        if (discountCodeEl)
+          discountCodeEl.textContent = appliedDedicatedCoupon.code;
+        if (discountAmountEl)
+          discountAmountEl.textContent = `-${formatINR(discountAmount)}`;
+        discountRow.style.display = "flex";
+      } else {
+        discountRow.style.display = "none";
+      }
+    }
+    const couponInput = document.getElementById("akCoCouponInput");
+    const couponBtn = document.getElementById("akCoApplyCouponBtn");
+    if (couponInput && couponBtn) {
+      if (appliedDedicatedCoupon) {
+        couponInput.value = appliedDedicatedCoupon.code;
+        couponInput.disabled = true;
+        couponBtn.textContent = "Remove";
+        couponBtn.style.background = "#DC2626";
+      } else {
+        couponInput.disabled = false;
+        couponBtn.textContent = "Apply";
+        couponBtn.style.background = "var(--ak-orange, #EA580C)";
+      }
+    }
+    renderDedicatedVisibleCoupons(subtotal, currentCheckoutItems);
+  }
+  async function applyDedicatedCoupon(codeVal) {
+    const code = (codeVal || "").trim().toUpperCase();
+    const msgEl = document.getElementById("akCoCouponMsg");
+    const btn = document.getElementById("akCoApplyCouponBtn");
+    if (!code) {
+      if (msgEl) {
+        msgEl.textContent = "Please enter a coupon code.";
+        msgEl.style.color = "#DC2626";
+        msgEl.style.display = "block";
+      }
+      return;
+    }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Checking...";
+    }
+    const subtotal = currentCheckoutItems.reduce((sum, it) => sum + it.price * (it.quantity || it.qty || 1), 0);
+    try {
+      const res = await fetch(apiUrl("/api/coupons/validate"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, cartTotal: subtotal, items: currentCheckoutItems })
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        appliedDedicatedCoupon = data;
+        if (msgEl) {
+          msgEl.textContent = data.message || `Coupon "${code}" applied successfully!`;
+          msgEl.style.color = "#16A34A";
+          msgEl.style.display = "block";
+        }
+        showToast(data.message || `Coupon "${code}" applied!`, "success");
+        renderCheckoutSummary();
+      } else {
+        const err = data.message || data.error || "Invalid or expired coupon.";
+        if (msgEl) {
+          msgEl.textContent = err;
+          msgEl.style.color = "#DC2626";
+          msgEl.style.display = "block";
+        }
+        showToast(err, "error");
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "Apply";
+        }
+      }
+    } catch (err) {
+      if (msgEl) {
+        msgEl.textContent = "Failed to validate coupon. Please try again.";
+        msgEl.style.color = "#DC2626";
+        msgEl.style.display = "block";
+      }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Apply";
+      }
+    }
+  }
+  function removeDedicatedCoupon() {
+    appliedDedicatedCoupon = null;
+    const msgEl = document.getElementById("akCoCouponMsg");
+    const inputEl = document.getElementById("akCoCouponInput");
+    if (msgEl)
+      msgEl.style.display = "none";
+    if (inputEl)
+      inputEl.value = "";
+    showToast("Coupon removed.", "info");
+    renderCheckoutSummary();
+  }
+  async function renderDedicatedVisibleCoupons(subtotal, items) {
+    const container = document.getElementById("akCoVisibleCouponsContainer");
+    if (!container)
+      return;
+    try {
+      const res = await fetch(apiUrl("/api/coupons/available"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartTotal: subtotal, items })
+      });
+      const data = await res.json();
+      const coupons = data.coupons || [];
+      if (!coupons || coupons.length === 0) {
+        container.innerHTML = `
+        <div style="font-size: 11.5px; color: #64748B; padding: 8px; background: #FFFFFF; border-radius: 6px; border: 1px dashed #CBD5E1; text-align: center; margin-top: 8px;">
+          No public coupons available at this time.
+        </div>
+      `;
+        return;
+      }
+      container.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-between; margin: 10px 0 6px;">
+        <span style="font-size: 12px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 4px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          Available Coupons (${coupons.length})
+        </span>
+        <span style="font-size: 11px; color: #64748B;">Instant Discount</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; padding-right: 2px;">
+        ${coupons.map((c) => {
+        const isApplied = appliedDedicatedCoupon && appliedDedicatedCoupon.code.toUpperCase() === c.code.toUpperCase();
+        const discountLabel = c.discountType === "percentage" ? `${c.discountValue}% OFF` : `${formatINR(c.discountValue)} OFF`;
+        return `
+            <div class="ak-coupon-picker-card ${isApplied ? "applied" : c.eligible ? "eligible" : "ineligible"}" style="padding: 10px 12px; border: 1px solid ${isApplied ? "var(--ak-orange, #EA580C)" : "#E2E8F0"}; border-radius: 8px; background: #FFFFFF; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <strong style="font-size: 13px; color: #0F172A; letter-spacing: 0.5px;">${escapeHtml2(c.code)}</strong>
+                  <span style="font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #DCFCE7; color: #166534;">${discountLabel}</span>
+                  ${isApplied ? '<span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #EA580C; color: #FFFFFF;">APPLIED</span>' : ""}
+                </div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 3px;">${escapeHtml2(c.shortTerms || "")}</div>
+                ${!c.eligible && c.reason ? `<div style="font-size: 11px; color: #DC2626; margin-top: 2px;">\u26A0\uFE0F ${escapeHtml2(c.reason)}</div>` : ""}
+              </div>
+              <div>
+                ${isApplied ? `
+                  <button type="button" class="ak-btn-dedicated-coupon-remove" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; border: 1px solid #DC2626; background: #FFF; color: #DC2626; cursor: pointer;">Remove</button>
+                ` : `
+                  <button type="button" class="ak-btn-dedicated-coupon-apply" data-code="${escapeHtml2(c.code)}" ${c.eligible ? "" : "disabled"} style="padding: 5px 12px; font-size: 11.5px; font-weight: 700; border-radius: 4px; border: none; background: ${c.eligible ? "#EA580C" : "#CBD5E1"}; color: ${c.eligible ? "#FFF" : "#94A3B8"}; cursor: ${c.eligible ? "pointer" : "not-allowed"};">Apply</button>
+                `}
+              </div>
+            </div>
+          `;
+      }).join("")}
+      </div>
+    `;
+      container.querySelectorAll(".ak-btn-dedicated-coupon-apply").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const code = btn.getAttribute("data-code");
+          if (code)
+            applyDedicatedCoupon(code);
+        });
+      });
+      container.querySelectorAll(".ak-btn-dedicated-coupon-remove").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          removeDedicatedCoupon();
+        });
+      });
+    } catch (err) {
+      console.warn("[Dedicated Checkout Coupons Error]", err);
+    }
   }
   function initProductDetailPage() {
     const backBtn = document.getElementById("ppBack");
@@ -34487,6 +34744,31 @@ Message: ${message}`);
         label.classList.add("active");
       });
     });
+    const couponBtn = document.getElementById("akCoApplyCouponBtn");
+    const couponInput = document.getElementById("akCoCouponInput");
+    if (couponBtn) {
+      couponBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (appliedDedicatedCoupon) {
+          removeDedicatedCoupon();
+        } else {
+          const codeVal = (couponInput?.value || "").trim();
+          applyDedicatedCoupon(codeVal);
+        }
+      });
+    }
+    if (couponInput) {
+      couponInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (appliedDedicatedCoupon) {
+            removeDedicatedCoupon();
+          } else {
+            applyDedicatedCoupon(couponInput.value.trim());
+          }
+        }
+      });
+    }
     const form = document.getElementById("akCheckoutPageForm");
     const submitBtn = document.getElementById("akCheckoutSubmitBtn");
     if (form) {
@@ -34496,6 +34778,16 @@ Message: ${message}`);
           showToast("Cart is empty.");
           return;
         }
+        let discountAmount = 0;
+        const subtotal = currentCheckoutItems.reduce((sum, it) => sum + it.price * (it.quantity || it.qty || 1), 0);
+        if (appliedDedicatedCoupon) {
+          if (appliedDedicatedCoupon.discountType === "percentage") {
+            discountAmount = Math.round(subtotal * Number(appliedDedicatedCoupon.discountValue) / 100);
+          } else {
+            discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal);
+          }
+        }
+        const finalTotal = Math.max(0, subtotal - discountAmount);
         const selectedPayment = document.querySelector('input[name="akCheckoutPayment"]:checked')?.value || "UPI";
         const orderData = {
           items: currentCheckoutItems,
@@ -34509,6 +34801,9 @@ Message: ${message}`);
             pincode: document.getElementById("akCoPincode")?.value || "400053"
           },
           paymentMethod: selectedPayment,
+          couponCode: appliedDedicatedCoupon ? appliedDedicatedCoupon.code : null,
+          discountAmount,
+          total: finalTotal,
           date: (/* @__PURE__ */ new Date()).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
         };
         if (submitBtn) {
@@ -34519,6 +34814,7 @@ Message: ${message}`);
           if (result.success) {
             orderData.transactionId = result.transactionId;
             ordersService.createOrder(orderData).catch((err) => console.warn("[Checkout] Order persistence notice:", err.message));
+            appliedDedicatedCoupon = null;
             clearCart();
             hideAllViews();
             showOrderConfirmation(orderData);
