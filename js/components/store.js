@@ -678,7 +678,7 @@ function renderStorePage() {
       const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
       displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : '';
-      offerStampHtml = getProductOfferStampHtml(product);
+      offerStampHtml = hasDiscount ? getProductOfferStampHtml(product) : '';
     }
 
     const cartQty = getCartItemQuantity(product.id);

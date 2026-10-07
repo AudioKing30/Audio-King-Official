@@ -1460,7 +1460,9 @@ export async function showProduct(productOrId, updateHash = true) {
   const viewport = document.getElementById('ppCarouselViewport');
   const stampContainer = document.getElementById('ppOfferStampContainer');
   if (stampContainer) {
-    stampContainer.innerHTML = getProductOfferStampHtml(product, 'ak-offer-stamp-modal');
+    const stampHtml = getProductOfferStampHtml(product, 'ak-offer-stamp-modal');
+    stampContainer.innerHTML = stampHtml;
+    stampContainer.style.display = stampHtml ? 'block' : 'none';
   }
 
   // Build slides array: all images + video demonstration slide (if product has video)
@@ -2766,7 +2768,7 @@ export function renderFeaturedProducts(items) {
       const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
       displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : '';
-      offerStampHtml = getProductOfferStampHtml(p);
+      offerStampHtml = hasDiscount ? getProductOfferStampHtml(p) : '';
     }
 
     return `
