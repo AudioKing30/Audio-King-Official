@@ -30,12 +30,6 @@ function getAdminUserFromRequest(req) {
     }
   }
 
-  const isDevOrLocal = process.env.NODE_ENV !== 'production' || 
-    req.hostname === 'localhost' || 
-    req.hostname === '127.0.0.1' || 
-    req.ip === '127.0.0.1' || 
-    req.ip === '::1';
-
   if (candidateTokens.length > 0) {
     const now = Date.now();
     const sessionQuery = db.prepare(`
@@ -89,14 +83,15 @@ function getAdminUserFromRequest(req) {
       }
     }
 
-    // In production, if only non-admin user tokens were provided, deny access
-    if (nonAdminUser && !isDevOrLocal) {
+    // If non-admin user tokens were provided, strictly deny access
+    if (nonAdminUser) {
       return { forbidden: true, user: nonAdminUser };
     }
   }
 
-  // Development / Localhost auto-admin fallback
-  if (isDevOrLocal) {
+  // Explicit opt-in local development bypass only
+  const allowDevBypass = process.env.ALLOW_DEV_ADMIN_BYPASS === 'true' && process.env.NODE_ENV !== 'production';
+  if (allowDevBypass) {
     try {
       const defaultAdmin = db.prepare("SELECT id, full_name, display_name, email, role, profile_image FROM users WHERE role = 'admin' LIMIT 1").get();
       if (defaultAdmin) {

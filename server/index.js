@@ -25,6 +25,7 @@ const adminAuthRoutes = require('./routes/adminAuth');
 const adminApiRoutes = require('./routes/adminApi');
 const analyticsRoutes = require('./routes/analytics');
 const { requireAdminWeb, getAdminUserFromRequest } = require('./middleware/adminMiddleware');
+const { generalApiRateLimiter } = require('./middleware/rateLimiter');
 const { sendCommunityWelcomeEmail } = require('./email');
 
 // Seed admin account and SQLite catalog
@@ -38,6 +39,9 @@ app.set('trust proxy', 1);
 
 // Security & Parsing Middlewares
 app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   next();
 });
@@ -79,6 +83,9 @@ app.options('*', corsMiddleware);
 app.use(cookieParser(process.env.SESSION_SECRET || 'audioking_secret'));
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
+
+// General Public API Rate Limiter (Protection against scraping & flood attacks)
+app.use('/api', generalApiRateLimiter);
 
 // Request Logger (Development)
 if (process.env.NODE_ENV !== 'test') {

@@ -198,7 +198,7 @@ async function sendSignupVerificationEmail(email, otp, fullName = 'Musician') {
  */
 async function sendPasswordResetEmail(email, otp, fullName = 'Musician') {
   const subject = `${otp} is your AudioKing password reset code`;
-  const text = `Hello ${fullName},\n\nYour AudioKing password reset code is: ${otp}\n\nThis code expires in 10 minutes. If you did not request a password reset, please secure your account.`;
+  const text = `Hello ${fullName},\n\nYour AudioKing password reset code is: ${otp}\n\nThis code expires in 30 minutes. If you did not request a password reset, please secure your account.`;
 
   const html = wrapEmailTemplate('Reset your password', `
     <h2 class="headline">Reset your password</h2>
@@ -207,7 +207,7 @@ async function sendPasswordResetEmail(email, otp, fullName = 'Musician') {
     
     <div class="otp-card">
       <div class="otp-code">${otp}</div>
-      <div class="otp-note">⏱ Code expires in 10 minutes</div>
+      <div class="otp-note">⏱ Code expires in 30 minutes</div>
     </div>
 
     <div class="security-box">
@@ -223,7 +223,7 @@ async function sendPasswordResetEmail(email, otp, fullName = 'Musician') {
  */
 async function sendChangePasswordOtpEmail(email, otp, fullName = 'Musician') {
   const subject = `${otp} is your AudioKing password change verification code`;
-  const text = `Hello ${fullName},\n\nYour AudioKing password change verification code is: ${otp}\n\nThis code expires in 10 minutes. If you did not request to change your password, please secure your account immediately.`;
+  const text = `Hello ${fullName},\n\nYour AudioKing password change verification code is: ${otp}\n\nThis code expires in 30 minutes. If you did not request to change your password, please secure your account immediately.`;
 
   const html = wrapEmailTemplate('Verify Password Change', `
     <h2 class="headline">Verify Password Change</h2>
@@ -232,7 +232,7 @@ async function sendChangePasswordOtpEmail(email, otp, fullName = 'Musician') {
     
     <div class="otp-card">
       <div class="otp-code">${otp}</div>
-      <div class="otp-note">⏱ Code expires in 10 minutes</div>
+      <div class="otp-note">⏱ Code expires in 30 minutes</div>
     </div>
 
     <div class="security-box">

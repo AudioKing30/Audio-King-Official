@@ -193,6 +193,8 @@ function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
     CREATE INDEX IF NOT EXISTS idx_products_brand ON products(brand);
     CREATE INDEX IF NOT EXISTS idx_products_price ON products(price);
+    CREATE INDEX IF NOT EXISTS idx_products_created ON products(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_products_stock_status ON products(stock_status);
 
     -- CATEGORIES TABLE
     CREATE TABLE IF NOT EXISTS categories (

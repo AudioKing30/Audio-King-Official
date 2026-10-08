@@ -29,7 +29,7 @@ const router = express.Router();
 
 const googleCodeExchanges = new Map();
 const SESSION_EXPIRY_MS = Number(process.env.SESSION_EXPIRY_MS) || (10 * 365 * 24 * 60 * 60 * 1000); // 10 years permanent sessions (No arbitrary TTL)
-const OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+const OTP_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes expiry for password reset and signup codes
 
 /**
  * Helper: Strip sensitive fields before returning user object
@@ -56,6 +56,18 @@ function sanitizeUser(user) {
     createdAt: user.created_at || user.createdAt,
     lastLoginAt: user.last_login_at || user.lastLoginAt
   };
+}
+
+/**
+ * Helper: Escape HTML to prevent XSS in server-rendered templates
+ */
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 /**
@@ -595,16 +607,17 @@ router.get('/google/callback', async (req, res) => {
 
   if (error) {
     console.warn('[GOOGLE AUTH CANCELLED/ERROR]', error);
+    const safeError = escapeHtml(error === 'access_denied' ? 'Sign-in was cancelled.' : error);
     return res.send(`
       <!DOCTYPE html>
       <html>
         <head><title>Google Sign-In Cancelled</title></head>
         <body style="background:#0B0E14; color:#fff; font-family:sans-serif; text-align:center; padding:60px 20px;">
           <h2>Google Sign-In Cancelled</h2>
-          <p style="color:#94A3B8;">${error === 'access_denied' ? 'Sign-in was cancelled.' : error}</p>
+          <p style="color:#94A3B8;">${safeError}</p>
           <script>
             if (window.opener) {
-              window.opener.postMessage({ type: 'AUDIOKING_GOOGLE_ERROR', error: '${error}' }, '*');
+              window.opener.postMessage({ type: 'AUDIOKING_GOOGLE_ERROR', error: ${JSON.stringify(String(error))} }, '*');
               setTimeout(() => window.close(), 1500);
             } else {
               setTimeout(() => { window.location.href = ${JSON.stringify(returnTo)}; }, 1500);
@@ -812,7 +825,7 @@ router.get('/google/callback', async (req, res) => {
           <div class="card">
             <div class="spinner"></div>
             <h2>Google Account Connected!</h2>
-            <p>Welcome, ${fullName} (${cleanEmail})...</p>
+            <p>Welcome, ${escapeHtml(fullName)} (${escapeHtml(cleanEmail)})...</p>
           </div>
           <script>
             const authData = {
@@ -850,7 +863,7 @@ router.get('/google/callback', async (req, res) => {
         <head><title>Server Error</title></head>
         <body style="background:#0B0E14; color:#fff; font-family:sans-serif; text-align:center; padding:60px 20px;">
           <h2>Google Authentication Error</h2>
-          <p style="color:#ef4444;">${err.message}</p>
+          <p style="color:#ef4444;">${escapeHtml(err.message)}</p>
           <p><a href="/" style="color:#FF6B00; text-decoration:none;">&larr; Return to AudioKing</a></p>
         </body>
       </html>
@@ -1044,10 +1057,10 @@ router.post('/verify-reset-otp', async (req, res) => {
     // Mark OTP as verified
     db.prepare('UPDATE verification_codes SET verified = 1 WHERE id = ?').run(record.id);
 
-    // Issue a 15-minute single-use reset token
+    // Issue a 30-minute single-use reset token
     const resetToken = generateResetToken();
     const tokenHash = hashToken(resetToken);
-    const tokenExpiresAt = Date.now() + (15 * 60 * 1000);
+    const tokenExpiresAt = Date.now() + (30 * 60 * 1000); // 30 minutes expiry
 
     const tokenId = crypto.randomUUID();
     db.prepare(`

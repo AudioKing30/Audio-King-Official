@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /uploads/
+Disallow: /admin/
+Disallow: /admin
+Disallow: /api/admin/
+Disallow: /api/user/
+
+Sitemap: https://audioking.in/sitemap.xml

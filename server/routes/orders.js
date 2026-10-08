@@ -59,16 +59,20 @@ function generateOrderNumber() {
 router.get('/', (req, res) => {
   try {
     const authUser = getAuthUser(req);
-    const emailParam = (req.query.email || '').trim().toLowerCase();
-    let targetUserId = authUser ? authUser.id : null;
-
-    if (!targetUserId && emailParam) {
-      const userRow = db.prepare('SELECT id FROM users WHERE email = ? COLLATE NOCASE').get(emailParam);
-      if (userRow) targetUserId = userRow.id;
+    if (!authUser) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentication required to view order history. Please sign in.',
+        code: 'AUTH_REQUIRED'
+      });
     }
 
-    if (!targetUserId) {
-      return res.json({ success: true, count: 0, orders: [] });
+    let targetUserId = authUser.id;
+    // Only verified administrators can query orders of another customer email
+    const emailParam = (req.query.email || '').trim().toLowerCase();
+    if (authUser.role === 'admin' && emailParam) {
+      const userRow = db.prepare('SELECT id FROM users WHERE email = ? COLLATE NOCASE').get(emailParam);
+      if (userRow) targetUserId = userRow.id;
     }
 
     const ordersQuery = db.prepare(`
