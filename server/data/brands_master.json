@@ -1,9 +1,4 @@
-/**
- * AudioKing Brands Directory
- * Authoritative brand list (auto-synced from the admin panel / SQLite brands table).
- * Contains all live brands listed in the store.
- */
-export const AUDIOKING_BRANDS = [
+[
   {
     "id": "brand_arowana-audioglyphs",
     "name": "Arowana Audioglyphs",
@@ -238,4 +233,4 @@ export const AUDIOKING_BRANDS = [
     "slug": "yamaha",
     "productCount": 0
   }
-];
+]

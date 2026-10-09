@@ -72,17 +72,29 @@ async function seedAdminAndCatalog() {
   }
 
   try {
-    const brandModule = await import('../js/data/brands.js');
-    const brands = brandModule.AUDIOKING_BRANDS || [];
+    let brands = [];
+    const brandMasterPath = path.join(__dirname, 'data', 'brands_master.json');
+    if (fs.existsSync(brandMasterPath)) {
+      try { brands = JSON.parse(fs.readFileSync(brandMasterPath, 'utf8')) || []; } catch (e) { brands = []; }
+    }
+    if (!brands.length) {
+      const brandModule = await import('../js/data/brands.js');
+      brands = brandModule.AUDIOKING_BRANDS || [];
+    }
     const brandInsert = db.prepare(`
       INSERT OR IGNORE INTO brands (id, name, slug, created_at)
       VALUES (?, ?, ?, ?)
     `);
     for (const brand of brands) {
-      brandInsert.run(brand.id || `brand_${brand.slug}`, brand.name, brand.slug, now);
+      if (!brand || !brand.name) continue;
+      const slug = brand.slug || brand.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      // Skip if a brand with the same name already exists under a different id
+      const sameName = db.prepare('SELECT id FROM brands WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))').get(brand.name);
+      if (sameName) continue;
+      brandInsert.run(brand.id || `brand_${slug}`, brand.name, slug, now);
     }
   } catch (err) {
-    console.warn('[SEED] Could not load brands.js for seeding:', err.message);
+    console.warn('[SEED] Could not load brands for seeding:', err.message);
   }
 
   // 3. Seed Products into SQLite if empty or incomplete

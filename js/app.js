@@ -211,24 +211,33 @@ export function renderTopBrandsRow(brandItems) {
   const row = document.getElementById('akBrandsRow');
   if (!row) return;
 
+  const sourceBrands = (brandItems && brandItems.length ? brandItems : (window._allCatalogBrands || []));
   const validBrandSet = new Set(
-    (brandItems && brandItems.length ? brandItems : (window._allCatalogBrands || []))
+    sourceBrands
       .map(b => (b.name || b.label || b.value || '').toLowerCase().trim())
       .filter(Boolean)
   );
+  const brandById = new Map(
+    sourceBrands.filter(b => b && b.id).map(b => [String(b.id).toLowerCase(), b])
+  );
 
+  // Brand ids are stable across admin renames, so resolve the live name via id first
   const defaultTopBrands = [
-    { label: 'Arowana Audioglyphs', value: 'Arowana Audioglyphs' },
-    { label: 'Universal Audio', value: 'Universal Audio' },
-    { label: 'Focusrite', value: 'Focusrite' },
-    { label: 'Lauten Audio', value: 'Lauten Audio' },
-    { label: 'Native Instruments', value: 'Native Instruments' },
-    { label: 'Nord', value: 'Nord' },
-    { label: 'ADAM Audio', value: 'ADAM Audio' },
-    { label: 'Audix', value: 'Audix' },
-    { label: 'Focal Professional', value: 'Focal Professional' },
-    { label: 'Efnote', value: 'Efnote' }
-  ];
+    { id: 'brand-arowana-audioglyphs', value: 'Arowana Audioglyphs' },
+    { id: 'brand-universal-audio', value: 'Universal Audio' },
+    { id: 'brand-focusrite', value: 'Focusrite' },
+    { id: 'brand-lauten-audio', value: 'Lauten Audio' },
+    { id: 'brand-native-instruments', value: 'Native Instruments' },
+    { id: 'brand-nord', value: 'Nord' },
+    { id: 'brand-adam-audio', value: 'ADAM Audio' },
+    { id: 'brand-audix', value: 'Audix' },
+    { id: 'brand-focal-professional', value: 'Focal Professional' },
+    { id: 'brand-efnote', value: 'Efnote' }
+  ].map(b => {
+    const live = brandById.get(b.id);
+    const liveName = live && live.name ? live.name : b.value;
+    return { label: liveName, value: liveName };
+  });
 
   const topBrands = validBrandSet.size > 0
     ? defaultTopBrands.filter(b => validBrandSet.has(b.value.toLowerCase().trim()))
@@ -339,39 +348,81 @@ function renderAllBrandsModalContent(query = '') {
 /**
  * Dynamic WhatsApp Hotline Storefront Manager
  * Automatically updates navbar phone, floating sticky button, mobile call buttons,
- * and footer WhatsApp links whenever changed in admin settings or on initial load.
+ * contact page phone links, footer phone & social links, and runtime config
+ * whenever changed in admin settings or on initial load.
  */
 export function applyWhatsAppNumberToStorefront(numberStr, customUrl) {
   if (!numberStr) return;
   const cleanDigits = String(numberStr).replace(/[^0-9]/g, '');
   const waUrl = customUrl || `https://wa.me/${cleanDigits}?text=Hey%20AudioKing,%20I'm%20looking%20for%20specialist%20audio%20gear%20guidance`;
 
-  // 1. Top navbar specialist phone text and link
+  // Cache globally and in localStorage
+  if (typeof window !== 'undefined') {
+    window._activeWhatsAppNumber = numberStr;
+    window._activeWhatsAppUrl = waUrl;
+    try { localStorage.setItem('audioking_active_whatsapp', numberStr); } catch (e) {}
+  }
+  if (typeof AUDIOKING_CONFIG !== 'undefined') {
+    AUDIOKING_CONFIG.whatsappNumber = numberStr;
+    AUDIOKING_CONFIG.expertPhone = numberStr;
+  }
+
+  // 1. All tagged phone target elements across navbar, mobile drawer, contact page, and footers
   document.querySelectorAll('.ak-expert-phone-target').forEach(el => {
     el.textContent = numberStr;
+    if (el.tagName === 'A') {
+      el.href = `tel:+${cleanDigits}`;
+    }
   });
+
+  // 2. Top navbar specialist phone link
   document.querySelectorAll('.ak-action-phone').forEach(el => {
     el.href = waUrl;
   });
 
-  // 2. Mobile drawer chat/call button
+  // 3. Mobile drawer chat/call buttons & text
   document.querySelectorAll('.ak-mobile-call-btn').forEach(el => {
     el.href = waUrl;
   });
+  document.querySelectorAll('.ak-mobile-expert-phone').forEach(el => {
+    el.textContent = numberStr;
+  });
 
-  // 3. Floating sticky WhatsApp button (stays visible across the entire website)
+  // 4. Contact page phone elements & tel links
+  document.querySelectorAll('#akContactPage a[href^="tel:"], .ak-contact-method-content a.ak-contact-val').forEach(el => {
+    el.textContent = numberStr;
+    el.href = `tel:+${cleanDigits}`;
+  });
+
+  // 5. Footer sales, expert, and services phone lines
+  document.querySelectorAll('.ak-footer-contact-item a[href^="tel:"], .ak-footer-link-val[href^="tel:"]').forEach(el => {
+    el.textContent = numberStr;
+    el.href = `tel:+${cleanDigits}`;
+  });
+
+  // 6. Floating sticky WhatsApp button (stays visible across the entire website)
   const floatingWa = document.getElementById('akFloatingWhatsApp');
   if (floatingWa) {
     floatingWa.href = waUrl;
   }
 
-  // 4. Footer WhatsApp social icon
-  document.querySelectorAll('a.ak-social-icon[aria-label="WhatsApp"]').forEach(el => {
-    el.href = `https://wa.me/${cleanDigits}`;
+  // 7. Footer WhatsApp social icon & any wa.me links
+  document.querySelectorAll('a.ak-social-icon[aria-label="WhatsApp"], a[href*="wa.me"]').forEach(el => {
+    if (el.id === 'akFloatingWhatsApp' || el.classList.contains('ak-action-phone') || el.classList.contains('ak-mobile-call-btn')) {
+      el.href = waUrl;
+    } else {
+      el.href = `https://wa.me/${cleanDigits}`;
+    }
   });
 }
 
 export async function loadDynamicWhatsAppSettings() {
+  // Fast cache restoration
+  try {
+    const cached = localStorage.getItem('audioking_active_whatsapp');
+    if (cached) applyWhatsAppNumberToStorefront(cached);
+  } catch (e) {}
+
   try {
     const res = await fetch(apiUrl('/api/settings/whatsapp'));
     if (res.ok) {
@@ -404,6 +455,7 @@ if (typeof window !== 'undefined') {
   window.filterAllBrandsModalList = filterAllBrandsModalList;
   window.applyWhatsAppNumberToStorefront = applyWhatsAppNumberToStorefront;
   window.loadDynamicWhatsAppSettings = loadDynamicWhatsAppSettings;
+  window.openProductInNewPage = openProductInNewPage;
 }
 
 if (typeof document !== 'undefined') {
@@ -439,6 +491,13 @@ if (typeof document !== 'undefined') {
       loadLiveCatalog();
     });
 
+    // Cross-tab sync: admin panel in another tab renamed a brand/category
+    window.addEventListener('storage', (e) => {
+      if (e && e.key === 'audioking_catalog_sync') {
+        loadLiveCatalog();
+      }
+    });
+
     // Re-synchronize featured products whenever admin locks/unlocks products
     window.addEventListener('ak:featured-sync', (e) => {
       if (e && e.detail && Array.isArray(e.detail.lockedProductIds)) {
@@ -448,10 +507,9 @@ if (typeof document !== 'undefined') {
       renderFeaturedProducts();
     });
 
-    // Set store product click callback to open product details page
+    // Set store product click callback to open product in a separate page
     setProductClickCallback((productId) => {
-      const p = AUDIOKING_PRODUCTS.find(item => item.id === productId);
-      if (p) showProduct(p);
+      openProductInNewPage(productId);
     });
 
     // 2. Interactive features & handlers
@@ -1250,6 +1308,17 @@ export function renderProductVariants(product) {
 }
 
 /**
+ * Opens a product in a separate dedicated browser page / tab
+ */
+export function openProductInNewPage(productOrId) {
+  const pId = (productOrId && typeof productOrId === 'object') ? productOrId.id : productOrId;
+  if (!pId) return;
+  try { recordProductClick(pId); } catch (e) {}
+  const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
+  window.open(targetUrl, '_blank');
+}
+
+/**
  * View 3: Product Detail View
  */
 export async function showProduct(productOrId, updateHash = true) {
@@ -1378,16 +1447,8 @@ export async function showProduct(productOrId, updateHash = true) {
   if (ppInStockBadge) ppInStockBadge.style.display = (!isOutOfStock && !isPreOrder) ? 'inline-flex' : 'none';
   if (ppOutOfStockBadge) {
     if (isPreOrder) {
-      ppOutOfStockBadge.style.display = 'inline-flex';
-      ppOutOfStockBadge.className = 'pp-stock-badge preorder';
-      ppOutOfStockBadge.style.background = '#FEF9C3';
-      ppOutOfStockBadge.style.color = '#854D0E';
-      ppOutOfStockBadge.style.borderColor = '#FACC15';
-      ppOutOfStockBadge.style.fontWeight = '700';
-      ppOutOfStockBadge.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Pre-order products take 25-30 days for delivery</span>
-      `;
+      // User requirement: Remove the duplicate note above the CTA buttons, only show the one below
+      ppOutOfStockBadge.style.display = 'none';
     } else if (isOutOfStock) {
       ppOutOfStockBadge.style.display = 'inline-flex';
       ppOutOfStockBadge.className = 'pp-stock-badge outstock';
@@ -1415,15 +1476,15 @@ export async function showProduct(productOrId, updateHash = true) {
       ppAddToCartBtn.classList.remove('disabled', 'is-out-of-stock');
       ppAddToCartBtn.classList.add('is-preorder');
       ppAddToCartBtn.disabled = false;
-      ppAddToCartBtn.style.background = '#FACC15';
-      ppAddToCartBtn.style.color = '#000000';
-      ppAddToCartBtn.style.borderColor = '#EAB308';
+      ppAddToCartBtn.style.background = '';
+      ppAddToCartBtn.style.color = '';
+      ppAddToCartBtn.style.borderColor = '';
       ppAddToCartBtn.style.cursor = 'pointer';
       ppAddToCartBtn.style.fontWeight = '700';
       const span = ppAddToCartBtn.querySelector('span');
       if (span) {
-        span.textContent = 'Pre order';
-        span.style.color = '#000000';
+        span.textContent = 'Add to Cart';
+        span.style.color = '';
         span.style.fontWeight = '700';
       }
     } else if (isOutOfStock) {
@@ -1459,7 +1520,7 @@ export async function showProduct(productOrId, updateHash = true) {
       ppBuyNowBtn.disabled = false;
       ppBuyNowBtn.style.opacity = '1';
       ppBuyNowBtn.style.cursor = 'pointer';
-      ppBuyNowBtn.textContent = 'Pre order';
+      ppBuyNowBtn.textContent = 'Pre-Order';
       ppBuyNowBtn.style.color = '#000000';
       ppBuyNowBtn.style.background = '#FACC15';
       ppBuyNowBtn.style.borderColor = '#EAB308';
@@ -2218,7 +2279,7 @@ function renderRelatedProducts(product) {
     card.addEventListener('click', () => {
       const pid = card.dataset.id;
       recordProductClick(pid);
-      showProduct(pid);
+      openProductInNewPage(pid);
     });
   });
 
@@ -2411,6 +2472,9 @@ export function showContact(updateHash = true) {
   const contactPage = document.getElementById('akContactPage');
   if (contactPage) contactPage.style.display = 'block';
   setActiveNavItem('akNavItemContact');
+  if (window._activeWhatsAppNumber) {
+    applyWhatsAppNumberToStorefront(window._activeWhatsAppNumber, window._activeWhatsAppUrl);
+  }
   if (updateHash) {
     setRouteHash('#contact', true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2967,8 +3031,7 @@ function setupAppEventListeners() {
   });
 
   window.addEventListener('ak:search-prod', (e) => {
-    const p = AUDIOKING_PRODUCTS.find(item => item.id === e.detail);
-    if (p) showProduct(p);
+    openProductInNewPage(e.detail);
   });
 
   window.addEventListener('ak:search-submit', (e) => {
@@ -3432,7 +3495,7 @@ export function getProductById(pId) {
 }
 
 /**
- * Attach Product Card Click Listeners to open Product Page
+ * Attach Product Card Click Listeners to open Product Page in a separate page
  */
 function attachProductCardListeners(container = document) {
   container.querySelectorAll('.ak-product-card').forEach(card => {
@@ -3441,12 +3504,7 @@ function attachProductCardListeners(container = document) {
       if (e.target.closest('.ak-add-btn') || e.target.closest('.ak-card-qty-control')) return;
       const pId = card.dataset.id;
       if (!pId) return;
-      const product = getProductById(pId);
-      if (product) {
-        showProduct(product);
-      } else {
-        showProduct(pId);
-      }
+      openProductInNewPage(pId);
     };
   });
 }

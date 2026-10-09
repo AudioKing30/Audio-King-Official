@@ -4,7 +4,7 @@
  * Seamless infinite loop with cloned cards, safe transition reset, arrow controls & dots.
  */
 
-const ADVANCE_INTERVAL = 1500; // 1.5s per block move
+const ADVANCE_INTERVAL = 7000; // 7s per block move (slowed down from 1.5s)
 const TRANSITION_DURATION = 520; // 0.52s smooth cubic-bezier slide
 
 export function initTestimonials() {

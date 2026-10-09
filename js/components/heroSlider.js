@@ -17,7 +17,8 @@ export function renderHeroSlidesHtml(slides) {
     const eyebrowHtml = slide.eyebrow ? `<span class="ak-hero-eyebrow">${slide.eyebrow}</span>` : '';
     const accentHtml = slide.accent_text || slide.accentText ? `<span class="ak-hero-accent">${slide.accent_text || slide.accentText}</span>` : '';
     const subtitleHtml = slide.subtitle ? `<p class="ak-hero-subtitle">${slide.subtitle}</p>` : '';
-    const ctaText = slide.cta_text || slide.ctaText || 'Explore Pro Audio';
+    const rawCta = slide.cta_text || slide.ctaText || 'Explore Pro Audio';
+    const cleanCtaText = String(rawCta).replace(/(&rarr;|&gt;|→|->|>)+$/gi, '').trim() || 'Explore Pro Audio';
     const ctaLink = slide.cta_link || slide.ctaLink || '#catalog';
 
     return `
@@ -27,7 +28,7 @@ export function renderHeroSlidesHtml(slides) {
           ${eyebrowHtml}
           <h1 class="ak-hero-title">${slide.title} ${accentHtml}</h1>
           ${subtitleHtml}
-          <a href="${ctaLink}" class="ak-hero-cta">${ctaText} <span class="ak-cta-arrow">&rarr;</span></a>
+          <a href="${ctaLink}" class="ak-hero-cta">${cleanCtaText} <span class="ak-cta-arrow">&rarr;</span></a>
         </div>
       </div>
     `;

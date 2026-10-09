@@ -7,9 +7,21 @@ import { formatINR, generateOrderId, formatDate, resolveProductImage } from '../
 
 export function triggerOrderAnimation(orderData) {
   const overlay = document.getElementById('akOrderAnimOverlay');
+  const items = (orderData && orderData.items && orderData.items.length) ? orderData.items : [];
+  const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some(it => it.isPreOrder || (it.badge && it.badge.toLowerCase().includes('pre-order')) || it.stockStatus === 'preorder'));
+
   if (overlay) {
     overlay.style.display = 'flex';
     overlay.classList.remove('fade-out');
+
+    const animTitle = overlay.querySelector('.ak-anim-title');
+    const animSub = overlay.querySelector('.ak-anim-sub');
+    if (animTitle) {
+      animTitle.textContent = isPreOrderOrder ? 'Pre order has been placed!' : 'Order Confirmed!';
+    }
+    if (animSub) {
+      animSub.textContent = isPreOrderOrder ? 'Your pre-order has been registered with AudioKing...' : 'Generating your official receipt...';
+    }
 
     // Reset checkmark SVG animation
     const checkmark = overlay.querySelector('.checkmark');
@@ -61,14 +73,34 @@ export function showOrderConfirmation(orderData) {
     orderView.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    const orderId = orderData.orderId || generateOrderId();
-    const items = (orderData.items && orderData.items.length) ? orderData.items : [{
+    const items = (orderData && orderData.items && orderData.items.length) ? orderData.items : [{
       brand: 'SHURE',
       name: 'SM7B Dynamic Vocal Microphone',
       category: 'DYNAMIC MICROPHONES',
       price: 34900,
       qty: 1
     }];
+
+    const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some(it => it.isPreOrder || (it.badge && it.badge.toLowerCase().includes('pre-order')) || it.stockStatus === 'preorder'));
+
+    // Dynamic title & subtitle for pre-order vs standard orders
+    const billTitle = orderView.querySelector('.ak-bill-title');
+    const billSubtitle = orderView.querySelector('.ak-bill-subtitle');
+    const orderBadge = orderView.querySelector('.ak-order-confirmed-badge');
+
+    if (billTitle) {
+      billTitle.textContent = isPreOrderOrder ? 'Pre order has been placed!' : 'Thank you for your order!';
+    }
+    if (billSubtitle) {
+      billSubtitle.textContent = isPreOrderOrder
+        ? 'Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days.'
+        : 'Your Audio King purchase has been placed successfully. This is a demo order confirmation page.';
+    }
+    if (orderBadge) {
+      orderBadge.textContent = isPreOrderOrder ? 'Pre-Order Confirmed' : 'Order Confirmed';
+    }
+
+    const orderId = orderData.orderId || generateOrderId();
 
     const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1), 0);
     const discount = Number(orderData.discountAmount) || 0;

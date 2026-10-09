@@ -78,6 +78,41 @@ function syncMasterFiles() {
   } catch (err) {
     console.warn('[SYNC MASTER FILES WARN]', err.message);
   }
+  syncBrandMasterFiles();
+}
+
+/**
+ * Persist the SQLite brands table to server/data/brands_master.json and js/data/brands.js
+ * so renamed brands survive restarts, re-seeding and storefront re-bundling.
+ */
+function syncBrandMasterFiles() {
+  try {
+    const brands = db.prepare(`
+      SELECT b.id, b.name, b.slug, COUNT(p.id) AS productCount
+      FROM brands b
+      LEFT JOIN products p ON LOWER(TRIM(p.brand)) = LOWER(TRIM(b.name))
+      GROUP BY b.id
+      ORDER BY b.name COLLATE NOCASE ASC
+    `).all().map(b => ({ id: b.id, name: b.name, slug: b.slug, productCount: b.productCount || 0 }));
+
+    // Keep Arowana Audioglyphs first (storefront convention)
+    brands.sort((a, b) => {
+      const aA = (a.name || '').toLowerCase().includes('arowana');
+      const bA = (b.name || '').toLowerCase().includes('arowana');
+      if (aA && !bA) return -1;
+      if (bA && !aA) return 1;
+      return 0;
+    });
+
+    const brandMasterPath = path.resolve(__dirname, '..', 'data', 'brands_master.json');
+    fs.writeFileSync(brandMasterPath, JSON.stringify(brands, null, 2), 'utf8');
+
+    const jsBrandsPath = path.resolve(__dirname, '..', '..', 'js', 'data', 'brands.js');
+    const header = `/**\n * AudioKing Brands Directory\n * Authoritative brand list (auto-synced from the admin panel / SQLite brands table).\n * Contains all live brands listed in the store.\n */\n`;
+    fs.writeFileSync(jsBrandsPath, `${header}export const AUDIOKING_BRANDS = ${JSON.stringify(brands, null, 2)};\n`, 'utf8');
+  } catch (err) {
+    console.warn('[SYNC BRAND FILES WARN]', err.message);
+  }
 }
 
 // -------------------------------------------------------------
@@ -473,6 +508,7 @@ router.post('/brands', (req, res) => {
 
     db.prepare('INSERT INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
       .run(id, cleanName, slug, now);
+    syncBrandMasterFiles();
 
     return res.status(201).json({ success: true, brand: { id, name: cleanName, slug, product_count: 0 } });
   } catch (err) {
@@ -491,13 +527,21 @@ router.put('/brands/:id', (req, res) => {
     const cleanName = name.trim();
     const slug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
-    const existing = db.prepare('SELECT * FROM brands WHERE id = ?').get(id);
+    const rawId = decodeURIComponent(String(id || ''));
+    let existing = db.prepare('SELECT * FROM brands WHERE id = ?').get(rawId);
+    if (!existing) {
+      existing = db.prepare('SELECT * FROM brands WHERE LOWER(slug) = LOWER(?) OR LOWER(TRIM(name)) = LOWER(TRIM(?))').get(rawId, rawId);
+    }
+    if (!existing && req.body && req.body.oldName) {
+      existing = db.prepare('SELECT * FROM brands WHERE LOWER(TRIM(name)) = LOWER(TRIM(?))').get(String(req.body.oldName));
+    }
     if (!existing) {
       return res.status(404).json({ error: 'Brand not found.' });
     }
+    const brandId = existing.id;
 
     // Check duplicate name
-    const dup = db.prepare('SELECT id FROM brands WHERE LOWER(name) = LOWER(?) AND id != ?').get(cleanName, id);
+    const dup = db.prepare('SELECT id FROM brands WHERE LOWER(name) = LOWER(?) AND id != ?').get(cleanName, brandId);
     if (dup) {
       return res.status(400).json({ error: 'Another brand with this name already exists.' });
     }
@@ -505,7 +549,7 @@ router.put('/brands/:id', (req, res) => {
     const oldName = existing.name;
 
     // Update brand row
-    db.prepare('UPDATE brands SET name = ?, slug = ? WHERE id = ?').run(cleanName, slug, id);
+    db.prepare('UPDATE brands SET name = ?, slug = ? WHERE id = ?').run(cleanName, slug, brandId);
 
     // Cascade update all products referencing old brand name
     const prodUpdate = db.prepare('UPDATE products SET brand = ? WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
@@ -515,12 +559,21 @@ router.put('/brands/:id', (req, res) => {
       db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'brand' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(cleanName, oldName);
     } catch (e) {}
 
+    // Cascade update brand-scoped coupons if any
+    try {
+      db.prepare('UPDATE coupons SET target_brand = ? WHERE LOWER(TRIM(target_brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+    } catch (e) {}
+    try {
+      db.prepare('UPDATE coupons SET applicable_brand = ? WHERE LOWER(TRIM(applicable_brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+    } catch (e) {}
+    try { syncCouponsMaster(db); } catch (e) {}
+
     syncMasterFiles();
 
     return res.json({
       success: true,
       message: `Brand updated to "${cleanName}". Updated ${prodUpdate.changes} matching products.`,
-      brand: { id, name: cleanName, slug }
+      brand: { id: brandId, name: cleanName, slug, oldName }
     });
   } catch (err) {
     console.error('[RENAME BRAND ERROR]', err);
@@ -1841,7 +1894,7 @@ router.post('/hero-slides', (req, res) => {
       (accent_text || '').trim(),
       (subtitle || '').trim(),
       cleanImg,
-      (cta_text || 'Explore Gear →').trim(),
+      (cta_text ? String(cta_text).replace(/(&rarr;|&gt;|→|->|>)+$/gi, '').trim() : 'Explore Gear').trim(),
       (cta_link || '#catalog').trim(),
       sortOrder,
       is_active !== undefined ? (is_active ? 1 : 0) : 1,
@@ -1909,7 +1962,7 @@ router.put('/hero-slides/:id', (req, res) => {
       accent_text !== undefined ? (accent_text || '').trim() : existing.accent_text,
       subtitle !== undefined ? (subtitle || '').trim() : existing.subtitle,
       cleanImg,
-      cta_text !== undefined ? (cta_text || '').trim() : existing.cta_text,
+      cta_text !== undefined ? String(cta_text || '').replace(/(&rarr;|&gt;|→|->|>)+$/gi, '').trim() : existing.cta_text,
       cta_link !== undefined ? (cta_link || '').trim() : existing.cta_link,
       sort_order !== undefined ? Number(sort_order) : existing.sort_order,
       is_active !== undefined ? (is_active ? 1 : 0) : existing.is_active,
@@ -1958,10 +2011,12 @@ router.get('/featured-settings', (req, res) => {
 
 router.put('/featured-settings', (req, res) => {
   try {
-    const { lockedProductIds } = req.body || {};
-    if (!Array.isArray(lockedProductIds)) {
+    const { lockedProductIds: rawIds } = req.body || {};
+    if (!Array.isArray(rawIds)) {
       return res.status(400).json({ error: 'lockedProductIds must be an array of product IDs.' });
     }
+    // De-duplicate and cap at 10 featured slots
+    const lockedProductIds = [...new Set(rawIds.map(String).filter(Boolean))].slice(0, 10);
 
     const valueJson = JSON.stringify(lockedProductIds);
     db.prepare(`

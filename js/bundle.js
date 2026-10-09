@@ -25779,7 +25779,7 @@ Weight: 1.24 lbs (0.567 kg`,
   // js/data/brands.js
   var AUDIOKING_BRANDS = [
     {
-      "id": "brand-arowana-audioglyphs",
+      "id": "brand_arowana-audioglyphs",
       "name": "Arowana Audioglyphs",
       "slug": "arowana-audioglyphs",
       "productCount": 27
@@ -25797,19 +25797,37 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 3
     },
     {
+      "id": "brand_audio-technica",
+      "name": "Audio-Technica",
+      "slug": "audio-technica",
+      "productCount": 0
+    },
+    {
+      "id": "brand_audioking",
+      "name": "AudioKing",
+      "slug": "audioking",
+      "productCount": 0
+    },
+    {
+      "id": "brand_audioking-labs",
+      "name": "AudioKing Labs",
+      "slug": "audioking-labs",
+      "productCount": 0
+    },
+    {
       "id": "brand-audix",
       "name": "Audix",
       "slug": "audix",
       "productCount": 2
     },
     {
-      "id": "brand-audota",
+      "id": "brand_audota",
       "name": "Audota",
       "slug": "audota",
       "productCount": 1
     },
     {
-      "id": "brand-avatar",
+      "id": "brand_avatar",
       "name": "Avatar",
       "slug": "avatar",
       "productCount": 4
@@ -25821,22 +25839,22 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 5
     },
     {
-      "id": "brand-caline",
+      "id": "brand_caline",
       "name": "Caline",
       "slug": "caline",
       "productCount": 3
     },
     {
-      "id": "brand-dsm-humboldt-electronics",
-      "name": "DSM & Humboldt Electronics",
-      "slug": "dsm-humboldt-electronics",
-      "productCount": 10
-    },
-    {
-      "id": "brand-donner",
+      "id": "brand_donner",
       "name": "Donner",
       "slug": "donner",
       "productCount": 13
+    },
+    {
+      "id": "brand-dsm-humboldt",
+      "name": "DSM & Humboldt Electronics",
+      "slug": "dsm-humboldt",
+      "productCount": 10
     },
     {
       "id": "brand-efnote",
@@ -25875,13 +25893,13 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 5
     },
     {
-      "id": "brand-joyo",
+      "id": "brand_joyo",
       "name": "Joyo",
       "slug": "joyo",
       "productCount": 11
     },
     {
-      "id": "brand-just-pro",
+      "id": "brand_just-pro",
       "name": "Just PRO",
       "slug": "just-pro",
       "productCount": 4
@@ -25899,7 +25917,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 8
     },
     {
-      "id": "brand-lirevo",
+      "id": "brand_lirevo",
       "name": "Lirevo",
       "slug": "lirevo",
       "productCount": 5
@@ -25929,7 +25947,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 8
     },
     {
-      "id": "brand-procraft",
+      "id": "brand_procraft",
       "name": "ProCraft",
       "slug": "procraft",
       "productCount": 5
@@ -25941,13 +25959,25 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 15
     },
     {
-      "id": "brand-sqoe",
+      "id": "brand_sennheiser",
+      "name": "Sennheiser",
+      "slug": "sennheiser",
+      "productCount": 0
+    },
+    {
+      "id": "brand_shure",
+      "name": "Shure",
+      "slug": "shure",
+      "productCount": 0
+    },
+    {
+      "id": "brand_sqoe",
       "name": "SQOE",
       "slug": "sqoe",
       "productCount": 3
     },
     {
-      "id": "brand-strydom",
+      "id": "brand_strydom",
       "name": "Strydom",
       "slug": "strydom",
       "productCount": 1
@@ -25965,7 +25995,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "productCount": 5
     },
     {
-      "id": "brand-udo",
+      "id": "brand_udo",
       "name": "UDO",
       "slug": "udo",
       "productCount": 1
@@ -25975,6 +26005,12 @@ Weight: 1.24 lbs (0.567 kg`,
       "name": "Universal Audio",
       "slug": "universal-audio",
       "productCount": 43
+    },
+    {
+      "id": "brand_yamaha",
+      "name": "Yamaha",
+      "slug": "yamaha",
+      "productCount": 0
     }
   ];
 
@@ -26466,9 +26502,19 @@ Weight: 1.24 lbs (0.567 kg`,
   // js/components/orderSuccess.js
   function triggerOrderAnimation(orderData) {
     const overlay = document.getElementById("akOrderAnimOverlay");
+    const items = orderData && orderData.items && orderData.items.length ? orderData.items : [];
+    const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
     if (overlay) {
       overlay.style.display = "flex";
       overlay.classList.remove("fade-out");
+      const animTitle = overlay.querySelector(".ak-anim-title");
+      const animSub = overlay.querySelector(".ak-anim-sub");
+      if (animTitle) {
+        animTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Order Confirmed!";
+      }
+      if (animSub) {
+        animSub.textContent = isPreOrderOrder ? "Your pre-order has been registered with AudioKing..." : "Generating your official receipt...";
+      }
       const checkmark = overlay.querySelector(".checkmark");
       const circle = overlay.querySelector(".checkmark-circle");
       const check = overlay.querySelector(".checkmark-check");
@@ -26513,14 +26559,27 @@ Weight: 1.24 lbs (0.567 kg`,
       orderView.style.display = "block";
       orderView.classList.add("active");
       window.scrollTo({ top: 0, behavior: "smooth" });
-      const orderId = orderData.orderId || generateOrderId();
-      const items = orderData.items && orderData.items.length ? orderData.items : [{
+      const items = orderData && orderData.items && orderData.items.length ? orderData.items : [{
         brand: "SHURE",
         name: "SM7B Dynamic Vocal Microphone",
         category: "DYNAMIC MICROPHONES",
         price: 34900,
         qty: 1
       }];
+      const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
+      const billTitle = orderView.querySelector(".ak-bill-title");
+      const billSubtitle = orderView.querySelector(".ak-bill-subtitle");
+      const orderBadge = orderView.querySelector(".ak-order-confirmed-badge");
+      if (billTitle) {
+        billTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Thank you for your order!";
+      }
+      if (billSubtitle) {
+        billSubtitle.textContent = isPreOrderOrder ? "Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days." : "Your Audio King purchase has been placed successfully. This is a demo order confirmation page.";
+      }
+      if (orderBadge) {
+        orderBadge.textContent = isPreOrderOrder ? "Pre-Order Confirmed" : "Order Confirmed";
+      }
+      const orderId = orderData.orderId || generateOrderId();
       const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1), 0);
       const discount = Number(orderData.discountAmount) || 0;
       const totalAmount = orderData.total != null ? Number(orderData.total) : Math.max(0, itemsSubtotal - discount);
@@ -30596,7 +30655,8 @@ Weight: 1.24 lbs (0.567 kg`,
       const eyebrowHtml = slide.eyebrow ? `<span class="ak-hero-eyebrow">${slide.eyebrow}</span>` : "";
       const accentHtml = slide.accent_text || slide.accentText ? `<span class="ak-hero-accent">${slide.accent_text || slide.accentText}</span>` : "";
       const subtitleHtml = slide.subtitle ? `<p class="ak-hero-subtitle">${slide.subtitle}</p>` : "";
-      const ctaText = slide.cta_text || slide.ctaText || "Explore Pro Audio";
+      const rawCta = slide.cta_text || slide.ctaText || "Explore Pro Audio";
+      const cleanCtaText = String(rawCta).replace(/(&rarr;|&gt;|→|->|>)+$/gi, "").trim() || "Explore Pro Audio";
       const ctaLink = slide.cta_link || slide.ctaLink || "#catalog";
       return `
       <div class="ak-hero-slide ${idx === 0 ? "active" : ""}" style="background-image: url('${bgUrl}');">
@@ -30605,7 +30665,7 @@ Weight: 1.24 lbs (0.567 kg`,
           ${eyebrowHtml}
           <h1 class="ak-hero-title">${slide.title} ${accentHtml}</h1>
           ${subtitleHtml}
-          <a href="${ctaLink}" class="ak-hero-cta">${ctaText} <span class="ak-cta-arrow">&rarr;</span></a>
+          <a href="${ctaLink}" class="ak-hero-cta">${cleanCtaText} <span class="ak-cta-arrow">&rarr;</span></a>
         </div>
       </div>
     `;
@@ -30742,7 +30802,7 @@ Weight: 1.24 lbs (0.567 kg`,
   }
 
   // js/components/testimonials.js
-  var ADVANCE_INTERVAL = 1500;
+  var ADVANCE_INTERVAL = 7e3;
   var TRANSITION_DURATION = 520;
   function initTestimonials() {
     const track = document.getElementById("akTCardTrack");
@@ -32665,21 +32725,29 @@ Message: ${message}`);
     const row = document.getElementById("akBrandsRow");
     if (!row)
       return;
+    const sourceBrands = brandItems && brandItems.length ? brandItems : window._allCatalogBrands || [];
     const validBrandSet = new Set(
-      (brandItems && brandItems.length ? brandItems : window._allCatalogBrands || []).map((b) => (b.name || b.label || b.value || "").toLowerCase().trim()).filter(Boolean)
+      sourceBrands.map((b) => (b.name || b.label || b.value || "").toLowerCase().trim()).filter(Boolean)
+    );
+    const brandById = new Map(
+      sourceBrands.filter((b) => b && b.id).map((b) => [String(b.id).toLowerCase(), b])
     );
     const defaultTopBrands = [
-      { label: "Arowana Audioglyphs", value: "Arowana Audioglyphs" },
-      { label: "Universal Audio", value: "Universal Audio" },
-      { label: "Focusrite", value: "Focusrite" },
-      { label: "Lauten Audio", value: "Lauten Audio" },
-      { label: "Native Instruments", value: "Native Instruments" },
-      { label: "Nord", value: "Nord" },
-      { label: "ADAM Audio", value: "ADAM Audio" },
-      { label: "Audix", value: "Audix" },
-      { label: "Focal Professional", value: "Focal Professional" },
-      { label: "Efnote", value: "Efnote" }
-    ];
+      { id: "brand-arowana-audioglyphs", value: "Arowana Audioglyphs" },
+      { id: "brand-universal-audio", value: "Universal Audio" },
+      { id: "brand-focusrite", value: "Focusrite" },
+      { id: "brand-lauten-audio", value: "Lauten Audio" },
+      { id: "brand-native-instruments", value: "Native Instruments" },
+      { id: "brand-nord", value: "Nord" },
+      { id: "brand-adam-audio", value: "ADAM Audio" },
+      { id: "brand-audix", value: "Audix" },
+      { id: "brand-focal-professional", value: "Focal Professional" },
+      { id: "brand-efnote", value: "Efnote" }
+    ].map((b) => {
+      const live = brandById.get(b.id);
+      const liveName = live && live.name ? live.name : b.value;
+      return { label: liveName, value: liveName };
+    });
     const topBrands = validBrandSet.size > 0 ? defaultTopBrands.filter((b) => validBrandSet.has(b.value.toLowerCase().trim())) : defaultTopBrands;
     row.innerHTML = topBrands.map((b) => `
     <a href="#store?brand=${encodeURIComponent(b.value)}" class="ak-brand-card" data-brand="${b.value}">
@@ -32770,8 +32838,23 @@ Message: ${message}`);
       return;
     const cleanDigits = String(numberStr).replace(/[^0-9]/g, "");
     const waUrl = customUrl || `https://wa.me/${cleanDigits}?text=Hey%20AudioKing,%20I'm%20looking%20for%20specialist%20audio%20gear%20guidance`;
+    if (typeof window !== "undefined") {
+      window._activeWhatsAppNumber = numberStr;
+      window._activeWhatsAppUrl = waUrl;
+      try {
+        localStorage.setItem("audioking_active_whatsapp", numberStr);
+      } catch (e) {
+      }
+    }
+    if (typeof AUDIOKING_CONFIG !== "undefined") {
+      AUDIOKING_CONFIG.whatsappNumber = numberStr;
+      AUDIOKING_CONFIG.expertPhone = numberStr;
+    }
     document.querySelectorAll(".ak-expert-phone-target").forEach((el) => {
       el.textContent = numberStr;
+      if (el.tagName === "A") {
+        el.href = `tel:+${cleanDigits}`;
+      }
     });
     document.querySelectorAll(".ak-action-phone").forEach((el) => {
       el.href = waUrl;
@@ -32779,15 +32862,36 @@ Message: ${message}`);
     document.querySelectorAll(".ak-mobile-call-btn").forEach((el) => {
       el.href = waUrl;
     });
+    document.querySelectorAll(".ak-mobile-expert-phone").forEach((el) => {
+      el.textContent = numberStr;
+    });
+    document.querySelectorAll('#akContactPage a[href^="tel:"], .ak-contact-method-content a.ak-contact-val').forEach((el) => {
+      el.textContent = numberStr;
+      el.href = `tel:+${cleanDigits}`;
+    });
+    document.querySelectorAll('.ak-footer-contact-item a[href^="tel:"], .ak-footer-link-val[href^="tel:"]').forEach((el) => {
+      el.textContent = numberStr;
+      el.href = `tel:+${cleanDigits}`;
+    });
     const floatingWa = document.getElementById("akFloatingWhatsApp");
     if (floatingWa) {
       floatingWa.href = waUrl;
     }
-    document.querySelectorAll('a.ak-social-icon[aria-label="WhatsApp"]').forEach((el) => {
-      el.href = `https://wa.me/${cleanDigits}`;
+    document.querySelectorAll('a.ak-social-icon[aria-label="WhatsApp"], a[href*="wa.me"]').forEach((el) => {
+      if (el.id === "akFloatingWhatsApp" || el.classList.contains("ak-action-phone") || el.classList.contains("ak-mobile-call-btn")) {
+        el.href = waUrl;
+      } else {
+        el.href = `https://wa.me/${cleanDigits}`;
+      }
     });
   }
   async function loadDynamicWhatsAppSettings() {
+    try {
+      const cached = localStorage.getItem("audioking_active_whatsapp");
+      if (cached)
+        applyWhatsAppNumberToStorefront(cached);
+    } catch (e) {
+    }
     try {
       const res = await fetch(apiUrl("/api/settings/whatsapp"));
       if (res.ok) {
@@ -32818,6 +32922,7 @@ Message: ${message}`);
     window.filterAllBrandsModalList = filterAllBrandsModalList;
     window.applyWhatsAppNumberToStorefront = applyWhatsAppNumberToStorefront;
     window.loadDynamicWhatsAppSettings = loadDynamicWhatsAppSettings;
+    window.openProductInNewPage = openProductInNewPage;
   }
   if (typeof document !== "undefined") {
     let startAudioKingApp = function() {
@@ -32842,6 +32947,11 @@ Message: ${message}`);
       window.addEventListener("ak:catalog-sync", () => {
         loadLiveCatalog();
       });
+      window.addEventListener("storage", (e) => {
+        if (e && e.key === "audioking_catalog_sync") {
+          loadLiveCatalog();
+        }
+      });
       window.addEventListener("ak:featured-sync", (e) => {
         if (e && e.detail && Array.isArray(e.detail.lockedProductIds)) {
           window._lockedFeaturedProductIds = e.detail.lockedProductIds;
@@ -32850,9 +32960,7 @@ Message: ${message}`);
         renderFeaturedProducts();
       });
       setProductClickCallback((productId) => {
-        const p = AUDIOKING_PRODUCTS.find((item) => item.id === productId);
-        if (p)
-          showProduct(p);
+        openProductInNewPage(productId);
       });
       initProductTabs();
       initBrandRow();
@@ -33515,6 +33623,17 @@ Message: ${message}`);
     renderVariantsUI();
     updateVariantDisplay();
   }
+  function openProductInNewPage(productOrId) {
+    const pId = productOrId && typeof productOrId === "object" ? productOrId.id : productOrId;
+    if (!pId)
+      return;
+    try {
+      recordProductClick(pId);
+    } catch (e) {
+    }
+    const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
+    window.open(targetUrl, "_blank");
+  }
   async function showProduct(productOrId, updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash)))
       return;
@@ -33631,16 +33750,7 @@ Message: ${message}`);
       ppInStockBadge.style.display = !isOutOfStock && !isPreOrder ? "inline-flex" : "none";
     if (ppOutOfStockBadge) {
       if (isPreOrder) {
-        ppOutOfStockBadge.style.display = "inline-flex";
-        ppOutOfStockBadge.className = "pp-stock-badge preorder";
-        ppOutOfStockBadge.style.background = "#FEF9C3";
-        ppOutOfStockBadge.style.color = "#854D0E";
-        ppOutOfStockBadge.style.borderColor = "#FACC15";
-        ppOutOfStockBadge.style.fontWeight = "700";
-        ppOutOfStockBadge.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Pre-order products take 25-30 days for delivery</span>
-      `;
+        ppOutOfStockBadge.style.display = "none";
       } else if (isOutOfStock) {
         ppOutOfStockBadge.style.display = "inline-flex";
         ppOutOfStockBadge.className = "pp-stock-badge outstock";
@@ -33666,15 +33776,15 @@ Message: ${message}`);
         ppAddToCartBtn.classList.remove("disabled", "is-out-of-stock");
         ppAddToCartBtn.classList.add("is-preorder");
         ppAddToCartBtn.disabled = false;
-        ppAddToCartBtn.style.background = "#FACC15";
-        ppAddToCartBtn.style.color = "#000000";
-        ppAddToCartBtn.style.borderColor = "#EAB308";
+        ppAddToCartBtn.style.background = "";
+        ppAddToCartBtn.style.color = "";
+        ppAddToCartBtn.style.borderColor = "";
         ppAddToCartBtn.style.cursor = "pointer";
         ppAddToCartBtn.style.fontWeight = "700";
         const span = ppAddToCartBtn.querySelector("span");
         if (span) {
-          span.textContent = "Pre order";
-          span.style.color = "#000000";
+          span.textContent = "Add to Cart";
+          span.style.color = "";
           span.style.fontWeight = "700";
         }
       } else if (isOutOfStock) {
@@ -33709,7 +33819,7 @@ Message: ${message}`);
         ppBuyNowBtn.disabled = false;
         ppBuyNowBtn.style.opacity = "1";
         ppBuyNowBtn.style.cursor = "pointer";
-        ppBuyNowBtn.textContent = "Pre order";
+        ppBuyNowBtn.textContent = "Pre-Order";
         ppBuyNowBtn.style.color = "#000000";
         ppBuyNowBtn.style.background = "#FACC15";
         ppBuyNowBtn.style.borderColor = "#EAB308";
@@ -34392,7 +34502,7 @@ Message: ${message}`);
       card.addEventListener("click", () => {
         const pid = card.dataset.id;
         recordProductClick(pid);
-        showProduct(pid);
+        openProductInNewPage(pid);
       });
     });
     const prevBtn = document.getElementById("ppRelatedPrevBtn");
@@ -34547,6 +34657,9 @@ Message: ${message}`);
     if (contactPage)
       contactPage.style.display = "block";
     setActiveNavItem("akNavItemContact");
+    if (window._activeWhatsAppNumber) {
+      applyWhatsAppNumberToStorefront(window._activeWhatsAppNumber, window._activeWhatsAppUrl);
+    }
     if (updateHash) {
       setRouteHash("#contact", true);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -35031,9 +35144,7 @@ Message: ${message}`);
       showCatalog(e.detail, "category");
     });
     window.addEventListener("ak:search-prod", (e) => {
-      const p = AUDIOKING_PRODUCTS.find((item) => item.id === e.detail);
-      if (p)
-        showProduct(p);
+      openProductInNewPage(e.detail);
     });
     window.addEventListener("ak:search-submit", (e) => {
       showCatalog(e.detail, "search");
@@ -35424,12 +35535,7 @@ Message: ${message}`);
         const pId = card.dataset.id;
         if (!pId)
           return;
-        const product = getProductById(pId);
-        if (product) {
-          showProduct(product);
-        } else {
-          showProduct(pId);
-        }
+        openProductInNewPage(pId);
       };
     });
   }

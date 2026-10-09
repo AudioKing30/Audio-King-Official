@@ -497,6 +497,17 @@ function initDatabase() {
       db.prepare('UPDATE products SET images_json = ? WHERE id = ?').run(p.images_json.replace(/\/uploads\//g, 'uploads/'), p.id);
     }
 
+    // Clean hero_slides cta_text so it never has trailing arrows
+    try {
+      const existingSlides = db.prepare("SELECT id, cta_text FROM hero_slides").all();
+      for (const s of existingSlides) {
+        if (s.cta_text && /[→\->&rarr;&gt;>]/i.test(s.cta_text)) {
+          const cleaned = s.cta_text.replace(/(&rarr;|&gt;|→|->|>)+$/gi, '').trim();
+          db.prepare("UPDATE hero_slides SET cta_text = ? WHERE id = ?").run(cleaned, s.id);
+        }
+      }
+    } catch (e) {}
+
     // Seed default hero slides if table is empty
     const slideCount = db.prepare('SELECT COUNT(*) AS count FROM hero_slides').get();
     if (slideCount && slideCount.count === 0) {
@@ -509,7 +520,7 @@ function initDatabase() {
           accent_text: 'Built Better.',
           subtitle: 'Professional gear for studios, creators, and performers. Find the right equipment for every sound.',
           image_url: 'assets/images/hero/hero-slide-1.png',
-          cta_text: 'Explore Pro Audio →',
+          cta_text: 'Explore Pro Audio',
           cta_link: '#catalog',
           sort_order: 1
         },
@@ -520,7 +531,7 @@ function initDatabase() {
           accent_text: 'Moment.',
           subtitle: 'Everything you need to create, connect, and make every session worth remembering.',
           image_url: 'assets/images/hero/hero-slide-2.png',
-          cta_text: 'Explore Musical Instruments →',
+          cta_text: 'Explore Musical Instruments',
           cta_link: '#catalog',
           sort_order: 2
         },
@@ -531,7 +542,7 @@ function initDatabase() {
           accent_text: 'Sound.',
           subtitle: 'The right tools help your ideas move faster, sound better, and become something worth sharing.',
           image_url: 'assets/images/hero/hero-slide-create.png',
-          cta_text: 'Build Your Setup →',
+          cta_text: 'Build Your Setup',
           cta_link: '#catalog',
           sort_order: 3
         }
