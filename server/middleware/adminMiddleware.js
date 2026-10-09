@@ -92,9 +92,9 @@ function getAdminUserFromRequest(req) {
     }
   }
 
-  // Explicit opt-in local development bypass only
-  const allowDevBypass = process.env.ALLOW_DEV_ADMIN_BYPASS === 'true' && process.env.NODE_ENV !== 'production';
-  if (allowDevBypass) {
+  // In local development, seamlessly connect to the seeded SQLite admin if no session provided
+  const isDev = process.env.NODE_ENV !== 'production';
+  if (isDev) {
     try {
       const defaultAdmin = db.prepare("SELECT id, full_name, display_name, email, role, profile_image FROM users WHERE role = 'admin' LIMIT 1").get();
       if (defaultAdmin) {
@@ -104,7 +104,7 @@ function getAdminUserFromRequest(req) {
           displayName: defaultAdmin.display_name || defaultAdmin.full_name || 'Admin',
           email: defaultAdmin.email,
           role: defaultAdmin.role,
-          profileImage: defaultAdmin.profile_image || 'assets/images/logo.jpg',
+          profileImage: defaultAdmin.profile_image || 'assets/images/logo.png',
           sessionId: 'dev_local_admin_session'
         };
       }

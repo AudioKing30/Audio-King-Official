@@ -1693,7 +1693,7 @@ async function handleSaveProduct(e) {
   const inStock = availVal === '2' ? 2 : (availVal === '1' ? 1 : 0);
   const stockStatus = availVal === '2' ? 'preorder' : (availVal === '1' ? 'instock' : 'outofstock');
   const description = document.getElementById('productDescription').value.trim();
-  const videoInput = document.getElementById('productVideoInput').value.trim();
+  const rawVideoInput = document.getElementById('productVideoInput')?.value?.trim() || '';
 
   if (!name) return alert('Product name is required');
   if (!category || category === '__NEW__') return alert('Please select or create a valid category');
@@ -1715,7 +1715,7 @@ async function handleSaveProduct(e) {
 
   const videoInput = state.formVideoChoice === 'youtube'
     ? (validYouTubeVideos[0] || '')
-    : (document.getElementById('productVideoInput')?.value?.trim() || '');
+    : rawVideoInput;
 
   const payload = {
     name,

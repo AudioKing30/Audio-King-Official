@@ -253,7 +253,12 @@ app.get('/admin/login', (req, res) => {
 });
 
 // Dedicated Master Admin Portal
-app.get(['/admin', '/admin/'], requireAdminWeb, (req, res) => {
+app.get(['/admin', '/admin/'], (req, res, next) => {
+  if (req.originalUrl === '/admin') {
+    return res.redirect(301, '/admin/');
+  }
+  next();
+}, requireAdminWeb, (req, res) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(rootDir, 'admin', 'index.html'));
 });

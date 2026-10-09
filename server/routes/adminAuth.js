@@ -85,8 +85,15 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
     // Update last_login_at
     db.prepare('UPDATE users SET last_login_at = ? WHERE id = ?').run(nowIso, user.id);
 
-    // Set HttpOnly cookie
+    // Set HttpOnly cookies for both admin and storefront auth
     res.cookie('audioking_admin_session', rawToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: SESSION_TTL_MS,
+      path: '/'
+    });
+    res.cookie('audioking_session', rawToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
