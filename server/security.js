@@ -7,7 +7,7 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
-const SALT_ROUNDS = 12;
+const SALT_ROUNDS = 10;
 
 /**
  * Hash a plain text password using bcrypt

@@ -685,7 +685,20 @@ function renderStorePage() {
     let actionBtnHtml = '';
 
     if (isPreOrder) {
-      actionBtnHtml = `<button type="button" class="ak-store-btn-add ak-btn-preorder" style="background:#0B2545; color:#FFFFFF;" data-id="${product.id}"><span>Coming Soon</span></button>`;
+      if (cartQty > 0) {
+        actionBtnHtml = `
+          <div class="ak-store-qty-control" data-id="${product.id}">
+            <span class="ak-store-qty-tick">✓ In Cart</span>
+            <div class="ak-store-qty-actions">
+              <button type="button" class="ak-store-qty-btn ak-minus" data-id="${product.id}" aria-label="Decrease quantity">−</button>
+              <span class="ak-store-qty-val">${cartQty}</span>
+              <button type="button" class="ak-store-qty-btn ak-plus" data-id="${product.id}" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        `;
+      } else {
+        actionBtnHtml = `<button type="button" class="ak-store-btn-add ak-btn-preorder" style="background:#FACC15; color:#000000; font-weight:700; border:1px solid #EAB308;" data-id="${product.id}"><span>Pre order</span></button>`;
+      }
     } else if (isOutOfStock) {
       actionBtnHtml = '<button type="button" class="ak-store-btn-add disabled ak-btn-out-of-stock" disabled>Out of Stock</button>';
     } else if (cartQty > 0) {

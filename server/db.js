@@ -17,8 +17,14 @@ if (!fs.existsSync(dataDir)) {
 
 const db = new DatabaseSync(path.resolve(dbPath));
 
-// Enable Foreign Keys & Write-Ahead Logging (WAL) for performance and consistency
+// Enable Foreign Keys, Write-Ahead Logging (WAL) and high-performance pragmas
 db.exec('PRAGMA foreign_keys = ON;');
+try {
+  db.exec('PRAGMA journal_mode = WAL;');
+  db.exec('PRAGMA synchronous = NORMAL;');
+  db.exec('PRAGMA cache_size = -64000;');
+  db.exec('PRAGMA temp_store = MEMORY;');
+} catch (_) {}
 
 /**
  * Initialize Database Tables
@@ -349,6 +355,13 @@ function initDatabase() {
       email TEXT UNIQUE NOT NULL COLLATE NOCASE,
       created_at TEXT NOT NULL
     );
+
+    -- SITE SETTINGS TABLE (Dynamic config: WhatsApp number, store hotlines, etc.)
+    CREATE TABLE IF NOT EXISTS site_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
   `);
 
   // Safe schema migrations for existing database columns
@@ -387,6 +400,9 @@ function initDatabase() {
     }
     if (!prodColNames.includes('stock_status')) {
       db.exec("ALTER TABLE products ADD COLUMN stock_status TEXT DEFAULT 'instock';");
+    }
+    if (!prodColNames.includes('youtube_videos_json')) {
+      db.exec("ALTER TABLE products ADD COLUMN youtube_videos_json TEXT DEFAULT '[]';");
     }
 
     const variantColumns = db.prepare("PRAGMA table_info(product_variants)").all();
@@ -535,6 +551,12 @@ function initDatabase() {
     const featRow = db.prepare("SELECT key FROM featured_settings WHERE key = 'locked_product_ids'").get();
     if (!featRow) {
       db.prepare("INSERT INTO featured_settings (key, value_json, updated_at) VALUES ('locked_product_ids', '[]', datetime('now'))").run();
+    }
+
+    // Seed default WhatsApp support hotline if empty
+    const waRow = db.prepare("SELECT key FROM site_settings WHERE key = 'whatsapp_number'").get();
+    if (!waRow) {
+      db.prepare("INSERT INTO site_settings (key, value, updated_at) VALUES ('whatsapp_number', '+91 88793 93743', datetime('now'))").run();
     }
 
     // Idempotent auto-sync: default variant's selling price & MRP to parent product

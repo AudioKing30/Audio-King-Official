@@ -29921,10 +29921,13 @@ Weight: 1.24 lbs (0.567 kg`,
       document.body.style.overflow = "";
     }
     if (typeof window !== "undefined" && window.location.hash === "#cart") {
-      if (window.history && window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.hash = "#home";
+      try {
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        } else {
+          window.location.hash = "";
+        }
+      } catch (_) {
       }
     }
   }
@@ -30017,12 +30020,15 @@ Weight: 1.24 lbs (0.567 kg`,
     if (closeBtn) {
       closeBtn.addEventListener("click", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         closeCartDrawer();
       });
     }
     document.addEventListener("click", (e) => {
-      if (e.target && e.target.closest("#akCartClose, #akCartCloseBtn, .ak-cart-close")) {
+      const btn = e.target && e.target.closest("#akCartClose, #akCartCloseBtn, .ak-cart-close");
+      if (btn) {
         e.preventDefault();
+        e.stopPropagation();
         closeCartDrawer();
       }
     });
@@ -32347,7 +32353,20 @@ Message: ${message}`);
       const cartQty = getCartItemQuantity(product.id);
       let actionBtnHtml = "";
       if (isPreOrder) {
-        actionBtnHtml = `<button type="button" class="ak-store-btn-add ak-btn-preorder" style="background:#0B2545; color:#FFFFFF;" data-id="${product.id}"><span>Coming Soon</span></button>`;
+        if (cartQty > 0) {
+          actionBtnHtml = `
+          <div class="ak-store-qty-control" data-id="${product.id}">
+            <span class="ak-store-qty-tick">\u2713 In Cart</span>
+            <div class="ak-store-qty-actions">
+              <button type="button" class="ak-store-qty-btn ak-minus" data-id="${product.id}" aria-label="Decrease quantity">\u2212</button>
+              <span class="ak-store-qty-val">${cartQty}</span>
+              <button type="button" class="ak-store-qty-btn ak-plus" data-id="${product.id}" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        `;
+        } else {
+          actionBtnHtml = `<button type="button" class="ak-store-btn-add ak-btn-preorder" style="background:#FACC15; color:#000000; font-weight:700; border:1px solid #EAB308;" data-id="${product.id}"><span>Pre order</span></button>`;
+        }
       } else if (isOutOfStock) {
         actionBtnHtml = '<button type="button" class="ak-store-btn-add disabled ak-btn-out-of-stock" disabled>Out of Stock</button>';
       } else if (cartQty > 0) {
@@ -32746,6 +32765,41 @@ Message: ${message}`);
       });
     });
   }
+  function applyWhatsAppNumberToStorefront(numberStr, customUrl) {
+    if (!numberStr)
+      return;
+    const cleanDigits = String(numberStr).replace(/[^0-9]/g, "");
+    const waUrl = customUrl || `https://wa.me/${cleanDigits}?text=Hey%20AudioKing,%20I'm%20looking%20for%20specialist%20audio%20gear%20guidance`;
+    document.querySelectorAll(".ak-expert-phone-target").forEach((el) => {
+      el.textContent = numberStr;
+    });
+    document.querySelectorAll(".ak-action-phone").forEach((el) => {
+      el.href = waUrl;
+    });
+    document.querySelectorAll(".ak-mobile-call-btn").forEach((el) => {
+      el.href = waUrl;
+    });
+    const floatingWa = document.getElementById("akFloatingWhatsApp");
+    if (floatingWa) {
+      floatingWa.href = waUrl;
+    }
+    document.querySelectorAll('a.ak-social-icon[aria-label="WhatsApp"]').forEach((el) => {
+      el.href = `https://wa.me/${cleanDigits}`;
+    });
+  }
+  async function loadDynamicWhatsAppSettings() {
+    try {
+      const res = await fetch(apiUrl("/api/settings/whatsapp"));
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && data.whatsappNumber) {
+          applyWhatsAppNumberToStorefront(data.whatsappNumber, data.waLink);
+        }
+      }
+    } catch (err) {
+      console.warn("[AUDIOKING] Failed to load dynamic WhatsApp settings:", err);
+    }
+  }
   if (typeof window !== "undefined") {
     window.showHome = showHome;
     window.showCatalog = showCatalog;
@@ -32762,6 +32816,8 @@ Message: ${message}`);
     window.openAllBrandsModal = openAllBrandsModal;
     window.closeAllBrandsModal = closeAllBrandsModal;
     window.filterAllBrandsModalList = filterAllBrandsModalList;
+    window.applyWhatsAppNumberToStorefront = applyWhatsAppNumberToStorefront;
+    window.loadDynamicWhatsAppSettings = loadDynamicWhatsAppSettings;
   }
   if (typeof document !== "undefined") {
     let startAudioKingApp = function() {
@@ -32777,6 +32833,12 @@ Message: ${message}`);
       initStore();
       initAccountSettings();
       loadLiveCatalog();
+      loadDynamicWhatsAppSettings();
+      window.addEventListener("ak:whatsapp-updated", (e) => {
+        if (e && e.detail) {
+          applyWhatsAppNumberToStorefront(e.detail.whatsappNumber, e.detail.whatsappUrl || e.detail.waLink);
+        }
+      });
       window.addEventListener("ak:catalog-sync", () => {
         loadLiveCatalog();
       });
@@ -33089,7 +33151,7 @@ Message: ${message}`);
       nav.style.display = "";
     const waBtn = document.getElementById("akFloatingWhatsApp");
     if (waBtn)
-      waBtn.style.display = "none";
+      waBtn.style.display = "flex";
   }
   function showAdmin(updateHash = true, targetView = null) {
     const status = authService.getStatus();
@@ -33131,6 +33193,9 @@ Message: ${message}`);
   }
   function _doShowAdmin(updateHash = true, targetView = null) {
     hideAllViews();
+    const waBtn = document.getElementById("akFloatingWhatsApp");
+    if (waBtn)
+      waBtn.style.display = "none";
     const header = document.querySelector(".ak-header");
     const footer = document.querySelector(".ak-footer");
     const nav = document.querySelector(".ak-nav-bar");
@@ -33496,7 +33561,7 @@ Message: ${message}`);
     if (!product)
       return;
     activeProduct = product;
-    const hasProductVideo = Boolean(product.youtubeVideoId || product.videoUrl);
+    const hasProductVideo = Boolean(product.youtubeVideoId || product.videoUrl || Array.isArray(product.youtubeVideos) && product.youtubeVideos.length > 0);
     hideAllViews();
     const productPage = document.getElementById("productPage");
     if (!productPage)
@@ -33568,12 +33633,13 @@ Message: ${message}`);
       if (isPreOrder) {
         ppOutOfStockBadge.style.display = "inline-flex";
         ppOutOfStockBadge.className = "pp-stock-badge preorder";
-        ppOutOfStockBadge.style.background = "#FEF3C7";
-        ppOutOfStockBadge.style.color = "#92400E";
-        ppOutOfStockBadge.style.borderColor = "#FCD34D";
+        ppOutOfStockBadge.style.background = "#FEF9C3";
+        ppOutOfStockBadge.style.color = "#854D0E";
+        ppOutOfStockBadge.style.borderColor = "#FACC15";
+        ppOutOfStockBadge.style.fontWeight = "700";
         ppOutOfStockBadge.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-        <span>Availability: Coming Soon \xB7 Pre-Order Reservation</span>
+        <span>Pre-order products take 25-30 days for delivery</span>
       `;
       } else if (isOutOfStock) {
         ppOutOfStockBadge.style.display = "inline-flex";
@@ -33589,21 +33655,27 @@ Message: ${message}`);
         ppOutOfStockBadge.style.display = "none";
       }
     }
+    const preOrderNotice = document.getElementById("ppPreOrderDeliveryNotice");
+    if (preOrderNotice) {
+      preOrderNotice.style.display = isPreOrder ? "flex" : "none";
+    }
     if (ppQtyInput)
       ppQtyInput.value = "1";
     if (ppAddToCartBtn) {
       if (isPreOrder) {
-        ppAddToCartBtn.classList.add("disabled", "is-preorder");
-        ppAddToCartBtn.classList.remove("is-out-of-stock");
-        ppAddToCartBtn.disabled = true;
-        ppAddToCartBtn.style.background = "#0B2545";
-        ppAddToCartBtn.style.color = "#FFFFFF";
-        ppAddToCartBtn.style.borderColor = "#0B2545";
-        ppAddToCartBtn.style.cursor = "not-allowed";
+        ppAddToCartBtn.classList.remove("disabled", "is-out-of-stock");
+        ppAddToCartBtn.classList.add("is-preorder");
+        ppAddToCartBtn.disabled = false;
+        ppAddToCartBtn.style.background = "#FACC15";
+        ppAddToCartBtn.style.color = "#000000";
+        ppAddToCartBtn.style.borderColor = "#EAB308";
+        ppAddToCartBtn.style.cursor = "pointer";
+        ppAddToCartBtn.style.fontWeight = "700";
         const span = ppAddToCartBtn.querySelector("span");
         if (span) {
-          span.textContent = "Coming Soon";
-          span.style.color = "#FFFFFF";
+          span.textContent = "Pre order";
+          span.style.color = "#000000";
+          span.style.fontWeight = "700";
         }
       } else if (isOutOfStock) {
         ppAddToCartBtn.classList.add("disabled", "is-out-of-stock");
@@ -33634,13 +33706,14 @@ Message: ${message}`);
     }
     if (ppBuyNowBtn) {
       if (isPreOrder) {
-        ppBuyNowBtn.disabled = true;
-        ppBuyNowBtn.style.opacity = "0.5";
-        ppBuyNowBtn.style.cursor = "not-allowed";
-        ppBuyNowBtn.textContent = "Coming Soon";
-        ppBuyNowBtn.style.color = "#FFFFFF";
-        ppBuyNowBtn.style.background = "#0B2545";
-        ppBuyNowBtn.style.borderColor = "#0B2545";
+        ppBuyNowBtn.disabled = false;
+        ppBuyNowBtn.style.opacity = "1";
+        ppBuyNowBtn.style.cursor = "pointer";
+        ppBuyNowBtn.textContent = "Pre order";
+        ppBuyNowBtn.style.color = "#000000";
+        ppBuyNowBtn.style.background = "#FACC15";
+        ppBuyNowBtn.style.borderColor = "#EAB308";
+        ppBuyNowBtn.style.fontWeight = "700";
       } else if (isOutOfStock) {
         ppBuyNowBtn.disabled = true;
         ppBuyNowBtn.style.opacity = "0.5";
@@ -33752,11 +33825,25 @@ Message: ${message}`);
       alt: `${product.name} - View ${idx + 1}`
     }));
     if (hasProductVideo) {
-      slidesData.push({
-        type: "video",
-        videoId: product.youtubeVideoId,
-        alt: `${product.name} - In-Studio Video Demonstration`
-      });
+      const ytList = Array.isArray(product.youtubeVideos) && product.youtubeVideos.length > 0 ? product.youtubeVideos : product.youtubeVideoId ? [{ id: product.youtubeVideoId }] : [];
+      if (ytList.length > 0) {
+        ytList.forEach((ytItem, vIdx) => {
+          const vidId = typeof ytItem === "string" ? ytItem : ytItem.id || ytItem.videoId;
+          if (vidId) {
+            slidesData.push({
+              type: "video",
+              videoId: vidId,
+              alt: `${product.name} - Video Demonstration ${ytList.length > 1 ? `#${vIdx + 1}` : ""}`
+            });
+          }
+        });
+      } else if (product.youtubeVideoId) {
+        slidesData.push({
+          type: "video",
+          videoId: product.youtubeVideoId,
+          alt: `${product.name} - In-Studio Video Demonstration`
+        });
+      }
     }
     if (track) {
       let syncCarouselToggleState = function(playing) {
@@ -34035,7 +34122,9 @@ Message: ${message}`);
       protocolNotice.style.display = isFileProtocol ? "block" : "none";
     }
     if (hasProductVideo) {
-      let syncDedicatedToggleState = function(playing) {
+      let buildEmbedUrl = function(vidId) {
+        return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(vidId)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3`;
+      }, syncDedicatedToggleState = function(playing) {
         isDedicatedPlaying = playing;
         if (dedicatedBottomToggle) {
           const playIcon = dedicatedBottomToggle.querySelector(".ak-play-icon");
@@ -34048,7 +34137,48 @@ Message: ${message}`);
           if (label)
             label.textContent = playing ? "Pause" : "Play";
         }
+      }, setDedicatedVideo = function(vidIndex, autoPlay = false) {
+        currentYtIndex = vidIndex;
+        activeYtId = ytVideosList[vidIndex]?.id || ytVideosList[0]?.id;
+        if (!activeYtId)
+          return;
+        const embedUrl = buildEmbedUrl(activeYtId);
+        const hqThumb = `https://img.youtube.com/vi/${encodeURIComponent(activeYtId)}/hqdefault.jpg`;
+        if (dedicatedCoverImg)
+          dedicatedCoverImg.src = hqThumb;
+        if (dedicatedCover) {
+          if (autoPlay)
+            dedicatedCover.classList.add("hidden");
+          else
+            dedicatedCover.classList.remove("hidden");
+        }
+        if (dedicatedIframe) {
+          dedicatedIframe.dataset.src = embedUrl;
+          dedicatedIframe.src = autoPlay ? embedUrl + "&autoplay=1" : embedUrl;
+        }
+        if (dedicatedShieldTitle) {
+          dedicatedShieldTitle.textContent = ytVideosList[vidIndex]?.title || `${product.name} Demonstration #${vidIndex + 1}`;
+        }
+        const playlistContainer2 = document.getElementById("ppVideoPlaylistContainer");
+        if (playlistContainer2) {
+          playlistContainer2.querySelectorAll(".pp-video-playlist-item").forEach((item, idx) => {
+            const isActive = idx === vidIndex;
+            item.classList.toggle("active", isActive);
+            item.style.borderColor = isActive ? "var(--ak-orange, #EA580C)" : "#CBD5E1";
+            item.style.backgroundColor = isActive ? "#FFF7ED" : "#FFFFFF";
+            const title = item.querySelector(".pp-playlist-title");
+            if (title)
+              title.style.color = isActive ? "var(--ak-orange, #EA580C)" : "#0F172A";
+          });
+        }
+        syncDedicatedToggleState(autoPlay);
       };
+      const ytVideosList = Array.isArray(product.youtubeVideos) && product.youtubeVideos.length > 0 ? product.youtubeVideos.map((v, i) => {
+        const id = typeof v === "string" ? v : v.id || v.videoId;
+        return { id, title: v && v.title ? v.title : `Video Demonstration #${i + 1}` };
+      }).filter((v) => Boolean(v.id)) : product.youtubeVideoId ? [{ id: product.youtubeVideoId, title: "In-Studio Demonstration" }] : [];
+      let currentYtIndex = 0;
+      let activeYtId = ytVideosList[0]?.id || product.youtubeVideoId;
       if (videoTab)
         videoTab.style.display = "inline-flex";
       if (infoVideoOpt)
@@ -34056,26 +34186,57 @@ Message: ${message}`);
       if (videoTitle)
         videoTitle.textContent = `Watch ${product.name} in Action`;
       if (dedicatedShieldTitle)
-        dedicatedShieldTitle.textContent = `${product.name} Demonstration`;
-      const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(product.youtubeVideoId)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3`;
-      const hqThumb = `https://img.youtube.com/vi/${encodeURIComponent(product.youtubeVideoId)}/hqdefault.jpg`;
-      if (dedicatedCoverImg) {
-        dedicatedCoverImg.src = hqThumb;
-      }
-      if (dedicatedCover) {
-        dedicatedCover.classList.remove("hidden");
-      }
-      if (dedicatedIframe) {
-        dedicatedIframe.dataset.src = embedUrl;
-        dedicatedIframe.src = embedUrl;
-      }
+        dedicatedShieldTitle.textContent = ytVideosList[0]?.title || `${product.name} Demonstration`;
       let isDedicatedPlaying = false;
+      if (activeYtId) {
+        setDedicatedVideo(0, false);
+      }
+      const playlistContainer = document.getElementById("ppVideoPlaylistContainer");
+      if (playlistContainer) {
+        if (ytVideosList.length > 1) {
+          playlistContainer.style.display = "block";
+          playlistContainer.innerHTML = `
+          <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--ak-border, #E2E8F0);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 13px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                <span>\u{1F3AC} Available Demonstration Videos (${ytVideosList.length})</span>
+              </span>
+              <span style="font-size: 11px; color: var(--ak-text-muted, #64748B);">Click to switch & play video</span>
+            </div>
+            <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch;">
+              ${ytVideosList.map((v, i) => `
+                <button type="button" class="pp-video-playlist-item ${i === 0 ? "active" : ""}" data-video-index="${i}" style="display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; border: 1.5px solid ${i === 0 ? "var(--ak-orange, #EA580C)" : "#CBD5E1"}; background: ${i === 0 ? "#FFF7ED" : "#FFFFFF"}; cursor: pointer; flex-shrink: 0; text-align: left; transition: all 0.15s ease;">
+                  <img src="https://img.youtube.com/vi/${encodeURIComponent(v.id)}/default.jpg" style="width: 42px; height: 32px; object-fit: cover; border-radius: 4px;" alt="Video #${i + 1}">
+                  <div>
+                    <div class="pp-playlist-title" style="font-size: 12px; font-weight: 700; color: ${i === 0 ? "var(--ak-orange, #EA580C)" : "#0F172A"};">Video #${i + 1}</div>
+                    <div style="font-size: 10.5px; color: #64748B;">Watch in HD</div>
+                  </div>
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+          playlistContainer.querySelectorAll(".pp-video-playlist-item").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.preventDefault();
+              const idx = parseInt(btn.getAttribute("data-video-index"), 10);
+              if (!isNaN(idx)) {
+                setDedicatedVideo(idx, true);
+              }
+            });
+          });
+        } else {
+          playlistContainer.style.display = "none";
+          playlistContainer.innerHTML = "";
+        }
+      }
       const startDedicatedVideo = () => {
         if (dedicatedCover)
           dedicatedCover.classList.add("hidden");
         if (dedicatedIframe) {
-          if (!dedicatedIframe.src || !dedicatedIframe.src.includes("embed")) {
-            dedicatedIframe.src = embedUrl + "&autoplay=1";
+          const curEmbed = buildEmbedUrl(activeYtId);
+          if (!dedicatedIframe.src || !dedicatedIframe.src.includes("embed") || !dedicatedIframe.src.includes(activeYtId)) {
+            dedicatedIframe.src = curEmbed + "&autoplay=1";
           } else {
             sendYtCommand(dedicatedIframe, "playVideo");
           }
@@ -34681,10 +34842,13 @@ Message: ${message}`);
       addBtn.addEventListener("click", () => {
         if (!activeProduct)
           return;
-        if (activeVariant && activeVariant.stock === 0)
-          return;
-        if (!activeVariant && activeProduct.stock === 0)
-          return;
+        const isPreOrder = Boolean(activeProduct.isPreOrder || activeProduct.badge && activeProduct.badge.toLowerCase().includes("pre-order") || activeProduct.stockStatus === "preorder");
+        if (!isPreOrder) {
+          if (activeVariant && activeVariant.stock === 0)
+            return;
+          if (!activeVariant && activeProduct.stock === 0)
+            return;
+        }
         const qty = parseInt(qtyInput?.value || 1, 10);
         const effectiveSelling = activeVariant ? activeVariant.sellingPrice != null ? Number(activeVariant.sellingPrice) : activeVariant.priceOverride != null ? Number(activeVariant.priceOverride) : Number(activeProduct.price) || 0 : Number(activeProduct.price) || 0;
         const effectiveMrp = activeVariant ? activeVariant.mrp != null ? Number(activeVariant.mrp) : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0 : activeProduct.originalPrice ? Number(activeProduct.originalPrice) : 0;
@@ -34707,10 +34871,13 @@ Message: ${message}`);
       buyNowBtn.addEventListener("click", () => {
         if (!activeProduct)
           return;
-        if (activeVariant && activeVariant.stock === 0)
-          return;
-        if (!activeVariant && activeProduct.stock === 0)
-          return;
+        const isPreOrder = Boolean(activeProduct.isPreOrder || activeProduct.badge && activeProduct.badge.toLowerCase().includes("pre-order") || activeProduct.stockStatus === "preorder");
+        if (!isPreOrder) {
+          if (activeVariant && activeVariant.stock === 0)
+            return;
+          if (!activeVariant && activeProduct.stock === 0)
+            return;
+        }
         const user = getCurrentUser();
         if (!user) {
           openAuthModal("signin", "To proceed shopping you need to sign in");
@@ -35072,26 +35239,63 @@ Message: ${message}`);
       const imgSrc = resolveProductImage(p.image);
       const cartQty = getCartItemQuantity(p.id);
       const clickCount = clicks[p.id] || 0;
+      const isPreOrder = Boolean(p.isPreOrder || p.badge && p.badge.toLowerCase().includes("pre-order") || p.stockStatus === "preorder");
+      const isOutOfStock = Boolean(!isPreOrder && (p.stock === 0 || p.inStock === false || p.isOutOfStock === true || p.stockStatus === "outofstock"));
       const trendingBadge = clickCount >= 2 ? `
       <div class="ak-card-trending-badge" aria-label="Trending Product">
         <span>\u{1F525} Trending</span>
       </div>
     ` : "";
-      const actionHtml = cartQty > 0 ? `
-      <div class="ak-card-qty-control" data-id="${p.id}">
-        <span class="ak-card-qty-tick">\u2713 In Cart</span>
-        <div class="ak-card-qty-actions">
-          <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">\u2212</button>
-          <span class="ak-card-qty-val">${cartQty}</span>
-          <button type="button" class="ak-card-qty-btn ak-plus" data-id="${p.id}" aria-label="Increase quantity">+</button>
-        </div>
+      const preOrderBadge = isPreOrder ? `
+      <div class="ak-card-trending-badge" aria-label="Pre-Order Product" style="background:#FEF3C7; color:#92400E; border:1px solid #FCD34D;">
+        <span>Pre-Order</span>
       </div>
-    ` : `
-      <button class="ak-add-btn" data-id="${p.id}">
-        <svg class="ak-btn-cart-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <span class="ak-btn-text">Add to Cart</span>
-      </button>
-    `;
+    ` : "";
+      let actionHtml = "";
+      if (isPreOrder) {
+        if (cartQty > 0) {
+          actionHtml = `
+          <div class="ak-card-qty-control" data-id="${p.id}">
+            <span class="ak-card-qty-tick">\u2713 In Cart</span>
+            <div class="ak-card-qty-actions">
+              <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">\u2212</button>
+              <span class="ak-card-qty-val">${cartQty}</span>
+              <button type="button" class="ak-card-qty-btn ak-plus" data-id="${p.id}" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+        `;
+        } else {
+          actionHtml = `
+          <button class="ak-add-btn ak-btn-preorder" data-id="${p.id}" style="background:#FACC15; color:#000000; font-weight:700; border:1.5px solid #EAB308;">
+            <span class="ak-btn-text" style="color:#000000; font-weight:700;">Pre order</span>
+          </button>
+        `;
+        }
+      } else if (isOutOfStock) {
+        actionHtml = `
+        <button class="ak-add-btn disabled ak-btn-out-of-stock" data-id="${p.id}" disabled style="opacity:0.6; cursor:not-allowed; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA;">
+          <span class="ak-btn-text" style="color:#DC2626;">Out of Stock</span>
+        </button>
+      `;
+      } else if (cartQty > 0) {
+        actionHtml = `
+        <div class="ak-card-qty-control" data-id="${p.id}">
+          <span class="ak-card-qty-tick">\u2713 In Cart</span>
+          <div class="ak-card-qty-actions">
+            <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">\u2212</button>
+            <span class="ak-card-qty-val">${cartQty}</span>
+            <button type="button" class="ak-card-qty-btn ak-plus" data-id="${p.id}" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+      `;
+      } else {
+        actionHtml = `
+        <button class="ak-add-btn" data-id="${p.id}">
+          <svg class="ak-btn-cart-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span class="ak-btn-text">Add to Cart</span>
+        </button>
+      `;
+      }
       const activeVariants = p.hasVariants && Array.isArray(p.variants) && p.variants.length > 0 ? p.variants.filter((v) => v.isActive !== false).length > 0 ? p.variants.filter((v) => v.isActive !== false) : p.variants : null;
       let displayPriceHtml = "";
       let originalPriceHtml = "";
@@ -35114,7 +35318,7 @@ Message: ${message}`);
       }
       return `
       <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
-        ${trendingBadge}
+        ${preOrderBadge || trendingBadge}
         ${offerStampHtml}
         <div class="ak-product-thumb">
           <img class="ak-product-img" src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.jpg';">

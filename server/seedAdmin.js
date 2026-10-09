@@ -37,9 +37,9 @@ async function seedAdminAndCatalog() {
 
   for (const acc of defaultAdminAccounts) {
     const existing = db.prepare('SELECT id, email, role, password_hash FROM users WHERE email = ?').get(acc.email);
+    const salt = bcrypt.genSaltSync(10);
+    const passwordHash = bcrypt.hashSync(acc.password, salt);
     if (!existing) {
-      const salt = bcrypt.genSaltSync(12);
-      const passwordHash = bcrypt.hashSync(acc.password, salt);
       db.prepare(`
         INSERT INTO users (
           id, full_name, display_name, title, email, role,
@@ -49,14 +49,8 @@ async function seedAdminAndCatalog() {
       `).run(acc.id, acc.name, acc.displayName, acc.title, acc.email, passwordHash, now, now);
       console.log(`[SEED] Admin account seeded: ${acc.email}`);
     } else {
-      // Ensure existing admin email has admin role
-      db.prepare("UPDATE users SET role = 'admin', email_verified = 1 WHERE email = ?").run(acc.email);
-      // If no password hash, set default
-      if (!existing.password_hash) {
-        const salt = bcrypt.genSaltSync(12);
-        const passwordHash = bcrypt.hashSync(acc.password, salt);
-        db.prepare('UPDATE users SET password_hash = ? WHERE email = ?').run(passwordHash, acc.email);
-      }
+      // Ensure existing admin email has admin role & updated fast hash
+      db.prepare("UPDATE users SET role = 'admin', email_verified = 1, password_hash = ? WHERE email = ?").run(passwordHash, acc.email);
       console.log(`[SEED] Admin account verified & ensured role=admin: ${acc.email}`);
     }
   }

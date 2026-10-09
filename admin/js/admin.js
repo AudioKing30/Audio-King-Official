@@ -14,6 +14,7 @@ const state = {
   formImages: [], // array of image paths
   formVideoChoice: 'youtube', // 'youtube' | 'upload' | 'none'
   formVideoUrl: '',
+  formYouTubeVideos: [''],
   ordersTab: 'current', // 'current' | 'history'
   activeModal: null,
   analyticsRange: 7,
@@ -370,8 +371,74 @@ async function loadDashboardStats() {
         `).join('');
       }
     }
+
+    // Load WhatsApp support hotline setting
+    loadAdminWhatsAppSetting();
   } catch (err) {
     console.error('[DASHBOARD ERROR]', err);
+  }
+}
+
+async function loadAdminWhatsAppSetting() {
+  const input = document.getElementById('adminWhatsAppNumberInput');
+  if (!input) return;
+  try {
+    const res = await adminFetch('/api/admin/settings/whatsapp');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.whatsappNumber) {
+        input.value = data.whatsappNumber;
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to load admin WhatsApp setting:', err);
+  }
+}
+
+async function handleSaveWhatsAppNumber(event) {
+  if (event) event.preventDefault();
+  const input = document.getElementById('adminWhatsAppNumberInput');
+  const btn = document.getElementById('adminSaveWhatsAppBtn');
+  const statusBadge = document.getElementById('adminWhatsAppStatusBadge');
+  if (!input || !input.value.trim()) {
+    alert('Please enter a valid WhatsApp phone number');
+    return;
+  }
+  const val = input.value.trim();
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+  }
+
+  try {
+    const res = await adminFetch('/api/admin/settings/whatsapp', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whatsappNumber: val })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      if (statusBadge) {
+        statusBadge.style.display = 'inline-block';
+        setTimeout(() => { statusBadge.style.display = 'none'; }, 4000);
+      }
+      try {
+        if (typeof window.applyWhatsAppNumberToStorefront === 'function') {
+          window.applyWhatsAppNumberToStorefront(data.whatsappNumber, data.whatsappUrl);
+        }
+      } catch (e) {}
+      window.dispatchEvent(new CustomEvent('ak:whatsapp-updated', { detail: data }));
+      alert('✓ WhatsApp hotline updated successfully to ' + data.whatsappNumber + ' and active live across all storefront pages!');
+    } else {
+      alert(data.error || 'Failed to update WhatsApp hotline.');
+    }
+  } catch (err) {
+    alert('Network error while saving WhatsApp number: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '💾 Update WhatsApp Hotline';
+    }
   }
 }
 
@@ -684,6 +751,7 @@ function resetProductForm() {
   state.formImages = [];
   state.formVideoChoice = 'none';
   state.formVideoUrl = '';
+  state.formYouTubeVideos = [''];
 
   // Reset variant state
   state.hasVariants = false;
@@ -746,22 +814,22 @@ async function openEditProduct(productId) {
     state.formImages = Array.isArray(p.images) && p.images.length > 0 ? [...p.images] : (p.image ? [p.image] : []);
     renderImagePreviewGrid();
 
-    // Video setup
-    if (p.youtubeVideoId) {
+    // Video setup & Multiple YouTube Videos
+    const rawYt = Array.isArray(p.youtubeVideos) && p.youtubeVideos.length > 0
+      ? p.youtubeVideos.map(v => typeof v === 'string' ? v : (v.url || v.id))
+      : (p.youtubeVideoId ? [`https://www.youtube.com/watch?v=${p.youtubeVideoId}`] : (p.videoType === 'youtube' && p.videoUrl ? [p.videoUrl] : []));
+
+    if (rawYt.length > 0) {
+      state.formYouTubeVideos = rawYt;
       setVideoChoice('youtube');
-      document.getElementById('productVideoInput').value = p.youtubeVideoId;
-      updateInlineVideoPreview('youtube', p.youtubeVideoId);
-    } else if (p.videoUrl) {
-      if (p.videoType === 'youtube') {
-        setVideoChoice('youtube');
-        document.getElementById('productVideoInput').value = p.videoUrl;
-        updateInlineVideoPreview('youtube', p.videoUrl);
-      } else {
-        setVideoChoice('upload');
-        document.getElementById('productVideoInput').value = p.videoUrl;
-        updateInlineVideoPreview('upload', p.videoUrl);
-      }
+    } else if (p.videoUrl && p.videoType === 'upload') {
+      state.formYouTubeVideos = [''];
+      setVideoChoice('upload');
+      const vInput = document.getElementById('productVideoInput');
+      if (vInput) vInput.value = p.videoUrl;
+      updateInlineVideoPreview('upload', p.videoUrl);
     } else {
+      state.formYouTubeVideos = [''];
       setVideoChoice('none');
     }
 
@@ -1268,27 +1336,122 @@ function setVideoChoice(choice) {
   if (choice === 'youtube') {
     urlInputGroup.style.display = 'block';
     fileUploadGroup.style.display = 'none';
-    const val = document.getElementById('productVideoInput').value.trim();
-    if (val) updateInlineVideoPreview('youtube', val);
-    else previewBox.style.display = 'none';
+    renderYouTubeVideoInputs();
   } else if (choice === 'upload') {
     urlInputGroup.style.display = 'none';
     fileUploadGroup.style.display = 'block';
-    const val = document.getElementById('productVideoInput').value.trim();
+    const val = document.getElementById('productVideoInput')?.value?.trim();
     if (val) updateInlineVideoPreview('upload', val);
-    else previewBox.style.display = 'none';
+    else if (previewBox) previewBox.style.display = 'none';
   } else {
     urlInputGroup.style.display = 'none';
     fileUploadGroup.style.display = 'none';
-    previewBox.style.display = 'none';
-    document.getElementById('productVideoInput').value = '';
+    if (previewBox) previewBox.style.display = 'none';
+    const vInput = document.getElementById('productVideoInput');
+    if (vInput) vInput.value = '';
+    state.formYouTubeVideos = [''];
   }
 }
 
+function renderYouTubeVideoInputs() {
+  const container = document.getElementById('productYouTubeInputsList');
+  if (!container) return;
+
+  if (!state.formYouTubeVideos || !Array.isArray(state.formYouTubeVideos) || state.formYouTubeVideos.length === 0) {
+    state.formYouTubeVideos = [''];
+  }
+
+  container.innerHTML = state.formYouTubeVideos.map((url, idx) => {
+    return `
+      <div style="display: flex; gap: 8px; align-items: center;" class="yt-video-input-row">
+        <span style="font-size: 11.5px; font-weight: 700; color: #64748B; width: 24px; text-align: center;">#${idx + 1}</span>
+        <input 
+          type="text" 
+          class="form-input" 
+          value="${escapeHtml(url)}" 
+          placeholder="Paste YouTube link or ID (e.g. https://www.youtube.com/watch?v=kYv_3jV8koc)" 
+          oninput="handleYouTubeVideoRowChange(${idx}, this.value)"
+          style="flex: 1;"
+        >
+        ${state.formYouTubeVideos.length > 1 ? `
+          <button type="button" class="btn-danger" style="padding: 6px 10px; font-size: 12px; font-weight: 700; border-radius: 4px;" onclick="removeYouTubeVideoInputRow(${idx})" title="Remove this video">
+            ✕
+          </button>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+
+  updateAllYouTubeVideoPreviews();
+}
+
+function addYouTubeVideoInputRow() {
+  if (!state.formYouTubeVideos) state.formYouTubeVideos = [];
+  state.formYouTubeVideos.push('');
+  renderYouTubeVideoInputs();
+}
+
+function removeYouTubeVideoInputRow(idx) {
+  if (!state.formYouTubeVideos) return;
+  state.formYouTubeVideos.splice(idx, 1);
+  if (state.formYouTubeVideos.length === 0) state.formYouTubeVideos.push('');
+  renderYouTubeVideoInputs();
+}
+
+function handleYouTubeVideoRowChange(idx, val) {
+  if (!state.formYouTubeVideos) state.formYouTubeVideos = [];
+  state.formYouTubeVideos[idx] = val;
+  updateAllYouTubeVideoPreviews();
+}
+
+function updateAllYouTubeVideoPreviews() {
+  const previewBox = document.getElementById('inlineVideoPreview');
+  if (!previewBox) return;
+
+  const validVideos = (state.formYouTubeVideos || [])
+    .map(url => typeof url === 'string' ? url.trim() : '')
+    .filter(Boolean)
+    .map(url => ({ raw: url, id: parseYouTubeId(url) }))
+    .filter(v => Boolean(v.id));
+
+  if (validVideos.length === 0) {
+    previewBox.style.display = 'none';
+    previewBox.innerHTML = '';
+    return;
+  }
+
+  previewBox.style.display = 'block';
+  previewBox.innerHTML = `
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="font-size: 12px; font-weight: 700; color: #0F172A;">
+        Connected YouTube Demonstration Videos (${validVideos.length}):
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+        ${validVideos.map((v, i) => `
+          <div style="border: 1px solid var(--ak-border); border-radius: 6px; overflow: hidden; background: #0F172A;">
+            <div style="padding: 4px 8px; background: #1E293B; color: #FFF; font-size: 11px; font-weight: 700; display: flex; justify-content: space-between;">
+              <span>Video #${i + 1}</span>
+              <span style="color: #38BDF8;">${v.id}</span>
+            </div>
+            <iframe 
+              src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?playsinline=1&modestbranding=1&rel=0" 
+              style="width: 100%; height: 140px; border: none; display: block;" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
 function handleVideoInputChange() {
-  const val = document.getElementById('productVideoInput').value.trim();
+  const val = document.getElementById('productVideoInput')?.value?.trim();
   if (state.formVideoChoice === 'youtube' && val) {
-    updateInlineVideoPreview('youtube', val);
+    if (!state.formYouTubeVideos) state.formYouTubeVideos = [];
+    state.formYouTubeVideos[0] = val;
+    updateAllYouTubeVideoPreviews();
   }
 }
 
@@ -1546,6 +1709,14 @@ async function handleSaveProduct(e) {
     if (v0.sellingPrice != null && v0.sellingPrice > 0) finalSellingPrice = Number(v0.sellingPrice);
   }
 
+  const validYouTubeVideos = (state.formYouTubeVideos || [])
+    .map(v => typeof v === 'string' ? v.trim() : '')
+    .filter(Boolean);
+
+  const videoInput = state.formVideoChoice === 'youtube'
+    ? (validYouTubeVideos[0] || '')
+    : (document.getElementById('productVideoInput')?.value?.trim() || '');
+
   const payload = {
     name,
     category,
@@ -1560,7 +1731,8 @@ async function handleSaveProduct(e) {
     description,
     images: state.formImages.length > 0 ? state.formImages : ['assets/images/placeholder.svg'],
     videoChoice: state.formVideoChoice,
-    videoInput
+    videoInput,
+    youtubeVideos: validYouTubeVideos
   };
 
   const saveBtn = document.getElementById('saveProductBtn');
@@ -2334,7 +2506,7 @@ async function loadOrders() {
           </span>
         </td>
         <td>
-          <div style="font-weight: 700; color: #FFF;">${o.customerName}</div>
+          <div style="font-weight: 700; color: var(--ak-text-primary, #0F172A);">${o.customerName}</div>
           <div style="font-size: 11px; color: var(--ak-text-muted);">${o.customerEmail}</div>
           <div style="font-size: 11px; color: #38BDF8; margin-top: 2px;">📞 ${o.customerPhone || 'N/A'}</div>
         </td>
@@ -3592,6 +3764,7 @@ function loadFeaturedManager() {
   renderActiveHomepageFeaturedProducts();
   renderLockedFeaturedProducts();
   renderPopularFeaturedProducts();
+  populateFeaturedCatalogDropdown();
 }
 
 function renderActiveHomepageFeaturedProducts() {
@@ -3726,10 +3899,13 @@ function renderLockedFeaturedProducts() {
 
     return `
       <div class="locked-product-item">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
-          <button type="button" class="btn-secondary" style="padding: 2px 5px; font-size: 10px;" ${isFirst ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', -1)" title="Move up priority">▲</button>
-          <span style="font-size: 11px; font-weight: 700; color: #2563EB;">#${idx + 1}</span>
-          <button type="button" class="btn-secondary" style="padding: 2px 5px; font-size: 10px;" ${isLast ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', 1)" title="Move down priority">▼</button>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 48px; flex-shrink: 0;">
+          <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1;" ${isFirst ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', -1)" title="Move up priority">▲</button>
+          <div style="display: flex; align-items: center; gap: 2px;" title="Set exact sequence position (1 to ${lockedIds.length})">
+            <span style="font-size: 11px; font-weight: 700; color: #475569;">#</span>
+            <input type="number" min="1" max="${lockedIds.length}" value="${idx + 1}" onchange="changeFeaturedSequence('${pid}', this.value)" style="width: 40px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;">
+          </div>
+          <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1;" ${isLast ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', 1)" title="Move down priority">▼</button>
         </div>
 
         <img src="${thumb}" alt="${escapeHtml(product.name)}" class="locked-product-thumb" onerror="this.src='${resolveAdminThumb('')}'">
@@ -3742,8 +3918,8 @@ function renderLockedFeaturedProducts() {
           </div>
         </div>
 
-        <button type="button" class="btn-danger" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap;" onclick="unlockFeaturedProduct('${pid}')" title="Unlock product from featured">
-          🔓 Unlock
+        <button type="button" class="btn-danger" style="padding: 6px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" onclick="unlockFeaturedProduct('${pid}')" title="Remove product from featured">
+          🗑️ Remove
         </button>
       </div>
     `;
@@ -3943,6 +4119,102 @@ async function moveLockedProduct(productId, delta) {
   }
 }
 
+async function changeFeaturedSequence(productId, newRank) {
+  const targetRank = parseInt(newRank, 10);
+  if (isNaN(targetRank) || targetRank < 1) {
+    renderLockedFeaturedProducts();
+    return;
+  }
+  const list = [...(state.lockedFeaturedIds || [])].map(String);
+  const currentIdx = list.findIndex(id => id === String(productId));
+  if (currentIdx < 0) return;
+
+  const targetIdx = Math.min(Math.max(targetRank - 1, 0), list.length - 1);
+  if (targetIdx === currentIdx) {
+    renderLockedFeaturedProducts();
+    return;
+  }
+
+  // Remove from current position and insert at target position
+  const [item] = list.splice(currentIdx, 1);
+  list.splice(targetIdx, 0, item);
+
+  try {
+    const res = await adminFetch('/api/admin/featured-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lockedProductIds: list })
+    });
+    if (res.ok) {
+      state.lockedFeaturedIds = list;
+      try {
+        localStorage.setItem('audioking_locked_featured', JSON.stringify(list));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:featured-sync', { detail: { lockedProductIds: list } }));
+      loadFeaturedManager();
+    } else {
+      alert('Failed to update sequence order');
+      renderLockedFeaturedProducts();
+    }
+  } catch (err) {
+    alert('Network error while updating sequence order');
+    renderLockedFeaturedProducts();
+  }
+}
+
+function populateFeaturedCatalogDropdown() {
+  const dropdown = document.getElementById('adminFeaturedCatalogDropdown');
+  if (!dropdown) return;
+  const allProducts = state.products || [];
+  const lockedSet = new Set((state.lockedFeaturedIds || []).map(String));
+  
+  let html = '<option value="">-- Select a product from catalog to add --</option>';
+  allProducts.forEach(p => {
+    const isLocked = lockedSet.has(String(p.id));
+    html += `<option value="${p.id}" ${isLocked ? 'disabled' : ''}>${escapeHtml(p.name)} (${p.brand || 'No Brand'}) - ₹${p.price} ${isLocked ? '[Already in Featured]' : ''}</option>`;
+  });
+  dropdown.innerHTML = html;
+}
+
+async function handleAddSelectedFeaturedProduct() {
+  const dropdown = document.getElementById('adminFeaturedCatalogDropdown');
+  const seqInput = document.getElementById('adminNewFeaturedSequence');
+  if (!dropdown || !dropdown.value) {
+    alert('Please select a product from the dropdown first.');
+    return;
+  }
+  const productId = String(dropdown.value);
+  const targetSeq = seqInput ? parseInt(seqInput.value, 10) : 1;
+  await addFeaturedProductAtSequence(productId, targetSeq);
+}
+
+async function addFeaturedProductAtSequence(productId, targetSeq) {
+  const list = [...(state.lockedFeaturedIds || [])].map(String).filter(id => id !== String(productId));
+  const insertIdx = isNaN(targetSeq) ? list.length : Math.min(Math.max(targetSeq - 1, 0), list.length);
+  list.splice(insertIdx, 0, String(productId));
+
+  try {
+    const res = await adminFetch('/api/admin/featured-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lockedProductIds: list })
+    });
+    if (res.ok) {
+      state.lockedFeaturedIds = list;
+      try {
+        localStorage.setItem('audioking_locked_featured', JSON.stringify(list));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:featured-sync', { detail: { lockedProductIds: list } }));
+      clearFeaturedProductSearch();
+      loadFeaturedManager();
+    } else {
+      alert('Failed to add product to featured');
+    }
+  } catch (err) {
+    alert('Network error while adding product to featured: ' + err.message);
+  }
+}
+
 async function saveFeaturedSettingsToServer() {
   const list = [...(state.lockedFeaturedIds || [])].map(String);
   const btn = document.getElementById('saveFeaturedSettingsBtn');
@@ -3975,6 +4247,12 @@ async function saveFeaturedSettingsToServer() {
   }
 }
 
+// Expose YouTube Video APIs to Window
+window.addYouTubeVideoInputRow = addYouTubeVideoInputRow;
+window.removeYouTubeVideoInputRow = removeYouTubeVideoInputRow;
+window.handleYouTubeVideoRowChange = handleYouTubeVideoRowChange;
+window.updateAllYouTubeVideoPreviews = updateAllYouTubeVideoPreviews;
+
 // Expose Homepage & Featured APIs to Window
 window.loadHomepageManager = loadHomepageManager;
 window.renderHeroSlidesAdmin = renderHeroSlidesAdmin;
@@ -3996,7 +4274,13 @@ window.clearFeaturedProductSearch = clearFeaturedProductSearch;
 window.lockFeaturedProduct = lockFeaturedProduct;
 window.unlockFeaturedProduct = unlockFeaturedProduct;
 window.moveLockedProduct = moveLockedProduct;
+window.changeFeaturedSequence = changeFeaturedSequence;
+window.populateFeaturedCatalogDropdown = populateFeaturedCatalogDropdown;
+window.handleAddSelectedFeaturedProduct = handleAddSelectedFeaturedProduct;
+window.addFeaturedProductAtSequence = addFeaturedProductAtSequence;
 window.saveFeaturedSettingsToServer = saveFeaturedSettingsToServer;
+window.loadAdminWhatsAppSetting = loadAdminWhatsAppSetting;
+window.handleSaveWhatsAppNumber = handleSaveWhatsAppNumber;
 
 // Expose Blanket Offer Picker APIs to Window
 window.handleOfferTargetTypeChange = handleOfferTargetTypeChange;

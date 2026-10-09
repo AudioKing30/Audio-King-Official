@@ -270,6 +270,11 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-width: 0;
+  max-width: calc(100% - 260px);
+  width: calc(100% - 260px);
+  overflow-x: hidden;
+  box-sizing: border-box;
   background-color: var(--ak-admin-bg);
 }
 
@@ -325,6 +330,10 @@
 .content-body {
   padding: 32px;
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* -------------------------------------------------------------------------
@@ -332,9 +341,15 @@
    ------------------------------------------------------------------------- */
 .panel-view {
   display: none;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .panel-view.active {
   display: block;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .metrics-grid {
@@ -439,6 +454,10 @@
   padding: 24px;
   margin-bottom: 28px;
   box-shadow: var(--ak-shadow-sm);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .card-header-bar {
@@ -551,8 +570,13 @@
    TABLES
    ------------------------------------------------------------------------- */
 .table-responsive {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
 .admin-table {
@@ -1549,9 +1573,11 @@
 
 .admin-coupon-form {
   display: grid;
-  grid-template-columns: 1.5fr 1.2fr 1fr 1.2fr 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
   align-items: end;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .admin-form-submit-row {
@@ -2600,5 +2626,50 @@
   }
 }
 
-
-
+/* =========================================================
+   LAPTOP & COMPACT DESKTOP RESPONSIVENESS (1024px - 1366px)
+   ========================================================= */
+@media (max-width: 1366px) {
+  .content-body {
+    padding: 24px 20px;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  .admin-card {
+    padding: 20px 18px;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  #view-homepage-manager .hero-slide-admin-card {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  #view-homepage-manager .hero-slide-admin-thumb {
+    width: 120px;
+    height: 68px;
+  }
+  #view-homepage-manager .hero-slide-admin-info {
+    min-width: 200px;
+    flex: 1 1 200px;
+  }
+  #view-homepage-manager .hero-slide-admin-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  #view-homepage-manager [style*="grid-template-columns"] {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  }
+  .admin-coupon-form {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)) !important;
+    gap: 12px;
+  }
+  .table-responsive {
+    max-width: 100%;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-table {
+    min-width: 720px;
+  }
+}

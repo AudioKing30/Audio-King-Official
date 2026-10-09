@@ -779,18 +779,37 @@ router.post('/products', (req, res) => {
     const imageArray = Array.isArray(images) && images.length > 0 ? images : ['assets/images/placeholder.svg'];
     const mainImage = imageArray[0];
 
-    // Video processing
+    // Video processing & Multiple YouTube Videos
     let videoType = null;
     let videoUrl = null;
     let youtubeVideoId = null;
+    let youtubeVideos = [];
+
+    if (Array.isArray(req.body.youtubeVideos)) {
+      youtubeVideos = req.body.youtubeVideos
+        .map(v => typeof v === 'string' ? v.trim() : (v?.url || ''))
+        .filter(Boolean)
+        .map(url => {
+          const id = parseYouTubeId(url);
+          return id ? { id, url: `https://www.youtube.com/watch?v=${id}` } : null;
+        })
+        .filter(Boolean);
+    }
 
     if (videoChoice === 'youtube' && videoInput) {
       youtubeVideoId = parseYouTubeId(videoInput);
       videoType = 'youtube';
       videoUrl = `https://www.youtube.com/watch?v=${youtubeVideoId || videoInput}`;
+      if (youtubeVideoId && !youtubeVideos.some(v => v.id === youtubeVideoId)) {
+        youtubeVideos.unshift({ id: youtubeVideoId, url: videoUrl });
+      }
     } else if (videoChoice === 'upload' && videoInput) {
       videoType = 'upload';
       videoUrl = videoInput;
+    } else if (youtubeVideos.length > 0) {
+      youtubeVideoId = youtubeVideos[0].id;
+      videoType = 'youtube';
+      videoUrl = youtubeVideos[0].url;
     }
 
     const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -809,14 +828,14 @@ router.post('/products', (req, res) => {
         id, name, short_name, brand, category, subcategory, section,
         price, original_price, stock, in_stock, stock_status, rating, review_count,
         badge, sku, description, image, images_json,
-        video_type, video_url, youtube_video_id,
+        video_type, video_url, youtube_video_id, youtube_videos_json,
         specs_json, deep_specs_json, is_featured,
         created_at, updated_at
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?,
-        ?, ?, ?,
+        ?, ?, ?, ?,
         ?, ?, ?,
         ?, ?
       )
@@ -843,6 +862,7 @@ router.post('/products', (req, res) => {
       videoType,
       videoUrl,
       youtubeVideoId,
+      JSON.stringify(youtubeVideos),
       '[]',
       '[]',
       0,
@@ -921,6 +941,24 @@ router.put('/products/:id', (req, res) => {
     let videoType = existing.video_type;
     let videoUrl = existing.video_url;
     let youtubeVideoId = existing.youtube_video_id;
+    let youtubeVideosJson = existing.youtube_videos_json || '[]';
+
+    if (body.youtubeVideos !== undefined && Array.isArray(body.youtubeVideos)) {
+      const parsedList = body.youtubeVideos
+        .map(v => typeof v === 'string' ? v.trim() : (v?.url || ''))
+        .filter(Boolean)
+        .map(url => {
+          const id = parseYouTubeId(url);
+          return id ? { id, url: `https://www.youtube.com/watch?v=${id}` } : null;
+        })
+        .filter(Boolean);
+      youtubeVideosJson = JSON.stringify(parsedList);
+      if (parsedList.length > 0) {
+        youtubeVideoId = parsedList[0].id;
+        videoType = 'youtube';
+        videoUrl = parsedList[0].url;
+      }
+    }
 
     if (body.videoChoice !== undefined) {
       if (body.videoChoice === 'youtube') {
@@ -935,6 +973,7 @@ router.put('/products/:id', (req, res) => {
         videoType = null;
         videoUrl = null;
         youtubeVideoId = null;
+        youtubeVideosJson = '[]';
       }
     }
 
@@ -945,7 +984,7 @@ router.put('/products/:id', (req, res) => {
         name = ?, brand = ?, category = ?, section = ?,
         price = ?, original_price = ?, stock = ?, in_stock = ?, stock_status = ?,
         badge = ?,
-        image = ?, images_json = ?, video_type = ?, video_url = ?, youtube_video_id = ?,
+        image = ?, images_json = ?, video_type = ?, video_url = ?, youtube_video_id = ?, youtube_videos_json = ?,
         description = ?, updated_at = ?
       WHERE id = ?
     `).run(
@@ -964,6 +1003,7 @@ router.put('/products/:id', (req, res) => {
       videoType,
       videoUrl,
       youtubeVideoId,
+      youtubeVideosJson,
       body.description !== undefined ? body.description : existing.description,
       now,
       req.params.id
@@ -1934,6 +1974,54 @@ router.put('/featured-settings', (req, res) => {
   } catch (err) {
     console.error('[ADMIN SAVE FEATURED SETTINGS ERROR]', err);
     return res.status(500).json({ error: 'Failed to save featured settings.' });
+  }
+});
+
+// -------------------------------------------------------------
+// WHATSAPP HOTLINE & FLOATING BUTTON SETTINGS
+// -------------------------------------------------------------
+router.get('/settings/whatsapp', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value FROM site_settings WHERE key = 'whatsapp_number'").get();
+    const rawNumber = row ? row.value : '+91 88793 93743';
+    const cleanDigits = rawNumber.replace(/[^0-9]/g, '');
+    return res.json({
+      success: true,
+      whatsappNumber: rawNumber,
+      cleanDigits,
+      waLink: `https://wa.me/${cleanDigits}`
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+router.put('/settings/whatsapp', (req, res) => {
+  try {
+    const { whatsappNumber } = req.body || {};
+    if (!whatsappNumber || !String(whatsappNumber).trim()) {
+      return res.status(400).json({ error: 'Please enter a valid phone number.' });
+    }
+    const clean = String(whatsappNumber).trim();
+    const cleanDigits = clean.replace(/[^0-9]/g, '');
+    if (cleanDigits.length < 8) {
+      return res.status(400).json({ error: 'Phone number is too short. Include country code and mobile number.' });
+    }
+    db.prepare(`
+      INSERT INTO site_settings (key, value, updated_at)
+      VALUES ('whatsapp_number', ?, datetime('now'))
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+    `).run(clean);
+    return res.json({
+      success: true,
+      message: 'WhatsApp support hotline updated successfully!',
+      whatsappNumber: clean,
+      cleanDigits,
+      waLink: `https://wa.me/${cleanDigits}`,
+      whatsappUrl: `https://wa.me/${cleanDigits}`
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
   }
 });
 

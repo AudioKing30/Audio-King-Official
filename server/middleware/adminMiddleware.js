@@ -56,12 +56,15 @@ function getAdminUserFromRequest(req) {
         if (!record) continue;
 
         if (record.role === 'admin') {
-          // Permanent lifetime admin session: auto-extend by 10 years and update last active
-          try {
-            const tenYearsLater = Date.now() + (10 * 365 * 24 * 60 * 60 * 1000);
-            db.prepare('UPDATE sessions SET expires_at = ?, last_active_at = ? WHERE id = ?')
-              .run(tenYearsLater, new Date().toISOString(), record.session_id);
-          } catch (e) {}
+          // Permanent lifetime admin session: throttle updates to once every 10 minutes
+          const tenMinutesMs = 10 * 60 * 1000;
+          if (!record.session_expires_at || (record.session_expires_at - now) < (9 * 365 * 24 * 60 * 60 * 1000)) {
+            try {
+              const tenYearsLater = Date.now() + (10 * 365 * 24 * 60 * 60 * 1000);
+              db.prepare('UPDATE sessions SET expires_at = ?, last_active_at = ? WHERE id = ?')
+                .run(tenYearsLater, new Date().toISOString(), record.session_id);
+            } catch (e) {}
+          }
 
           return {
             id: record.id,

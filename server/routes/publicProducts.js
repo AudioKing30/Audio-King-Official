@@ -95,40 +95,54 @@ function formatProduct(row, activeOffers = []) {
     ? Math.round(((originalPrice - sellingPrice) / originalPrice) * 100) 
     : 0;
 
-  return {
-    id: row.id,
-    name: row.name,
-    shortName: row.short_name || row.name,
-    brand: row.brand,
-    category: row.category,
-    subcategory: row.subcategory || '',
-    price: sellingPrice,
-    originalPrice: originalPrice,
-    discountPercent,
-    activeOfferTitle,
-    offerDiscount: maxOfferDiscount,
-    hasOffer: Boolean(activeOfferTitle || maxOfferDiscount > 0 || (originalPrice > sellingPrice && originalPrice > 0)),
-    stock: Number(row.stock ?? 10),
-    inStock: Boolean((row.in_stock === 1 || row.stock_status === 'instock') && row.in_stock !== 2 && row.stock_status !== 'preorder' && !(row.badge && row.badge.toLowerCase().includes('pre-order')) && row.stock > 0),
-    isOutOfStock: Boolean(row.in_stock !== 2 && row.stock_status !== 'preorder' && !(row.badge && row.badge.toLowerCase().includes('pre-order')) && (row.in_stock === 0 || row.stock === 0 || row.stock_status === 'outofstock')),
-    isPreOrder: Boolean(row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))),
-    stockStatus: (row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : ((row.in_stock === 0 || row.stock === 0 || row.stock_status === 'outofstock') ? 'outofstock' : 'instock'),
-    rating: Number(row.rating || 5.0),
-    reviewCount: Number(row.review_count || 0),
-    badge: (row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'Pre-Order' : (activeOfferTitle ? `${maxOfferDiscount}% OFF · ${activeOfferTitle}` : (row.badge || (discountPercent > 0 ? `${discountPercent}% OFF` : ''))),
-    sku: row.sku || `AK-${row.id.toUpperCase()}`,
-    description: row.description || '',
-    image: mainImage,
-    images: images,
-    videoType: row.video_type || null,
-    videoUrl: row.video_url || null,
-    youtubeVideoId: row.youtube_video_id || null,
-    specs: specs,
-    deepSpecs: deepSpecs,
-    isFeatured: Boolean(row.is_featured),
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
-  };
+    let youtubeVideos = [];
+    try {
+      youtubeVideos = JSON.parse(row.youtube_videos_json || '[]');
+    } catch (e) {
+      youtubeVideos = [];
+    }
+    if (!youtubeVideos.length && row.youtube_video_id) {
+      youtubeVideos = [{
+        id: row.youtube_video_id,
+        url: row.video_url || `https://www.youtube.com/watch?v=${row.youtube_video_id}`
+      }];
+    }
+
+    return {
+      id: row.id,
+      name: row.name,
+      shortName: row.short_name || row.name,
+      brand: row.brand,
+      category: row.category,
+      subcategory: row.subcategory || '',
+      price: sellingPrice,
+      originalPrice: originalPrice,
+      discountPercent,
+      activeOfferTitle,
+      offerDiscount: maxOfferDiscount,
+      hasOffer: Boolean(activeOfferTitle || maxOfferDiscount > 0 || (originalPrice > sellingPrice && originalPrice > 0)),
+      stock: Number(row.stock ?? 10),
+      inStock: Boolean((row.in_stock === 1 || row.stock_status === 'instock') && row.in_stock !== 2 && row.stock_status !== 'preorder' && !(row.badge && row.badge.toLowerCase().includes('pre-order')) && row.stock > 0),
+      isOutOfStock: Boolean(row.in_stock !== 2 && row.stock_status !== 'preorder' && !(row.badge && row.badge.toLowerCase().includes('pre-order')) && (row.in_stock === 0 || row.stock === 0 || row.stock_status === 'outofstock')),
+      isPreOrder: Boolean(row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))),
+      stockStatus: (row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : ((row.in_stock === 0 || row.stock === 0 || row.stock_status === 'outofstock') ? 'outofstock' : 'instock'),
+      rating: Number(row.rating || 5.0),
+      reviewCount: Number(row.review_count || 0),
+      badge: (row.in_stock === 2 || row.stock_status === 'preorder' || (row.badge && row.badge.toLowerCase().includes('pre-order'))) ? 'Pre-Order' : (activeOfferTitle ? `${maxOfferDiscount}% OFF · ${activeOfferTitle}` : (row.badge || (discountPercent > 0 ? `${discountPercent}% OFF` : ''))),
+      sku: row.sku || `AK-${row.id.toUpperCase()}`,
+      description: row.description || '',
+      image: mainImage,
+      images: images,
+      videoType: row.video_type || (youtubeVideos.length ? 'youtube' : null),
+      videoUrl: row.video_url || (youtubeVideos[0]?.url || null),
+      youtubeVideoId: row.youtube_video_id || (youtubeVideos[0]?.id || null),
+      youtubeVideos: youtubeVideos,
+      specs: specs,
+      deepSpecs: deepSpecs,
+      isFeatured: Boolean(row.is_featured),
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
+    };
 }
 
 /**
@@ -280,6 +294,7 @@ router.get('/', (req, res) => {
     const products = rows.map(r => formatProduct(r, activeOffers));
     attachVariantsToProducts(products);
 
+    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
     return res.json({
       success: true,
       count: products.length,
@@ -410,6 +425,7 @@ router.get('/:id', (req, res) => {
     const product = formatProduct(row, activeOffers);
     attachVariantsToProducts([product]);
 
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
     return res.json({
       success: true,
       product

@@ -327,11 +327,13 @@ export function closeCartDrawer() {
     document.body.style.overflow = '';
   }
   if (typeof window !== 'undefined' && window.location.hash === '#cart') {
-    if (window.history && window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.location.hash = '#home';
-    }
+    try {
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } else {
+        window.location.hash = '';
+      }
+    } catch (_) {}
   }
 }
 
@@ -428,14 +430,17 @@ export function initCart() {
   if (closeBtn) {
     closeBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      e.stopPropagation();
       closeCartDrawer();
     });
   }
 
   // Delegated click handler guarantees [X] button or child SVG closes the drawer
   document.addEventListener('click', (e) => {
-    if (e.target && e.target.closest('#akCartClose, #akCartCloseBtn, .ak-cart-close')) {
+    const btn = e.target && e.target.closest('#akCartClose, #akCartCloseBtn, .ak-cart-close');
+    if (btn) {
       e.preventDefault();
+      e.stopPropagation();
       closeCartDrawer();
     }
   });

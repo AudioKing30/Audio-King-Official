@@ -173,9 +173,35 @@ app.use('/api/admin', adminApiRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin/analytics', analyticsRoutes);
 
-// Static uploads serving
+// Public WhatsApp Support Hotline API
+app.get('/api/settings/whatsapp', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value FROM site_settings WHERE key = 'whatsapp_number'").get();
+    const rawNumber = row ? row.value : '+91 88793 93743';
+    const cleanDigits = rawNumber.replace(/[^0-9]/g, '');
+    res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    res.json({
+      success: true,
+      whatsappNumber: rawNumber,
+      cleanDigits,
+      waLink: `https://wa.me/${cleanDigits}`
+    });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
+// Static uploads serving with fast image caching & ETag
 const uploadsDir = path.resolve(__dirname, '..', 'uploads');
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', express.static(uploadsDir, {
+  maxAge: '7d',
+  etag: true,
+  setHeaders: (res, filePath) => {
+    if (/\.(jpg|jpeg|png|webp|avif|svg|gif|ico)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
+    }
+  }
+}));
 
 // Newsletter Community Subscription API
 app.post('/api/newsletter/subscribe', async (req, res) => {
@@ -237,11 +263,14 @@ app.get(['/store', '/store/*', '/catalog', '/catalog/*'], (req, res) => {
   res.redirect('/#store');
 });
 
-// Static Asset Serving (Frontend & Storefront) with no-cache for code assets
+// Static Asset Serving (Frontend & Storefront) with no-cache for code assets and long-term caching for media
 app.use(express.static(rootDir, {
+  etag: true,
   setHeaders: (res, filePath) => {
     if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    } else if (/\.(jpg|jpeg|png|webp|avif|svg|gif|ico|woff2|woff|ttf|mp4|webm)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
     }
   }
 }));
