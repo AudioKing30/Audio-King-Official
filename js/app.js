@@ -1039,30 +1039,13 @@ export function renderProductVariants(product) {
     }
 
     if (ppDiscountBadge) {
-      if (hasDiscount && discountPct > 0) {
-        ppDiscountBadge.textContent = `${discountPct}% OFF`;
-        ppDiscountBadge.style.display = 'inline-flex';
-      } else {
-        ppDiscountBadge.textContent = '';
-        ppDiscountBadge.style.display = 'none';
-      }
+      ppDiscountBadge.textContent = '';
+      ppDiscountBadge.style.display = 'none';
     }
 
     if (ppOfferStampContainer) {
-      if (hasDiscount && discountPct > 0) {
-        const variantOfferProd = {
-          ...product,
-          price: effectiveSelling,
-          originalPrice: effectiveMrp,
-          discountPercent: discountPct,
-          hasOffer: true
-        };
-        ppOfferStampContainer.innerHTML = getProductOfferStampHtml(variantOfferProd, 'ak-offer-stamp-modal');
-        ppOfferStampContainer.style.display = 'block';
-      } else {
-        ppOfferStampContainer.innerHTML = '';
-        ppOfferStampContainer.style.display = 'none';
-      }
+      ppOfferStampContainer.innerHTML = '';
+      ppOfferStampContainer.style.display = 'none';
     }
 
     // Check if any selected option has a variant image
@@ -1319,13 +1302,8 @@ export async function showProduct(productOrId, updateHash = true) {
   }
   const ppDiscountBadge = document.getElementById('ppDiscountBadge');
   if (ppDiscountBadge) {
-    if (prodHasDiscount && prodDiscountPct > 0) {
-      ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
-      ppDiscountBadge.style.display = 'inline-flex';
-    } else {
-      ppDiscountBadge.textContent = '';
-      ppDiscountBadge.style.display = 'none';
-    }
+    ppDiscountBadge.textContent = '';
+    ppDiscountBadge.style.display = 'none';
   }
 
   // Stock status (supports in-stock, out-of-stock, and pre-order / coming soon)
@@ -2350,16 +2328,21 @@ function renderCheckoutSummary() {
 
   const couponInput = document.getElementById('akCoCouponInput');
   const couponBtn = document.getElementById('akCoApplyCouponBtn');
+  const removeBtn = document.getElementById('akCoRemoveCouponBtn');
   if (couponInput && couponBtn) {
     if (appliedDedicatedCoupon) {
       couponInput.value = appliedDedicatedCoupon.code;
       couponInput.disabled = true;
-      couponBtn.textContent = 'Remove';
-      couponBtn.style.background = '#DC2626';
+      couponBtn.textContent = 'Applied';
+      couponBtn.style.background = '#16A34A';
+      couponBtn.disabled = true;
+      if (removeBtn) removeBtn.style.display = 'inline-block';
     } else {
       couponInput.disabled = false;
       couponBtn.textContent = 'Apply';
       couponBtn.style.background = 'var(--ak-orange, #EA580C)';
+      couponBtn.disabled = false;
+      if (removeBtn) removeBtn.style.display = 'none';
     }
   }
 
@@ -2370,6 +2353,7 @@ async function applyDedicatedCoupon(codeVal) {
   const code = (codeVal || '').trim().toUpperCase();
   const msgEl = document.getElementById('akCoCouponMsg');
   const btn = document.getElementById('akCoApplyCouponBtn');
+  const removeBtn = document.getElementById('akCoRemoveCouponBtn');
 
   if (!code) {
     if (msgEl) {
@@ -2414,6 +2398,10 @@ async function applyDedicatedCoupon(codeVal) {
       if (btn) {
         btn.disabled = false;
         btn.textContent = 'Apply';
+        btn.style.background = 'var(--ak-orange, #EA580C)';
+      }
+      if (removeBtn) {
+        removeBtn.style.display = 'none';
       }
     }
   } catch (err) {
@@ -2425,6 +2413,10 @@ async function applyDedicatedCoupon(codeVal) {
     if (btn) {
       btn.disabled = false;
       btn.textContent = 'Apply';
+      btn.style.background = 'var(--ak-orange, #EA580C)';
+    }
+    if (removeBtn) {
+      removeBtn.style.display = 'none';
     }
   }
 }
@@ -2433,8 +2425,25 @@ function removeDedicatedCoupon() {
   appliedDedicatedCoupon = null;
   const msgEl = document.getElementById('akCoCouponMsg');
   const inputEl = document.getElementById('akCoCouponInput');
-  if (msgEl) msgEl.style.display = 'none';
-  if (inputEl) inputEl.value = '';
+  const removeBtn = document.getElementById('akCoRemoveCouponBtn');
+  const applyBtn = document.getElementById('akCoApplyCouponBtn');
+
+  if (msgEl) {
+    msgEl.textContent = '';
+    msgEl.style.display = 'none';
+  }
+  if (inputEl) {
+    inputEl.value = '';
+    inputEl.disabled = false;
+  }
+  if (applyBtn) {
+    applyBtn.textContent = 'Apply';
+    applyBtn.style.background = 'var(--ak-orange, #EA580C)';
+    applyBtn.disabled = false;
+  }
+  if (removeBtn) {
+    removeBtn.style.display = 'none';
+  }
   showToast('Coupon removed.', 'info');
   renderCheckoutSummary();
 }
@@ -2649,8 +2658,9 @@ function initDedicatedCheckoutPage() {
     });
   });
 
-  // Dedicated Coupon Apply Button & Input
+  // Dedicated Coupon Apply & Remove Buttons & Input
   const couponBtn = document.getElementById('akCoApplyCouponBtn');
+  const removeBtn = document.getElementById('akCoRemoveCouponBtn');
   const couponInput = document.getElementById('akCoCouponInput');
 
   if (couponBtn) {
@@ -2662,6 +2672,13 @@ function initDedicatedCheckoutPage() {
         const codeVal = (couponInput?.value || '').trim();
         applyDedicatedCoupon(codeVal);
       }
+    });
+  }
+
+  if (removeBtn) {
+    removeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      removeDedicatedCoupon();
     });
   }
 
@@ -3059,14 +3076,14 @@ export function renderFeaturedProducts(items) {
       const hasDiscount = mrp > selling && selling > 0;
       displayPriceHtml = `<span>${formatINR(selling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : '';
-      offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : '';
+      offerStampHtml = '';
     } else {
       const baseSelling = Number(p.price) || 0;
       const baseMrp = Number(p.originalPrice) || 0;
       const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
       displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : '';
-      offerStampHtml = hasDiscount ? getProductOfferStampHtml(p) : '';
+      offerStampHtml = '';
     }
 
     return `
@@ -3332,8 +3349,47 @@ function setupQuickCategoryListeners() {
   });
 }
 
+function openCommunityWelcomeModal(email) {
+  const modal = document.getElementById('akCommunityWelcomeModal');
+  const emailEl = document.getElementById('akCommWelcomeEmail');
+  if (emailEl && email) {
+    emailEl.textContent = email;
+  }
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeCommunityWelcomeModal() {
+  const modal = document.getElementById('akCommunityWelcomeModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
 function initNewsletter() {
   const form = document.getElementById('akNewsletterForm');
+  const welcomeModal = document.getElementById('akCommunityWelcomeModal');
+  const closeBtn = document.getElementById('akCommunityWelcomeClose');
+  const okBtn = document.getElementById('akCommunityWelcomeOkBtn');
+
+  if (closeBtn) closeBtn.addEventListener('click', closeCommunityWelcomeModal);
+  if (okBtn) {
+    okBtn.addEventListener('click', () => {
+      closeCommunityWelcomeModal();
+      window.location.hash = '#store';
+    });
+  }
+  if (welcomeModal) {
+    welcomeModal.addEventListener('click', (e) => {
+      if (e.target === welcomeModal) {
+        closeCommunityWelcomeModal();
+      }
+    });
+  }
+
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -3345,7 +3401,7 @@ function initNewsletter() {
       const origBtnText = submitBtn ? submitBtn.textContent : '';
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Subscribing...';
+        submitBtn.textContent = 'Joining...';
       }
 
       try {
@@ -3356,13 +3412,15 @@ function initNewsletter() {
         });
         const data = await res.json();
         if (data.success) {
-          showToast(data.message || 'Welcome to the AudioKing Creator Community!', getIcon('check', '', 20));
+          openCommunityWelcomeModal(email);
+          showToast('You are officially part of the AudioKing community!', getIcon('check', '', 20));
           if (input) input.value = '';
         } else {
-          showToast(data.message || 'Subscription failed. Please check your email.');
+          showToast(data.message || 'Subscription failed. Please check your email.', 'error');
         }
       } catch (err) {
-        showToast('Welcome to the AudioKing Community! We have saved your subscription.', getIcon('check', '', 20));
+        console.error('[Newsletter submit error]', err);
+        openCommunityWelcomeModal(email);
         if (input) input.value = '';
       } finally {
         if (submitBtn) {

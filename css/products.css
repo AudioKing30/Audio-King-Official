@@ -1004,4 +1004,17 @@ span.ak-req, .ak-req {
   }
 }
 
+/* Defensively remove all offer stamps, bubbles, and discount percentage badges across all products */
+.ak-offer-stamp-badge,
+.ak-offer-stamp,
+.ak-offer-stamp-modal,
+.pp-offer-stamp-container,
+.pp-discount-badge,
+.badge-discount {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 

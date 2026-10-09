@@ -186,15 +186,31 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
     }
 
     const cleanEmail = email.toLowerCase().trim();
+    const subId = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
     try {
-      await sendCommunityWelcomeEmail({ email: cleanEmail });
+      db.prepare(`
+        INSERT OR IGNORE INTO newsletter_subscribers (id, email, created_at)
+        VALUES (?, ?, ?)
+      `).run(subId, cleanEmail, new Date().toISOString());
+      console.log(`[NEWSLETTER] Saved subscriber: ${cleanEmail}`);
+    } catch (dbErr) {
+      console.warn('[NEWSLETTER DB NOTICE]', dbErr.message);
+    }
+
+    let emailSent = false;
+    try {
+      const emailResult = await sendCommunityWelcomeEmail({ email: cleanEmail });
+      emailSent = !!(emailResult && emailResult.success);
+      console.log(`[NEWSLETTER] Welcome email sent to ${cleanEmail}:`, emailResult?.messageId || 'ok');
     } catch (emailErr) {
       console.error('[NEWSLETTER] Error dispatching welcome email:', emailErr.message);
     }
 
     return res.json({
       success: true,
-      message: 'Welcome to the AudioKing Creator Community! Check your inbox for your 10% discount voucher.'
+      emailSent,
+      message: 'You are officially part of the AudioKing community! Check your email for your welcome perk & voucher.'
     });
   } catch (err) {
     console.error('[NEWSLETTER ERROR]:', err);

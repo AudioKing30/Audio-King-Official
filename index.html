@@ -299,7 +299,7 @@
           <li class="ak-nav-item" id="akNavItemStore"><a href="#store" class="ak-nav-link">Store</a></li>
 
           <li class="ak-nav-item" id="akNavItemBrands">
-            <a href="javascript:void(0)" class="ak-nav-link" id="akBrandsNavToggle">
+            <a href="#store?brand=ADAM%20Audio" class="ak-nav-link" id="akBrandsNavToggle">
               <span>Brands</span>
               <span class="ak-chevron-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
             </a>
@@ -334,7 +334,7 @@
           </li>
 
           <li class="ak-nav-item" id="akNavItemProAudio">
-            <a href="#pro-audio" class="ak-nav-link">
+            <a href="#store?category=Audio%20Interfaces" class="ak-nav-link">
               <span>Pro Audio</span>
               <span class="ak-chevron-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
             </a>
@@ -364,7 +364,7 @@
           </li>
 
           <li class="ak-nav-item" id="akNavItemMusical">
-            <a href="#musical-instruments" class="ak-nav-link">
+            <a href="#store?category=Keyboards" class="ak-nav-link">
               <span>Musical Instruments</span>
               <span class="ak-chevron-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
             </a>
@@ -1847,15 +1847,6 @@
                     <span class="ak-choice-desc">All major Indian banks supported</span>
                   </div>
                 </label>
-
-                <label class="ak-payment-choice">
-                  <input type="radio" name="akCheckoutPayment" value="COD">
-                  <span class="ak-choice-radio"></span>
-                  <div class="ak-choice-info">
-                    <span class="ak-choice-name">Cash on Delivery (COD)</span>
-                    <span class="ak-choice-desc">Pay cash upon verified doorstep delivery</span>
-                  </div>
-                </label>
               </div>
             </div>
 
@@ -1883,6 +1874,9 @@
                 <input type="text" id="akCoCouponInput" class="ak-form-input" placeholder="ENTER COUPON CODE" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1; height: 38px; padding: 0 12px; background: #FFFFFF; border: 1px solid #CBD5E1; color: #0F172A; border-radius: 6px; font-size: 13px;">
                 <button type="button" id="akCoApplyCouponBtn" class="ak-btn" style="padding: 0 16px; height: 38px; background: var(--ak-orange, #EA580C); color: #FFF; font-weight: 700; font-size: 13px; border-radius: 6px; border: none; cursor: pointer; white-space: nowrap;">
                   Apply
+                </button>
+                <button type="button" id="akCoRemoveCouponBtn" class="ak-btn" style="display: none; padding: 0 16px; height: 38px; background: #DC2626; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 6px; border: none; cursor: pointer; white-space: nowrap;">
+                  Remove
                 </button>
               </div>
               <div id="akCoCouponMsg" style="font-size: 12px; margin-top: 6px; display: none; line-height: 1.4;"></div>
@@ -1984,7 +1978,7 @@
                 </div>
                 <div class="ak-order-field">
                   <div class="ak-label">PAYMENT METHOD</div>
-                  <div class="ak-value" id="akOrderPaymentVal">Cash on Delivery (COD)</div>
+                  <div class="ak-value" id="akOrderPaymentVal">Prepaid (UPI / Online)</div>
                 </div>
                 <div class="ak-order-field">
                   <div class="ak-label">DELIVERY</div>
@@ -2111,6 +2105,38 @@
       <div class="ak-checkout-foot">
         <button class="ak-back-btn" id="akModalCheckoutBackBtn" style="display:none; background:none; border:none; cursor:pointer;">&larr; Back to Address</button>
         <button class="ak-proceed-btn" id="akModalCheckoutSubmitBtn" style="cursor:pointer; border:none;">Continue to Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JOIN COMMUNITY THANK YOU POPUP MODAL ==================== -->
+  <div class="ak-modal-overlay" id="akCommunityWelcomeModal" role="dialog" aria-modal="true" aria-labelledby="akCommWelcomeTitle" style="display:none;">
+    <div class="ak-modal-container" style="max-width: 480px; text-align: center; border-radius: 12px; overflow: hidden; background: #FFFFFF; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <div class="ak-modal-header" style="justify-content: flex-end; padding: 14px 18px 0; border: none; background: #FFF;">
+        <button type="button" class="ak-modal-close" id="akCommunityWelcomeClose" aria-label="Close dialog" style="cursor: pointer; background: none; border: none; font-size: 20px; line-height: 1; color: #64748B;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="ak-modal-content" style="padding: 10px 28px 32px;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #ECFDF5; border: 2px solid #A7F3D0; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <h2 id="akCommWelcomeTitle" style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0 0 10px; line-height: 1.3;">
+          You are officially part of the AudioKing community!
+        </h2>
+        <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0 0 20px;">
+          Thank you for joining India's dedicated network of audio creators and sound engineers. We have sent an automated welcome email directly to <strong id="akCommWelcomeEmail" style="color:#0F172A;">your email</strong> with your exclusive 10% discount code.
+        </p>
+        <div style="background: #FFF7ED; border: 1.5px dashed #F97316; border-radius: 8px; padding: 14px; margin-bottom: 22px;">
+          <div style="font-size: 11px; font-weight: 700; color: #C2410C; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Welcome Voucher Code</div>
+          <div style="font-family: 'Courier New', monospace; font-size: 20px; font-weight: 800; letter-spacing: 2px; color: #EA580C;">AUDIOKING10</div>
+          <div style="font-size: 12px; color: #9A3412; margin-top: 4px;">10% off your gear order at checkout</div>
+        </div>
+        <button type="button" id="akCommunityWelcomeOkBtn" class="ak-btn" style="width: 100%; height: 44px; background: var(--ak-orange, #EA580C); color: #FFF; font-weight: 700; font-size: 14px; border-radius: 8px; border: none; cursor: pointer;">
+          Start Exploring Gear &rarr;
+        </button>
       </div>
     </div>
   </div>

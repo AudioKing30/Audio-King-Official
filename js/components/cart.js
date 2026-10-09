@@ -166,6 +166,14 @@ if (typeof window !== 'undefined') {
  */
 export async function addToCart(product, qty = 1, silent = false) {
   if (!product) return false;
+
+  // Strict Sign-In Gate: Users must be authenticated before adding items to cart
+  if (!authService.isAuthenticated()) {
+    showToast('Please sign in to add products to your cart', 'error');
+    openAuthModal('signin', 'Please sign in to add items to your cart.');
+    return false;
+  }
+
   const pId = String(product.id);
   const quantity = Math.max(1, Number(qty) || 1);
 
@@ -219,6 +227,11 @@ export async function addToCart(product, qty = 1, silent = false) {
  * Writes immediately to SQLite database when user is authenticated.
  */
 export async function updateCartItemQty(productId, delta) {
+  if (!authService.isAuthenticated()) {
+    showToast('Please sign in to manage your cart.', 'error');
+    openAuthModal('signin', 'Please sign in to manage your cart.');
+    return;
+  }
   const pId = String(productId);
   const item = cart.find(i => String(i.id) === pId);
   if (!item) return;
@@ -407,12 +420,26 @@ export function renderCartDrawer() {
 export function initCart() {
   updateCartBadge();
   const trigger = document.getElementById('akCartTrigger');
-  const closeBtn = document.getElementById('akCartCloseBtn');
+  const closeBtn = document.getElementById('akCartClose') || document.getElementById('akCartCloseBtn');
   const backdrop = document.getElementById('akCartBackdrop');
   const checkoutBtn = document.getElementById('akProceedCheckoutBtn');
 
   if (trigger) trigger.addEventListener('click', () => openCartDrawer(true));
-  if (closeBtn) closeBtn.addEventListener('click', closeCartDrawer);
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeCartDrawer();
+    });
+  }
+
+  // Delegated click handler guarantees [X] button or child SVG closes the drawer
+  document.addEventListener('click', (e) => {
+    if (e.target && e.target.closest('#akCartClose, #akCartCloseBtn, .ak-cart-close')) {
+      e.preventDefault();
+      closeCartDrawer();
+    }
+  });
+
   if (backdrop) {
     backdrop.addEventListener('click', (e) => {
       if (e.target === backdrop) closeCartDrawer();

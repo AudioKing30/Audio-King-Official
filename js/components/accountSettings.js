@@ -520,7 +520,7 @@ export async function renderOrdersList() {
 
         <div class="ak-order-card-footer">
           <div class="ak-order-footer-details">
-            <span>Payment: <strong>${order.paymentMethod || 'Cash on Delivery (COD)'}</strong></span>
+            <span>Payment: <strong>${order.paymentMethod || 'Online / Prepaid (UPI)'}</strong></span>
             ${order.shippingAddress?.city ? `<span>Ship to: <strong>${order.shippingAddress.name || ''} (${order.shippingAddress.city}, ${order.shippingAddress.state || ''})</strong></span>` : ''}
           </div>
           <div class="ak-order-footer-total">

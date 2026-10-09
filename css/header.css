@@ -434,9 +434,8 @@
   z-index: 1050;
 }
 
-.ak-nav-item:hover > .ak-nav-dropdown,
-.ak-nav-item:focus-within > .ak-nav-dropdown,
-.ak-nav-item.dropdown-open > .ak-nav-dropdown {
+.ak-nav-item:hover:not(.dropdown-closed) > .ak-nav-dropdown,
+.ak-nav-item.dropdown-open:not(.dropdown-closed) > .ak-nav-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);

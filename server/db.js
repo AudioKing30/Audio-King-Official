@@ -342,6 +342,13 @@ function initDatabase() {
       value_json TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
+
+    -- NEWSLETTER SUBSCRIBERS (Community members)
+    CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+      id TEXT PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL COLLATE NOCASE,
+      created_at TEXT NOT NULL
+    );
   `);
 
   // Safe schema migrations for existing database columns

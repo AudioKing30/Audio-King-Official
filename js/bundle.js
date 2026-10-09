@@ -26050,82 +26050,14 @@ Weight: 1.24 lbs (0.567 kg`,
     window.getProductOfferStampSvg = getProductOfferStampSvg;
     window.getProductOfferStampHtml = getProductOfferStampHtml;
   }
-  function hasProductOffer(product) {
-    if (!product)
-      return false;
-    if (product.isPreOrder || product.stockStatus === "preorder" || product.badge && /pre-order/i.test(product.badge)) {
-      return false;
-    }
-    const pct = getProductOfferPercent(product);
-    return pct > 0;
-  }
   function getProductOfferPercent(product) {
-    if (!product)
-      return 0;
-    const originalPrice = Number(product.originalPrice ?? product.mrp ?? 0);
-    const price = Number(product.price ?? product.sellingPrice ?? product.sp ?? 0);
-    const calcDiscount = calculateDiscountPercent(originalPrice, price);
-    if (calcDiscount > 0)
-      return calcDiscount;
-    const explicit = Number(product.discountPercent ?? product.discount_percent ?? product.offerDiscount ?? product.offer_discount);
-    if (Number.isFinite(explicit) && explicit > 0) {
-      return Math.round(explicit);
-    }
-    if (product.badge) {
-      const m = String(product.badge).match(/(\d+(?:\.\d+)?)\s*%\s*off/i);
-      if (m) {
-        return Math.round(parseFloat(m[1]));
-      }
-    }
     return 0;
   }
-  var _stampCounter = 0;
   function getProductOfferStampSvg(pct) {
-    const cleanPct = Math.round(Number(pct)) || 0;
-    if (cleanPct <= 0)
-      return "";
-    const fontSize = cleanPct >= 100 ? 38 : cleanPct >= 10 ? 46 : 50;
-    const letterSpacing = cleanPct >= 10 ? "-1px" : "0px";
-    _stampCounter++;
-    const gradId = `akStampGrad_${cleanPct}_${_stampCounter}_${Math.random().toString(36).slice(2, 7)}`;
-    const rosettePath = "M 100.00 2.00 C 107.95 5.27, 115.10 16.07, 121.22 20.79 C 128.89 19.76, 140.47 13.99, 149.00 15.13 C 154.25 21.94, 155.04 34.86, 157.98 42.02 C 165.14 44.96, 178.06 45.75, 184.87 51.00 C 186.01 59.53, 180.24 71.11, 179.21 78.78 C 183.93 84.90, 194.73 92.05, 198.00 100.00 C 194.73 107.95, 183.93 115.10, 179.21 121.22 C 180.24 128.89, 186.01 140.47, 184.87 149.00 C 178.06 154.25, 165.14 155.04, 157.98 157.98 C 155.04 165.14, 154.25 178.06, 149.00 184.87 C 140.47 186.01, 128.89 180.24, 121.22 179.21 C 115.10 183.93, 107.95 194.73, 100.00 198.00 C 92.05 194.73, 84.90 183.93, 78.78 179.21 C 71.11 180.24, 59.53 186.01, 51.00 184.87 C 45.75 178.06, 44.96 165.14, 42.02 157.98 C 34.86 155.04, 21.94 154.25, 15.13 149.00 C 13.99 140.47, 19.76 128.89, 20.79 121.22 C 16.07 115.10, 5.27 107.95, 2.00 100.00 C 5.27 92.05, 16.07 84.90, 20.79 78.78 C 19.76 71.11, 13.99 59.53, 15.13 51.00 C 21.94 45.75, 34.86 44.96, 42.02 42.02 C 44.96 34.86, 45.75 21.94, 51.00 15.13 C 59.53 13.99, 71.11 19.76, 78.78 20.79 C 84.90 16.07, 92.05 5.27, 100.00 2.00 Z";
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%" class="ak-offer-stamp-img" aria-hidden="true" focusable="false">
-    <defs>
-      <radialGradient id="${gradId}" cx="45%" cy="40%" r="65%">
-        <stop offset="0%" stop-color="#E81822"/>
-        <stop offset="80%" stop-color="#D10C14"/>
-        <stop offset="100%" stop-color="#B5070E"/>
-      </radialGradient>
-    </defs>
-    <!-- Solid red base path ensures red rosette stamp badge is 100% visible across all tabs, modals, and hidden ancestor states -->
-    <path d="${rosettePath}" fill="#D10C14"/>
-    <path d="${rosettePath}" fill="url(#${gradId})"/>
-    <circle cx="100" cy="100" r="74" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.95"/>
-    <line x1="60" y1="48" x2="82" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
-    <polygon points="100.00,39.50 102.23,44.93 108.08,45.37 103.61,49.17 105.00,54.88 100.00,51.80 95.00,54.88 96.39,49.17 91.92,45.37 97.77,44.93" fill="#FFFFFF"/>
-    <line x1="118" y1="48" x2="140" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
-    <text x="100" y="105" text-anchor="middle" fill="#FFFFFF" font-family="'Arial Black', 'Montserrat', Impact, -apple-system, sans-serif" font-weight="900" font-size="${fontSize}" letter-spacing="${letterSpacing}">${cleanPct}%</text>
-    <line x1="58" y1="124" x2="72" y2="124" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
-    <text x="100" y="131" text-anchor="middle" fill="#FFFFFF" font-family="'Arial Black', 'Montserrat', Impact, -apple-system, sans-serif" font-weight="900" font-size="22" letter-spacing="1.5px">OFF</text>
-    <line x1="128" y1="124" x2="142" y2="124" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
-    <polygon points="100.00,141.50 102.23,146.93 108.08,147.37 103.61,151.17 105.00,156.88 100.00,153.80 95.00,156.88 96.39,151.17 91.92,147.37 97.77,146.93" fill="#FFFFFF"/>
-  </svg>`;
+    return "";
   }
   function getProductOfferStampHtml(product, extraClass = "") {
-    if (!hasProductOffer(product))
-      return "";
-    const pct = getProductOfferPercent(product);
-    if (!pct || pct <= 0)
-      return "";
-    const offerTitle = product.activeOfferTitle ? `${product.activeOfferTitle} (${pct}% OFF)` : `${pct}% OFF Special Offer`;
-    const svg = getProductOfferStampSvg(pct);
-    if (!svg)
-      return "";
-    return `
-    <div class="ak-offer-stamp-badge ${extraClass}" title="${offerTitle}" aria-label="${offerTitle}">
-      ${svg}
-    </div>
-  `;
+    return "";
   }
   function resolveProductImage(src) {
     if (!src || src === "assets/images/logo.jpg" || src === "assets/images/placeholder.jpg") {
@@ -26621,7 +26553,7 @@ Weight: 1.24 lbs (0.567 kg`,
         dateEl.textContent = orderData.date || formatDate();
       const paymentEl = document.getElementById("akOrderPaymentVal");
       if (paymentEl)
-        paymentEl.textContent = orderData.paymentMethod || "Cash on Delivery (COD)";
+        paymentEl.textContent = orderData.paymentMethod || "Online / Prepaid (UPI)";
       const cust = orderData.customer || {
         name: "Demo Customer",
         city: "Mumbai",
@@ -28302,7 +28234,7 @@ Weight: 1.24 lbs (0.567 kg`,
         items: orderData.items || [],
         customer: orderData.customer || {},
         shippingAddress: orderData.customer || {},
-        paymentMethod: orderData.paymentMethod || "Cash on Delivery (COD)",
+        paymentMethod: orderData.paymentMethod || "Prepaid Online (UPI)",
         couponCode: orderData.couponCode || null
       };
       let serverSavedOrder = null;
@@ -28773,7 +28705,7 @@ Weight: 1.24 lbs (0.567 kg`,
 
         <div class="ak-order-card-footer">
           <div class="ak-order-footer-details">
-            <span>Payment: <strong>${order.paymentMethod || "Cash on Delivery (COD)"}</strong></span>
+            <span>Payment: <strong>${order.paymentMethod || "Online / Prepaid (UPI)"}</strong></span>
             ${order.shippingAddress?.city ? `<span>Ship to: <strong>${order.shippingAddress.name || ""} (${order.shippingAddress.city}, ${order.shippingAddress.state || ""})</strong></span>` : ""}
           </div>
           <div class="ak-order-footer-total">
@@ -29230,7 +29162,7 @@ Weight: 1.24 lbs (0.567 kg`,
       couponBtn.disabled = true;
       couponBtn.textContent = "Checking...";
     }
-    const subtotal = getCartSubtotal();
+    const subtotal = checkoutItems && checkoutItems.length > 0 ? checkoutItems.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0) : getCartSubtotal();
     try {
       const res = await fetch(apiUrl("/api/coupons/validate"), {
         method: "POST",
@@ -29429,14 +29361,19 @@ Weight: 1.24 lbs (0.567 kg`,
       </div>
 
       <div class="ak-payment-options">
-        <!-- 1. Cash on Delivery (COD) -->
-        <label class="ak-payment-option selected" data-method="COD">
-          <input type="radio" name="akPayment" value="COD" checked class="ak-payment-radio">
+        <!-- 1. UPI -->
+        <label class="ak-payment-option selected" data-method="UPI">
+          <input type="radio" name="akPayment" value="UPI" checked class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">Cash on Delivery (COD)</div>
-            <div class="ak-payment-desc">Pay upon courier delivery at your doorstep via cash or digital QR</div>
-            <div class="ak-method-details" id="akCodDetails" style="margin-top: 10px; font-size: 12px; color: #059669; background: #ECFDF5; padding: 8px 12px; border-radius: 4px; border: 1px solid #A7F3D0;">
-              \u2713 Free Pan-India Cash on Delivery available for your order.
+            <div class="ak-payment-title">UPI (Google Pay, PhonePe, Paytm, BHIM)</div>
+            <div class="ak-payment-desc">Instant payment via any UPI application or UPI ID</div>
+            <div class="ak-method-details" id="akUpiDetails" style="display: block; margin-top: 10px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+              <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                <button type="button" class="ak-upi-chip selected" data-upi="Google Pay" style="padding: 5px 12px; font-size: 12px; font-weight: 700; border: 1.5px solid var(--ak-orange); background: #FFF7ED; color: var(--ak-orange); border-radius: 4px; cursor: pointer;">Google Pay</button>
+                <button type="button" class="ak-upi-chip" data-upi="PhonePe" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">PhonePe</button>
+                <button type="button" class="ak-upi-chip" data-upi="Paytm" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">Paytm</button>
+              </div>
+              <input type="text" id="akUpiIdInput" class="ak-form-input" placeholder="e.g. mobile@upi or username@okhdfcbank" value="musician@okhdfcbank" style="background:#FFF;">
             </div>
           </div>
         </label>
@@ -29470,24 +29407,7 @@ Weight: 1.24 lbs (0.567 kg`,
           </div>
         </label>
 
-        <!-- 3. UPI -->
-        <label class="ak-payment-option" data-method="UPI">
-          <input type="radio" name="akPayment" value="UPI" class="ak-payment-radio">
-          <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">UPI (Google Pay, PhonePe, Paytm, BHIM)</div>
-            <div class="ak-payment-desc">Instant payment via any UPI application or UPI ID</div>
-            <div class="ak-method-details" id="akUpiDetails" style="display: none; margin-top: 10px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
-              <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
-                <button type="button" class="ak-upi-chip selected" data-upi="Google Pay" style="padding: 5px 12px; font-size: 12px; font-weight: 700; border: 1.5px solid var(--ak-orange); background: #FFF7ED; color: var(--ak-orange); border-radius: 4px; cursor: pointer;">Google Pay</button>
-                <button type="button" class="ak-upi-chip" data-upi="PhonePe" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">PhonePe</button>
-                <button type="button" class="ak-upi-chip" data-upi="Paytm" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">Paytm</button>
-              </div>
-              <input type="text" id="akUpiIdInput" class="ak-form-input" placeholder="e.g. mobile@upi or username@okhdfcbank" value="musician@okhdfcbank" style="background:#FFF;">
-            </div>
-          </div>
-        </label>
-
-        <!-- 4. Net Banking -->
+        <!-- 3. Net Banking -->
         <label class="ak-payment-option" data-method="Net Banking">
           <input type="radio" name="akPayment" value="Net Banking" class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
@@ -29518,8 +29438,11 @@ Weight: 1.24 lbs (0.567 kg`,
         <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Have a Promo Code or Private Coupon?</label>
         <div style="display: flex; gap: 8px;">
           <input type="text" id="akCouponInput" class="ak-form-input" placeholder="Enter coupon code" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1;" value="${appliedCoupon ? appliedCoupon.code : ""}" ${appliedCoupon ? "disabled" : ""}>
-          <button type="button" id="akApplyCouponBtn" class="ak-btn" style="padding: 8px 16px; background: ${appliedCoupon ? "#DC2626" : "var(--ak-orange)"}; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
-            ${appliedCoupon ? "Remove" : "Apply"}
+          <button type="button" id="akApplyCouponBtn" class="ak-btn" style="padding: 8px 16px; background: ${appliedCoupon ? "#16A34A" : "var(--ak-orange)"}; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
+            ${appliedCoupon ? "Applied" : "Apply"}
+          </button>
+          <button type="button" id="akRemoveCouponBtn" class="ak-btn" style="display: ${appliedCoupon ? "inline-block" : "none"}; padding: 8px 16px; background: #DC2626; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
+            Remove
           </button>
         </div>
         <div id="akCouponMsg" style="margin-top: 6px; font-size: 12px; font-weight: 600; color: ${appliedCoupon ? "#166534" : "#DC2626"}; display: ${appliedCoupon ? "block" : "none"};">
@@ -29554,6 +29477,7 @@ Weight: 1.24 lbs (0.567 kg`,
     `;
       loadAndRenderVisibleCoupons(subtotal, checkoutItems);
       const couponBtn = bodyEl.querySelector("#akApplyCouponBtn");
+      const removeCouponBtn = bodyEl.querySelector("#akRemoveCouponBtn");
       const couponInput = bodyEl.querySelector("#akCouponInput");
       if (couponBtn) {
         couponBtn.addEventListener("click", async () => {
@@ -29567,6 +29491,27 @@ Weight: 1.24 lbs (0.567 kg`,
           executeApplyCoupon(codeVal);
         });
       }
+      if (removeCouponBtn) {
+        removeCouponBtn.addEventListener("click", () => {
+          appliedCoupon = null;
+          showToast("Coupon removed.", "info");
+          renderCheckoutStep();
+        });
+      }
+      if (couponInput) {
+        couponInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (appliedCoupon) {
+              appliedCoupon = null;
+              showToast("Coupon removed.", "info");
+              renderCheckoutStep();
+            } else {
+              executeApplyCoupon(couponInput.value.trim());
+            }
+          }
+        });
+      }
       bodyEl.querySelectorAll(".ak-payment-option").forEach((opt) => {
         opt.addEventListener("click", () => {
           bodyEl.querySelectorAll(".ak-payment-option").forEach((o) => o.classList.remove("selected"));
@@ -29578,15 +29523,12 @@ Weight: 1.24 lbs (0.567 kg`,
           const cardDetails = document.getElementById("akCardDetails");
           const upiDetails = document.getElementById("akUpiDetails");
           const nbDetails = document.getElementById("akNbDetails");
-          const codDetails = document.getElementById("akCodDetails");
           if (cardDetails)
             cardDetails.style.display = method === "Card" ? "block" : "none";
           if (upiDetails)
             upiDetails.style.display = method === "UPI" ? "block" : "none";
           if (nbDetails)
             nbDetails.style.display = method === "Net Banking" ? "block" : "none";
-          if (codDetails)
-            codDetails.style.display = method === "COD" ? "block" : "none";
         });
       });
       bodyEl.querySelectorAll(".ak-upi-chip").forEach((chip) => {
@@ -29671,8 +29613,8 @@ Weight: 1.24 lbs (0.567 kg`,
           renderCheckoutStep();
         } else if (currentStep === 2) {
           const paymentRadio = document.querySelector('input[name="akPayment"]:checked');
-          const methodVal = paymentRadio ? paymentRadio.value : "COD";
-          let paymentMethodLabel = "Cash on Delivery (COD)";
+          const methodVal = paymentRadio ? paymentRadio.value : "UPI";
+          let paymentMethodLabel = "Prepaid UPI / Online";
           if (methodVal === "Card") {
             const cardNum = document.getElementById("akCardNumber")?.value.trim() || "4242 4242 4242 4242";
             const cardName = document.getElementById("akCardName")?.value.trim();
@@ -29685,8 +29627,9 @@ Weight: 1.24 lbs (0.567 kg`,
             const selectedBank = document.getElementById("akBankSelect")?.value || "HDFC Bank";
             paymentMethodLabel = `Net Banking - ${selectedBank}`;
           } else {
-            paymentMethodLabel = "Cash on Delivery (COD)";
+            paymentMethodLabel = "Prepaid UPI / Online";
           }
+          const itemsTotal = checkoutItems && checkoutItems.length > 0 ? checkoutItems.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0) : getCartSubtotal();
           const orderData = {
             items: [...checkoutItems],
             customer: savedAddress || {
@@ -29700,7 +29643,7 @@ Weight: 1.24 lbs (0.567 kg`,
             paymentMethod: paymentMethodLabel,
             couponCode: appliedCoupon ? appliedCoupon.code : null,
             discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0,
-            total: appliedCoupon ? Math.max(0, getCartSubtotal() - appliedCoupon.discountAmount) : getCartSubtotal(),
+            total: appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal,
             date: formatDate()
           };
           ordersService.createOrder(orderData).catch((e) => console.warn("[Checkout] Order persistence notice:", e.message));
@@ -29841,6 +29784,11 @@ Weight: 1.24 lbs (0.567 kg`,
   async function addToCart(product, qty = 1, silent = false) {
     if (!product)
       return false;
+    if (!authService.isAuthenticated()) {
+      showToast("Please sign in to add products to your cart", "error");
+      openAuthModal("signin", "Please sign in to add items to your cart.");
+      return false;
+    }
     const pId = String(product.id);
     const quantity = Math.max(1, Number(qty) || 1);
     const existing = cart.find((item) => String(item.id) === pId);
@@ -29885,6 +29833,11 @@ Weight: 1.24 lbs (0.567 kg`,
     return true;
   }
   async function updateCartItemQty(productId, delta) {
+    if (!authService.isAuthenticated()) {
+      showToast("Please sign in to manage your cart.", "error");
+      openAuthModal("signin", "Please sign in to manage your cart.");
+      return;
+    }
     const pId = String(productId);
     const item = cart.find((i) => String(i.id) === pId);
     if (!item)
@@ -30056,13 +30009,23 @@ Weight: 1.24 lbs (0.567 kg`,
   function initCart() {
     updateCartBadge();
     const trigger = document.getElementById("akCartTrigger");
-    const closeBtn = document.getElementById("akCartCloseBtn");
+    const closeBtn = document.getElementById("akCartClose") || document.getElementById("akCartCloseBtn");
     const backdrop = document.getElementById("akCartBackdrop");
     const checkoutBtn = document.getElementById("akProceedCheckoutBtn");
     if (trigger)
       trigger.addEventListener("click", () => openCartDrawer(true));
-    if (closeBtn)
-      closeBtn.addEventListener("click", closeCartDrawer);
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        closeCartDrawer();
+      });
+    }
+    document.addEventListener("click", (e) => {
+      if (e.target && e.target.closest("#akCartClose, #akCartCloseBtn, .ak-cart-close")) {
+        e.preventDefault();
+        closeCartDrawer();
+      }
+    });
     if (backdrop) {
       backdrop.addEventListener("click", (e) => {
         if (e.target === backdrop)
@@ -30533,14 +30496,42 @@ Weight: 1.24 lbs (0.567 kg`,
     if (brandsToggle && brandsItem) {
       brandsToggle.addEventListener("click", (e) => {
         e.preventDefault();
-        e.stopPropagation();
-        brandsItem.classList.remove("dropdown-closed");
-        brandsItem.classList.toggle("dropdown-open");
-      });
-      document.addEventListener("click", (e) => {
-        if (!brandsItem.contains(e.target)) {
-          brandsItem.classList.remove("dropdown-open");
+        dismissDropdown(brandsItem);
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
         }
+        setActiveNavItem(brandsItem);
+        const firstBrandEl = brandsItem.querySelector(".ak-brand-filter-link");
+        const firstBrandName = firstBrandEl?.dataset?.brand || firstBrandEl?.textContent?.trim() || "ADAM Audio";
+        window.dispatchEvent(new CustomEvent("ak:filter-brand", { detail: firstBrandName }));
+      });
+    }
+    const proAudioItem = document.getElementById("akNavItemProAudio");
+    const proAudioLink = proAudioItem?.querySelector(":scope > .ak-nav-link");
+    if (proAudioLink && proAudioItem) {
+      proAudioLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        dismissDropdown(proAudioItem);
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
+        }
+        setActiveNavItem(proAudioItem);
+        window.dispatchEvent(new CustomEvent("ak:filter-category", { detail: "Audio Interfaces" }));
+      });
+    }
+    const musicalItem = document.getElementById("akNavItemMusical");
+    const musicalLink = musicalItem?.querySelector(":scope > .ak-nav-link");
+    if (musicalLink && musicalItem) {
+      musicalLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        dismissDropdown(musicalItem);
+        if (document.activeElement && typeof document.activeElement.blur === "function") {
+          document.activeElement.blur();
+        }
+        setActiveNavItem(musicalItem);
+        const firstMusicalEl = musicalItem.querySelector(".ak-cat-filter-link");
+        const firstCatName = firstMusicalEl?.dataset?.cat || firstMusicalEl?.textContent?.trim() || "Keyboards";
+        window.dispatchEvent(new CustomEvent("ak:filter-category", { detail: firstCatName }));
       });
     }
     const mobileBtn = document.getElementById("akMobileMenuBtn");
@@ -30978,25 +30969,22 @@ Weight: 1.24 lbs (0.567 kg`,
         number: 6,
         heading: "Payment",
         body: `
-        <p>AudioKing may support multiple payment methods, including:</p>
+        <p>AudioKing supports multiple secure digital payment methods, including:</p>
         <ul>
-          <li>Credit and debit cards</li>
-          <li>UPI</li>
-          <li>Net banking</li>
-          <li>Cash on Delivery, where available</li>
-          <li>Other payment methods displayed during checkout</li>
+          <li>UPI (Google Pay, PhonePe, Paytm, BHIM)</li>
+          <li>Credit and debit cards (Visa, MasterCard, RuPay, Amex)</li>
+          <li>Net banking across all major Indian banks</li>
+          <li>Other secure payment methods displayed during checkout</li>
         </ul>
-        <p>Online payments may be processed through third-party payment service providers.</p>
-        <p>AudioKing does not directly store complete card details or sensitive payment credentials unless explicitly stated otherwise in its applicable privacy documentation.</p>
+        <p>Online payments are processed through RBI-authorized payment service providers with 256-bit bank-grade encryption.</p>
+        <p>AudioKing does not store complete card details or sensitive payment credentials on its servers.</p>
       `
       },
       {
         number: 7,
-        heading: "Cash on Delivery",
+        heading: "Prepaid Transactions & Fulfillment",
         body: `
-        <p>Cash on Delivery may be available only for eligible products, locations, order values, or customers.</p>
-        <p>AudioKing reserves the right to restrict or disable Cash on Delivery for certain orders.</p>
-        <p>Additional verification may be requested before processing a COD order.</p>
+        <p>All orders placed on AudioKing are processed through 100% verified prepaid online transactions to ensure guaranteed transit insurance and tamper-evident courier dispatch.</p>
       `
       },
       {
@@ -31350,9 +31338,9 @@ Weight: 1.24 lbs (0.567 kg`,
       },
       {
         number: 14,
-        heading: "Cash on Delivery Orders",
+        heading: "Prepaid Insured Dispatch",
         body: `
-        <p>For eligible COD orders, please have the exact payable amount ready in cash or supported UPI at the time of delivery.</p>
+        <p>All equipment consignments are dispatched with full transit coverage via insured express courier networks.</p>
       `
       },
       {
@@ -31510,9 +31498,9 @@ Weight: 1.24 lbs (0.567 kg`,
       },
       {
         number: 15,
-        heading: "Cash on Delivery Refunds",
+        heading: "Prepaid Source Refunds",
         body: `
-        <p>For COD orders, refunds are processed via secure NEFT/IMPS bank transfer upon customer account verification.</p>
+        <p>Refunds are transferred back to the original source payment instrument (UPI ID, bank account, or credit/debit card).</p>
       `
       },
       {
@@ -32347,14 +32335,14 @@ Message: ${message}`);
         const hasDiscount = mrp > selling && selling > 0;
         displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : "";
-        offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...product, price: selling, originalPrice: mrp }) : "";
+        offerStampHtml = "";
       } else {
         const baseSelling = Number(product.price) || 0;
         const baseMrp = Number(product.originalPrice) || 0;
         const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
         displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : "";
-        offerStampHtml = hasDiscount ? getProductOfferStampHtml(product) : "";
+        offerStampHtml = "";
       }
       const cartQty = getCartItemQuantity(product.id);
       let actionBtnHtml = "";
@@ -33330,29 +33318,12 @@ Message: ${message}`);
         }
       }
       if (ppDiscountBadge) {
-        if (hasDiscount && discountPct > 0) {
-          ppDiscountBadge.textContent = `${discountPct}% OFF`;
-          ppDiscountBadge.style.display = "inline-flex";
-        } else {
-          ppDiscountBadge.textContent = "";
-          ppDiscountBadge.style.display = "none";
-        }
+        ppDiscountBadge.textContent = "";
+        ppDiscountBadge.style.display = "none";
       }
       if (ppOfferStampContainer) {
-        if (hasDiscount && discountPct > 0) {
-          const variantOfferProd = {
-            ...product,
-            price: effectiveSelling,
-            originalPrice: effectiveMrp,
-            discountPercent: discountPct,
-            hasOffer: true
-          };
-          ppOfferStampContainer.innerHTML = getProductOfferStampHtml(variantOfferProd, "ak-offer-stamp-modal");
-          ppOfferStampContainer.style.display = "block";
-        } else {
-          ppOfferStampContainer.innerHTML = "";
-          ppOfferStampContainer.style.display = "none";
-        }
+        ppOfferStampContainer.innerHTML = "";
+        ppOfferStampContainer.style.display = "none";
       }
       let variantImg = null;
       for (const g of product.variantGroups) {
@@ -33586,13 +33557,8 @@ Message: ${message}`);
     }
     const ppDiscountBadge = document.getElementById("ppDiscountBadge");
     if (ppDiscountBadge) {
-      if (prodHasDiscount && prodDiscountPct > 0) {
-        ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
-        ppDiscountBadge.style.display = "inline-flex";
-      } else {
-        ppDiscountBadge.textContent = "";
-        ppDiscountBadge.style.display = "none";
-      }
+      ppDiscountBadge.textContent = "";
+      ppDiscountBadge.style.display = "none";
     }
     const isPreOrder = Boolean(product.isPreOrder || product.badge && product.badge.toLowerCase().includes("pre-order") || product.stockStatus === "preorder");
     const isOutOfStock = Boolean(!isPreOrder && (product.stock === 0 || product.inStock === false || product.isOutOfStock === true || product.stockStatus === "outofstock"));
@@ -34500,16 +34466,23 @@ Message: ${message}`);
     }
     const couponInput = document.getElementById("akCoCouponInput");
     const couponBtn = document.getElementById("akCoApplyCouponBtn");
+    const removeBtn = document.getElementById("akCoRemoveCouponBtn");
     if (couponInput && couponBtn) {
       if (appliedDedicatedCoupon) {
         couponInput.value = appliedDedicatedCoupon.code;
         couponInput.disabled = true;
-        couponBtn.textContent = "Remove";
-        couponBtn.style.background = "#DC2626";
+        couponBtn.textContent = "Applied";
+        couponBtn.style.background = "#16A34A";
+        couponBtn.disabled = true;
+        if (removeBtn)
+          removeBtn.style.display = "inline-block";
       } else {
         couponInput.disabled = false;
         couponBtn.textContent = "Apply";
         couponBtn.style.background = "var(--ak-orange, #EA580C)";
+        couponBtn.disabled = false;
+        if (removeBtn)
+          removeBtn.style.display = "none";
       }
     }
     renderDedicatedVisibleCoupons(subtotal, currentCheckoutItems);
@@ -34518,6 +34491,7 @@ Message: ${message}`);
     const code = (codeVal || "").trim().toUpperCase();
     const msgEl = document.getElementById("akCoCouponMsg");
     const btn = document.getElementById("akCoApplyCouponBtn");
+    const removeBtn = document.getElementById("akCoRemoveCouponBtn");
     if (!code) {
       if (msgEl) {
         msgEl.textContent = "Please enter a coupon code.";
@@ -34558,6 +34532,10 @@ Message: ${message}`);
         if (btn) {
           btn.disabled = false;
           btn.textContent = "Apply";
+          btn.style.background = "var(--ak-orange, #EA580C)";
+        }
+        if (removeBtn) {
+          removeBtn.style.display = "none";
         }
       }
     } catch (err) {
@@ -34569,6 +34547,10 @@ Message: ${message}`);
       if (btn) {
         btn.disabled = false;
         btn.textContent = "Apply";
+        btn.style.background = "var(--ak-orange, #EA580C)";
+      }
+      if (removeBtn) {
+        removeBtn.style.display = "none";
       }
     }
   }
@@ -34576,10 +34558,24 @@ Message: ${message}`);
     appliedDedicatedCoupon = null;
     const msgEl = document.getElementById("akCoCouponMsg");
     const inputEl = document.getElementById("akCoCouponInput");
-    if (msgEl)
+    const removeBtn = document.getElementById("akCoRemoveCouponBtn");
+    const applyBtn = document.getElementById("akCoApplyCouponBtn");
+    if (msgEl) {
+      msgEl.textContent = "";
       msgEl.style.display = "none";
-    if (inputEl)
+    }
+    if (inputEl) {
       inputEl.value = "";
+      inputEl.disabled = false;
+    }
+    if (applyBtn) {
+      applyBtn.textContent = "Apply";
+      applyBtn.style.background = "var(--ak-orange, #EA580C)";
+      applyBtn.disabled = false;
+    }
+    if (removeBtn) {
+      removeBtn.style.display = "none";
+    }
     showToast("Coupon removed.", "info");
     renderCheckoutSummary();
   }
@@ -34760,6 +34756,7 @@ Message: ${message}`);
       });
     });
     const couponBtn = document.getElementById("akCoApplyCouponBtn");
+    const removeBtn = document.getElementById("akCoRemoveCouponBtn");
     const couponInput = document.getElementById("akCoCouponInput");
     if (couponBtn) {
       couponBtn.addEventListener("click", (e) => {
@@ -34770,6 +34767,12 @@ Message: ${message}`);
           const codeVal = (couponInput?.value || "").trim();
           applyDedicatedCoupon(codeVal);
         }
+      });
+    }
+    if (removeBtn) {
+      removeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        removeDedicatedCoupon();
       });
     }
     if (couponInput) {
@@ -35100,14 +35103,14 @@ Message: ${message}`);
         const hasDiscount = mrp > selling && selling > 0;
         displayPriceHtml = `<span>${formatINR(selling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : "";
-        offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...p, price: selling, originalPrice: mrp }) : "";
+        offerStampHtml = "";
       } else {
         const baseSelling = Number(p.price) || 0;
         const baseMrp = Number(p.originalPrice) || 0;
         const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
         displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : "";
-        offerStampHtml = hasDiscount ? getProductOfferStampHtml(p) : "";
+        offerStampHtml = "";
       }
       return `
       <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
@@ -35320,8 +35323,44 @@ Message: ${message}`);
       });
     });
   }
+  function openCommunityWelcomeModal(email) {
+    const modal = document.getElementById("akCommunityWelcomeModal");
+    const emailEl = document.getElementById("akCommWelcomeEmail");
+    if (emailEl && email) {
+      emailEl.textContent = email;
+    }
+    if (modal) {
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+  }
+  function closeCommunityWelcomeModal() {
+    const modal = document.getElementById("akCommunityWelcomeModal");
+    if (modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+    }
+  }
   function initNewsletter() {
     const form = document.getElementById("akNewsletterForm");
+    const welcomeModal = document.getElementById("akCommunityWelcomeModal");
+    const closeBtn = document.getElementById("akCommunityWelcomeClose");
+    const okBtn = document.getElementById("akCommunityWelcomeOkBtn");
+    if (closeBtn)
+      closeBtn.addEventListener("click", closeCommunityWelcomeModal);
+    if (okBtn) {
+      okBtn.addEventListener("click", () => {
+        closeCommunityWelcomeModal();
+        window.location.hash = "#store";
+      });
+    }
+    if (welcomeModal) {
+      welcomeModal.addEventListener("click", (e) => {
+        if (e.target === welcomeModal) {
+          closeCommunityWelcomeModal();
+        }
+      });
+    }
     if (form) {
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -35333,7 +35372,7 @@ Message: ${message}`);
         const origBtnText = submitBtn ? submitBtn.textContent : "";
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.textContent = "Subscribing...";
+          submitBtn.textContent = "Joining...";
         }
         try {
           const res = await fetch(apiUrl("/api/newsletter/subscribe"), {
@@ -35343,14 +35382,16 @@ Message: ${message}`);
           });
           const data = await res.json();
           if (data.success) {
-            showToast(data.message || "Welcome to the AudioKing Creator Community!", getIcon("check", "", 20));
+            openCommunityWelcomeModal(email);
+            showToast("You are officially part of the AudioKing community!", getIcon("check", "", 20));
             if (input)
               input.value = "";
           } else {
-            showToast(data.message || "Subscription failed. Please check your email.");
+            showToast(data.message || "Subscription failed. Please check your email.", "error");
           }
         } catch (err) {
-          showToast("Welcome to the AudioKing Community! We have saved your subscription.", getIcon("check", "", 20));
+          console.error("[Newsletter submit error]", err);
+          openCommunityWelcomeModal(email);
           if (input)
             input.value = "";
         } finally {

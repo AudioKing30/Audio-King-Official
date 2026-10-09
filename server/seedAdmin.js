@@ -197,6 +197,35 @@ async function seedAdminAndCatalog() {
     console.log(`[SEED] Products table already contains ${prodCount} products.`);
   }
 
+  // 4. Seed Welcome Community Coupon (AUDIOKING10)
+  try {
+    const existingCoupon = db.prepare('SELECT id FROM coupons WHERE code = ?').get('AUDIOKING10');
+    if (!existingCoupon) {
+      db.prepare(`
+        INSERT INTO coupons (
+          id, code, discount_type, discount_value, min_cart_value,
+          usage_limit, used_count, per_user_limit, expires_at,
+          is_active, visibility, target_brand, target_category,
+          applicable_brand, applicable_category, created_at, updated_at
+        ) VALUES (
+          'cpn_audioking10', 'AUDIOKING10', 'percentage', 10, 0,
+          NULL, 0, 1, NULL,
+          1, 'visible', 'all', 'all',
+          'all', 'all', ?, ?
+        )
+      `).run(now, now);
+      console.log('[SEED] Seeded AUDIOKING10 welcome coupon (10% off).');
+      try {
+        const { syncCouponsMaster } = require('./dataSync');
+        syncCouponsMaster(db);
+      } catch (_) {}
+    } else {
+      console.log('[SEED] AUDIOKING10 coupon already exists.');
+    }
+  } catch (err) {
+    console.warn('[SEED] Could not seed AUDIOKING10 coupon:', err.message);
+  }
+
   console.log('[SEED] Seeding completed.');
 }
 

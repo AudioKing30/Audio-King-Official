@@ -1,6 +1,6 @@
 /**
  * AudioKing Multi-Step Checkout Modal Controller
- * Handles Step 1 (Shipping Address) & Step 2 (Cashfree-ready Payment UI: COD, Cards, UPI, Net Banking).
+ * Handles Step 1 (Shipping Address) & Step 2 (Cashfree-ready Payment UI: Cards, UPI, Net Banking).
  */
 import { formatINR, formatDate } from '../utils/formatters.js';
 import { AUDIOKING_CONFIG } from '../config.js';
@@ -98,7 +98,9 @@ async function executeApplyCoupon(codeVal) {
     couponBtn.textContent = 'Checking...';
   }
 
-  const subtotal = getCartSubtotal();
+  const subtotal = (checkoutItems && checkoutItems.length > 0)
+    ? checkoutItems.reduce((sum, it) => sum + ((Number(it.price) || 0) * (it.quantity || it.qty || 1)), 0)
+    : getCartSubtotal();
   try {
     const res = await fetch(apiUrl('/api/coupons/validate'), {
       method: 'POST',
@@ -300,14 +302,19 @@ function renderCheckoutStep() {
       </div>
 
       <div class="ak-payment-options">
-        <!-- 1. Cash on Delivery (COD) -->
-        <label class="ak-payment-option selected" data-method="COD">
-          <input type="radio" name="akPayment" value="COD" checked class="ak-payment-radio">
+        <!-- 1. UPI -->
+        <label class="ak-payment-option selected" data-method="UPI">
+          <input type="radio" name="akPayment" value="UPI" checked class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">Cash on Delivery (COD)</div>
-            <div class="ak-payment-desc">Pay upon courier delivery at your doorstep via cash or digital QR</div>
-            <div class="ak-method-details" id="akCodDetails" style="margin-top: 10px; font-size: 12px; color: #059669; background: #ECFDF5; padding: 8px 12px; border-radius: 4px; border: 1px solid #A7F3D0;">
-              ✓ Free Pan-India Cash on Delivery available for your order.
+            <div class="ak-payment-title">UPI (Google Pay, PhonePe, Paytm, BHIM)</div>
+            <div class="ak-payment-desc">Instant payment via any UPI application or UPI ID</div>
+            <div class="ak-method-details" id="akUpiDetails" style="display: block; margin-top: 10px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+              <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                <button type="button" class="ak-upi-chip selected" data-upi="Google Pay" style="padding: 5px 12px; font-size: 12px; font-weight: 700; border: 1.5px solid var(--ak-orange); background: #FFF7ED; color: var(--ak-orange); border-radius: 4px; cursor: pointer;">Google Pay</button>
+                <button type="button" class="ak-upi-chip" data-upi="PhonePe" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">PhonePe</button>
+                <button type="button" class="ak-upi-chip" data-upi="Paytm" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">Paytm</button>
+              </div>
+              <input type="text" id="akUpiIdInput" class="ak-form-input" placeholder="e.g. mobile@upi or username@okhdfcbank" value="musician@okhdfcbank" style="background:#FFF;">
             </div>
           </div>
         </label>
@@ -341,24 +348,7 @@ function renderCheckoutStep() {
           </div>
         </label>
 
-        <!-- 3. UPI -->
-        <label class="ak-payment-option" data-method="UPI">
-          <input type="radio" name="akPayment" value="UPI" class="ak-payment-radio">
-          <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">UPI (Google Pay, PhonePe, Paytm, BHIM)</div>
-            <div class="ak-payment-desc">Instant payment via any UPI application or UPI ID</div>
-            <div class="ak-method-details" id="akUpiDetails" style="display: none; margin-top: 10px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
-              <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
-                <button type="button" class="ak-upi-chip selected" data-upi="Google Pay" style="padding: 5px 12px; font-size: 12px; font-weight: 700; border: 1.5px solid var(--ak-orange); background: #FFF7ED; color: var(--ak-orange); border-radius: 4px; cursor: pointer;">Google Pay</button>
-                <button type="button" class="ak-upi-chip" data-upi="PhonePe" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">PhonePe</button>
-                <button type="button" class="ak-upi-chip" data-upi="Paytm" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">Paytm</button>
-              </div>
-              <input type="text" id="akUpiIdInput" class="ak-form-input" placeholder="e.g. mobile@upi or username@okhdfcbank" value="musician@okhdfcbank" style="background:#FFF;">
-            </div>
-          </div>
-        </label>
-
-        <!-- 4. Net Banking -->
+        <!-- 3. Net Banking -->
         <label class="ak-payment-option" data-method="Net Banking">
           <input type="radio" name="akPayment" value="Net Banking" class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
@@ -389,8 +379,11 @@ function renderCheckoutStep() {
         <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Have a Promo Code or Private Coupon?</label>
         <div style="display: flex; gap: 8px;">
           <input type="text" id="akCouponInput" class="ak-form-input" placeholder="Enter coupon code" style="text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; flex: 1;" value="${appliedCoupon ? appliedCoupon.code : ''}" ${appliedCoupon ? 'disabled' : ''}>
-          <button type="button" id="akApplyCouponBtn" class="ak-btn" style="padding: 8px 16px; background: ${appliedCoupon ? '#DC2626' : 'var(--ak-orange)'}; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
-            ${appliedCoupon ? 'Remove' : 'Apply'}
+          <button type="button" id="akApplyCouponBtn" class="ak-btn" style="padding: 8px 16px; background: ${appliedCoupon ? '#16A34A' : 'var(--ak-orange)'}; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
+            ${appliedCoupon ? 'Applied' : 'Apply'}
+          </button>
+          <button type="button" id="akRemoveCouponBtn" class="ak-btn" style="display: ${appliedCoupon ? 'inline-block' : 'none'}; padding: 8px 16px; background: #DC2626; color: #FFF; font-weight: 700; font-size: 13px; border-radius: 4px; border: none; cursor: pointer; white-space: nowrap;">
+            Remove
           </button>
         </div>
         <div id="akCouponMsg" style="margin-top: 6px; font-size: 12px; font-weight: 600; color: ${appliedCoupon ? '#166534' : '#DC2626'}; display: ${appliedCoupon ? 'block' : 'none'};">
@@ -429,6 +422,7 @@ function renderCheckoutStep() {
 
     // Coupon button interaction
     const couponBtn = bodyEl.querySelector('#akApplyCouponBtn');
+    const removeCouponBtn = bodyEl.querySelector('#akRemoveCouponBtn');
     const couponInput = bodyEl.querySelector('#akCouponInput');
 
     if (couponBtn) {
@@ -445,6 +439,29 @@ function renderCheckoutStep() {
       });
     }
 
+    if (removeCouponBtn) {
+      removeCouponBtn.addEventListener('click', () => {
+        appliedCoupon = null;
+        showToast('Coupon removed.', 'info');
+        renderCheckoutStep();
+      });
+    }
+
+    if (couponInput) {
+      couponInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (appliedCoupon) {
+            appliedCoupon = null;
+            showToast('Coupon removed.', 'info');
+            renderCheckoutStep();
+          } else {
+            executeApplyCoupon(couponInput.value.trim());
+          }
+        }
+      });
+    }
+
     // Radio click & dynamic details toggle
     bodyEl.querySelectorAll('.ak-payment-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -458,12 +475,10 @@ function renderCheckoutStep() {
         const cardDetails = document.getElementById('akCardDetails');
         const upiDetails = document.getElementById('akUpiDetails');
         const nbDetails = document.getElementById('akNbDetails');
-        const codDetails = document.getElementById('akCodDetails');
 
         if (cardDetails) cardDetails.style.display = method === 'Card' ? 'block' : 'none';
         if (upiDetails) upiDetails.style.display = method === 'UPI' ? 'block' : 'none';
         if (nbDetails) nbDetails.style.display = method === 'Net Banking' ? 'block' : 'none';
-        if (codDetails) codDetails.style.display = method === 'COD' ? 'block' : 'none';
       });
     });
 
@@ -555,8 +570,8 @@ export function initCheckout() {
       } else if (currentStep === 2) {
         // Step 2 Submission
         const paymentRadio = document.querySelector('input[name="akPayment"]:checked');
-        const methodVal = paymentRadio ? paymentRadio.value : 'COD';
-        let paymentMethodLabel = 'Cash on Delivery (COD)';
+        const methodVal = paymentRadio ? paymentRadio.value : 'UPI';
+        let paymentMethodLabel = 'Prepaid UPI / Online';
 
         if (methodVal === 'Card') {
           const cardNum = document.getElementById('akCardNumber')?.value.trim() || '4242 4242 4242 4242';
@@ -570,8 +585,12 @@ export function initCheckout() {
           const selectedBank = document.getElementById('akBankSelect')?.value || 'HDFC Bank';
           paymentMethodLabel = `Net Banking - ${selectedBank}`;
         } else {
-          paymentMethodLabel = 'Cash on Delivery (COD)';
+          paymentMethodLabel = 'Prepaid UPI / Online';
         }
+
+        const itemsTotal = (checkoutItems && checkoutItems.length > 0)
+          ? checkoutItems.reduce((sum, it) => sum + ((Number(it.price) || 0) * (it.quantity || it.qty || 1)), 0)
+          : getCartSubtotal();
 
         const orderData = {
           items: [...checkoutItems],
@@ -586,7 +605,7 @@ export function initCheckout() {
           paymentMethod: paymentMethodLabel,
           couponCode: appliedCoupon ? appliedCoupon.code : null,
           discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0,
-          total: appliedCoupon ? Math.max(0, getCartSubtotal() - appliedCoupon.discountAmount) : getCartSubtotal(),
+          total: appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal,
           date: formatDate()
         };
 

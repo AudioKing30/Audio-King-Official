@@ -376,21 +376,52 @@ export function initNavigation() {
     });
   });
 
-  // Desktop Brands nav dropdown click toggle
+  // Desktop Brands nav dropdown click: redirect to first brand & shut dropdown immediately
   const brandsToggle = document.getElementById('akBrandsNavToggle');
   const brandsItem = document.getElementById('akNavItemBrands') || document.getElementById('akNavBrandsItem');
   if (brandsToggle && brandsItem) {
     brandsToggle.addEventListener('click', (e) => {
       e.preventDefault();
-      e.stopPropagation();
-      brandsItem.classList.remove('dropdown-closed');
-      brandsItem.classList.toggle('dropdown-open');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!brandsItem.contains(e.target)) {
-        brandsItem.classList.remove('dropdown-open');
+      dismissDropdown(brandsItem);
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
       }
+      setActiveNavItem(brandsItem);
+      const firstBrandEl = brandsItem.querySelector('.ak-brand-filter-link');
+      const firstBrandName = firstBrandEl?.dataset?.brand || firstBrandEl?.textContent?.trim() || 'ADAM Audio';
+      window.dispatchEvent(new CustomEvent('ak:filter-brand', { detail: firstBrandName }));
+    });
+  }
+
+  // Desktop Pro Audio nav link click: redirect to Pro Audio & shut dropdown
+  const proAudioItem = document.getElementById('akNavItemProAudio');
+  const proAudioLink = proAudioItem?.querySelector(':scope > .ak-nav-link');
+  if (proAudioLink && proAudioItem) {
+    proAudioLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      dismissDropdown(proAudioItem);
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
+      setActiveNavItem(proAudioItem);
+      window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: 'Audio Interfaces' }));
+    });
+  }
+
+  // Desktop Musical Instruments nav link click: redirect to first category (Keyboards) & shut dropdown
+  const musicalItem = document.getElementById('akNavItemMusical');
+  const musicalLink = musicalItem?.querySelector(':scope > .ak-nav-link');
+  if (musicalLink && musicalItem) {
+    musicalLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      dismissDropdown(musicalItem);
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
+      setActiveNavItem(musicalItem);
+      const firstMusicalEl = musicalItem.querySelector('.ak-cat-filter-link');
+      const firstCatName = firstMusicalEl?.dataset?.cat || firstMusicalEl?.textContent?.trim() || 'Keyboards';
+      window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: firstCatName }));
     });
   }
 

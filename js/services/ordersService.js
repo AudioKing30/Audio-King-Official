@@ -74,7 +74,7 @@ class OrdersService {
       items: orderData.items || [],
       customer: orderData.customer || {},
       shippingAddress: orderData.customer || {},
-      paymentMethod: orderData.paymentMethod || 'Cash on Delivery (COD)',
+      paymentMethod: orderData.paymentMethod || 'Prepaid Online (UPI)',
       couponCode: orderData.couponCode || null
     };
 

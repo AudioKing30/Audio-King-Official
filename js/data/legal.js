@@ -83,25 +83,22 @@ export const termsPolicy = {
       number: 6,
       heading: 'Payment',
       body: `
-        <p>AudioKing may support multiple payment methods, including:</p>
+        <p>AudioKing supports multiple secure digital payment methods, including:</p>
         <ul>
-          <li>Credit and debit cards</li>
-          <li>UPI</li>
-          <li>Net banking</li>
-          <li>Cash on Delivery, where available</li>
-          <li>Other payment methods displayed during checkout</li>
+          <li>UPI (Google Pay, PhonePe, Paytm, BHIM)</li>
+          <li>Credit and debit cards (Visa, MasterCard, RuPay, Amex)</li>
+          <li>Net banking across all major Indian banks</li>
+          <li>Other secure payment methods displayed during checkout</li>
         </ul>
-        <p>Online payments may be processed through third-party payment service providers.</p>
-        <p>AudioKing does not directly store complete card details or sensitive payment credentials unless explicitly stated otherwise in its applicable privacy documentation.</p>
+        <p>Online payments are processed through RBI-authorized payment service providers with 256-bit bank-grade encryption.</p>
+        <p>AudioKing does not store complete card details or sensitive payment credentials on its servers.</p>
       `
     },
     {
       number: 7,
-      heading: 'Cash on Delivery',
+      heading: 'Prepaid Transactions & Fulfillment',
       body: `
-        <p>Cash on Delivery may be available only for eligible products, locations, order values, or customers.</p>
-        <p>AudioKing reserves the right to restrict or disable Cash on Delivery for certain orders.</p>
-        <p>Additional verification may be requested before processing a COD order.</p>
+        <p>All orders placed on AudioKing are processed through 100% verified prepaid online transactions to ensure guaranteed transit insurance and tamper-evident courier dispatch.</p>
       `
     },
     {
@@ -457,9 +454,9 @@ export const shippingPolicy = {
     },
     {
       number: 14,
-      heading: 'Cash on Delivery Orders',
+      heading: 'Prepaid Insured Dispatch',
       body: `
-        <p>For eligible COD orders, please have the exact payable amount ready in cash or supported UPI at the time of delivery.</p>
+        <p>All equipment consignments are dispatched with full transit coverage via insured express courier networks.</p>
       `
     },
     {
@@ -618,9 +615,9 @@ export const returnsPolicy = {
     },
     {
       number: 15,
-      heading: 'Cash on Delivery Refunds',
+      heading: 'Prepaid Source Refunds',
       body: `
-        <p>For COD orders, refunds are processed via secure NEFT/IMPS bank transfer upon customer account verification.</p>
+        <p>Refunds are transferred back to the original source payment instrument (UPI ID, bank account, or credit/debit card).</p>
       `
     },
     {

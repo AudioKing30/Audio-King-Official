@@ -671,14 +671,14 @@ function renderStorePage() {
       const hasDiscount = mrp > selling && selling > 0;
       displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : '';
-      offerStampHtml = hasDiscount ? getProductOfferStampHtml({ ...product, price: selling, originalPrice: mrp }) : '';
+      offerStampHtml = '';
     } else {
       const baseSelling = Number(product.price) || 0;
       const baseMrp = Number(product.originalPrice) || 0;
       const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
       displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : '';
-      offerStampHtml = hasDiscount ? getProductOfferStampHtml(product) : '';
+      offerStampHtml = '';
     }
 
     const cartQty = getCartItemQuantity(product.id);

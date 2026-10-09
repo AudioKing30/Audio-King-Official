@@ -106,7 +106,7 @@ export function showOrderConfirmation(orderData) {
     if (dateEl) dateEl.textContent = orderData.date || formatDate();
 
     const paymentEl = document.getElementById('akOrderPaymentVal');
-    if (paymentEl) paymentEl.textContent = orderData.paymentMethod || 'Cash on Delivery (COD)';
+    if (paymentEl) paymentEl.textContent = orderData.paymentMethod || 'Online / Prepaid (UPI)';
 
     // 4. Shipping Details Section
     const cust = orderData.customer || {
