@@ -38,9 +38,9 @@
   --ak-radius-pill: 9999px;
   
   /* Header Dimensions */
-  --ak-header-top-height: 72px;
+  --ak-header-top-height: 80px;
   --ak-header-nav-height: 44px;
-  --ak-header-total-height: 116px;
+  --ak-header-total-height: 124px;
   
   /* Transitions */
   --ak-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
