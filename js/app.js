@@ -82,9 +82,17 @@ async function updateProductVisibleCouponNotice(product) {
   });
 
   if (matching && matching.code) {
+    const dType = (matching.discountType || matching.discount_type || '').toLowerCase();
+    const dVal = matching.discountValue !== undefined ? matching.discountValue : matching.discount_value;
+    let discountText = 'special';
+    if (dType === 'percentage' || dType === 'percent') {
+      discountText = `${dVal}%`;
+    } else if (dVal !== undefined && dVal !== null && dVal !== '') {
+      discountText = `₹${Number(dVal).toLocaleString('en-IN')}`;
+    }
     noticeEl.innerHTML = `
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml(matching.code)}</span> code to discover flat discount on this product</span>
+      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml(matching.code)}</span> code to get ${discountText} discount on this product</span>
     `;
     noticeEl.style.display = 'flex';
   } else {
@@ -543,6 +551,7 @@ if (typeof document !== 'undefined') {
 
     // 3. Quick categories interaction
     setupQuickCategoryListeners();
+    loadAndRenderPopularCategories();
 
     // 4. Custom Event Listeners for Header Search & Navigation
     setupAppEventListeners();
@@ -2753,12 +2762,39 @@ function renderCheckoutSummary() {
     }
   }
 
+  let totalLineTaxable = 0;
+  let totalLineGst = 0;
+  let weightedGstRateSum = 0;
+
+  currentCheckoutItems.forEach(item => {
+    const qty = item.quantity || item.qty || 1;
+    const lineTotal = (Number(item.price) || 0) * qty;
+    const rate = Number(item.gstPercent ?? item.gst_percent ?? 18.0);
+    const taxable = lineTotal / (1 + rate / 100);
+    const gst = lineTotal - taxable;
+    totalLineTaxable += taxable;
+    totalLineGst += gst;
+    weightedGstRateSum += rate * lineTotal;
+  });
+
+  const avgGstRate = subtotal > 0 ? Math.round((weightedGstRateSum / subtotal) * 10) / 10 : 18;
   const grandTotal = Math.max(0, subtotal - discountAmount);
-  const gstAmount = Math.round(grandTotal * 0.18 / 1.18);
+  const effectiveTaxable = grandTotal / (1 + avgGstRate / 100);
+  const effectiveGst = grandTotal - effectiveTaxable;
+
+  const taxableValEl = document.getElementById('akCoTaxableValue');
+  if (taxableValEl) taxableValEl.textContent = formatINR(Math.round(effectiveTaxable));
+  const gstLabelEl = document.getElementById('akCoGstLabel');
+  if (gstLabelEl) gstLabelEl.textContent = `GST (${avgGstRate}% Included)`;
 
   if (subtotalEl) subtotalEl.textContent = formatINR(subtotal);
-  if (gstEl) gstEl.textContent = formatINR(gstAmount);
+  if (gstEl) gstEl.textContent = formatINR(Math.round(effectiveGst));
   if (totalEl) totalEl.textContent = formatINR(grandTotal);
+
+  const gstNoteEl = document.getElementById('akCoInclusiveGstNote');
+  if (gstNoteEl) {
+    gstNoteEl.textContent = `Inclusive of ₹${Math.round(effectiveGst).toLocaleString('en-IN')} GST (${avgGstRate}%)`;
+  }
 
   const discountRow = document.getElementById('akCoDiscountRow');
   const discountCodeEl = document.getElementById('akCoDiscountCode');
@@ -3695,11 +3731,11 @@ function initProductTabs() {
 
 export function getProductById(pId) {
   if (!pId && pId !== 0) return null;
-  const sId = String(pId);
+  const sId = String(pId).trim().toLowerCase();
   const liveList = window._liveCatalogProducts || [];
-  return liveList.find(p => p && String(p.id) === sId) ||
-         AUDIOKING_PRODUCTS.find(p => p && String(p.id) === sId) || 
-         FEATURED_PRODUCTS.find(p => p && String(p.id) === sId) || 
+  return liveList.find(p => p && (String(p.id).toLowerCase() === sId || String(p.id) === String(pId))) ||
+         AUDIOKING_PRODUCTS.find(p => p && (String(p.id).toLowerCase() === sId || String(p.id) === String(pId))) || 
+         FEATURED_PRODUCTS.find(p => p && (String(p.id).toLowerCase() === sId || String(p.id) === String(pId))) || 
          null;
 }
 
@@ -3926,3 +3962,37 @@ if (typeof window !== 'undefined') {
   window.__AUDIOKING_PRODUCTS = AUDIOKING_PRODUCTS;
   window.__FEATURED_PRODUCTS = FEATURED_PRODUCTS;
 }
+
+
+/**
+ * Loads dynamic popular categories configured by admin and renders them
+ */
+export async function loadAndRenderPopularCategories() {
+  const container = document.getElementById('akQuickCategoriesGrid');
+  if (!container) return;
+
+  try {
+    const res = await fetch(apiUrl('/api/popular-categories'));
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.popularCategories) && data.popularCategories.length > 0) {
+        container.innerHTML = data.popularCategories.map(cat => {
+          const catName = cat.category_name || cat.name;
+          const imgSrc = resolveProductImage(cat.image_url || cat.image);
+          return `
+            <a href="#store?category=${encodeURIComponent(catName)}" class="ak-cat-box-card" data-filter="${escapeHtml(catName)}">
+              <div class="ak-cat-box">
+                <img src="${imgSrc}" alt="${escapeHtml(catName)}" class="ak-cat-box-img ak-cat-img-lg" loading="lazy" onerror="this.src='assets/images/placeholder.svg'">
+              </div>
+              <span class="ak-cat-box-label">${escapeHtml(catName)}</span>
+            </a>
+          `;
+        }).join('');
+        setupQuickCategoryListeners();
+      }
+    }
+  } catch (e) {
+    // Keep static fallback
+  }
+}
+window.loadAndRenderPopularCategories = loadAndRenderPopularCategories;

@@ -26121,7 +26121,7 @@ Weight: 1.24 lbs (0.567 kg`,
     tagline: "Pro Audio \u2022 Musical Instruments \u2022 Studio Gear",
     expertPhone: "+91 88793 93743",
     whatsappNumber: "+91 88793 93743",
-    supportEmail: "support@audioking.in",
+    supportEmail: "info@audioking.co.in",
     businessHours: "Monday \u2013 Saturday: 10:00 AM \u2013 8:00 PM IST",
     currency: "INR",
     currencySymbol: "\u20B9",
@@ -26499,6 +26499,368 @@ Weight: 1.24 lbs (0.567 kg`,
   // js/components/paymentAdapter.js
   var activePaymentAdapter = new CashfreePaymentAdapter();
 
+  // js/components/taxInvoice.js
+  function numberToIndianWords(num) {
+    const n = Math.round(Number(num) || 0);
+    if (n === 0)
+      return "Zero Rupees Only";
+    const singleDigits = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+    const teenDigits = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    const tensDigits = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    function convertTwoDigits(v) {
+      if (v === 0)
+        return "";
+      if (v < 10)
+        return singleDigits[v];
+      if (v < 20)
+        return teenDigits[v - 10];
+      const t = Math.floor(v / 10);
+      const r = v % 10;
+      return `${tensDigits[t]}${r > 0 ? " " + singleDigits[r] : ""}`;
+    }
+    function convertThreeDigits(v) {
+      const h = Math.floor(v / 100);
+      const rem = v % 100;
+      let res = "";
+      if (h > 0)
+        res += `${singleDigits[h]} Hundred`;
+      if (rem > 0)
+        res += `${res ? " and " : ""}${convertTwoDigits(rem)}`;
+      return res;
+    }
+    let crore = Math.floor(n / 1e7);
+    let remCrore = n % 1e7;
+    let lakh = Math.floor(remCrore / 1e5);
+    let remLakh = remCrore % 1e5;
+    let thousand = Math.floor(remLakh / 1e3);
+    let remThousand = remLakh % 1e3;
+    const parts = [];
+    if (crore > 0)
+      parts.push(`${convertTwoDigits(crore)} Crore`);
+    if (lakh > 0)
+      parts.push(`${convertTwoDigits(lakh)} Lakh`);
+    if (thousand > 0)
+      parts.push(`${convertTwoDigits(thousand)} Thousand`);
+    if (remThousand > 0)
+      parts.push(convertThreeDigits(remThousand));
+    return `Indian Rupees ${parts.join(" ")} Only`;
+  }
+  function generateTaxInvoiceHtml(orderData) {
+    const order = orderData || {};
+    const orderNum = order.order_number || order.orderNumber || `AK-${Date.now().toString().slice(-6)}`;
+    const orderId = order.id || orderNum;
+    const rawDate = order.created_at || order.createdAt || (/* @__PURE__ */ new Date()).toISOString();
+    const d = new Date(rawDate);
+    const dayStr = String(d.getDate()).padStart(2, "0");
+    const monthStr = String(d.getMonth() + 1).padStart(2, "0");
+    const yearStr = d.getFullYear();
+    const formattedDate = `${dayStr} / ${monthStr} / ${yearStr}`;
+    let shipping = {};
+    if (typeof order.shipping_address === "string") {
+      try {
+        shipping = JSON.parse(order.shipping_address);
+      } catch (_) {
+        shipping = { address: order.shipping_address };
+      }
+    } else if (order.shipping_address && typeof order.shipping_address === "object") {
+      shipping = order.shipping_address;
+    } else if (order.shipping && typeof order.shipping === "object") {
+      shipping = order.shipping;
+    }
+    const customerName = order.customer_name || order.customerName || shipping.name || shipping.recipient_name || "Valued Customer";
+    const customerEmail = order.customer_email || order.customerEmail || shipping.email || order.user_email || "";
+    const customerPhone = order.customer_phone || order.customerPhone || shipping.phone || "";
+    const customerGst = (order.gst_number || order.gstNumber || shipping.gst_number || shipping.gstNumber || "").trim().toUpperCase();
+    const street = shipping.line1 || shipping.street || shipping.address || "";
+    const city = shipping.city || "";
+    const state = shipping.state || "Maharashtra";
+    const pin = shipping.pin || shipping.pincode || "";
+    const fullAddress = [street, city, state, pin].filter(Boolean).join(", ") || "Mumbai, Maharashtra";
+    const isMaharashtra = state.toLowerCase().includes("maharashtra") || state.toLowerCase().includes("mh") || !state;
+    const placeOfSupply = isMaharashtra ? "Maharashtra (27)" : `${state}`;
+    const stateCode = isMaharashtra ? "27" : "Inter-State";
+    const items = Array.isArray(order.items) && order.items.length > 0 ? order.items : [
+      {
+        name: order.product_name || order.productName || "Pro Audio Hardware",
+        quantity: 1,
+        price: order.total_amount || order.totalAmount || 0,
+        gst_percent: 18
+      }
+    ];
+    let totalTaxable = 0;
+    let totalCgst = 0;
+    let totalSgst = 0;
+    let totalIgst = 0;
+    let totalGrand = 0;
+    const renderedRows = items.map((it, idx) => {
+      const qty = Number(it.quantity || it.qty || 1);
+      const unitSellingPrice = Number(it.unit_price ?? it.price ?? 0);
+      const lineTotal = unitSellingPrice * qty;
+      const gstRate = Number(it.gst_percent ?? it.gstPercent ?? 18);
+      const lineTaxable = Math.round(lineTotal / (1 + gstRate / 100) * 100) / 100;
+      const lineGst = Math.round((lineTotal - lineTaxable) * 100) / 100;
+      let cgst = 0;
+      let sgst = 0;
+      let igst = 0;
+      if (isMaharashtra) {
+        cgst = Math.round(lineGst / 2 * 100) / 100;
+        sgst = Math.round((lineGst - cgst) * 100) / 100;
+      } else {
+        igst = lineGst;
+      }
+      totalTaxable += lineTaxable;
+      totalCgst += cgst;
+      totalSgst += sgst;
+      totalIgst += igst;
+      totalGrand += lineTotal;
+      const hsnCode = it.hsn || it.hsn_code || "8518";
+      return `
+      <tr>
+        <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
+        <td style="font-weight: 600;">${it.name || it.product_name || "Pro Audio Equipment"}</td>
+        <td style="text-align: center;">${hsnCode}</td>
+        <td style="text-align: center; font-weight: 700;">${qty}</td>
+        <td style="text-align: right;">\u20B9${unitSellingPrice.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align: right;">\u20B9${lineTaxable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align: center;">${gstRate}%</td>
+        <td style="text-align: right;">${cgst > 0 ? "\u20B9" + cgst.toFixed(2) : "\u2014"}</td>
+        <td style="text-align: right;">${sgst > 0 ? "\u20B9" + sgst.toFixed(2) : "\u2014"}</td>
+        <td style="text-align: right;">${igst > 0 ? "\u20B9" + igst.toFixed(2) : "\u2014"}</td>
+        <td style="text-align: right; font-weight: 800;">\u20B9${lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+      </tr>
+    `;
+    }).join("");
+    const discountAmount = Number(order.discount_amount || order.discountAmount || 0);
+    const finalPayable = Math.max(0, totalGrand - discountAmount);
+    const amountWords = numberToIndianWords(finalPayable);
+    const invoiceNo = `AK-INV-${yearStr}-${orderNum.replace(/^AK-/, "")}`;
+    const paymentMethod = order.payment_method || order.paymentMethod || "Prepaid / Online";
+    return `
+    <div class="ak-invoice-wrapper">
+      <div class="ak-invoice-controls-bar no-print">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 700; color: #0F172A; font-size: 15px;">Official Tax Invoice: ${invoiceNo}</span>
+          <span style="font-size: 11.5px; background: #DCFCE7; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700;">GST Registered</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-primary" onclick="window.print()" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; background: #E4572E; color: #FFF; font-weight: 700; border: none; border-radius: 6px; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print / Save PDF
+          </button>
+          <button type="button" class="btn-secondary" onclick="closeTaxInvoiceModal()" style="padding: 7px 14px; background: #F1F5F9; color: #334155; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px; cursor: pointer;">
+            Close \u2715
+          </button>
+        </div>
+      </div>
+
+      <div class="ak-invoice-sheet" id="akInvoicePrintSheet">
+        <!-- TOP HEADER: LOGO & TAX INVOICE BADGE -->
+        <div class="ak-inv-header">
+          <div class="ak-inv-supplier">
+            <div class="ak-inv-brand-row">
+              <img src="assets/images/logo.png" alt="Audio King Logo" class="ak-inv-logo" onerror="this.style.display='none'">
+              <span class="ak-inv-brand-title">AUDIO KING</span>
+            </div>
+            <div class="ak-inv-legal-name">VASP ADVISORS PRIVATE LIMITED</div>
+            <div class="ak-inv-address">F 505, RNA Regency Park, MG Road Off Link Road, Dhanukar Wadi, Kandivali West, Mumbai Suburban, Maharashtra \u2013 400067</div>
+            <div class="ak-inv-gstin"><strong>GSTIN:</strong> 27AAHCV5628B1ZC &nbsp;|&nbsp; <strong>Trade Name / Brand:</strong> AUDIO KING</div>
+          </div>
+
+          <div class="ak-inv-title-box">
+            <h1 class="ak-inv-heading">TAX INVOICE</h1>
+            <div class="ak-inv-subbrand">AUDIO KING</div>
+          </div>
+        </div>
+
+        <!-- METADATA 2-COLUMN TABLE -->
+        <table class="ak-inv-meta-table">
+          <tbody>
+            <tr>
+              <td style="width: 50%;"><strong>Invoice No.:</strong> ${invoiceNo}</td>
+              <td style="width: 50%;"><strong>Place of Supply:</strong> ${placeOfSupply}</td>
+            </tr>
+            <tr>
+              <td><strong>Invoice Date:</strong> ${formattedDate}</td>
+              <td><strong>Due Date:</strong> Immediate (Paid)</td>
+            </tr>
+            <tr>
+              <td><strong>Payment Terms:</strong> ${paymentMethod}</td>
+              <td><strong>PO / Reference No.:</strong> ${orderNum}</td>
+            </tr>
+            <tr>
+              <td><strong>Reverse Charge:</strong> No</td>
+              <td><strong>State Code:</strong> ${stateCode}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ORANGE SECTION BARS: BILL TO & SHIP TO -->
+        <div class="ak-inv-recipients-grid">
+          <div class="ak-inv-recipient-col">
+            <div class="ak-inv-orange-bar">BILL TO (RECIPIENT)</div>
+            <div class="ak-inv-box-body">
+              <div><strong>Customer / Company Name:</strong> ${customerName}</div>
+              <div><strong>Billing Address:</strong> ${fullAddress}</div>
+              <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                <span><strong>GSTIN / UIN:</strong> ${customerGst || "N/A (Consumer)"}</span>
+                <span><strong>State:</strong> ${state}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ak-inv-recipient-col">
+            <div class="ak-inv-orange-bar">SHIP TO (IF DIFFERENT)</div>
+            <div class="ak-inv-box-body">
+              <div><strong>Recipient / Company Name:</strong> ${customerName}</div>
+              <div><strong>Shipping Address:</strong> ${fullAddress}</div>
+              <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                <span><strong>GSTIN / UIN:</strong> ${customerGst || "N/A (Consumer)"}</span>
+                <span><strong>State:</strong> ${state}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FULL-WIDTH CONTACT ROW -->
+        <div class="ak-inv-contact-bar">
+          <strong>Contact / Email:</strong> ${customerPhone ? customerPhone + " | " : ""}${customerEmail || "info@audioking.co.in"}
+        </div>
+
+        <!-- ITEMS BREAKDOWN TABLE (DARK CHARCOAL HEADER) -->
+        <table class="ak-inv-items-table">
+          <thead>
+            <tr>
+              <th style="width: 32px; text-align: center;">#</th>
+              <th>Item / Description</th>
+              <th style="width: 60px; text-align: center;">HSN/SAC</th>
+              <th style="width: 40px; text-align: center;">Qty</th>
+              <th style="width: 75px; text-align: right;">Rate (INR)</th>
+              <th style="width: 80px; text-align: right;">Taxable (INR)</th>
+              <th style="width: 50px; text-align: center;">GST %</th>
+              <th style="width: 65px; text-align: right;">CGST (INR)</th>
+              <th style="width: 65px; text-align: right;">SGST (INR)</th>
+              <th style="width: 65px; text-align: right;">IGST (INR)</th>
+              <th style="width: 85px; text-align: right;">Line Total (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${renderedRows}
+          </tbody>
+        </table>
+
+        <!-- BOTTOM SECTION: BANK/TERMS ON LEFT, FINANCIAL SUMMARY ON RIGHT -->
+        <div class="ak-inv-bottom-grid">
+          <!-- LEFT: AMOUNT IN WORDS, NOTES, BANK DETAILS -->
+          <div class="ak-inv-bottom-left">
+            <div class="ak-inv-info-block">
+              <div class="ak-inv-block-title">Amount in Words:</div>
+              <div class="ak-inv-block-text" style="font-weight: 700; color: #1E293B;">${amountWords}</div>
+            </div>
+
+            <div class="ak-inv-info-block">
+              <div class="ak-inv-block-title">Notes / Terms:</div>
+              <div class="ak-inv-block-text">
+                1. Goods once sold are covered under official manufacturer warranty.<br>
+                2. All prices are inclusive of GST as mandated under Indian GST laws.<br>
+                3. Disputes are subject to Mumbai, Maharashtra jurisdiction.
+              </div>
+            </div>
+
+            <div class="ak-inv-info-block">
+              <div class="ak-inv-block-title">Bank / Payment Details:</div>
+              <div class="ak-inv-block-text">
+                Bank: HDFC Bank Ltd &nbsp;|&nbsp; Beneficiary: VASP ADVISORS PRIVATE LIMITED
+              </div>
+            </div>
+
+            <div class="ak-inv-info-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+              <div class="ak-inv-block-title">Account / UPI / IFSC:</div>
+              <div class="ak-inv-block-text">
+                A/C No: 50200088991234 &nbsp;|&nbsp; IFSC: HDFC0000123 &nbsp;|&nbsp; UPI: audioking@hdfcbank
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: FINANCIAL TOTALS -->
+          <div class="ak-inv-bottom-right">
+            <table class="ak-inv-totals-table">
+              <tbody>
+                <tr>
+                  <td>Subtotal (Taxable)</td>
+                  <td style="text-align: right;">INR ${totalTaxable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>Discount</td>
+                  <td style="text-align: right;">INR ${discountAmount > 0 ? "-" + discountAmount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</td>
+                </tr>
+                <tr>
+                  <td>CGST</td>
+                  <td style="text-align: right;">INR ${totalCgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>SGST</td>
+                  <td style="text-align: right;">INR ${totalSgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>IGST</td>
+                  <td style="text-align: right;">INR ${totalIgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>Shipping / Transit Insurance</td>
+                  <td style="text-align: right; color: #166534; font-weight: 700;">INR 0.00 (Free)</td>
+                </tr>
+                <tr class="ak-inv-grand-row">
+                  <td style="font-weight: 900; font-size: 14px;">GRAND TOTAL</td>
+                  <td style="text-align: right; font-weight: 900; font-size: 14px;">INR ${finalPayable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SIGNATURE FOOTER -->
+        <div class="ak-inv-footer">
+          <div class="ak-inv-signatory">
+            <div style="font-size: 12px; font-weight: 700; color: #1E293B;">For VASP ADVISORS PRIVATE LIMITED (Audio King)</div>
+            <div style="height: 48px; border-bottom: 1px dashed #CBD5E1; margin: 8px 0;"></div>
+            <div style="font-size: 11px; font-weight: 700; color: #64748B;">Authorized Signatory</div>
+          </div>
+          <div class="ak-inv-thanks">
+            Thank you for your business.
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  }
+  function openTaxInvoiceModal(orderData) {
+    let modal = document.getElementById("akTaxInvoiceModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "akTaxInvoiceModal";
+      modal.className = "ak-tax-invoice-modal-overlay";
+      document.body.appendChild(modal);
+    }
+    modal.innerHTML = `
+    <div class="ak-tax-invoice-modal-content">
+      ${generateTaxInvoiceHtml(orderData)}
+    </div>
+  `;
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+  }
+  function closeTaxInvoiceModal() {
+    const modal = document.getElementById("akTaxInvoiceModal");
+    if (modal) {
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.openTaxInvoiceModal = openTaxInvoiceModal;
+    window.closeTaxInvoiceModal = closeTaxInvoiceModal;
+  }
+
   // js/components/orderSuccess.js
   function triggerOrderAnimation(orderData) {
     const overlay = document.getElementById("akOrderAnimOverlay");
@@ -26544,7 +26906,9 @@ Weight: 1.24 lbs (0.567 kg`,
       showOrderConfirmation(orderData);
     }
   }
+  var lastOrderData = null;
   function showOrderConfirmation(orderData) {
+    lastOrderData = orderData;
     const mainView = document.getElementById("akMainContent");
     const catalogView = document.getElementById("catalogPage");
     const productView = document.getElementById("productPage");
@@ -26659,6 +27023,15 @@ Weight: 1.24 lbs (0.567 kg`,
   function initOrderSuccess() {
     const continueBtn = document.getElementById("akOrderContinueBtn");
     const printBtn = document.getElementById("akOrderPrintBtn");
+    const invoiceBtn = document.getElementById("akOrderInvoiceBtn");
+    if (invoiceBtn) {
+      invoiceBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (lastOrderData) {
+          openTaxInvoiceModal(lastOrderData);
+        }
+      });
+    }
     if (continueBtn) {
       continueBtn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -27940,6 +28313,7 @@ Weight: 1.24 lbs (0.567 kg`,
         const lastName = document.getElementById("akSignUpLast")?.value.trim();
         const email = document.getElementById("akSignUpEmail")?.value.trim();
         const phone = document.getElementById("akSignUpPhone")?.value.trim();
+        const gstNumber = document.getElementById("akSignUpGst")?.value.trim().toUpperCase() || "";
         const pass = document.getElementById("akSignUpPass")?.value;
         const passConfirm = document.getElementById("akSignUpPassConfirm")?.value;
         if (!firstName || !lastName || !email || !phone || !pass) {
@@ -27961,7 +28335,8 @@ Weight: 1.24 lbs (0.567 kg`,
             email,
             password: pass,
             confirmPassword: passConfirm,
-            phone
+            phone,
+            gstNumber
           });
           showOtpVerification(email);
           showToast("Verification code dispatched to your email.");
@@ -29428,6 +29803,16 @@ Weight: 1.24 lbs (0.567 kg`,
       if (submitBtn)
         submitBtn.textContent = "Place Order";
       const subtotal = getCartSubtotal();
+      let weightedGstRateSum = 0;
+      checkoutItems.forEach((it) => {
+        const line = (Number(it.price) || 0) * (it.quantity || it.qty || 1);
+        const rate = Number(it.gstPercent ?? it.gst_percent ?? 18);
+        weightedGstRateSum += rate * line;
+      });
+      const avgGstRate = subtotal > 0 ? Math.round(weightedGstRateSum / subtotal * 10) / 10 : 18;
+      const finalAmount = appliedCoupon ? Math.max(0, subtotal - appliedCoupon.discountAmount) : subtotal;
+      const taxableBase = finalAmount / (1 + avgGstRate / 100);
+      const inclusiveGstAmt = finalAmount - taxableBase;
       bodyEl.innerHTML = `
       <!-- Cashfree integration badge -->
       <div class="ak-payment-badge-strip">
@@ -29537,16 +29922,23 @@ Weight: 1.24 lbs (0.567 kg`,
         </div>
         ` : ""}
         <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-          <span>Delivery</span>
-          <span style="color: #166534; font-weight: 700;">FREE</span>
+          <span>Taxable Value (Excl. Tax)</span>
+          <span>${formatINR(Math.round(taxableBase))}</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-          <span>GST / Taxes</span>
-          <span style="color: #166534; font-weight: 700;">Included</span>
+          <span>GST (${avgGstRate}% Included)</span>
+          <span style="color: #166534; font-weight: 700;">${formatINR(Math.round(inclusiveGstAmt))}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+          <span>Delivery & Transit Insurance</span>
+          <span style="color: #166534; font-weight: 700;">FREE</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 900; border-top: 1px solid var(--ak-border); padding-top: 8px; margin-top: 8px; color: var(--ak-navy);">
           <span>Amount Payable</span>
-          <span>${formatINR(appliedCoupon ? Math.max(0, subtotal - appliedCoupon.discountAmount) : subtotal)}</span>
+          <span>${formatINR(finalAmount)}</span>
+        </div>
+        <div style="font-size: 11px; color: #166534; font-weight: 600; text-align: right; margin-top: 3px;">
+          (Inclusive of ${formatINR(Math.round(inclusiveGstAmt))} GST at ${avgGstRate}%)
         </div>
       </div>
     `;
@@ -31455,7 +31847,7 @@ Weight: 1.24 lbs (0.567 kg`,
         number: 19,
         heading: "Contact",
         body: `
-        <p>For tracking inquiries or logistics questions, contact our support team at support@audioking.in or call our hotline.</p>
+        <p>For tracking inquiries or logistics questions, contact our support team at info@audioking.co.in or call our hotline.</p>
       `
       }
     ]
@@ -31615,7 +32007,7 @@ Weight: 1.24 lbs (0.567 kg`,
         number: 20,
         heading: "How to Request a Return",
         body: `
-        <p>To initiate a return, contact support@audioking.in with your Order ID, reason for return, and photographic proof.</p>
+        <p>To initiate a return, contact info@audioking.co.in with your Order ID, reason for return, and photographic proof.</p>
       `
       },
       {
@@ -32630,9 +33022,17 @@ Message: ${message}`);
       return brandMatches && catMatches;
     });
     if (matching && matching.code) {
+      const dType = (matching.discountType || matching.discount_type || "").toLowerCase();
+      const dVal = matching.discountValue !== void 0 ? matching.discountValue : matching.discount_value;
+      let discountText = "special";
+      if (dType === "percentage" || dType === "percent") {
+        discountText = `${dVal}%`;
+      } else if (dVal !== void 0 && dVal !== null && dVal !== "") {
+        discountText = `\u20B9${Number(dVal).toLocaleString("en-IN")}`;
+      }
       noticeEl.innerHTML = `
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml2(matching.code)}</span> code to discover flat discount on this product</span>
+      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml2(matching.code)}</span> code to get ${discountText} discount on this product</span>
     `;
       noticeEl.style.display = "flex";
     } else {
@@ -33006,6 +33406,7 @@ Message: ${message}`);
       initDedicatedCheckoutPage();
       initScrollReveal();
       setupQuickCategoryListeners();
+      loadAndRenderPopularCategories();
       setupAppEventListeners();
       document.querySelectorAll(".ak-logo-link, .ak-nav-home").forEach((el) => {
         el.addEventListener("click", (e) => {
@@ -34927,14 +35328,39 @@ Message: ${message}`);
         discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal);
       }
     }
+    let totalLineTaxable = 0;
+    let totalLineGst = 0;
+    let weightedGstRateSum = 0;
+    currentCheckoutItems.forEach((item) => {
+      const qty = item.quantity || item.qty || 1;
+      const lineTotal = (Number(item.price) || 0) * qty;
+      const rate = Number(item.gstPercent ?? item.gst_percent ?? 18);
+      const taxable = lineTotal / (1 + rate / 100);
+      const gst = lineTotal - taxable;
+      totalLineTaxable += taxable;
+      totalLineGst += gst;
+      weightedGstRateSum += rate * lineTotal;
+    });
+    const avgGstRate = subtotal > 0 ? Math.round(weightedGstRateSum / subtotal * 10) / 10 : 18;
     const grandTotal = Math.max(0, subtotal - discountAmount);
-    const gstAmount = Math.round(grandTotal * 0.18 / 1.18);
+    const effectiveTaxable = grandTotal / (1 + avgGstRate / 100);
+    const effectiveGst = grandTotal - effectiveTaxable;
+    const taxableValEl = document.getElementById("akCoTaxableValue");
+    if (taxableValEl)
+      taxableValEl.textContent = formatINR(Math.round(effectiveTaxable));
+    const gstLabelEl = document.getElementById("akCoGstLabel");
+    if (gstLabelEl)
+      gstLabelEl.textContent = `GST (${avgGstRate}% Included)`;
     if (subtotalEl)
       subtotalEl.textContent = formatINR(subtotal);
     if (gstEl)
-      gstEl.textContent = formatINR(gstAmount);
+      gstEl.textContent = formatINR(Math.round(effectiveGst));
     if (totalEl)
       totalEl.textContent = formatINR(grandTotal);
+    const gstNoteEl = document.getElementById("akCoInclusiveGstNote");
+    if (gstNoteEl) {
+      gstNoteEl.textContent = `Inclusive of \u20B9${Math.round(effectiveGst).toLocaleString("en-IN")} GST (${avgGstRate}%)`;
+    }
     const discountRow = document.getElementById("akCoDiscountRow");
     const discountCodeEl = document.getElementById("akCoDiscountCode");
     const discountAmountEl = document.getElementById("akCoDiscountAmount");
@@ -35733,9 +36159,9 @@ Message: ${message}`);
   function getProductById(pId) {
     if (!pId && pId !== 0)
       return null;
-    const sId = String(pId);
+    const sId = String(pId).trim().toLowerCase();
     const liveList = window._liveCatalogProducts || [];
-    return liveList.find((p) => p && String(p.id) === sId) || AUDIOKING_PRODUCTS.find((p) => p && String(p.id) === sId) || FEATURED_PRODUCTS.find((p) => p && String(p.id) === sId) || null;
+    return liveList.find((p) => p && (String(p.id).toLowerCase() === sId || String(p.id) === String(pId))) || AUDIOKING_PRODUCTS.find((p) => p && (String(p.id).toLowerCase() === sId || String(p.id) === String(pId))) || FEATURED_PRODUCTS.find((p) => p && (String(p.id).toLowerCase() === sId || String(p.id) === String(pId))) || null;
   }
   function attachProductCardListeners(container = document) {
     container.querySelectorAll(".ak-product-card").forEach((card) => {
@@ -35930,4 +36356,32 @@ Message: ${message}`);
     window.__AUDIOKING_PRODUCTS = AUDIOKING_PRODUCTS;
     window.__FEATURED_PRODUCTS = FEATURED_PRODUCTS;
   }
+  async function loadAndRenderPopularCategories() {
+    const container = document.getElementById("akQuickCategoriesGrid");
+    if (!container)
+      return;
+    try {
+      const res = await fetch(apiUrl("/api/popular-categories"));
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.popularCategories) && data.popularCategories.length > 0) {
+          container.innerHTML = data.popularCategories.map((cat) => {
+            const catName = cat.category_name || cat.name;
+            const imgSrc = resolveProductImage(cat.image_url || cat.image);
+            return `
+            <a href="#store?category=${encodeURIComponent(catName)}" class="ak-cat-box-card" data-filter="${escapeHtml2(catName)}">
+              <div class="ak-cat-box">
+                <img src="${imgSrc}" alt="${escapeHtml2(catName)}" class="ak-cat-box-img ak-cat-img-lg" loading="lazy" onerror="this.src='assets/images/placeholder.svg'">
+              </div>
+              <span class="ak-cat-box-label">${escapeHtml2(catName)}</span>
+            </a>
+          `;
+          }).join("");
+          setupQuickCategoryListeners();
+        }
+      }
+    } catch (e) {
+    }
+  }
+  window.loadAndRenderPopularCategories = loadAndRenderPopularCategories;
 })();

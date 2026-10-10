@@ -23,7 +23,8 @@ const state = {
   variantMatrix: [],
   selectedOfferProductId: null,
   heroSlides: [],
-  lockedFeaturedIds: []
+  lockedFeaturedIds: [],
+  popularCategories: []
 };
 
 function escapeHtml(str) {
@@ -770,6 +771,8 @@ function resetProductForm() {
   document.getElementById('productIdHidden').value = '';
   document.getElementById('productPriceError').style.display = 'none';
   document.getElementById('discountBadgePreview').textContent = '0% OFF';
+  if (document.getElementById('productGstPercent')) document.getElementById('productGstPercent').value = 18;
+  if (document.getElementById('productGstBreakdownPreview')) document.getElementById('productGstBreakdownPreview').innerHTML = 'Base: ₹0.00 | GST (18%): ₹0.00 | Total: ₹0.00';
   document.getElementById('inlineNewCatRow').style.display = 'none';
   document.getElementById('inlineNewBrandRow').style.display = 'none';
   const secSelect = document.getElementById('productSection');
@@ -806,6 +809,7 @@ async function openEditProduct(productId) {
     document.getElementById('productBrand').value = p.brand;
     document.getElementById('productMrp').value = p.originalPrice;
     document.getElementById('productSellingPrice').value = p.price;
+    if (document.getElementById('productGstPercent')) document.getElementById('productGstPercent').value = (p.gstPercent !== undefined ? p.gstPercent : (p.gst_percent !== undefined ? p.gst_percent : 18.0));
     document.getElementById('productStock').value = p.stock;
     const isPre = Boolean(p.isPreOrder || p.stockStatus === 'preorder' || p.in_stock === 2 || (p.badge && p.badge.toLowerCase().includes('pre-order')));
     document.getElementById('productAvailability').value = isPre ? '2' : (p.inStock ? '1' : '0');
@@ -1642,6 +1646,17 @@ function updateProductDiscountDisplay() {
     }
   }
 
+  const gstInput = document.getElementById('productGstPercent');
+  const gstPreview = document.getElementById('productGstBreakdownPreview');
+  if (gstPreview && selling > 0) {
+    const gstRate = parseFloat(gstInput?.value) || 18.0;
+    const taxable = Math.round((selling / (1 + gstRate / 100)) * 100) / 100;
+    const gstAmt = Math.round((selling - taxable) * 100) / 100;
+    gstPreview.innerHTML = `Base: <strong>${formatINR(taxable)}</strong> | GST (${gstRate}%): <strong>${formatINR(gstAmt)}</strong> | Total: <strong>${formatINR(selling)}</strong> (Inclusive)`;
+  } else if (gstPreview) {
+    gstPreview.innerHTML = 'Base: ₹0.00 | GST (18%): ₹0.00 | Total: ₹0.00';
+  }
+
   return true;
 }
 window.updateProductDiscountDisplay = updateProductDiscountDisplay;
@@ -1747,6 +1762,7 @@ async function handleSaveProduct(e) {
     stockStatus,
     badge: availVal === '2' ? 'Pre-Order' : '',
     description,
+    gstPercent: parseFloat(document.getElementById('productGstPercent')?.value) || 18.0,
     images: state.formImages.length > 0 ? state.formImages : ['assets/images/placeholder.svg'],
     videoChoice: state.formVideoChoice,
     videoInput,
@@ -2545,6 +2561,7 @@ async function loadOrders() {
         <td>
           <div style="display: flex; gap: 6px; align-items: center;">
             <button class="btn-edit" onclick="openOrderDetailModal('${o.id}')">View Details</button>
+            <button class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px; display: inline-flex; align-items: center; gap: 4px;" onclick="printAdminOrderTaxInvoice('${o.id}')" title="Print Tax Invoice">📄 Invoice</button>
             ${o.status !== 'Cancelled' && o.status !== 'Delivered' ? `
               <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px; background: #EF4444;" onclick="cancelOrderDirect('${o.id}', '${o.orderNumber}')" title="Cancel Order">🚫 Cancel</button>
             ` : ''}
@@ -2711,14 +2728,10 @@ async function loadCustomers() {
 
     tbody.innerHTML = customers.map(c => `
       <tr>
-        <td><strong>${c.name}</strong></td>
-        <td>${c.email}</td>
-        <td>
-          <span class="provider-badge ${c.provider === 'Google Account' ? 'google' : 'email'}">
-            ${c.provider}
-          </span>
-        </td>
-        <td>${formatDate(c.joinedAt)}</td>
+        <td><strong>${escapeHtml(c.name)}</strong></td>
+        <td>${escapeHtml(c.email)}</td>
+        <td>${escapeHtml(c.phone || 'N/A')}</td>
+        <td>${c.gstNumber ? `<code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px; color: #1E293B;">${escapeHtml(c.gstNumber)}</code>` : '<span style="color: #94A3B8; font-size: 11.5px;">—</span>'}</td>
         <td><strong>${c.ordersCount}</strong></td>
         <td><strong style="color: var(--ak-orange);">${formatINR(c.totalSpent)}</strong></td>
         <td>
@@ -2739,7 +2752,7 @@ async function openCustomerHistoryModal(customerId) {
     const orders = data.orders || [];
 
     document.getElementById('modalCustomerHistoryTitle').textContent = `Order History: ${customer.name}`;
-    document.getElementById('modalCustomerHistorySub').textContent = `${customer.email} Â· ${customer.phone}`;
+    document.getElementById('modalCustomerHistorySub').textContent = `${customer.email} · ${customer.phone}${customer.gstNumber ? ' · GSTIN: ' + customer.gstNumber : ''}`;
 
     const tbody = document.getElementById('modalCustomerOrdersTbody');
     if (orders.length === 0) {
@@ -3807,13 +3820,39 @@ function getFeaturedSlotItems() {
   const prodMap = new Map();
   allProducts.forEach(p => prodMap.set(String(p.id), p));
 
-  const lockedIds = (state.lockedFeaturedIds || []).map(String).filter(id => prodMap.has(id)).slice(0, MAX_FEATURED_SLOTS);
-  const items = lockedIds.map(id => ({ product: prodMap.get(id), isLocked: true }));
-  const remaining = MAX_FEATURED_SLOTS - items.length;
-  if (remaining > 0) {
-    getFeaturedAutoCandidates(new Set(lockedIds)).slice(0, remaining).forEach(p => items.push({ product: p, isLocked: false }));
+  let lockedIds = (state.lockedFeaturedIds || []).map(String).filter(id => prodMap.has(id)).slice(0, MAX_FEATURED_SLOTS);
+
+  if (!lockedIds.length) {
+    lockedIds = allProducts.filter(p => p.isFeatured || p.is_featured).map(p => String(p.id)).slice(0, MAX_FEATURED_SLOTS);
   }
-  return items;
+
+  const default10 = [
+    'adam-audio-a44h-single',
+    'adam-audio-a4v-single',
+    'adam-audio-d3v-black-pair',
+    'adam-audio-d3v-white-pair',
+    'adam-audio-t10s-single',
+    'adam-audio-t5v-single',
+    'adam-audio-t7v-single',
+    'adam-audio-t8v-single',
+    'apollo-e1x-remote-controllable-unison-preamp-dante-mug4ipgz',
+    'arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix'
+  ];
+  default10.forEach(id => {
+    if (lockedIds.length < MAX_FEATURED_SLOTS && prodMap.has(id) && !lockedIds.includes(id)) {
+      lockedIds.push(id);
+    }
+  });
+
+  if (lockedIds.length < MAX_FEATURED_SLOTS) {
+    for (const p of allProducts) {
+      if (lockedIds.length >= MAX_FEATURED_SLOTS) break;
+      const pid = String(p.id);
+      if (!lockedIds.includes(pid)) lockedIds.push(pid);
+    }
+  }
+
+  return lockedIds.map(id => ({ product: prodMap.get(id), isLocked: true }));
 }
 
 async function persistFeaturedList(list) {
@@ -4501,3 +4540,249 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+
+// -------------------------------------------------------------
+// POPULAR CATEGORIES MANAGER CONTROLLER
+// -------------------------------------------------------------
+async function loadPopularCategoriesManager() {
+  const select = document.getElementById('adminPopularCategorySelect');
+
+  // Populate dropdown with available categories from products catalog
+  if (select) {
+    const allProds = state.products || [];
+    const catSet = new Set();
+    allProds.forEach(p => {
+      const c = (p.category || '').trim();
+      if (c) catSet.add(c);
+    });
+    (state.categories || []).forEach(c => {
+      const name = (c.name || '').trim();
+      if (name) catSet.add(name);
+    });
+    const availableCategories = Array.from(catSet).sort();
+    select.innerHTML = '<option value="">-- Choose an available category --</option>' +
+      availableCategories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+  }
+
+  try {
+    const res = await adminFetch('/api/admin/popular-categories');
+    if (res.ok) {
+      const data = await res.json();
+      state.popularCategories = data.popularCategories || [];
+    }
+  } catch (e) {
+    console.warn('Could not load popular categories:', e);
+  }
+
+  renderPopularCategoriesAdmin();
+}
+window.loadPopularCategoriesManager = loadPopularCategoriesManager;
+
+function renderPopularCategoriesAdmin() {
+  const container = document.getElementById('popularCategoriesListContainer');
+  const countBadge = document.getElementById('popularCategoriesCountBadge');
+  if (!container) return;
+
+  const cats = state.popularCategories || [];
+  if (countBadge) countBadge.textContent = `${cats.length} Categories`;
+
+  if (!cats.length) {
+    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--ak-text-muted);">No popular categories configured. Select an available category above to add.</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      ${cats.map((cat, idx) => {
+        const thumb = resolveAdminThumb(cat.image_url || cat.image);
+        const isFirst = idx === 0;
+        const isLast = idx === cats.length - 1;
+        return `
+          <div class="locked-product-item" style="background: #FFFFFF; border: 1px solid var(--ak-border);">
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${isFirst ? 'disabled' : ''} onclick="movePopularCategory(${idx}, -1)" title="Move up">▲</button>
+                <div style="display: flex; align-items: center; gap: 2px;">
+                  <span style="font-size: 11px; font-weight: 700; color: #475569;">#</span>
+                  <input type="number" min="1" max="${cats.length}" value="${idx + 1}" onchange="setPopularCategoryPosition(${idx}, this.value)" style="width: 38px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;">
+                </div>
+                <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${isLast ? 'disabled' : ''} onclick="movePopularCategory(${idx}, 1)" title="Move down">▼</button>
+              </div>
+              <img src="${thumb}" alt="${escapeHtml(cat.category_name)}" class="locked-product-thumb" onerror="this.src='assets/images/placeholder.svg'" style="background: #F8FAFC; object-fit: contain;">
+            </div>
+
+            <div class="locked-product-info">
+              <div class="locked-product-title" style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 4px;">
+                ${escapeHtml(cat.category_name)}
+              </div>
+              <div style="font-size: 11.5px; color: var(--ak-text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span>Image: <code style="font-size: 10.5px; background: #F1F5F9; padding: 2px 6px; border-radius: 3px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle;">${escapeHtml(cat.image_url || '')}</code></span>
+                <button type="button" class="btn-secondary" style="padding: 2px 8px; font-size: 10.5px;" onclick="promptChangePopularCategoryImage(${idx})">Change Image</button>
+              </div>
+            </div>
+
+            <div>
+              <button type="button" class="btn-danger" style="padding: 6px 12px; font-size: 12px; font-weight: 700;" onclick="deletePopularCategory(${idx})">
+                🗑️ Remove
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+window.renderPopularCategoriesAdmin = renderPopularCategoriesAdmin;
+
+async function handleAddPopularCategory() {
+  const select = document.getElementById('adminPopularCategorySelect');
+  const imgInput = document.getElementById('adminPopularCategoryImage');
+  const catName = (select?.value || '').trim();
+  const imgUrl = (imgInput?.value || '').trim() || 'assets/images/placeholder.svg';
+
+  if (!catName) {
+    alert('Please select an available category from the dropdown.');
+    return;
+  }
+
+  const existing = (state.popularCategories || []).find(c => (c.category_name || '').toLowerCase() === catName.toLowerCase());
+  if (existing) {
+    alert(`Category "${catName}" is already in the popular categories list.`);
+    return;
+  }
+
+  state.popularCategories = state.popularCategories || [];
+  state.popularCategories.push({
+    id: `pop-cat-${Date.now()}`,
+    category_name: catName,
+    image_url: imgUrl,
+    sort_order: state.popularCategories.length + 1
+  });
+
+  if (imgInput) imgInput.value = '';
+  if (select) select.value = '';
+
+  await savePopularCategoriesToServer();
+}
+window.handleAddPopularCategory = handleAddPopularCategory;
+
+async function handlePopularCategoryImageUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const res = await adminFetch('/api/admin/upload-image', {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.url) {
+        document.getElementById('adminPopularCategoryImage').value = data.url;
+      }
+    } else {
+      alert('Failed to upload category image.');
+    }
+  } catch (err) {
+    alert('Network error while uploading category image.');
+  }
+}
+window.handlePopularCategoryImageUpload = handlePopularCategoryImageUpload;
+
+async function movePopularCategory(idx, delta) {
+  const list = [...(state.popularCategories || [])];
+  const target = idx + delta;
+  if (target < 0 || target >= list.length) return;
+  [list[idx], list[target]] = [list[target], list[idx]];
+  list.forEach((c, i) => c.sort_order = i + 1);
+  state.popularCategories = list;
+  await savePopularCategoriesToServer();
+}
+window.movePopularCategory = movePopularCategory;
+
+async function setPopularCategoryPosition(idx, newPos) {
+  const list = [...(state.popularCategories || [])];
+  const pos = parseInt(newPos, 10);
+  if (isNaN(pos) || pos < 1 || pos > list.length) {
+    renderPopularCategoriesAdmin();
+    return;
+  }
+  const target = pos - 1;
+  const [item] = list.splice(idx, 1);
+  list.splice(target, 0, item);
+  list.forEach((c, i) => c.sort_order = i + 1);
+  state.popularCategories = list;
+  await savePopularCategoriesToServer();
+}
+window.setPopularCategoryPosition = setPopularCategoryPosition;
+
+async function deletePopularCategory(idx) {
+  const cat = state.popularCategories && state.popularCategories[idx];
+  if (!cat) return;
+  if (!confirm(`Remove "${cat.category_name}" from popular categories?`)) return;
+  state.popularCategories.splice(idx, 1);
+  (state.popularCategories || []).forEach((c, i) => c.sort_order = i + 1);
+  await savePopularCategoriesToServer();
+}
+window.deletePopularCategory = deletePopularCategory;
+
+async function promptChangePopularCategoryImage(idx) {
+  const cat = state.popularCategories && state.popularCategories[idx];
+  if (!cat) return;
+  const newImg = prompt(`Enter new image URL for "${cat.category_name}":`, cat.image_url || '');
+  if (newImg !== null && newImg.trim()) {
+    cat.image_url = newImg.trim();
+    await savePopularCategoriesToServer();
+  }
+}
+window.promptChangePopularCategoryImage = promptChangePopularCategoryImage;
+
+async function savePopularCategoriesToServer() {
+  const btn = document.getElementById('savePopularCategoriesBtn');
+  if (btn) btn.disabled = true;
+
+  try {
+    const res = await adminFetch('/api/admin/popular-categories', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ popularCategories: state.popularCategories || [] })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      state.popularCategories = data.popularCategories || [];
+      renderPopularCategoriesAdmin();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      alert(err.error || 'Failed to save popular categories.');
+    }
+  } catch (e) {
+    alert('Network error while saving popular categories: ' + e.message);
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+window.savePopularCategoriesToServer = savePopularCategoriesToServer;
+
+// TAX INVOICE PRINT CONTROLLER FOR ADMIN
+async function printAdminOrderTaxInvoice(orderId) {
+  try {
+    const res = await adminFetch(`/api/admin/orders/${orderId}`);
+    if (!res.ok) throw new Error('Order not found');
+    const data = await res.json();
+    const order = data.order;
+    if (typeof openTaxInvoiceModal === 'function') {
+      openTaxInvoiceModal(order);
+    } else if (typeof window.openTaxInvoiceModal === 'function') {
+      window.openTaxInvoiceModal(order);
+    } else {
+      alert('Tax Invoice generator is loading. Please try again.');
+    }
+  } catch (err) {
+    alert('Failed to load order invoice: ' + err.message);
+  }
+}
+window.printAdminOrderTaxInvoice = printAdminOrderTaxInvoice;

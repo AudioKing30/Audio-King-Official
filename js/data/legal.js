@@ -491,7 +491,7 @@ export const shippingPolicy = {
       number: 19,
       heading: 'Contact',
       body: `
-        <p>For tracking inquiries or logistics questions, contact our support team at support@audioking.in or call our hotline.</p>
+        <p>For tracking inquiries or logistics questions, contact our support team at info@audioking.co.in or call our hotline.</p>
       `
     }
   ]
@@ -652,7 +652,7 @@ export const returnsPolicy = {
       number: 20,
       heading: 'How to Request a Return',
       body: `
-        <p>To initiate a return, contact support@audioking.in with your Order ID, reason for return, and photographic proof.</p>
+        <p>To initiate a return, contact info@audioking.co.in with your Order ID, reason for return, and photographic proof.</p>
       `
     },
     {

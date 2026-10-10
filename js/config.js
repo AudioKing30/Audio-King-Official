@@ -7,7 +7,7 @@ export const AUDIOKING_CONFIG = {
   tagline: "Pro Audio • Musical Instruments • Studio Gear",
   expertPhone: "+91 88793 93743",
   whatsappNumber: "+91 88793 93743",
-  supportEmail: "support@audioking.in",
+  supportEmail: "info@audioking.co.in",
   businessHours: "Monday – Saturday: 10:00 AM – 8:00 PM IST",
   currency: "INR",
   currencySymbol: "₹",

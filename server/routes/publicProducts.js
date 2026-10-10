@@ -139,6 +139,7 @@ function formatProduct(row, activeOffers = []) {
       youtubeVideos: youtubeVideos,
       specs: specs,
       deepSpecs: deepSpecs,
+      gstPercent: (row.gst_percent !== undefined && row.gst_percent !== null) ? Number(row.gst_percent) : 18.0,
       isFeatured: Boolean(row.is_featured),
       createdAt: row.created_at,
       updatedAt: row.updated_at

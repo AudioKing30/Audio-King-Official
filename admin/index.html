@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/admin.css?v=20261010_v3">
+  <link rel="stylesheet" href="../css/tax-invoice.css">
   <style>
     input::-ms-reveal,
     input::-ms-clear {
@@ -476,6 +477,21 @@
               <span style="font-size: 12px; color: var(--ak-text-muted);">(Formula: round(((MRP − SellingPrice) / MRP) × 100))</span>
             </div>
 
+            <!-- GST % Input & Inclusive Calculation Breakdown -->
+            <div class="form-grid-2" style="margin-top: 16px;">
+              <div class="form-group">
+                <label class="form-label" for="productGstPercent">GST Rate (%) *</label>
+                <input type="number" id="productGstPercent" class="form-input" min="0" max="28" step="0.5" value="18" placeholder="e.g. 18, 12, 5" oninput="calculateDiscountAndValidate()">
+                <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Selling price entered above is <strong>inclusive</strong> of this GST rate.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tax Breakdown Preview (Inclusive Base + GST)</label>
+                <div id="productGstBreakdownPreview" style="padding: 10px 12px; background: #F8FAFC; border: 1px solid var(--ak-border); border-radius: 6px; font-size: 12px; color: #334155; line-height: 1.4;">
+                  Base: ₹0.00 | GST (18%): ₹0.00 | Total: ₹0.00
+                </div>
+              </div>
+            </div>
+
             <!-- 9 & 10. Stock & Availability Toggle -->
             <div class="form-grid-2" style="margin-top: 20px;">
               <div class="form-group">
@@ -806,6 +822,63 @@
 
           </div>
 
+          <!-- SECTION C: POPULAR CATEGORIES MANAGER -->
+          <div class="admin-card">
+            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                  <span>🏷️ Popular Categories Manager</span>
+                  <span id="popularCategoriesCountBadge" class="badge-active" style="font-size: 11.5px; padding: 2px 8px;">10 Categories</span>
+                </h2>
+                <p class="card-desc">Manage the popular category boxes shown on the homepage. Add, delete, and sequence categories (restricted to available catalog categories) with custom thumbnail images.</p>
+              </div>
+              <div>
+                <button type="button" class="btn-primary" id="savePopularCategoriesBtn" onclick="savePopularCategoriesToServer()" style="display: flex; align-items: center; gap: 6px; padding: 8px 18px; font-weight: 700; background: #16A34A;">
+                  <span>💾 Save Popular Categories</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Add Popular Category Form -->
+            <div style="background: #F8FAFC; border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; margin-bottom: 20px;">
+              <h3 style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">➕ Add Category to Popular Grid</h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: flex-end;">
+                <div>
+                  <label class="form-label" style="font-size: 12px; font-weight: 700;">Select Catalog Category *</label>
+                  <select id="adminPopularCategorySelect" class="form-select" style="width: 100%;">
+                    <option value="">-- Choose an available category --</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 12px; font-weight: 700;">Category Image (URL or Upload) *</label>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="text" id="adminPopularCategoryImage" class="form-input" placeholder="e.g. assets/images/categories/..." style="flex: 1;">
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('adminPopCatImageFile').click()" style="padding: 7px 12px; font-size: 12px; white-space: nowrap;">📁 Upload</button>
+                    <input type="file" id="adminPopCatImageFile" accept="image/*" style="display: none;" onchange="handlePopularCategoryImageUpload(event)">
+                  </div>
+                </div>
+                <div>
+                  <button type="button" class="btn-primary" onclick="handleAddPopularCategory()" style="padding: 9px 18px; font-weight: 700; width: 100%; justify-content: center;">
+                    + Add to Popular Grid
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- List of Popular Categories Container -->
+            <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #0F172A;">
+                  <span>📋 Active Homepage Popular Categories (In Display Sequence)</span>
+                </h3>
+                <span style="font-size: 12px; color: var(--ak-text-muted);">Reorder with ▲/▼ or slot position, or remove</span>
+              </div>
+              <div id="popularCategoriesListContainer">
+                <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">Loading popular categories...</div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -1090,6 +1163,7 @@
                   <th>Customer Name</th>
                   <th>Email</th>
                   <th>Phone</th>
+                  <th>GST Number</th>
                   <th>Orders Placed</th>
                   <th>Total Spent</th>
                   <th>Actions</th>
@@ -1479,6 +1553,11 @@
     </div>
   </div>
 
+  <script type="module">
+    import { openTaxInvoiceModal, closeTaxInvoiceModal } from '../js/components/taxInvoice.js';
+    window.openTaxInvoiceModal = openTaxInvoiceModal;
+    window.closeTaxInvoiceModal = closeTaxInvoiceModal;
+  </script>
   <script src="js/admin.js?v=20261010_v3"></script>
 </body>
 </html>

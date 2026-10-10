@@ -118,7 +118,8 @@ function createSessionForUser(res, userId, req) {
 // 1. SIGNUP (Initiate Registration with Email OTP)
 // =========================================================================
 router.post('/signup', async (req, res) => {
-  const { fullName, email, password, confirmPassword, phone } = req.body;
+  const { fullName, email, password, confirmPassword, phone, gstNumber } = req.body;
+  const cleanGst = (gstNumber || '').trim().toUpperCase();
 
   // Validation
   if (!fullName || !email || !password) {
@@ -166,18 +167,19 @@ router.post('/signup', async (req, res) => {
       userId = crypto.randomUUID();
       const displayName = fullName.trim().split(' ')[0] + Math.floor(Math.random() * 90 + 10);
       db.prepare(`
-        INSERT INTO users (id, full_name, display_name, title, email, phone_number, profile_image, auth_provider, email_verified, password_hash, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'email', 0, ?, ?, ?)
-      `).run(userId, fullName.trim(), displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, (phone || '').trim(), 'assets/images/logo.jpg', passwordHash, now, now);
+        INSERT INTO users (id, full_name, display_name, title, email, phone_number, gst_number, profile_image, auth_provider, email_verified, password_hash, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'email', 0, ?, ?, ?)
+      `).run(userId, fullName.trim(), displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, (phone || '').trim(), cleanGst || null, 'assets/images/logo.jpg', passwordHash, now, now);
     } else {
       db.prepare(`
-        UPDATE users SET full_name = ?, phone_number = ?, password_hash = ?, updated_at = ? WHERE id = ?
-      `).run(fullName.trim(), (phone || '').trim(), passwordHash, now, userId);
+        UPDATE users SET full_name = ?, phone_number = ?, gst_number = COALESCE(?, gst_number), password_hash = ?, updated_at = ? WHERE id = ?
+      `).run(fullName.trim(), (phone || '').trim(), cleanGst || null, passwordHash, now, userId);
     }
 
     const metadata = JSON.stringify({
       fullName: fullName.trim(),
       phone: (phone || '').trim(),
+      gstNumber: cleanGst,
       passwordHash
     });
 
@@ -210,7 +212,8 @@ router.post('/signup', async (req, res) => {
 // 1B. DIRECT REGISTER (Direct user registration endpoint)
 // =========================================================================
 router.post('/register', async (req, res) => {
-  const { fullName, email, password, phone } = req.body;
+  const { fullName, email, password, phone, gstNumber } = req.body;
+  const cleanGst = (gstNumber || '').trim().toUpperCase();
 
   if (!fullName || !email || !password) {
     return res.status(400).json({ error: 'Full name, email, and password are required.' });
@@ -240,9 +243,9 @@ router.post('/register', async (req, res) => {
       userId = crypto.randomUUID();
       const displayName = fullName.trim().split(' ')[0] + Math.floor(Math.random() * 90 + 10);
       db.prepare(`
-        INSERT INTO users (id, full_name, display_name, title, email, phone_number, profile_image, auth_provider, email_verified, password_hash, created_at, updated_at, last_login_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'email', 1, ?, ?, ?, ?)
-      `).run(userId, fullName.trim(), displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, (phone || '').trim(), 'assets/images/placeholder.svg', passwordHash, now, now, now);
+        INSERT INTO users (id, full_name, display_name, title, email, phone_number, gst_number, profile_image, auth_provider, email_verified, password_hash, created_at, updated_at, last_login_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'email', 1, ?, ?, ?, ?)
+      `).run(userId, fullName.trim(), displayName, 'Music Creator & Pro Audio Enthusiast', cleanEmail, (phone || '').trim(), cleanGst || null, 'assets/images/placeholder.svg', passwordHash, now, now, now);
     } else {
       db.prepare(`
         UPDATE users SET full_name = ?, phone_number = ?, password_hash = ?, email_verified = 1, updated_at = ?, last_login_at = ? WHERE id = ?
@@ -317,12 +320,13 @@ router.post('/verify-signup-otp', async (req, res) => {
         UPDATE users SET 
           full_name = ?, 
           phone_number = ?, 
+          gst_number = COALESCE(?, gst_number),
           password_hash = ?, 
           email_verified = 1, 
           updated_at = ?, 
           last_login_at = ?
         WHERE id = ?
-      `).run(meta.fullName, meta.phone, meta.passwordHash, now, now, user.id);
+      `).run(meta.fullName, meta.phone, meta.gstNumber || null, meta.passwordHash, now, now, user.id);
       user = db.prepare('SELECT * FROM users WHERE id = ?').get(user.id);
     } else {
       // Insert new user

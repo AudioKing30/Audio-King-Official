@@ -590,6 +590,7 @@ export function initAuth() {
       const lastName = document.getElementById('akSignUpLast')?.value.trim();
       const email = document.getElementById('akSignUpEmail')?.value.trim();
       const phone = document.getElementById('akSignUpPhone')?.value.trim();
+      const gstNumber = document.getElementById('akSignUpGst')?.value.trim().toUpperCase() || '';
       const pass = document.getElementById('akSignUpPass')?.value;
       const passConfirm = document.getElementById('akSignUpPassConfirm')?.value;
 
@@ -616,7 +617,8 @@ export function initAuth() {
           email,
           password: pass,
           confirmPassword: passConfirm,
-          phone
+          phone,
+          gstNumber
         });
 
         showOtpVerification(email);

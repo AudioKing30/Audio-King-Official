@@ -12,6 +12,7 @@ const DATA_DIR = path.resolve(__dirname, 'data');
 const CUSTOMERS_MASTER_PATH = path.join(DATA_DIR, 'customers_master.json');
 const ORDERS_MASTER_PATH = path.join(DATA_DIR, 'orders_master.json');
 const COUPONS_MASTER_PATH = path.join(DATA_DIR, 'coupons_master.json');
+const POPULAR_CATEGORIES_MASTER_PATH = path.join(DATA_DIR, 'popular_categories_master.json');
 
 /**
  * Safely writes JSON data with atomic temporary file swapping
@@ -157,10 +158,31 @@ function syncCouponsMaster(db) {
 /**
  * Exports all database entities to their respective master JSON files
  */
+
+/**
+ * Mirrors popular categories to popular_categories_master.json
+ */
+function syncPopularCategoriesMaster(db) {
+  try {
+    if (!db) return;
+    const categories = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      count: categories.length,
+      categories
+    };
+    safeWriteJson(POPULAR_CATEGORIES_MASTER_PATH, payload);
+    console.log(`[DATA SYNC] Mirrored ${categories.length} popular categories to popular_categories_master.json`);
+  } catch (err) {
+    console.error('[DATA SYNC ERROR] syncPopularCategoriesMaster:', err.message);
+  }
+}
+
 function exportAllMasterData(db) {
   syncCustomersMaster(db);
   syncOrdersMaster(db);
   syncCouponsMaster(db);
+  syncPopularCategoriesMaster(db);
 }
 
 /**
@@ -235,6 +257,14 @@ function hydrateDatabaseFromMaster(db) {
         }
       }
     }
+
+    // 4. Hydrate Popular Categories
+    const popData = safeReadJson(POPULAR_CATEGORIES_MASTER_PATH, null);
+    if (popData && Array.isArray(popData.categories) && popData.categories.length > 0) {
+      for (const pc of popData.categories) {
+        dynamicInsertOrIgnore(db, 'popular_categories', pc);
+      }
+    }
   } catch (err) {
     console.error('[HYDRATION ERROR] Failed to hydrate database:', err);
   }
@@ -244,6 +274,7 @@ module.exports = {
   syncCustomersMaster,
   syncOrdersMaster,
   syncCouponsMaster,
+  syncPopularCategoriesMaster,
   exportAllMasterData,
   hydrateDatabaseFromMaster
 };

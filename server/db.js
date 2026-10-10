@@ -357,6 +357,19 @@ function initDatabase() {
     );
 
     -- SITE SETTINGS TABLE (Dynamic config: WhatsApp number, store hotlines, etc.)
+    
+    -- POPULAR CATEGORIES (Homepage Quick Categories Grid)
+    CREATE TABLE IF NOT EXISTS popular_categories (
+      id TEXT PRIMARY KEY,
+      category_name TEXT NOT NULL,
+      image_url TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_popular_categories_order ON popular_categories(sort_order ASC);
+
     CREATE TABLE IF NOT EXISTS site_settings (
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL,
@@ -377,6 +390,9 @@ function initDatabase() {
     if (!userColNames.includes('provider_profile_image')) {
       db.exec('ALTER TABLE users ADD COLUMN provider_profile_image TEXT;');
     }
+    if (!userColNames.includes('gst_number')) {
+      db.exec('ALTER TABLE users ADD COLUMN gst_number TEXT;');
+    }
 
     const orderColumns = db.prepare("PRAGMA table_info(orders)").all();
     const orderColNames = orderColumns.map(c => c.name);
@@ -386,6 +402,15 @@ function initDatabase() {
     if (!orderColNames.includes('discount_amount')) {
       db.exec('ALTER TABLE orders ADD COLUMN discount_amount REAL DEFAULT 0;');
     }
+    if (!orderColNames.includes('gst_number')) {
+      db.exec('ALTER TABLE orders ADD COLUMN gst_number TEXT;');
+    }
+    try {
+      const orderItemCols = db.prepare("PRAGMA table_info(order_items)").all().map(c => c.name);
+      if (!orderItemCols.includes('gst_percent')) {
+        db.exec('ALTER TABLE order_items ADD COLUMN gst_percent REAL DEFAULT 18.0;');
+      }
+    } catch (_) {}
 
     const catColumns = db.prepare("PRAGMA table_info(categories)").all();
     const catColNames = catColumns.map(c => c.name);
@@ -397,6 +422,9 @@ function initDatabase() {
     const prodColNames = prodColumns.map(c => c.name);
     if (!prodColNames.includes('section')) {
       db.exec("ALTER TABLE products ADD COLUMN section TEXT DEFAULT 'pro-audio';");
+    }
+    if (!prodColNames.includes('gst_percent')) {
+      db.exec('ALTER TABLE products ADD COLUMN gst_percent REAL DEFAULT 18.0;');
     }
     if (!prodColNames.includes('stock_status')) {
       db.exec("ALTER TABLE products ADD COLUMN stock_status TEXT DEFAULT 'instock';");
@@ -556,10 +584,66 @@ function initDatabase() {
       }
     }
 
-    // Seed default featured settings if empty
-    const featRow = db.prepare("SELECT key FROM featured_settings WHERE key = 'locked_product_ids'").get();
-    if (!featRow) {
-      db.prepare("INSERT INTO featured_settings (key, value_json, updated_at) VALUES ('locked_product_ids', '[]', datetime('now'))").run();
+    // Seed default popular categories if empty
+    try {
+      const popCatCount = db.prepare("SELECT COUNT(*) AS count FROM popular_categories").get();
+      if (!popCatCount || popCatCount.count === 0) {
+        const insertPopCat = db.prepare(`
+          INSERT INTO popular_categories (id, category_name, image_url, sort_order, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `);
+        const defaultPopularCategories = [
+          { id: 'pop-cat-1', category_name: 'Audio Interfaces', image_url: 'assets/images/categories/cat-audio-interfaces-nobg.png', sort_order: 1 },
+          { id: 'pop-cat-2', category_name: 'Condenser Microphones', image_url: 'assets/images/categories/cat-condenser-mics-nobg.png', sort_order: 2 },
+          { id: 'pop-cat-3', category_name: 'DJ Consoles', image_url: 'assets/images/categories/cat-dj-consoles-nobg.png', sort_order: 3 },
+          { id: 'pop-cat-4', category_name: 'Electronic Drums', image_url: 'assets/images/categories/cat-electronic-drums-nobg.png', sort_order: 4 },
+          { id: 'pop-cat-5', category_name: 'Headphones', image_url: 'assets/images/categories/cat-headphones-nobg.png', sort_order: 5 },
+          { id: 'pop-cat-6', category_name: 'MIDI Controllers', image_url: 'assets/images/categories/cat-midi-controllers-nobg.png', sort_order: 6 },
+          { id: 'pop-cat-7', category_name: 'Audio Mixers', image_url: 'assets/images/categories/cat-audio-mixers-nobg.png', sort_order: 7 },
+          { id: 'pop-cat-8', category_name: 'Studio Monitors', image_url: 'assets/images/categories/cat-monitor-speakers-nobg.png', sort_order: 8 },
+          { id: 'pop-cat-9', category_name: 'Preamps & Channel Strips', image_url: 'assets/images/categories/cat-pre-amps-nobg.png', sort_order: 9 },
+          { id: 'pop-cat-10', category_name: 'Keyboards', image_url: 'assets/images/categories/cat-synthesizers-nobg.png', sort_order: 10 }
+        ];
+        for (const pc of defaultPopularCategories) {
+          const nowIsoStr = new Date().toISOString(); insertPopCat.run(pc.id, pc.category_name, pc.image_url, pc.sort_order, nowIsoStr, nowIsoStr);
+        }
+      }
+    } catch (e) {
+      console.warn('[SEED POPULAR CATEGORIES WARN]', e.message);
+    }
+
+    // Seed default featured settings if empty or empty array
+    const defaultFeaturedIds = [
+      'adam-audio-a44h-single',
+      'adam-audio-a4v-single',
+      'adam-audio-d3v-black-pair',
+      'adam-audio-d3v-white-pair',
+      'adam-audio-t10s-single',
+      'adam-audio-t5v-single',
+      'adam-audio-t7v-single',
+      'adam-audio-t8v-single',
+      'apollo-e1x-remote-controllable-unison-preamp-dante-mug4ipgz',
+      'arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix'
+    ];
+    try {
+      const featRow = db.prepare("SELECT key, value_json FROM featured_settings WHERE key = 'locked_product_ids'").get();
+      let currentFeatIds = [];
+      if (featRow && featRow.value_json) {
+        try { currentFeatIds = JSON.parse(featRow.value_json); } catch (_) {}
+      }
+      if (!featRow || !Array.isArray(currentFeatIds) || currentFeatIds.length === 0) {
+        db.prepare(`
+          INSERT INTO featured_settings (key, value_json, updated_at)
+          VALUES ('locked_product_ids', ?, datetime('now'))
+          ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at
+        `).run(JSON.stringify(defaultFeaturedIds));
+
+        // Sync is_featured in products table
+        const placeholders = defaultFeaturedIds.map(() => '?').join(',');
+        db.prepare(`UPDATE products SET is_featured = 1 WHERE id IN (${placeholders})`).run(...defaultFeaturedIds);
+      }
+    } catch (e) {
+      console.warn('[SEED FEATURED SETTINGS WARN]', e.message);
     }
 
     // Seed default WhatsApp support hotline if empty

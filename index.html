@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="css/checkout-page.css">
   <link rel="stylesheet" href="css/account-settings.css?v=202609271405">
   <link rel="stylesheet" href="admin/css/admin.css?v=20261006_v2">
+  <link rel="stylesheet" href="css/tax-invoice.css">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     // Early route preloader: completely eliminates the flash of Home view on refresh for deep routes
@@ -1022,7 +1023,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
           </div>
           <div class="ak-trust-text">
-            <h4>Fast, Free Shipping</h4>
+            <h4>Fast Shipping</h4>
             <p>Pan-India delivery with transit insurance</p>
           </div>
         </div>
@@ -1032,7 +1033,7 @@
           </div>
           <div class="ak-trust-text">
             <h4>Price Protection</h4>
-            <p>Authorized lowest distributor pricing</p>
+            <p>Authorized distributor pricing</p>
           </div>
         </div>
         <div class="ak-trust-item">
@@ -1040,7 +1041,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           </div>
           <div class="ak-trust-text">
-            <h4>FREE Efficient Warranty</h4>
+            <h4>Official Warranty</h4>
             <p>Total peace of mind on all hardware</p>
           </div>
         </div>
@@ -1049,7 +1050,7 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
           </div>
           <div class="ak-trust-text">
-            <h4>FREE Specialist Support</h4>
+            <h4>Complete Specialist Support</h4>
             <p>Real sound engineers &amp; pro audio musicians</p>
           </div>
         </div>
@@ -1477,7 +1478,7 @@
               </div>
               <div class="ak-contact-method-content">
                 <span class="ak-contact-label">Email Support</span>
-                <a href="mailto:support@audioking.in" class="ak-contact-val">support@audioking.in</a>
+                <a href="mailto:info@audioking.co.in" class="ak-contact-val">info@audioking.co.in</a>
               </div>
             </div>
 
@@ -1979,7 +1980,11 @@
                 <span style="color:#16a34a; font-weight:600;">Included</span>
               </div>
               <div class="ak-total-row">
-                <span>GST (18% Included)</span>
+                <span id="akCoTaxableLabel">Taxable Value (Excl. Tax)</span>
+                <span id="akCoTaxableValue">₹0</span>
+              </div>
+              <div class="ak-total-row">
+                <span id="akCoGstLabel">GST (18% Included)</span>
                 <span id="akCoGst">₹0</span>
               </div>
               <div class="ak-total-divider"></div>
@@ -1987,6 +1992,7 @@
                 <span>Grand Total</span>
                 <span id="akCoGrandTotal">₹0</span>
               </div>
+              <div id="akCoInclusiveGstNote" style="font-size: 11.5px; color: #15803D; font-weight: 600; text-align: right; margin-top: 3px;">Inclusive of GST</div>
             </div>
 
             <div class="ak-summary-guarantees">
@@ -2118,6 +2124,7 @@
 
       <div class="ak-order-actions">
         <button id="akOrderContinueBtn" class="ak-order-btn-continue">Continue Shopping</button>
+        <button id="akOrderInvoiceBtn" class="ak-order-btn-continue" style="background:#E4572E; color:#FFF; border:none; font-weight:700;">📄 View Official Tax Invoice</button>
         <button id="akOrderPrintBtn" class="ak-order-btn-print">Print / Save Order</button>
       </div>
     </div>
@@ -2294,6 +2301,10 @@
             <div class="ak-form-group full">
               <label class="ak-form-label" for="akSignUpPhone">Mobile Phone (10 digits) <span class="ak-req">*</span></label>
               <input type="tel" id="akSignUpPhone" class="ak-form-input" required placeholder="9876543210" autocomplete="tel">
+            </div>
+            <div class="ak-form-group full">
+              <label class="ak-form-label" for="akSignUpGst">GST Number <span style="font-size: 11px; font-weight: normal; color: var(--ak-text-muted);">(Optional, for B2B billing)</span></label>
+              <input type="text" id="akSignUpGst" class="ak-form-input" placeholder="e.g. 27AAAAA0000A1Z5" maxlength="15" style="text-transform: uppercase;">
             </div>
             <div class="ak-form-group">
               <label class="ak-form-label" for="akSignUpPass">Password <span class="ak-req">*</span></label>

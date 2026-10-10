@@ -293,6 +293,17 @@ function renderCheckoutStep() {
     if (submitBtn) submitBtn.textContent = 'Place Order';
 
     const subtotal = getCartSubtotal();
+    let weightedGstRateSum = 0;
+    checkoutItems.forEach(it => {
+      const line = (Number(it.price) || 0) * (it.quantity || it.qty || 1);
+      const rate = Number(it.gstPercent ?? it.gst_percent ?? 18.0);
+      weightedGstRateSum += rate * line;
+    });
+    const avgGstRate = subtotal > 0 ? Math.round((weightedGstRateSum / subtotal) * 10) / 10 : 18;
+    const finalAmount = appliedCoupon ? Math.max(0, subtotal - appliedCoupon.discountAmount) : subtotal;
+    const taxableBase = finalAmount / (1 + avgGstRate / 100);
+    const inclusiveGstAmt = finalAmount - taxableBase;
+
 
     bodyEl.innerHTML = `
       <!-- Cashfree integration badge -->
@@ -403,16 +414,23 @@ function renderCheckoutStep() {
         </div>
         ` : ''}
         <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-          <span>Delivery</span>
-          <span style="color: #166534; font-weight: 700;">FREE</span>
+          <span>Taxable Value (Excl. Tax)</span>
+          <span>${formatINR(Math.round(taxableBase))}</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
-          <span>GST / Taxes</span>
-          <span style="color: #166534; font-weight: 700;">Included</span>
+          <span>GST (${avgGstRate}% Included)</span>
+          <span style="color: #166534; font-weight: 700;">${formatINR(Math.round(inclusiveGstAmt))}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+          <span>Delivery & Transit Insurance</span>
+          <span style="color: #166534; font-weight: 700;">FREE</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 15px; font-weight: 900; border-top: 1px solid var(--ak-border); padding-top: 8px; margin-top: 8px; color: var(--ak-navy);">
           <span>Amount Payable</span>
-          <span>${formatINR(appliedCoupon ? Math.max(0, subtotal - appliedCoupon.discountAmount) : subtotal)}</span>
+          <span>${formatINR(finalAmount)}</span>
+        </div>
+        <div style="font-size: 11px; color: #166534; font-weight: 600; text-align: right; margin-top: 3px;">
+          (Inclusive of ${formatINR(Math.round(inclusiveGstAmt))} GST at ${avgGstRate}%)
         </div>
       </div>
     `;

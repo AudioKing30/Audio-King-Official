@@ -1017,6 +1017,7 @@ router.put('/products/:id', (req, res) => {
 
     const mrp = body.mrp !== undefined ? parseFloat(body.mrp) : Number(existing.original_price);
     const sellingPrice = body.sellingPrice !== undefined ? parseFloat(body.sellingPrice) : Number(existing.price);
+    const gstPercent = body.gstPercent !== undefined ? parseFloat(body.gstPercent) : ((existing.gst_percent !== undefined && existing.gst_percent !== null) ? Number(existing.gst_percent) : 18.0);
 
     if (sellingPrice > mrp) {
       return res.status(400).json({ error: 'Selling Price (₹' + sellingPrice + ') cannot exceed MRP (₹' + mrp + ').' });
@@ -1668,7 +1669,7 @@ router.get('/customers', (req, res) => {
 
 router.get('/customers/:id/orders', (req, res) => {
   try {
-    const customer = db.prepare('SELECT id, full_name, email, phone_number FROM users WHERE id = ?').get(req.params.id);
+    const customer = db.prepare('SELECT id, full_name, email, phone_number, gst_number FROM users WHERE id = ?').get(req.params.id);
     if (!customer) return res.status(404).json({ error: 'Customer not found.' });
 
     const orders = db.prepare(`
@@ -2100,6 +2101,66 @@ router.put('/featured-settings', (req, res) => {
 // -------------------------------------------------------------
 // WHATSAPP HOTLINE & FLOATING BUTTON SETTINGS
 // -------------------------------------------------------------
+
+// -------------------------------------------------------------
+// POPULAR CATEGORIES MANAGER
+// -------------------------------------------------------------
+router.get('/popular-categories', (req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    return res.json({ success: true, popularCategories: rows });
+  } catch (err) {
+    console.error('[ADMIN GET POPULAR CATEGORIES ERROR]', err);
+    return res.status(500).json({ error: 'Failed to fetch popular categories.' });
+  }
+});
+
+router.put('/popular-categories', (req, res) => {
+  try {
+    const { popularCategories } = req.body || {};
+    if (!Array.isArray(popularCategories)) {
+      return res.status(400).json({ error: 'popularCategories must be an array.' });
+    }
+
+    // Available categories validation
+    const catRows = db.prepare('SELECT name FROM categories').all();
+    const prodCatRows = db.prepare('SELECT DISTINCT category FROM products').all();
+    const availableSet = new Set([
+      ...catRows.map(c => (c.name || '').trim().toLowerCase()),
+      ...prodCatRows.map(p => (p.category || '').trim().toLowerCase())
+    ]);
+
+    const nowIso = new Date().toISOString();
+    const insertStmt = db.prepare(`
+      INSERT INTO popular_categories (id, category_name, image_url, sort_order, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    db.transaction(() => {
+      db.prepare('DELETE FROM popular_categories').run();
+      popularCategories.forEach((item, idx) => {
+        const catName = String(item.category_name || item.name || '').trim();
+        if (!catName) return;
+        if (!availableSet.has(catName.toLowerCase())) {
+          throw new Error(`Category "${catName}" is not an available catalog category.`);
+        }
+        const id = item.id || `pop-cat-${Date.now()}-${idx}`;
+        const imageUrl = String(item.image_url || item.image || 'assets/images/placeholder.svg').trim();
+        const sortOrder = item.sort_order !== undefined ? Number(item.sort_order) : (idx + 1);
+        insertStmt.run(id, catName, imageUrl, sortOrder, nowIso, nowIso);
+      });
+    })();
+
+    try { syncPopularCategoriesMaster(db); } catch (_) {}
+
+    const updated = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    return res.json({ success: true, popularCategories: updated });
+  } catch (err) {
+    console.error('[ADMIN SAVE POPULAR CATEGORIES ERROR]', err);
+    return res.status(400).json({ error: err.message || 'Failed to save popular categories.' });
+  }
+});
+
 router.get('/settings/whatsapp', (req, res) => {
   try {
     const row = db.prepare("SELECT value FROM site_settings WHERE key = 'whatsapp_number'").get();

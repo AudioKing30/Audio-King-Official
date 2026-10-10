@@ -165,6 +165,15 @@ app.get('/api/featured-settings', (req, res) => {
   }
 });
 
+app.get('/api/popular-categories', (req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    res.json({ success: true, popularCategories: rows });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
 // Admin APIs (Protected by requireAdminApi inside adminApi.js)
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin', adminApiRoutes);

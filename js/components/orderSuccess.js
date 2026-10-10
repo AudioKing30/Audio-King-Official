@@ -1,3 +1,4 @@
+import { openTaxInvoiceModal } from './taxInvoice.js';
 /**
  * AudioKing Order Confirmation & Bill Controller
  * Faithfully matches user's uploaded receipt reference image (media_1789423751815.jpg)
@@ -58,7 +59,10 @@ export function triggerOrderAnimation(orderData) {
   }
 }
 
+let lastOrderData = null;
+
 export function showOrderConfirmation(orderData) {
+  lastOrderData = orderData;
   const mainView = document.getElementById('akMainContent');
   const catalogView = document.getElementById('catalogPage');
   const productView = document.getElementById('productPage');
@@ -191,6 +195,16 @@ export function showOrderConfirmation(orderData) {
 export function initOrderSuccess() {
   const continueBtn = document.getElementById('akOrderContinueBtn');
   const printBtn = document.getElementById('akOrderPrintBtn');
+  const invoiceBtn = document.getElementById('akOrderInvoiceBtn');
+
+  if (invoiceBtn) {
+    invoiceBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (lastOrderData) {
+        openTaxInvoiceModal(lastOrderData);
+      }
+    });
+  }
 
   if (continueBtn) {
     continueBtn.addEventListener('click', (e) => {

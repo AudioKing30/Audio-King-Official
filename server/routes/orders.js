@@ -76,7 +76,7 @@ router.get('/', (req, res) => {
     }
 
     const ordersQuery = db.prepare(`
-      SELECT id, user_id, order_number, total_amount, status, shipping_address, payment_method, coupon_code, discount_amount, created_at, updated_at
+      SELECT id, user_id, order_number, total_amount, status, shipping_address, payment_method, coupon_code, discount_amount, gst_number, created_at, updated_at
       FROM orders
       WHERE user_id = ?
       ORDER BY created_at DESC
@@ -85,7 +85,7 @@ router.get('/', (req, res) => {
     const orderRows = ordersQuery.all(targetUserId);
 
     const itemsQuery = db.prepare(`
-      SELECT id, order_id, product_id, product_name, product_image, quantity, unit_price, subtotal
+      SELECT id, order_id, product_id, product_name, product_image, quantity, unit_price, subtotal, gst_percent
       FROM order_items
       WHERE order_id = ?
     `);
@@ -105,6 +105,7 @@ router.get('/', (req, res) => {
         totalAmount: order.total_amount,
         couponCode: order.coupon_code || null,
         discountAmount: order.discount_amount || 0,
+        gstNumber: order.gst_number || null,
         status: order.status,
         shippingAddress,
         paymentMethod: order.payment_method,
@@ -117,7 +118,8 @@ router.get('/', (req, res) => {
           image: item.product_image || 'assets/images/placeholder.svg',
           quantity: item.quantity,
           unitPrice: item.unit_price,
-          subtotal: item.subtotal
+          subtotal: item.subtotal,
+          gstPercent: item.gst_percent !== undefined && item.gst_percent !== null ? Number(item.gst_percent) : 18.0
         }))
       };
     });
@@ -165,11 +167,17 @@ router.get('/:id', requireAuth, (req, res) => {
         id: order.id,
         orderNumber: order.order_number,
         totalAmount: order.total_amount,
+        couponCode: order.coupon_code || null,
+        discountAmount: order.discount_amount || 0,
+        gstNumber: order.gst_number || null,
         status: order.status,
         shippingAddress,
         paymentMethod: order.payment_method,
         createdAt: order.created_at,
-        items
+        items: items.map(item => ({
+          ...item,
+          gstPercent: item.gst_percent !== undefined && item.gst_percent !== null ? Number(item.gst_percent) : 18.0
+        }))
       }
     });
   } catch (err) {
@@ -254,13 +262,17 @@ router.post('/', async (req, res) => {
     let verifiedImage = item.image || item.img || 'assets/images/placeholder.svg';
 
     // Verify against database product catalog to prevent price tampering
+    let itemGstPercent = Number(item.gstPercent ?? item.gst_percent ?? 18.0);
     if (baseProdId) {
       try {
-        const catalogProduct = db.prepare('SELECT id, name, price, image FROM products WHERE id = ?').get(baseProdId);
+        const catalogProduct = db.prepare('SELECT id, name, price, image, gst_percent FROM products WHERE id = ?').get(baseProdId);
         if (catalogProduct) {
           verifiedPrice = Number(catalogProduct.price);
           verifiedName = catalogProduct.name;
           verifiedImage = catalogProduct.image || verifiedImage;
+          if (catalogProduct.gst_percent !== undefined && catalogProduct.gst_percent !== null) {
+            itemGstPercent = Number(catalogProduct.gst_percent);
+          }
         }
         if (variantId) {
           const v = db.prepare('SELECT * FROM product_variants WHERE id = ?').get(variantId);
@@ -289,7 +301,8 @@ router.post('/', async (req, res) => {
       image: verifiedImage,
       quantity: qty,
       unitPrice: verifiedPrice,
-      subtotal
+      subtotal,
+      gstPercent: itemGstPercent
     };
   });
 
@@ -376,11 +389,20 @@ router.post('/', async (req, res) => {
   try {
     const addressJson = JSON.stringify(shipping);
 
+    let userGst = '';
+    if (userId) {
+      try {
+        const uRow = db.prepare('SELECT gst_number FROM users WHERE id = ?').get(userId);
+        if (uRow && uRow.gst_number) userGst = uRow.gst_number;
+      } catch (_) {}
+    }
+    const finalGstNumber = (req.body.gstNumber || shipping.gstNumber || userGst || '').trim().toUpperCase();
+
     db.prepare(`
       INSERT INTO orders (
         id, user_id, order_number, total_amount, status, shipping_address,
-        payment_method, coupon_code, discount_amount, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, 'Confirmed', ?, ?, ?, ?, ?, ?)
+        payment_method, coupon_code, discount_amount, gst_number, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, 'Confirmed', ?, ?, ?, ?, ?, ?, ?)
     `).run(
       orderId,
       userId,
@@ -390,17 +412,18 @@ router.post('/', async (req, res) => {
       method,
       appliedCouponCode,
       appliedDiscountAmount,
+      finalGstNumber || null,
       now,
       now
     );
 
     const insertItem = db.prepare(`
-      INSERT INTO order_items (id, order_id, product_id, product_name, product_image, quantity, unit_price, subtotal)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO order_items (id, order_id, product_id, product_name, product_image, quantity, unit_price, subtotal, gst_percent)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     for (const it of processedItems) {
-      insertItem.run(it.id, orderId, it.productId, it.name, it.image, it.quantity, it.unitPrice, it.subtotal);
+      insertItem.run(it.id, orderId, it.productId, it.name, it.image, it.quantity, it.unitPrice, it.subtotal, it.gstPercent || 18.0);
     }
 
     // Record coupon usage per user if coupon was applied
@@ -454,6 +477,7 @@ router.post('/', async (req, res) => {
         discountAmount: appliedDiscountAmount,
         couponCode: appliedCouponCode,
         totalAmount: finalTotalAmount,
+        gstNumber: finalGstNumber || null,
         status: 'Confirmed',
         items: processedItems,
         shippingAddress: shipping,
