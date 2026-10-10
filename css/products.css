@@ -318,7 +318,7 @@
   padding: 14px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
@@ -399,8 +399,7 @@
 .ak-product-body {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 1;
 }
 
 .ak-product-brand {

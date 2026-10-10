@@ -4,7 +4,7 @@
  * Background: #F8FAFC / #FFFFFF, Orange: #F27021, Text: #0F172A, Font: 'Inter'
  */
 
-:root, body, #adminPage {
+#adminPage {
   --ak-admin-bg: #F8FAFC;
   --ak-sidebar-bg: #FFFFFF;
   --ak-card-bg: #FFFFFF;
@@ -35,7 +35,7 @@
   --ak-price-weight: 500;
 }
 
-body, #adminPage {
+#adminPage {
   background-color: var(--ak-admin-bg);
   color: var(--ak-text-primary);
   min-height: 100vh;
@@ -47,7 +47,7 @@ body, #adminPage {
   -webkit-font-smoothing: antialiased;
 }
 
-body *, #adminPage * {
+#adminPage * {
   box-sizing: border-box;
 }
 
@@ -113,7 +113,7 @@ body *, #adminPage * {
   gap: 4px;
 }
 
-.nav-link, #adminPage .nav-link {
+#adminPage .nav-link {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -127,29 +127,29 @@ body *, #adminPage * {
   cursor: pointer;
 }
 
-.nav-link:hover, #adminPage .nav-link:hover {
+#adminPage .nav-link:hover {
   background-color: var(--ak-orange-soft);
   color: var(--ak-orange);
 }
 
-.nav-link.active, #adminPage .nav-link.active {
+#adminPage .nav-link.active {
   background-color: var(--ak-orange);
   color: #FFFFFF;
   box-shadow: 0 2px 8px rgba(242, 112, 33, 0.3);
 }
 
-.nav-link .nav-svg, #adminPage .nav-link .nav-svg {
+#adminPage .nav-link .nav-svg {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   stroke: currentColor;
 }
 
-.nav-link:hover .nav-svg, #adminPage .nav-link:hover .nav-svg {
+#adminPage .nav-link:hover .nav-svg {
   stroke: var(--ak-orange);
 }
 
-.nav-link.active .nav-svg, #adminPage .nav-link.active .nav-svg {
+#adminPage .nav-link.active .nav-svg {
   stroke: #FFFFFF;
 }
 
@@ -1820,12 +1820,13 @@ body *, #adminPage * {
   }
 
   /* 3. Main Container & Sub-Header */
-  html, body {
+  body#adminPage {
     width: 100% !important;
     max-width: 100vw !important;
     overflow-x: hidden !important;
   }
 
+  #adminPage .admin-main,
   .admin-main {
     margin-left: 0 !important;
     width: 100% !important;
