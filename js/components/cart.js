@@ -74,7 +74,8 @@ function hydrateFromList(serverItems) {
         price: Number(it.price) || 0,
         originalPrice: Number(it.originalPrice) || 0,
         image: it.image || 'assets/images/placeholder.svg',
-        qty: Number(it.qty || it.quantity) || 1
+        qty: Number(it.qty || it.quantity) || 1,
+        isPreOrder: Boolean(it.isPreOrder || it.is_preorder || it.stockStatus === 'preorder' || (it.badge && String(it.badge).toLowerCase().includes('pre-order')))
       });
       return;
     }
@@ -90,7 +91,8 @@ function hydrateFromList(serverItems) {
         price: prod.price,
         originalPrice: prod.originalPrice || 0,
         image: prod.image || 'assets/images/placeholder.svg',
-        qty: Number(it.qty || it.quantity) || 1
+        qty: Number(it.qty || it.quantity) || 1,
+        isPreOrder: Boolean(prod.isPreOrder || prod.stockStatus === 'preorder' || (prod.badge && String(prod.badge).toLowerCase().includes('pre-order')))
       });
     }
   });
@@ -193,7 +195,8 @@ export async function addToCart(product, qty = 1, silent = false) {
       price: Number(product.price) || 0,
       originalPrice: product.originalPrice ? Number(product.originalPrice) : 0,
       image: product.image || 'assets/images/placeholder.svg',
-      qty: quantity
+      qty: quantity,
+      isPreOrder: Boolean(product.isPreOrder || product.stockStatus === 'preorder' || (product.badge && String(product.badge).toLowerCase().includes('pre-order')))
     });
   }
   saveCart(false);

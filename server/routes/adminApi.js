@@ -15,6 +15,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
+const { exec } = require('child_process');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
 const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
@@ -110,6 +111,14 @@ function syncBrandMasterFiles() {
     const jsBrandsPath = path.resolve(__dirname, '..', '..', 'js', 'data', 'brands.js');
     const header = `/**\n * AudioKing Brands Directory\n * Authoritative brand list (auto-synced from the admin panel / SQLite brands table).\n * Contains all live brands listed in the store.\n */\n`;
     fs.writeFileSync(jsBrandsPath, `${header}export const AUDIOKING_BRANDS = ${JSON.stringify(brands, null, 2)};\n`, 'utf8');
+
+    // Trigger async esbuild rebuild so bundle stays in sync with brand updates
+    try {
+      exec('npx esbuild js/app.js --bundle --outfile=js/bundle.js --format=iife', { cwd: path.resolve(__dirname, '..', '..') }, (err) => {
+        if (err) console.warn('[ESBUILD WARN]', err.message);
+        else console.log('[ESBUILD] Rebuilt js/bundle.js with updated brands.');
+      });
+    } catch (e) {}
   } catch (err) {
     console.warn('[SYNC BRAND FILES WARN]', err.message);
   }
@@ -547,24 +556,29 @@ router.put('/brands/:id', (req, res) => {
     }
 
     const oldName = existing.name;
+    const reqOldName = (req.body && req.body.oldName) ? String(req.body.oldName).trim() : '';
 
     // Update brand row
     db.prepare('UPDATE brands SET name = ?, slug = ? WHERE id = ?').run(cleanName, slug, brandId);
 
     // Cascade update all products referencing old brand name
-    const prodUpdate = db.prepare('UPDATE products SET brand = ? WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+    let prodUpdate = db.prepare('UPDATE products SET brand = ? WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+    if (reqOldName && reqOldName.toLowerCase() !== oldName.toLowerCase()) {
+      const extraUpdate = db.prepare('UPDATE products SET brand = ? WHERE LOWER(TRIM(brand)) = LOWER(TRIM(?))').run(cleanName, reqOldName);
+      prodUpdate = { changes: prodUpdate.changes + extraUpdate.changes };
+    }
 
     // Cascade update brand-targeted offers if any
     try {
-      db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'brand' AND LOWER(TRIM(target_id)) = LOWER(TRIM(?))").run(cleanName, oldName);
+      db.prepare("UPDATE offers SET target_id = ? WHERE target_type = 'brand' AND (LOWER(TRIM(target_id)) = LOWER(TRIM(?)) OR LOWER(TRIM(target_id)) = LOWER(TRIM(?)))").run(cleanName, oldName, reqOldName || oldName);
     } catch (e) {}
 
     // Cascade update brand-scoped coupons if any
     try {
-      db.prepare('UPDATE coupons SET target_brand = ? WHERE LOWER(TRIM(target_brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+      db.prepare('UPDATE coupons SET target_brand = ? WHERE LOWER(TRIM(target_brand)) = LOWER(TRIM(?)) OR LOWER(TRIM(target_brand)) = LOWER(TRIM(?))').run(cleanName, oldName, reqOldName || oldName);
     } catch (e) {}
     try {
-      db.prepare('UPDATE coupons SET applicable_brand = ? WHERE LOWER(TRIM(applicable_brand)) = LOWER(TRIM(?))').run(cleanName, oldName);
+      db.prepare('UPDATE coupons SET applicable_brand = ? WHERE LOWER(TRIM(applicable_brand)) = LOWER(TRIM(?)) OR LOWER(TRIM(applicable_brand)) = LOWER(TRIM(?))').run(cleanName, oldName, reqOldName || oldName);
     } catch (e) {}
     try { syncCouponsMaster(db); } catch (e) {}
 

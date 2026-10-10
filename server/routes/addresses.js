@@ -7,6 +7,7 @@ const express = require('express');
 const crypto = require('crypto');
 const { db } = require('../db');
 const { requireAuth } = require('../middleware/authMiddleware');
+const { syncCustomersMaster } = require('../dataSync');
 
 const router = express.Router();
 
@@ -92,6 +93,8 @@ router.post('/', (req, res) => {
       FROM addresses WHERE id = ?
     `).get(addrId);
 
+    try { syncCustomersMaster(db); } catch (e) {}
+
     return res.status(201).json({
       success: true,
       message: 'Address saved successfully.',
@@ -160,6 +163,8 @@ router.put('/:id', (req, res) => {
       FROM addresses WHERE id = ?
     `).get(id);
 
+    try { syncCustomersMaster(db); } catch (e) {}
+
     return res.json({
       success: true,
       message: 'Address updated successfully.',
@@ -199,6 +204,8 @@ router.delete('/:id', (req, res) => {
       }
     }
 
+    try { syncCustomersMaster(db); } catch (e) {}
+
     return res.json({ success: true, message: 'Address deleted successfully.' });
   } catch (err) {
     console.error('[DELETE ADDRESS ERROR]', err);
@@ -220,6 +227,8 @@ router.post('/:id/default', (req, res) => {
 
     db.prepare('UPDATE addresses SET is_default = 0 WHERE user_id = ?').run(req.user.id);
     db.prepare('UPDATE addresses SET is_default = 1, updated_at = ? WHERE id = ?').run(new Date().toISOString(), id);
+
+    try { syncCustomersMaster(db); } catch (e) {}
 
     return res.json({ success: true, message: 'Default address updated.' });
   } catch (err) {

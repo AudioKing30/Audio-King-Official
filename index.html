@@ -942,7 +942,6 @@
           <div class="ak-benefit-info">
             <h3>100% Genuine Gear</h3>
             <p>Official authorized Indian distributor warranty and verified import serials on every purchase.</p>
-            <span class="ak-benefit-action">Learn more &rarr;</span>
           </div>
         </div>
 
@@ -953,7 +952,6 @@
           <div class="ak-benefit-info">
             <h3>Free Pan-India Delivery</h3>
             <p>Express courier dispatch with transit insurance across all 28 states and union territories.</p>
-            <span class="ak-benefit-action">Shipping details &rarr;</span>
           </div>
         </div>
 
@@ -964,7 +962,6 @@
           <div class="ak-benefit-info">
             <h3>Expert Audio Consultation</h3>
             <p>Talk with real sound engineers and musicians to spec out your exact recording or stage setup.</p>
-            <span class="ak-benefit-action">Speak with an expert &rarr;</span>
           </div>
         </div>
       </div>
@@ -1787,7 +1784,39 @@
                 <span class="ak-step-num">1</span>
                 <h2>Shipping &amp; Delivery Address</h2>
               </div>
-              <div class="ak-step-form-grid">
+
+              <!-- Address Bars Selection Section -->
+              <div class="ak-checkout-address-bars-section" id="akCheckoutAddressBarsWrap">
+                <div class="ak-checkout-address-bar-header">
+                  <span class="ak-checkout-addr-heading">Saved Delivery Addresses</span>
+                  <button type="button" class="ak-btn-checkout-add-addr" id="akCheckoutAddAddrBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>+ Add Address</span>
+                  </button>
+                </div>
+
+                <!-- Empty state when 0 addresses exist -->
+                <div class="ak-checkout-no-address-box" id="akCheckoutNoAddrBox" style="display:none;">
+                  <div class="ak-no-addr-icon">📍</div>
+                  <p class="ak-no-addr-msg">No address listed yet.</p>
+                  <button type="button" class="ak-btn-no-address" id="akCheckoutNoAddrBtn">
+                    <span>No address listed. Add Address</span>
+                  </button>
+                </div>
+
+                <!-- Up to 3 visible address bars -->
+                <div class="ak-checkout-address-bars-list" id="akCheckoutAddressBarsList"></div>
+
+                <!-- Collapsible wrap for address 4+ -->
+                <div class="ak-checkout-more-addresses-wrap" id="akCheckoutMoreAddressesWrap" style="display:none;"></div>
+
+                <!-- View More / View Less Toggle Button (shown when > 3 addresses) -->
+                <button type="button" class="ak-btn-view-more-addresses" id="akCheckoutViewMoreBtn" style="display:none;">
+                  <span>View more addresses ▼</span>
+                </button>
+              </div>
+
+              <div class="ak-step-form-grid" id="akCheckoutAddressFormGrid" style="margin-top: 18px;">
                 <div class="ak-field-col">
                   <label for="akCoFullName">Full Name *</label>
                   <input type="text" id="akCoFullName" required placeholder="Enter full name">

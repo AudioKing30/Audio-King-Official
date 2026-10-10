@@ -39,7 +39,7 @@ function escapeHtml(str) {
 // Formatting Helpers
 function formatINR(amount) {
   const num = Number(amount) || 0;
-  return 'â‚¹' + num.toLocaleString('en-IN');
+  return '₹' + num.toLocaleString('en-IN');
 }
 
 function formatDate(isoStr) {
@@ -428,7 +428,7 @@ async function handleSaveWhatsAppNumber(event) {
         }
       } catch (e) {}
       window.dispatchEvent(new CustomEvent('ak:whatsapp-updated', { detail: data }));
-      alert('âœ“ WhatsApp hotline updated successfully to ' + data.whatsappNumber + ' and active live across all storefront pages!');
+      alert('✓ WhatsApp hotline updated successfully to ' + data.whatsappNumber + ' and active live across all storefront pages!');
     } else {
       alert(data.error || 'Failed to update WhatsApp hotline.');
     }
@@ -437,7 +437,7 @@ async function handleSaveWhatsAppNumber(event) {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.textContent = 'ðŸ’¾ Update WhatsApp Hotline';
+      btn.textContent = '💾 Update WhatsApp Hotline';
     }
   }
 }
@@ -1001,8 +1001,8 @@ function renderAdminBrandsTable(brands) {
         </td>
         <td style="text-align: right;">
           <div style="display: flex; gap: 6px; justify-content: flex-end;">
-            <button type="button" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px;" onclick="openRenameModal('brand', '${b.id}', '${safeName}')">âœï¸ Rename</button>
-            <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px;" onclick="confirmDeleteBrand('${b.id}', '${safeName}')">ðŸ—‘ï¸ Delete</button>
+            <button type="button" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px;" onclick="openRenameModal('brand', '${b.id}', '${safeName}')">✏️ Rename</button>
+            <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px;" onclick="confirmDeleteBrand('${b.id}', '${safeName}')">🗑️ Delete</button>
           </div>
         </td>
       </tr>
@@ -1024,8 +1024,8 @@ function renderAdminCategoriesTable(categories) {
     const safeName = (c.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
     const isMusical = c.section === 'musical-instruments';
     const sectionBadge = isMusical
-      ? `<span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC; font-size: 11px; padding: 2px 7px; border: 1px solid rgba(168,85,247,0.3); border-radius: 4px;">ðŸŽ¸ Musical Instruments</span>`
-      : `<span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 11px; padding: 2px 7px; border: 1px solid rgba(56,189,248,0.3); border-radius: 4px;">ðŸŽ›ï¸ Pro Audio</span>`;
+      ? `<span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #C084FC; font-size: 11px; padding: 2px 7px; border: 1px solid rgba(168,85,247,0.3); border-radius: 4px;">🎸 Musical Instruments</span>`
+      : `<span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8; font-size: 11px; padding: 2px 7px; border: 1px solid rgba(56,189,248,0.3); border-radius: 4px;">🎛️ Pro Audio</span>`;
 
     return `
       <tr>
@@ -1040,8 +1040,8 @@ function renderAdminCategoriesTable(categories) {
         </td>
         <td style="text-align: right;">
           <div style="display: flex; gap: 6px; justify-content: flex-end;">
-            <button type="button" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px;" onclick="openRenameModal('category', '${c.id}', '${safeName}')">âœï¸ Rename</button>
-            <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px;" onclick="confirmDeleteCategory('${c.id}', '${safeName}')">ðŸ—‘ï¸ Delete</button>
+            <button type="button" class="btn-secondary" style="padding: 4px 8px; font-size: 11.5px;" onclick="openRenameModal('category', '${c.id}', '${safeName}')">✏️ Rename</button>
+            <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px;" onclick="confirmDeleteCategory('${c.id}', '${safeName}')">🗑️ Delete</button>
           </div>
         </td>
       </tr>
@@ -1173,7 +1173,7 @@ window.handleRenameMetaSubmit = handleRenameMetaSubmit;
 
 function confirmDeleteBrand(id, name) {
   document.getElementById('confirmModalTitle').textContent = `Terminate Brand: ${name}?`;
-  document.getElementById('confirmModalMessage').innerHTML = `âš ï¸ <strong style="color: var(--ak-danger);">CRITICAL WARNING:</strong> Deleting brand <strong>"${name}"</strong> will <strong>PERMANENTLY TERMINATE</strong> every product, inventory item, blanket offer, and section associated with this brand across the entire store and catalog.<br><br>This cascading deletion cannot be undone. Are you sure you want to proceed?`;
+  document.getElementById('confirmModalMessage').innerHTML = `⚠️ <strong style="color: var(--ak-danger);">CRITICAL WARNING:</strong> Deleting brand <strong>"${name}"</strong> will <strong>PERMANENTLY TERMINATE</strong> every product, inventory item, blanket offer, and section associated with this brand across the entire store and catalog.<br><br>This cascading deletion cannot be undone. Are you sure you want to proceed?`;
   const actionBtn = document.getElementById('confirmModalActionBtn');
   actionBtn.textContent = 'Terminate Brand & All Products';
   actionBtn.onclick = async () => {
@@ -1200,7 +1200,7 @@ function confirmDeleteBrand(id, name) {
 
 function confirmDeleteCategory(id, name) {
   document.getElementById('confirmModalTitle').textContent = `Terminate Category: ${name}?`;
-  document.getElementById('confirmModalMessage').innerHTML = `âš ï¸ <strong style="color: var(--ak-danger);">CRITICAL WARNING:</strong> Deleting category <strong>"${name}"</strong> will <strong>PERMANENTLY TERMINATE</strong> every product, inventory item, blanket offer, and section associated with this category across the entire store and catalog.<br><br>This cascading deletion cannot be undone. Are you sure you want to proceed?`;
+  document.getElementById('confirmModalMessage').innerHTML = `⚠️ <strong style="color: var(--ak-danger);">CRITICAL WARNING:</strong> Deleting category <strong>"${name}"</strong> will <strong>PERMANENTLY TERMINATE</strong> every product, inventory item, blanket offer, and section associated with this category across the entire store and catalog.<br><br>This cascading deletion cannot be undone. Are you sure you want to proceed?`;
   const actionBtn = document.getElementById('confirmModalActionBtn');
   actionBtn.textContent = 'Terminate Category & All Products';
   actionBtn.onclick = async () => {
@@ -1236,7 +1236,7 @@ function renderImagePreviewGrid() {
 
   grid.innerHTML = state.formImages.map((imgUrl, idx) => `
     <div class="preview-tile ${idx === 0 ? 'cover' : ''}">
-      ${idx === 0 ? '<span class="cover-badge">â­ COVER</span>' : ''}
+      ${idx === 0 ? '<span class="cover-badge">⭐ COVER</span>' : ''}
       <img src="${resolveAdminThumb(imgUrl)}" class="preview-img" alt="Product image" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
       <div class="preview-tile-actions">
         <button type="button" class="btn-tile-act" title="Move Left" onclick="moveImage(${idx}, -1)" ${idx === 0 ? 'disabled' : ''}>&larr;</button>
@@ -1296,7 +1296,7 @@ async function handleImageFilesUpload(event) {
       state.formImages.push(...data.urls);
       renderImagePreviewGrid();
       if (uploadStatus) {
-        uploadStatus.textContent = `âœ“ ${data.urls.length} image(s) uploaded successfully!`;
+        uploadStatus.textContent = `✓ ${data.urls.length} image(s) uploaded successfully!`;
         uploadStatus.style.color = 'var(--ak-success, #16A34A)';
         setTimeout(() => { uploadStatus.style.display = 'none'; uploadStatus.style.color = ''; }, 3000);
       }
@@ -1393,7 +1393,7 @@ function renderYouTubeVideoInputs() {
         >
         ${state.formYouTubeVideos.length > 1 ? `
           <button type="button" class="btn-danger" style="padding: 6px 10px; font-size: 12px; font-weight: 700; border-radius: 4px;" onclick="removeYouTubeVideoInputRow(${idx})" title="Remove this video">
-            âœ•
+            ✕
           </button>
         ` : ''}
       </div>
@@ -2212,7 +2212,7 @@ function renderCouponsTable() {
       if (brandExists) {
         brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #E0F2FE; color: #0369A1; font-weight: 700;">${escapeHtml(targetBrand)}</span>`;
       } else {
-        brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">âš ï¸ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
+        brandDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target brand was deleted from database">⚠️ ${escapeHtml(targetBrand)} (Target no longer exists)</span>`;
       }
     }
 
@@ -2225,7 +2225,7 @@ function renderCouponsTable() {
       if (catExists) {
         categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #F3E8FF; color: #6B21A8; font-weight: 700;">${escapeHtml(targetCategory)}</span>`;
       } else {
-        categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">âš ï¸ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
+        categoryDisplay = `<span style="font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #FEE2E2; color: #DC2626; font-weight: 700;" title="Target category was deleted from database">⚠️ ${escapeHtml(targetCategory)} (Target no longer exists)</span>`;
       }
     }
 
@@ -2252,7 +2252,7 @@ function renderCouponsTable() {
         <td>${brandDisplay}</td>
         <td>${categoryDisplay}</td>
         <td>${minCart > 0 ? formatINR(minCart) : 'None'}</td>
-        <td><strong>${usedCount}</strong> / ${usageLimit || 'âˆž'}</td>
+        <td><strong>${usedCount}</strong> / ${usageLimit || '∞'}</td>
         <td>${expiresAt ? String(expiresAt).slice(0, 10) : 'Never'}</td>
         <td>
           <button class="badge-stock ${isActive ? 'in' : 'out'}" style="cursor: pointer; border: none;" onclick="toggleCoupon('${c.id}')">
@@ -2526,7 +2526,7 @@ async function loadOrders() {
         <td>
           <div style="font-weight: 700; color: var(--ak-text-primary, #0F172A);">${o.customerName}</div>
           <div style="font-size: 11px; color: var(--ak-text-muted);">${o.customerEmail}</div>
-          <div style="font-size: 11px; color: #38BDF8; margin-top: 2px;">ðŸ“ž ${o.customerPhone || 'N/A'}</div>
+          <div style="font-size: 11px; color: #38BDF8; margin-top: 2px;">📞 ${o.customerPhone || 'N/A'}</div>
         </td>
         <td style="max-width: 220px;">
           <div style="font-size: 12px; line-height: 1.4; color: var(--ak-text-secondary); word-break: break-word;">${addrStr}</div>
@@ -2546,7 +2546,7 @@ async function loadOrders() {
           <div style="display: flex; gap: 6px; align-items: center;">
             <button class="btn-edit" onclick="openOrderDetailModal('${o.id}')">View Details</button>
             ${o.status !== 'Cancelled' && o.status !== 'Delivered' ? `
-              <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px; background: #EF4444;" onclick="cancelOrderDirect('${o.id}', '${o.orderNumber}')" title="Cancel Order">ðŸš« Cancel</button>
+              <button type="button" class="btn-danger" style="padding: 4px 8px; font-size: 11.5px; background: #EF4444;" onclick="cancelOrderDirect('${o.id}', '${o.orderNumber}')" title="Cancel Order">🚫 Cancel</button>
             ` : ''}
           </div>
         </td>
@@ -3310,7 +3310,7 @@ function updateVariantRowDisplay(index) {
     } else if (discountPct > 0) {
       badgeEl.innerHTML = `<span class="badge-discount" style="background:var(--ak-success-soft); color:var(--ak-success); font-size:11px; padding:2px 6px; font-weight:700;">${discountPct}% OFF</span>`;
     } else {
-      badgeEl.innerHTML = '<span style="color:var(--ak-text-muted); font-size:11px;">â€”</span>';
+      badgeEl.innerHTML = '<span style="color:var(--ak-text-muted); font-size:11px;">—</span>';
     }
   }
 
@@ -3373,7 +3373,7 @@ function renderVariantMatrix() {
     const hasError = effectiveMrp > 0 && effectiveSelling > 0 && effectiveSelling > effectiveMrp;
     const discountPct = calculateDiscountPercent(effectiveMrp, effectiveSelling);
 
-    let discountBadgeHtml = '<span style="color:var(--ak-text-muted); font-size:11px;">â€”</span>';
+    let discountBadgeHtml = '<span style="color:var(--ak-text-muted); font-size:11px;">—</span>';
     if (hasError) {
       discountBadgeHtml = '<span class="badge-discount" style="background:#FEE2E2; color:#DC2626; font-size:11px; padding:2px 6px; font-weight:700;">Invalid</span>';
     } else if (discountPct > 0) {
@@ -3393,10 +3393,10 @@ function renderVariantMatrix() {
         <input type="text" class="form-input" style="height: 30px; font-size: 12px; width: 90px;" value="${v.skuSuffix || ''}" placeholder="e.g. -BLK" onchange="state.variantMatrix[${idx}].skuSuffix = this.value.trim();">
       </td>
       <td>
-        <input type="number" id="variantInputMrp_${idx}" class="form-input" style="height: 30px; font-size: 12px; width: 110px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.mrp != null ? v.mrp : ''}" placeholder="${parentMrp ? 'â‚¹' + parentMrp : 'MRP'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'mrp', this.value)">
+        <input type="number" id="variantInputMrp_${idx}" class="form-input" style="height: 30px; font-size: 12px; width: 110px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.mrp != null ? v.mrp : ''}" placeholder="${parentMrp ? '₹' + parentMrp : 'MRP'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'mrp', this.value)">
       </td>
       <td>
-        <input type="number" id="variantInputSp_${idx}" class="form-input" style="height: 30px; font-size: 12px; width: 110px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.sellingPrice != null ? v.sellingPrice : ''}" placeholder="${parentSelling ? 'â‚¹' + parentSelling : 'Selling'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'sellingPrice', this.value)">
+        <input type="number" id="variantInputSp_${idx}" class="form-input" style="height: 30px; font-size: 12px; width: 110px; ${hasError ? 'border-color:#DC2626; background:#FFF1F2;' : ''}" value="${v.sellingPrice != null ? v.sellingPrice : ''}" placeholder="${parentSelling ? '₹' + parentSelling : 'Selling'}" min="1" step="1" oninput="handleVariantFieldChange(${idx}, 'sellingPrice', this.value)">
       </td>
       <td id="variantDiscount_${idx}" style="text-align: center; vertical-align: middle;">
         ${discountBadgeHtml}
@@ -3541,9 +3541,9 @@ function renderHeroSlidesAdmin() {
     return `
       <div class="hero-slide-admin-card" data-slide-id="${slide.id}">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding-right: 6px;">
-          <button type="button" class="btn-secondary" style="padding: 3px 6px; font-size: 11px; min-width: 28px;" ${isFirst ? 'disabled' : ''} onclick="moveHeroSlide('${slide.id}', -1)" title="Move slide up">â–²</button>
+          <button type="button" class="btn-secondary" style="padding: 3px 6px; font-size: 11px; min-width: 28px;" ${isFirst ? 'disabled' : ''} onclick="moveHeroSlide('${slide.id}', -1)" title="Move slide up">▲</button>
           <span style="font-size: 11px; font-weight: 700; color: var(--ak-text-muted);">#${index + 1}</span>
-          <button type="button" class="btn-secondary" style="padding: 3px 6px; font-size: 11px; min-width: 28px;" ${isLast ? 'disabled' : ''} onclick="moveHeroSlide('${slide.id}', 1)" title="Move slide down">â–¼</button>
+          <button type="button" class="btn-secondary" style="padding: 3px 6px; font-size: 11px; min-width: 28px;" ${isLast ? 'disabled' : ''} onclick="moveHeroSlide('${slide.id}', 1)" title="Move slide down">▼</button>
         </div>
 
         <div class="hero-slide-admin-thumb" style="background-image: url('${thumbUrl}');">
@@ -3565,8 +3565,8 @@ function renderHeroSlidesAdmin() {
         </div>
 
         <div class="hero-slide-admin-actions">
-          <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 12.5px;" onclick="openEditHeroSlideModal('${slide.id}')">âœï¸ Edit</button>
-          <button type="button" class="btn-danger" style="padding: 6px 10px; font-size: 12.5px;" onclick="deleteHeroSlide('${slide.id}')">ðŸ—‘ï¸ Delete</button>
+          <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 12.5px;" onclick="openEditHeroSlideModal('${slide.id}')">✏️ Edit</button>
+          <button type="button" class="btn-danger" style="padding: 6px 10px; font-size: 12.5px;" onclick="deleteHeroSlide('${slide.id}')">🗑️ Delete</button>
         </div>
       </div>
     `;
@@ -3893,7 +3893,7 @@ async function autoFillFeaturedSlots() {
   const list = materializeFeaturedSlotIds();
   if (!list.length) { alert('No products available in catalog.'); return; }
   const ok = await persistFeaturedList(list);
-  if (ok) alert(`âœ“ All ${list.length} featured slots are now pinned in the current order.`);
+  if (ok) alert(`✓ All ${list.length} featured slots are now pinned in the current order.`);
 }
 
 async function clearFeaturedPins() {
@@ -3926,11 +3926,11 @@ function renderActiveHomepageFeaturedProducts() {
   const toolbar = `
     <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 10px 12px; background: #F8FAFC; border: 1px dashed var(--ak-border); border-radius: 8px;">
       <span style="font-size: 12px; color: var(--ak-text-secondary); flex: 1; min-width: 220px;">
-        Change a slot number, use â–²/â–¼ to re-sequence, or ðŸ—‘ï¸ to remove. Up to <strong>${MAX_FEATURED_SLOTS}</strong> products are shown on the homepage at a time.
+        Change a slot number, use ▲/▼ to re-sequence, or 🗑️ to remove. Up to <strong>${MAX_FEATURED_SLOTS}</strong> products are shown on the homepage at a time.
       </span>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 12px; background: #2563EB;" onclick="autoFillFeaturedSlots()">âš¡ Auto-Fill &amp; Pin All 10 Slots</button>
-        <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="clearFeaturedPins()" ${pinnedCount === 0 ? 'disabled' : ''}>ðŸ§¹ Clear All Pins</button>
+        <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 12px; background: #2563EB;" onclick="autoFillFeaturedSlots()">⚡ Auto-Fill &amp; Pin All 10 Slots</button>
+        <button type="button" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="clearFeaturedPins()" ${pinnedCount === 0 ? 'disabled' : ''}>🧹 Clear All Pins</button>
       </div>
     </div>`;
 
@@ -3941,7 +3941,7 @@ function renderActiveHomepageFeaturedProducts() {
     if (!item) {
       rows.push(`
         <div class="locked-product-item featured-slot-empty" style="background: #FFFFFF; border: 1.5px dashed #CBD5E1; justify-content: space-between;">
-          <span style="font-size: 13px; font-weight: 800; color: #94A3B8;">Slot #${slotNo} â€” Empty</span>
+          <span style="font-size: 13px; font-weight: 800; color: #94A3B8;">Slot #${slotNo} — Empty</span>
           <button type="button" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;" onclick="openFeaturedSlotPicker(${slotNo})">+ Select Product</button>
         </div>`);
       continue;
@@ -3956,12 +3956,12 @@ function renderActiveHomepageFeaturedProducts() {
       <div class="locked-product-item featured-slot-row" style="background: ${isLocked ? '#F0FDF4' : '#F8FAFC'}; border: 1px solid ${isLocked ? '#BBF7D0' : 'var(--ak-border)'};">
         <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
           <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-            <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${i === 0 ? 'disabled' : ''} onclick="moveFeaturedSlot('${pid}', -1)" title="Move up">â–²</button>
+            <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${i === 0 ? 'disabled' : ''} onclick="moveFeaturedSlot('${pid}', -1)" title="Move up">▲</button>
             <div style="display: flex; align-items: center; gap: 2px;" title="Set slot position (1 to ${items.length})">
               <span style="font-size: 11px; font-weight: 700; color: #475569;">#</span>
               <input type="number" min="1" max="${items.length}" value="${slotNo}" onchange="setFeaturedSlotPosition('${pid}', this.value)" style="width: 40px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;">
             </div>
-            <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${i === items.length - 1 ? 'disabled' : ''} onclick="moveFeaturedSlot('${pid}', 1)" title="Move down">â–¼</button>
+            <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${i === items.length - 1 ? 'disabled' : ''} onclick="moveFeaturedSlot('${pid}', 1)" title="Move down">▼</button>
           </div>
           <img src="${thumb}" alt="${escapeHtml(prod.name)}" class="locked-product-thumb" onerror="this.src='${resolveAdminThumb('')}'">
         </div>
@@ -3970,19 +3970,19 @@ function renderActiveHomepageFeaturedProducts() {
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 3px; flex-wrap: wrap;">
             <span class="locked-product-title" title="${escapeHtml(prod.name)}" style="margin-bottom:0;">${escapeHtml(prod.name)}</span>
             ${isLocked
-              ? `<span style="background: #DCFCE7; color: #166534; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1px solid #86EFAC;">ðŸ”’ PINNED</span>`
-              : `<span style="background: #E0F2FE; color: #0369A1; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; border: 1px solid #BAE6FD;">ðŸ”¥ AUTO-FILL</span>`}
+              ? `<span style="background: #DCFCE7; color: #166534; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1px solid #86EFAC;">🔒 PINNED</span>`
+              : `<span style="background: #E0F2FE; color: #0369A1; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; border: 1px solid #BAE6FD;">🔥 AUTO-FILL</span>`}
           </div>
           <div class="locked-product-meta">
-            ${prod.brand ? `<span>${escapeHtml(prod.brand)}</span> â€¢ ` : ''}
-            <span>${formatINR(prod.price)}</span> â€¢
+            ${prod.brand ? `<span>${escapeHtml(prod.brand)}</span> • ` : ''}
+            <span>${formatINR(prod.price)}</span> •
             <span style="color: var(--ak-orange);">${clicks} clicks / ${impressions} views</span>
           </div>
         </div>
 
         <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-          ${isLocked ? '' : `<button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap; background: #2563EB;" onclick="pinFeaturedSlot('${pid}')" title="Pin this product in this slot">ðŸ“Œ Pin</button>`}
-          <button type="button" class="btn-danger" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap;" onclick="removeFeaturedSlot('${pid}')" title="Remove from featured">ðŸ—‘ï¸ Remove</button>
+          ${isLocked ? '' : `<button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap; background: #2563EB;" onclick="pinFeaturedSlot('${pid}')" title="Pin this product in this slot">📌 Pin</button>`}
+          <button type="button" class="btn-danger" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap;" onclick="removeFeaturedSlot('${pid}')" title="Remove from featured">🗑️ Remove</button>
         </div>
       </div>`);
   }
@@ -4003,7 +4003,7 @@ function renderLockedFeaturedProducts() {
   if (lockedIds.length === 0) {
     container.innerHTML = `
       <div style="text-align: center; padding: 24px; color: var(--ak-text-muted); font-size: 13px;">
-        ðŸ”’ No products currently locked.<br>
+        🔒 No products currently locked.<br>
         <span style="font-size: 12px;">Search above or click "+ Lock / Pin" on any popular item to lock it to the top of the homepage carousel.</span>
       </div>
     `;
@@ -4023,12 +4023,12 @@ function renderLockedFeaturedProducts() {
     return `
       <div class="locked-product-item">
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 48px; flex-shrink: 0;">
-          <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1;" ${isFirst ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', -1)" title="Move up priority">â–²</button>
+          <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1;" ${isFirst ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', -1)" title="Move up priority">▲</button>
           <div style="display: flex; align-items: center; gap: 2px;" title="Set exact sequence position (1 to ${lockedIds.length})">
             <span style="font-size: 11px; font-weight: 700; color: #475569;">#</span>
             <input type="number" min="1" max="${lockedIds.length}" value="${idx + 1}" onchange="changeFeaturedSequence('${pid}', this.value)" style="width: 40px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;">
           </div>
-          <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1;" ${isLast ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', 1)" title="Move down priority">â–¼</button>
+          <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1;" ${isLast ? 'disabled' : ''} onclick="moveLockedProduct('${pid}', 1)" title="Move down priority">▼</button>
         </div>
 
         <img src="${thumb}" alt="${escapeHtml(product.name)}" class="locked-product-thumb" onerror="this.src='${resolveAdminThumb('')}'">
@@ -4036,13 +4036,13 @@ function renderLockedFeaturedProducts() {
         <div class="locked-product-info">
           <div class="locked-product-title" title="${escapeHtml(product.name)}">${escapeHtml(product.name)}</div>
           <div class="locked-product-meta">
-            ${product.brand ? `<span>${escapeHtml(product.brand)}</span> â€¢ ` : ''}
+            ${product.brand ? `<span>${escapeHtml(product.brand)}</span> • ` : ''}
             <span>${formatINR(product.price)}</span>
           </div>
         </div>
 
         <button type="button" class="btn-danger" style="padding: 6px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px;" onclick="unlockFeaturedProduct('${pid}')" title="Remove product from featured">
-          ðŸ—‘ï¸ Remove
+          🗑️ Remove
         </button>
       </div>
     `;
@@ -4084,14 +4084,14 @@ function renderPopularFeaturedProducts() {
         <div class="locked-product-info">
           <div class="locked-product-title" title="${escapeHtml(product.name)}">${escapeHtml(product.name)}</div>
           <div class="locked-product-meta">
-            ${product.brand ? `<span>${escapeHtml(product.brand)}</span> â€¢ ` : ''}
-            <span>${formatINR(product.price)}</span> â€¢ 
+            ${product.brand ? `<span>${escapeHtml(product.brand)}</span> • ` : ''}
+            <span>${formatINR(product.price)}</span> • 
             <span style="color: var(--ak-orange);">${clicks} clicks / ${impressions} views</span>
           </div>
         </div>
 
         <button type="button" class="btn-primary" style="padding: 5px 10px; font-size: 11.5px; white-space: nowrap; background: #2563EB;" onclick="lockFeaturedProduct('${product.id}')" title="Pin this product to featured carousel">
-          ðŸ”’ Lock / Pin
+          🔒 Lock / Pin
         </button>
       </div>
     `;
@@ -4134,10 +4134,10 @@ function handleFeaturedSearchInput(e) {
         <img src="${thumb}" alt="${escapeHtml(product.name)}" style="width: 36px; height: 36px; object-fit: contain; background: #FFF; border-radius: 4px; border: 1px solid var(--ak-border-subtle);">
         <div style="flex: 1; min-width: 0;">
           <div style="font-size: 13px; font-weight: 600; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(product.name)}</div>
-          <div style="font-size: 11.5px; color: var(--ak-text-muted);">${escapeHtml(product.brand || '')} â€¢ ${formatINR(product.price)}</div>
+          <div style="font-size: 11.5px; color: var(--ak-text-muted);">${escapeHtml(product.brand || '')} • ${formatINR(product.price)}</div>
         </div>
         ${isLocked ? `
-          <span style="font-size: 11px; font-weight: 700; color: #2563EB; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 3px 8px; border-radius: 4px;">ðŸ”’ Already Locked (Click to Unlock)</span>
+          <span style="font-size: 11px; font-weight: 700; color: #2563EB; background: #EFF6FF; border: 1px solid #BFDBFE; padding: 3px 8px; border-radius: 4px;">🔒 Already Locked (Click to Unlock)</span>
         ` : `
           <span style="font-size: 11px; font-weight: 700; color: #16A34A; background: #F0FDF4; border: 1px solid #BBF7D0; padding: 3px 8px; border-radius: 4px;">+ Click to Lock</span>
         `}
@@ -4298,7 +4298,7 @@ function populateFeaturedCatalogDropdown() {
   let html = '<option value="">-- Select a product from catalog to add --</option>';
   allProducts.forEach(p => {
     const isLocked = lockedSet.has(String(p.id));
-    html += `<option value="${p.id}" ${isLocked ? 'disabled' : ''}>${escapeHtml(p.name)} (${p.brand || 'No Brand'}) - â‚¹${p.price} ${isLocked ? '[Already in Featured]' : ''}</option>`;
+    html += `<option value="${p.id}" ${isLocked ? 'disabled' : ''}>${escapeHtml(p.name)} (${p.brand || 'No Brand'}) - ₹${p.price} ${isLocked ? '[Already in Featured]' : ''}</option>`;
   });
   dropdown.innerHTML = html;
 }
@@ -4358,7 +4358,7 @@ async function saveFeaturedSettingsToServer() {
       try { localStorage.setItem('audioking_locked_featured', JSON.stringify(list)); } catch (e) {}
       window.dispatchEvent(new CustomEvent('ak:featured-sync', { detail: { lockedProductIds: list } }));
       loadFeaturedManager();
-      alert('âœ“ Featured products settings successfully saved and updated on homepage!');
+      alert('✓ Featured products settings successfully saved and updated on homepage!');
     } else {
       alert('Failed to save featured settings.');
     }
@@ -4367,7 +4367,7 @@ async function saveFeaturedSettingsToServer() {
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = '<span>ðŸ’¾ Save Featured Changes</span>';
+      btn.innerHTML = '<span>💾 Save Featured Changes</span>';
     }
   }
 }

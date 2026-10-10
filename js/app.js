@@ -11,7 +11,7 @@ import { formatINR, calculateDiscountPercent, getProductOfferStampHtml, resolveP
 import { getIcon } from '../assets/icons/icons.js';
 import { initCart, addToCart, openCartDrawer, getCartItems, getCartSubtotal, clearCart, getCartItemQuantity, updateCartItemQty } from './components/cart.js';
 import { initCheckout, openCheckoutModal } from './components/checkout.js';
-import { initOrderSuccess, showOrderConfirmation } from './components/orderSuccess.js';
+import { initOrderSuccess, showOrderConfirmation, triggerOrderAnimation } from './components/orderSuccess.js';
 import { initAuth, getCurrentUser, openAuthModal } from './components/auth.js';
 import { initHeader } from './components/header.js';
 import { initNavigation, setActiveNavItem, renderNavigationBrands, renderNavigationCategories } from './components/navigation.js';
@@ -21,7 +21,7 @@ import { initModals } from './components/modals.js';
 import { showToast } from './components/toast.js';
 import { initStore, openStoreWithCategory, openStoreWithBrand, openStoreWithSearch, setProductClickCallback, getStoreState, setStoreState } from './components/store.js';
 import { activePaymentAdapter } from './components/paymentAdapter.js';
-import { initAccountSettings, renderAccountSettings, promptUnsavedChanges, isAccountFormDirty } from './components/accountSettings.js';
+import { initAccountSettings, renderAccountSettings, promptUnsavedChanges, isAccountFormDirty, openAddressModal } from './components/accountSettings.js';
 import { ordersService } from './services/ordersService.js';
 import { authService } from './services/authService.js';
 import { apiUrl } from './services/apiConfig.js';
@@ -1195,12 +1195,26 @@ export function renderProductVariants(product) {
       if (ppInStockBadge) ppInStockBadge.style.display = (!vOutOfStock && !isPreOrder) ? 'inline-flex' : 'none';
       if (ppOutOfStockBadge && !isPreOrder) {
         ppOutOfStockBadge.style.display = vOutOfStock ? 'inline-flex' : 'none';
+        if (vOutOfStock) {
+          const activePhone = window._activeWhatsAppNumber || localStorage.getItem('audioking_active_whatsapp') || AUDIOKING_CONFIG.expertPhone || '+91 88793 93743';
+          const cleanPhone = String(activePhone).replace(/[^0-9]/g, '');
+          ppOutOfStockBadge.className = 'pp-stock-badge outstock';
+          ppOutOfStockBadge.style.background = '#FEE2E2';
+          ppOutOfStockBadge.style.color = '#DC2626';
+          ppOutOfStockBadge.style.borderColor = '#FECACA';
+          ppOutOfStockBadge.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span>Availability: Out of Stock · Please reach out to us at <a href="tel:+${cleanPhone}" class="ak-expert-phone-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+          `;
+        }
       }
 
       if (ppAddToCartBtn && !isPreOrder) {
         if (vOutOfStock) {
+          ppAddToCartBtn.style.display = 'inline-flex';
           ppAddToCartBtn.classList.add('disabled', 'is-out-of-stock');
           ppAddToCartBtn.disabled = true;
+          ppAddToCartBtn.style.opacity = '0.65';
           ppAddToCartBtn.style.background = '#FEF2F2';
           ppAddToCartBtn.style.color = '#DC2626';
           ppAddToCartBtn.style.borderColor = '#FECACA';
@@ -1211,8 +1225,10 @@ export function renderProductVariants(product) {
             span.style.color = '#DC2626';
           }
         } else {
+          ppAddToCartBtn.style.display = 'inline-flex';
           ppAddToCartBtn.classList.remove('disabled', 'is-out-of-stock', 'is-preorder');
           ppAddToCartBtn.disabled = false;
+          ppAddToCartBtn.style.opacity = '1';
           ppAddToCartBtn.style.background = '';
           ppAddToCartBtn.style.color = '';
           ppAddToCartBtn.style.borderColor = '';
@@ -1227,14 +1243,9 @@ export function renderProductVariants(product) {
 
       if (ppBuyNowBtn && !isPreOrder) {
         if (vOutOfStock) {
-          ppBuyNowBtn.disabled = true;
-          ppBuyNowBtn.style.opacity = '0.5';
-          ppBuyNowBtn.style.cursor = 'not-allowed';
-          ppBuyNowBtn.textContent = 'Out of Stock';
-          ppBuyNowBtn.style.color = '#DC2626';
-          ppBuyNowBtn.style.background = '#FEF2F2';
-          ppBuyNowBtn.style.borderColor = '#FECACA';
+          ppBuyNowBtn.style.display = 'none';
         } else {
+          ppBuyNowBtn.style.display = 'inline-flex';
           ppBuyNowBtn.disabled = false;
           ppBuyNowBtn.style.opacity = '1';
           ppBuyNowBtn.style.cursor = 'pointer';
@@ -1450,6 +1461,8 @@ export async function showProduct(productOrId, updateHash = true) {
       // User requirement: Remove the duplicate note above the CTA buttons, only show the one below
       ppOutOfStockBadge.style.display = 'none';
     } else if (isOutOfStock) {
+      const activePhone = window._activeWhatsAppNumber || localStorage.getItem('audioking_active_whatsapp') || AUDIOKING_CONFIG.expertPhone || '+91 88793 93743';
+      const cleanPhone = String(activePhone).replace(/[^0-9]/g, '');
       ppOutOfStockBadge.style.display = 'inline-flex';
       ppOutOfStockBadge.className = 'pp-stock-badge outstock';
       ppOutOfStockBadge.style.background = '#FEE2E2';
@@ -1457,7 +1470,7 @@ export async function showProduct(productOrId, updateHash = true) {
       ppOutOfStockBadge.style.borderColor = '#FECACA';
       ppOutOfStockBadge.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Availability: Out of Stock · Will notify you when available</span>
+        <span>Availability: Out of Stock · Please reach out to us at <a href="tel:+${cleanPhone}" class="ak-expert-phone-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
       `;
     } else {
       ppOutOfStockBadge.style.display = 'none';
@@ -1473,9 +1486,11 @@ export async function showProduct(productOrId, updateHash = true) {
 
   if (ppAddToCartBtn) {
     if (isPreOrder) {
+      ppAddToCartBtn.style.display = 'inline-flex';
       ppAddToCartBtn.classList.remove('disabled', 'is-out-of-stock');
       ppAddToCartBtn.classList.add('is-preorder');
       ppAddToCartBtn.disabled = false;
+      ppAddToCartBtn.style.opacity = '1';
       ppAddToCartBtn.style.background = '';
       ppAddToCartBtn.style.color = '';
       ppAddToCartBtn.style.borderColor = '';
@@ -1488,9 +1503,11 @@ export async function showProduct(productOrId, updateHash = true) {
         span.style.fontWeight = '700';
       }
     } else if (isOutOfStock) {
+      ppAddToCartBtn.style.display = 'inline-flex';
       ppAddToCartBtn.classList.add('disabled', 'is-out-of-stock');
       ppAddToCartBtn.classList.remove('is-preorder');
       ppAddToCartBtn.disabled = true;
+      ppAddToCartBtn.style.opacity = '0.65';
       ppAddToCartBtn.style.background = '#FEF2F2';
       ppAddToCartBtn.style.color = '#DC2626';
       ppAddToCartBtn.style.borderColor = '#FECACA';
@@ -1501,8 +1518,10 @@ export async function showProduct(productOrId, updateHash = true) {
         span.style.color = '#DC2626';
       }
     } else {
+      ppAddToCartBtn.style.display = 'inline-flex';
       ppAddToCartBtn.classList.remove('disabled', 'is-preorder', 'is-out-of-stock');
       ppAddToCartBtn.disabled = false;
+      ppAddToCartBtn.style.opacity = '1';
       ppAddToCartBtn.style.background = '';
       ppAddToCartBtn.style.color = '';
       ppAddToCartBtn.style.borderColor = '';
@@ -1517,6 +1536,7 @@ export async function showProduct(productOrId, updateHash = true) {
 
   if (ppBuyNowBtn) {
     if (isPreOrder) {
+      ppBuyNowBtn.style.display = 'inline-flex';
       ppBuyNowBtn.disabled = false;
       ppBuyNowBtn.style.opacity = '1';
       ppBuyNowBtn.style.cursor = 'pointer';
@@ -1526,14 +1546,9 @@ export async function showProduct(productOrId, updateHash = true) {
       ppBuyNowBtn.style.borderColor = '#EAB308';
       ppBuyNowBtn.style.fontWeight = '700';
     } else if (isOutOfStock) {
-      ppBuyNowBtn.disabled = true;
-      ppBuyNowBtn.style.opacity = '0.5';
-      ppBuyNowBtn.style.cursor = 'not-allowed';
-      ppBuyNowBtn.textContent = 'Out of Stock';
-      ppBuyNowBtn.style.color = '#DC2626';
-      ppBuyNowBtn.style.background = '#FEF2F2';
-      ppBuyNowBtn.style.borderColor = '#FECACA';
+      ppBuyNowBtn.style.display = 'none';
     } else {
+      ppBuyNowBtn.style.display = 'inline-flex';
       ppBuyNowBtn.disabled = false;
       ppBuyNowBtn.style.opacity = '1';
       ppBuyNowBtn.style.cursor = 'pointer';
@@ -2502,11 +2517,195 @@ export function showCheckoutPage(items = null, updateHash = true) {
   }
 
   renderCheckoutSummary();
+  renderCheckoutAddressBars();
   if (updateHash) {
     setRouteHash('#checkout', true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   triggerScrollReveal();
+}
+
+/**
+ * Address Bars & Selection for Full Checkout Page
+ */
+let checkoutAddressesList = [];
+let selectedCheckoutAddressId = null;
+
+export async function renderCheckoutAddressBars(forceSelectedId = null) {
+  const barsWrap = document.getElementById('akCheckoutAddressBarsWrap');
+  const barsList = document.getElementById('akCheckoutAddressBarsList');
+  const moreWrap = document.getElementById('akCheckoutMoreAddressesWrap');
+  const viewMoreBtn = document.getElementById('akCheckoutViewMoreBtn');
+  const noAddrBox = document.getElementById('akCheckoutNoAddrBox');
+  const addAddrBtn = document.getElementById('akCheckoutAddAddrBtn');
+  const noAddrBtn = document.getElementById('akCheckoutNoAddrBtn');
+
+  if (!barsWrap || !barsList) return;
+
+  // Wire add address buttons to open standard address modal
+  if (addAddrBtn) {
+    addAddrBtn.onclick = (e) => {
+      e.preventDefault();
+      openAddressModal(null);
+    };
+  }
+  if (noAddrBtn) {
+    noAddrBtn.onclick = (e) => {
+      e.preventDefault();
+      openAddressModal(null);
+    };
+  }
+
+  try {
+    checkoutAddressesList = await authService.getAddresses();
+  } catch (err) {
+    checkoutAddressesList = [];
+  }
+
+  // Fallback to local storage if needed
+  if (!checkoutAddressesList || !checkoutAddressesList.length) {
+    const key = authService.getUserAddressKey();
+    const local = localStorage.getItem(key);
+    try { checkoutAddressesList = local ? JSON.parse(local) : []; } catch (e) { checkoutAddressesList = []; }
+  }
+
+  if (!checkoutAddressesList || checkoutAddressesList.length === 0) {
+    if (noAddrBox) noAddrBox.style.display = 'block';
+    if (barsList) barsList.innerHTML = '';
+    if (moreWrap) { moreWrap.innerHTML = ''; moreWrap.style.display = 'none'; }
+    if (viewMoreBtn) viewMoreBtn.style.display = 'none';
+    return;
+  }
+
+  if (noAddrBox) noAddrBox.style.display = 'none';
+
+  // Determine which address is selected
+  if (forceSelectedId) {
+    selectedCheckoutAddressId = forceSelectedId;
+  } else if (!selectedCheckoutAddressId || !checkoutAddressesList.some(a => a.id === selectedCheckoutAddressId)) {
+    const defaultAddr = checkoutAddressesList.find(a => a.isDefault || a.is_default) || checkoutAddressesList[0];
+    selectedCheckoutAddressId = defaultAddr ? defaultAddr.id : null;
+  }
+
+  // Populate form with selected address
+  const activeAddr = checkoutAddressesList.find(a => a.id === selectedCheckoutAddressId) || checkoutAddressesList[0];
+  if (activeAddr) {
+    selectCheckoutAddress(activeAddr, false);
+  }
+
+  // Render top 3 bars, remainder in collapsible container
+  const top3 = checkoutAddressesList.slice(0, 3);
+  const remaining = checkoutAddressesList.slice(3);
+
+  const renderBarHtml = (addr) => {
+    const isChecked = addr.id === selectedCheckoutAddressId;
+    const recipient = escapeHtml(addr.recipient_name || addr.name || 'Valued Customer');
+    const phone = escapeHtml(addr.phone || '');
+    const street = escapeHtml(addr.street || '');
+    const city = escapeHtml(addr.city || 'Mumbai');
+    const state = escapeHtml(addr.state || 'Maharashtra');
+    const pin = escapeHtml(addr.pin || '');
+    const tag = escapeHtml(addr.tag || 'Home');
+
+    return `
+      <div class="ak-checkout-address-bar ${isChecked ? 'selected' : ''}" data-addr-id="${addr.id}">
+        <input type="radio" name="akSelectedShippingAddress" class="ak-addr-bar-radio" value="${addr.id}" ${isChecked ? 'checked' : ''} aria-label="Select address">
+        <div class="ak-addr-bar-content">
+          <div class="ak-addr-bar-head">
+            <span class="ak-addr-bar-tag">${tag}</span>
+            <span class="ak-addr-bar-name">${recipient}</span>
+            ${phone ? `<span class="ak-addr-bar-phone">• ${phone}</span>` : ''}
+          </div>
+          <p class="ak-addr-bar-text">${street}, ${city}, ${state} - <strong>${pin}</strong></p>
+        </div>
+      </div>
+    `;
+  };
+
+  barsList.innerHTML = top3.map(renderBarHtml).join('');
+
+  if (moreWrap) {
+    if (remaining.length > 0) {
+      moreWrap.innerHTML = remaining.map(renderBarHtml).join('');
+    } else {
+      moreWrap.innerHTML = '';
+      moreWrap.style.display = 'none';
+    }
+  }
+
+  if (viewMoreBtn) {
+    if (remaining.length > 0) {
+      viewMoreBtn.style.display = 'flex';
+      viewMoreBtn.innerHTML = `<span>View more addresses (${remaining.length} more) ▼</span>`;
+      viewMoreBtn.onclick = (e) => {
+        e.preventDefault();
+        const isHidden = moreWrap.style.display === 'none';
+        moreWrap.style.display = isHidden ? 'flex' : 'none';
+        viewMoreBtn.innerHTML = isHidden
+          ? `<span>Show less addresses ▲</span>`
+          : `<span>View more addresses (${remaining.length} more) ▼</span>`;
+      };
+    } else {
+      viewMoreBtn.style.display = 'none';
+    }
+  }
+
+  // Attach click listeners on bars
+  barsWrap.querySelectorAll('.ak-checkout-address-bar').forEach(bar => {
+    bar.onclick = (e) => {
+      const aId = bar.dataset.addrId;
+      const targetAddr = checkoutAddressesList.find(a => a.id === aId);
+      if (targetAddr) {
+        selectCheckoutAddress(targetAddr, true);
+      }
+    };
+  });
+}
+
+function selectCheckoutAddress(addr, updateUi = true) {
+  if (!addr) return;
+  selectedCheckoutAddressId = addr.id;
+
+  const nameInput = document.getElementById('akCoFullName');
+  const phoneInput = document.getElementById('akCoPhone');
+  const addrInput = document.getElementById('akCoAddress');
+  const cityInput = document.getElementById('akCoCity');
+  const stateInput = document.getElementById('akCoState');
+  const pinInput = document.getElementById('akCoPincode');
+  const emailInput = document.getElementById('akCoEmail');
+
+  const u = getCurrentUser();
+
+  if (nameInput) nameInput.value = addr.recipient_name || addr.name || (u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() : '');
+  if (phoneInput) phoneInput.value = addr.phone || (u ? u.phone || u.phone_number || '' : '');
+  if (addrInput) addrInput.value = addr.street || '';
+  if (cityInput) cityInput.value = addr.city || 'Mumbai';
+  if (stateInput) stateInput.value = addr.state || 'Maharashtra';
+  if (pinInput) pinInput.value = addr.pin || '';
+  if (emailInput && (!emailInput.value || emailInput.value === 'customer@example.com')) {
+    emailInput.value = (u && u.email) ? u.email : '';
+  }
+
+  if (updateUi) {
+    document.querySelectorAll('.ak-checkout-address-bar').forEach(b => {
+      const isSel = b.dataset.addrId === addr.id;
+      b.classList.toggle('selected', isSel);
+      const radio = b.querySelector('.ak-addr-bar-radio');
+      if (radio) radio.checked = isSel;
+    });
+  }
+}
+
+// Automatically refresh checkout address bars when a new address is saved in modal
+if (typeof window !== 'undefined') {
+  window.addEventListener('ak:address-saved', async () => {
+    const checkoutPage = document.getElementById('akCheckoutPage');
+    if (checkoutPage && checkoutPage.style.display !== 'none') {
+      const list = await authService.getAddresses();
+      const newest = list[list.length - 1] || list[0];
+      renderCheckoutAddressBars(newest ? newest.id : null);
+    }
+  });
 }
 
 /**
@@ -2994,7 +3193,7 @@ function initDedicatedCheckoutPage() {
           appliedDedicatedCoupon = null;
           clearCart();
           hideAllViews();
-          showOrderConfirmation(orderData);
+          triggerOrderAnimation(orderData);
         } else {
           showToast('Payment processing failed. Please try again.');
         }

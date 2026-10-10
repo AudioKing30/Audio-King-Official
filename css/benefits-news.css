@@ -17,7 +17,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.25s ease-in, box-shadow 0.25s ease-in, border-color 0.25s ease-in;
 }
 
 .ak-benefit-card:hover {
@@ -56,7 +56,7 @@
 .ak-benefit-info p {
   font-size: 12px;
   color: var(--ak-text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 
 .ak-benefit-action {

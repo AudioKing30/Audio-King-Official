@@ -817,6 +817,20 @@ class AuthService {
 
   async addAddress(addr) {
     const key = this.getUserAddressKey();
+    if (!this.isAuthenticated()) {
+      const list = getStorage(key, []);
+      const newAddr = {
+        id: 'addr_' + Date.now(),
+        ...addr,
+        name: addr.recipient_name || addr.name || '',
+        isDefault: addr.is_default || list.length === 0,
+        createdAt: new Date().toISOString()
+      };
+      list.push(newAddr);
+      setStorage(key, list);
+      return newAddr;
+    }
+
     const res = await this.safeFetch('/api/user/addresses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -825,8 +839,10 @@ class AuthService {
 
     if (res.ok && res.data?.address) {
       const list = await this.getAddresses();
-      list.push(res.data.address);
-      setStorage(key, list);
+      if (!list.some(a => a.id === res.data.address.id)) {
+        list.push(res.data.address);
+        setStorage(key, list);
+      }
       return res.data.address;
     }
 

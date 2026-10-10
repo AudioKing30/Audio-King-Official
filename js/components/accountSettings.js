@@ -911,6 +911,7 @@ export function initAccountSettings() {
 
       closeAddressModal();
       await renderAddressesList();
+      window.dispatchEvent(new CustomEvent('ak:address-saved'));
       showToast(id ? 'Address updated in database!' : 'New address saved to database!', getIcon('check', '', 18));
     } catch (err) {
       showToast(err.message || 'Failed to save address.');

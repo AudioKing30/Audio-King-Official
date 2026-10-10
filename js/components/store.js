@@ -783,7 +783,9 @@ function renderStorePage() {
         if (onProductClickCallback) onProductClickCallback(pid);
         return;
       }
-      if (product && product.stock !== 0) {
+      const isPreOrder = Boolean(product && (product.isPreOrder || product.stockStatus === 'preorder' || (product.badge && product.badge.toLowerCase().includes('pre-order'))));
+      const isOutOfStock = Boolean(product && !isPreOrder && (product.stock === 0 || product.inStock === false || product.isOutOfStock === true || product.stockStatus === 'outofstock'));
+      if (product && !isOutOfStock) {
         const added = addToCart(product, 1);
         if (added !== false) {
           renderStorePage();

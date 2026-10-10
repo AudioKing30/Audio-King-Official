@@ -599,6 +599,28 @@
   color: #DC2626 !important;
 }
 
+/* Store Card Pre-Order Button */
+.ak-store-btn-add.ak-btn-preorder {
+  background: #FACC15 !important;
+  color: #1E293B !important;
+  border: 1.5px solid #EAB308 !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+.ak-store-btn-add.ak-btn-preorder:hover {
+  background: #EAB308 !important;
+  color: #0F172A !important;
+  transform: translateY(-1px) !important;
+}
+.ak-store-btn-add.ak-btn-preorder span {
+  color: #1E293B !important;
+  font-weight: 700 !important;
+}
+.ak-store-btn-add.ak-btn-preorder:hover span {
+  color: #0F172A !important;
+}
+
 /* Store Card Inline Quantity Stepper */
 .ak-store-qty-control {
   flex: 1;

@@ -497,6 +497,30 @@ span.ak-req, .ak-req {
   color: #FFFFFF;
 }
 
+/* Featured Products Pre-Order Button */
+.ak-add-btn.ak-btn-preorder {
+  background-color: #FACC15 !important;
+  color: #1E293B !important;
+  border: 1.5px solid #EAB308 !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+.ak-add-btn.ak-btn-preorder:hover {
+  background-color: #EAB308 !important;
+  color: #0F172A !important;
+  transform: translateY(-1px) !important;
+}
+.ak-add-btn.ak-btn-preorder .ak-btn-text,
+.ak-add-btn.ak-btn-preorder span {
+  color: #1E293B !important;
+  font-weight: 700 !important;
+}
+.ak-add-btn.ak-btn-preorder:hover .ak-btn-text,
+.ak-add-btn.ak-btn-preorder:hover span {
+  color: #0F172A !important;
+}
+
 /* Card Quantity Stepper (Shown when item is in cart) */
 .ak-card-qty-control {
   width: 100%;
