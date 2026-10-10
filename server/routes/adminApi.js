@@ -29,7 +29,7 @@ router.use(requireAdminApi);
 /**
  * Synchronize SQLite products table with products_master.json and js/data/products.js
  */
-function syncMasterFiles() {
+function syncMasterFiles(oldBrandName, newBrandName) {
   try {
     const products = db.prepare('SELECT * FROM products ORDER BY id ASC').all();
     const formatted = products.map(p => {
@@ -79,14 +79,62 @@ function syncMasterFiles() {
   } catch (err) {
     console.warn('[SYNC MASTER FILES WARN]', err.message);
   }
-  syncBrandMasterFiles();
+  syncBrandMasterFiles(oldBrandName, newBrandName);
 }
 
 /**
- * Persist the SQLite brands table to server/data/brands_master.json and js/data/brands.js
- * so renamed brands survive restarts, re-seeding and storefront re-bundling.
+ * Update static brand elements in index.html so navigation dropdown and brand rows
+ * are immediately and permanently up-to-date even without JS hydration or on static hosts.
  */
-function syncBrandMasterFiles() {
+function updateIndexHtmlBrands(brands, oldName, cleanName) {
+  try {
+    const indexPath = path.resolve(__dirname, '..', '..', 'index.html');
+    if (!fs.existsSync(indexPath)) return;
+    let html = fs.readFileSync(indexPath, 'utf8');
+
+    // 1. Replace direct text & attribute references if renaming
+    if (oldName && cleanName && oldName !== cleanName) {
+      const escapeRegex = (s) => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const escapedOld = escapeRegex(oldName);
+      html = html.replace(new RegExp(`data-brand="${escapedOld}"`, 'g'), `data-brand="${cleanName}"`);
+      html = html.replace(new RegExp(`brand=${encodeURIComponent(oldName)}`, 'g'), `brand=${encodeURIComponent(cleanName)}`);
+      html = html.replace(new RegExp(`>\\s*${escapedOld}\\s*<`, 'g'), `>${cleanName}<`);
+    }
+
+    // 2. Re-generate desktop dropdown grid HTML
+    const chunkSize = 10;
+    const cols = [];
+    for (let i = 0; i < brands.length; i += chunkSize) {
+      cols.push(brands.slice(i, i + chunkSize));
+    }
+    const desktopGridInner = '\n' + cols.map(col => `                <div class="ak-brands-col">
+${col.map(b => `                  <a href="#store?brand=${encodeURIComponent(b.name)}" class="ak-nav-drop-item ak-brand-filter-link" data-brand="${b.name}">${b.name}</a>`).join('\n')}
+                </div>`).join('\n') + '\n              ';
+
+    const desktopRegex = /(<div\s+class="ak-brands-grid-dropdown"\s+id="akBrandsDropdownGrid">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/li>)/i;
+    if (desktopRegex.test(html)) {
+      html = html.replace(desktopRegex, `$1${desktopGridInner}$3`);
+    }
+
+    // 3. Re-generate mobile accordion body HTML
+    const mobInner = '\n' + brands.map(b => `            <a href="#store?brand=${encodeURIComponent(b.name)}" class="ak-mobile-sub-link ak-mob-brand-link" data-brand="${b.name}">${b.name}</a>`).join('\n') + '\n          ';
+    const mobRegex = /(<div\s+id="akMobBrands"\s+class="ak-mobile-accordion-body">)([\s\S]*?)(<\/div>\s*<\/div>\s*<div\s+class="ak-mobile-nav-item">)/i;
+    if (mobRegex.test(html)) {
+      html = html.replace(mobRegex, `$1${mobInner}$3`);
+    }
+
+    fs.writeFileSync(indexPath, html, 'utf8');
+    console.log('[INDEX.HTML SYNC] Updated index.html with live brands.');
+  } catch (err) {
+    console.warn('[INDEX.HTML SYNC WARN]', err.message);
+  }
+}
+
+/**
+ * Persist the SQLite brands table to server/data/brands_master.json, js/data/brands.js,
+ * and index.html so renamed brands survive restarts, re-seeding and storefront re-bundling.
+ */
+function syncBrandMasterFiles(oldName, cleanName) {
   try {
     const brands = db.prepare(`
       SELECT b.id, b.name, b.slug, COUNT(p.id) AS productCount
@@ -96,7 +144,7 @@ function syncBrandMasterFiles() {
       ORDER BY b.name COLLATE NOCASE ASC
     `).all().map(b => ({ id: b.id, name: b.name, slug: b.slug, productCount: b.productCount || 0 }));
 
-    // Keep Arowana Audioglyphs first (storefront convention)
+    // Prioritize Arowana first (if present), then alphabetical
     brands.sort((a, b) => {
       const aA = (a.name || '').toLowerCase().includes('arowana');
       const bA = (b.name || '').toLowerCase().includes('arowana');
@@ -111,6 +159,9 @@ function syncBrandMasterFiles() {
     const jsBrandsPath = path.resolve(__dirname, '..', '..', 'js', 'data', 'brands.js');
     const header = `/**\n * AudioKing Brands Directory\n * Authoritative brand list (auto-synced from the admin panel / SQLite brands table).\n * Contains all live brands listed in the store.\n */\n`;
     fs.writeFileSync(jsBrandsPath, `${header}export const AUDIOKING_BRANDS = ${JSON.stringify(brands, null, 2)};\n`, 'utf8');
+
+    // Update index.html static markup permanently
+    updateIndexHtmlBrands(brands, oldName, cleanName);
 
     // Trigger async esbuild rebuild so bundle stays in sync with brand updates
     try {
@@ -517,7 +568,7 @@ router.post('/brands', (req, res) => {
 
     db.prepare('INSERT INTO brands (id, name, slug, created_at) VALUES (?, ?, ?, ?)')
       .run(id, cleanName, slug, now);
-    syncBrandMasterFiles();
+    syncBrandMasterFiles(null, cleanName);
 
     return res.status(201).json({ success: true, brand: { id, name: cleanName, slug, product_count: 0 } });
   } catch (err) {
@@ -582,7 +633,7 @@ router.put('/brands/:id', (req, res) => {
     } catch (e) {}
     try { syncCouponsMaster(db); } catch (e) {}
 
-    syncMasterFiles();
+    syncMasterFiles(oldName, cleanName);
 
     return res.json({
       success: true,
@@ -634,7 +685,7 @@ router.delete('/brands/:id', (req, res) => {
     } catch (e) {}
     db.prepare('DELETE FROM brands WHERE id = ? OR LOWER(TRIM(name)) = LOWER(TRIM(?))').run(id, brandName);
 
-    syncMasterFiles();
+    syncMasterFiles(brandName, null);
 
     console.log(`[ADMIN CASCADE DELETE] Terminated brand "${brandName}" and ${prodIds.length} associated products.`);
     return res.json({

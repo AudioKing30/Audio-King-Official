@@ -484,9 +484,7 @@ function initDatabase() {
         AND (section IS NULL OR section = '' OR section = 'pro-audio')
     `).run();
 
-    // Ensure Arowana Audioglyphs naming consistency and category normalization in database
-    db.prepare("UPDATE products SET brand = 'Arowana Audioglyphs' WHERE brand = 'Arowana Audioglyph'").run();
-    db.prepare("DELETE FROM brands WHERE LOWER(name) = 'arowana audioglyph'").run();
+    // Category normalization in database
     db.prepare("UPDATE products SET category = 'Power Supply Cables' WHERE category = 'Power supply cabels'").run();
     db.prepare("DELETE FROM categories WHERE LOWER(name) = 'power supply cabels'").run();
 

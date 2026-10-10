@@ -1346,7 +1346,7 @@
       "id": "arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix",
       "name": "Arowana Audioglyph 3.5mm to 2 RCA Audio Cable (1.5m / 5ft) \u2013 Gold-Plated Connectors, Braided Shielding",
       "shortName": "Arowana Audioglyph 3.5mm to 2 RCA Audio Cable (1.5m / 5ft) \u2013 Gold-Plated Connectors, Braided Shielding",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Instrument Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -1377,7 +1377,7 @@
       "id": "arowana-audioglyph-audioflux-series-premium-guitar-cable-low-noise-low-capacitance-oxygen-free-mugt7wwx",
       "name": "Arowana Audioglyph AudioFlux Series Premium Guitar Cable Low noise, low capacitance Oxygen Free",
       "shortName": "Arowana Audioglyph AudioFlux Series Premium Guitar Cable Low noise, low capacitance Oxygen Free",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Instrument Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -1419,7 +1419,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-audioglyph-audioflux-series-premium-xlr-microphone-cable-broadcast-studio-grade-mugt2g9o",
       "name": "Arowana Audioglyph AudioFlux Series Premium XLR Microphone Cable Broadcast & Studio Grade",
       "shortName": "Arowana Audioglyph AudioFlux Series Premium XLR Microphone Cable Broadcast & Studio Grade",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Microphone Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -1451,7 +1451,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-audioglyph-audiophile-grade-c13-iec-shielded-power-cable-right-angle-10a-for-rack-audio-audiophile-systems-mugszajp",
       "name": "Arowana Audioglyph Audiophile Grade C13 IEC Shielded Power Cable Right Angle 10A for Rack Audio & Audiophile systems",
       "shortName": "Arowana Audioglyph Audiophile Grade C13 IEC Shielded Power Cable Right Angle 10A for Rack Audio & Audiophile systems",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supply Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -1481,7 +1481,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-audioglyph-core-performance-xlr-microphone-cable-mugt4fli",
       "name": "Arowana Audioglyph Core Performance XLR Microphone Cable",
       "shortName": "Arowana Audioglyph Core Performance XLR Microphone Cable",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Microphone Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -1512,7 +1512,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-audioglyph-high-current-16a-shielded-iec-c13-power-cable-audio-audiophile-grade-right-angled-1-5-mtr-mugswgqx",
       "name": "Arowana Audioglyph High-Current 16A Shielded IEC C13 Power Cable Audio & Audiophile grade right angled 1.5 Mtr",
       "shortName": "Arowana Audioglyph High-Current 16A Shielded IEC C13 Power Cable Audio & Audiophile grade right angled 1.5 Mtr",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supply Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -1544,7 +1544,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-audioglyph-pc-08-gen-2-power-conditioner-with-voltage-display-and-2-channel-switch-mugsrcgr",
       "name": "Arowana AudioGlyph PC-08 Gen 2 Power Conditioner with voltage display and 2 channel switch",
       "shortName": "Arowana AudioGlyph PC-08 Gen 2 Power Conditioner with voltage display and 2 channel switch",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Conditioners",
       "section": "pro-audio",
       "subcategory": "",
@@ -1576,7 +1576,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-kyb24v1-studio-grade-24v-1-amp-center-positive-power-supply-for-keyboards-synths-digital-pianos-preamps-audio-gear-mugttcsr",
       "name": "Arowana KYB24V1 Studio Grade 24V 1 Amp Center Positive Power Supply for Keyboards, Synths, Digital Pianos, Preamps & Audio Gear",
       "shortName": "Arowana KYB24V1 Studio Grade 24V 1 Amp Center Positive Power Supply for Keyboards, Synths, Digital Pianos, Preamps & Audio Gear",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supplies",
       "section": "pro-audio",
       "subcategory": "",
@@ -1609,7 +1609,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-kyb24v2-studio-grade-center-24v-2-amp-center-positive-power-supply-for-keyboards-digital-piano-synths-preamps-audio-mugtv8fn",
       "name": "Arowana KYB24V2 Studio Grade Center 24V 2 Amp Center Positive Power Supply for Keyboards, Digital Piano, Synths, Preamps & Audio",
       "shortName": "Arowana KYB24V2 Studio Grade Center 24V 2 Amp Center Positive Power Supply for Keyboards, Digital Piano, Synths, Preamps & Audio",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supplies",
       "section": "pro-audio",
       "subcategory": "",
@@ -1642,7 +1642,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-kyb9v1-9v-1-amp-center-positive-power-supply-for-keyboards-synths-preamps-mugtk1mc",
       "name": "Arowana KYB9V1 9V 1 Amp Center Positive Power Supply for Keyboards, Synths, Preamps",
       "shortName": "Arowana KYB9V1 9V 1 Amp Center Positive Power Supply for Keyboards, Synths, Preamps",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supplies",
       "section": "pro-audio",
       "subcategory": "",
@@ -1675,7 +1675,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "id": "arowana-kyb9v2-studio-grade-center-positive-9v-2a-power-supply-for-keboards-synthesizers-preamps-mugthmv5",
       "name": "Arowana KYB9V2 Studio Grade Center Positive 9V 2A Power Supply for Keboards, Synthesizers & Preamps",
       "shortName": "Arowana KYB9V2 Studio Grade Center Positive 9V 2A Power Supply for Keboards, Synthesizers & Preamps",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supplies",
       "section": "pro-audio",
       "subcategory": "",
@@ -2670,7 +2670,7 @@ Country of Origin	China`,
       "id": "battery-jack-mobile-charger-or-powerbank-power-supply-for-guitar-pedals-mugsowx8",
       "name": "Battery Jack Mobile Charger or Powerbank Power Supply for Guitar Pedals",
       "shortName": "Battery Jack Mobile Charger or Powerbank Power Supply for Guitar Pedals",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -10705,7 +10705,7 @@ Key Highlights:
       "id": "guitar-pedal-dc-power-supply-cable-right-angle-5-5-2-1-2-2-mm-28-inch-length-for-guitar-pedals-mugstbz0",
       "name": "Guitar Pedal DC Power Supply cable right angle 5.5 2.1 / 2.2 MM 28 inch length for guitar pedals",
       "shortName": "Guitar Pedal DC Power Supply cable right angle 5.5 2.1 / 2.2 MM 28 inch length for guitar pedals",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supply Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -11735,7 +11735,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "kyb12v2-studio-grade-center-positive-12v-2a-power-supply-for-keyboards-synths-preamps-other-audio-gear-mugtoepu",
       "name": "KYB12V2 Studio Grade Center Positive 12V 2A Power Supply for Keyboards, Synths, Preamps & other Audio Gear",
       "shortName": "KYB12V2 Studio Grade Center Positive 12V 2A Power Supply for Keyboards, Synths, Preamps & other Audio Gear",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supplies",
       "section": "pro-audio",
       "subcategory": "",
@@ -11768,7 +11768,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "kyb15v1-studio-grade-15v-1-amp-center-positive-power-supply-for-keyboards-synths-preamps-hifi-turntable-audio-gear-mugtx3uy",
       "name": "KYB15V1 Studio Grade 15V 1 Amp Center Positive Power supply for keyboards, synths, preamps, Hifi Turntable audio gear",
       "shortName": "KYB15V1 Studio Grade 15V 1 Amp Center Positive Power supply for keyboards, synths, preamps, Hifi Turntable audio gear",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supplies",
       "section": "pro-audio",
       "subcategory": "",
@@ -14483,7 +14483,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "mooer-pdc-5a-5-right-angled-daisy-chain-cable-mugsuq87",
       "name": "Mooer PDC-5A 5 RIGHT Angled Daisy Chain Cable",
       "shortName": "Mooer PDC-5A 5 RIGHT Angled Daisy Chain Cable",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supply Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -16870,7 +16870,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "pc-04-power-conditioner-for-audio-gear-studio-gigs-audiophile-home-theaters-mugrkkdt",
       "name": "PC 04 Power Conditioner for Audio Gear Studio Gigs Audiophile & Home Theaters",
       "shortName": "PC 04 Power Conditioner for Audio Gear Studio Gigs Audiophile & Home Theaters",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Conditioners",
       "section": "pro-audio",
       "subcategory": "",
@@ -16902,7 +16902,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "ped12v1-studio-grade-center-negative-12v-1-amp-power-supply-for-amp-sims-guitar-processors-pedals-pre-amp-mugsg5q3",
       "name": "PED12V1 Studio Grade Center Negative 12V 1 Amp power supply for Amp Sims, Guitar Processors Pedals & Pre Amp",
       "shortName": "PED12V1 Studio Grade Center Negative 12V 1 Amp power supply for Amp Sims, Guitar Processors Pedals & Pre Amp",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -16934,7 +16934,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "ped12v2-studio-grade-12v-2-amp-center-negative-power-supply-for-guitar-processors-pedals-preamps-audio-mugsi42b",
       "name": "PED12V2 Studio Grade 12V 2 Amp Center Negative Power Supply for guitar processors, pedals. preamps& audio",
       "shortName": "PED12V2 Studio Grade 12V 2 Amp Center Negative Power Supply for guitar processors, pedals. preamps& audio",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -16966,7 +16966,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "ped18v2a-guitar-pedals-preamp-power-supply-18v-2a-center-negative-mugsjxn6",
       "name": "PED18V2A Guitar Pedals & Preamp Power Supply 18v 2A Center Negative",
       "shortName": "PED18V2A Guitar Pedals & Preamp Power Supply 18v 2A Center Negative",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -16998,7 +16998,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "ped9v1-power-supply-for-guitar-pedals-line6-hx-stomp-and-other-modellers-mugsdh4o",
       "name": "PED9V1 Power Supply for Guitar Pedals Line6 HX Stomp and other modellers",
       "shortName": "PED9V1 Power Supply for Guitar Pedals Line6 HX Stomp and other modellers",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -17030,7 +17030,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "ped9v2-guitar-pedal-power-supply-9v2a-center-negative-for-guitar-pedals-processo-mugseraa",
       "name": "PED9V2 Guitar Pedal Power Supply 9V2A Center Negative for Guitar Pedals Processo",
       "shortName": "PED9V2 Guitar Pedal Power Supply 9V2A Center Negative for Guitar Pedals Processo",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -17062,7 +17062,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "phantom-pro91-true-isolated-guitar-pedal-power-supply-6-9v-300ma-1-9v-1a-center-negative-noise-free-mugs9ybe",
       "name": "Phantom Pro91 True Isolated Guitar Pedal Power Supply 6 9v 300ma & 1 9v 1A Center negative Noise Free",
       "shortName": "Phantom Pro91 True Isolated Guitar Pedal Power Supply 6 9v 300ma & 1 9v 1A Center negative Noise Free",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -17094,7 +17094,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "phantom-pro912-true-isolated-guitar-pedal-power-supply-6-9v-300ma-1-12v-850ma-center-negative-noise-free-mugsbuuy",
       "name": "Phantom Pro912 True Isolated Guitar Pedal Power Supply 6 9v 300ma & 1 12v 850MA Center negative Noise Free",
       "shortName": "Phantom Pro912 True Isolated Guitar Pedal Power Supply 6 9v 300ma & 1 12v 850MA Center negative Noise Free",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -17126,7 +17126,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "pro-audio-grade-iec-plug-10a-length-1-5m-4-9-feet-mugt0j06",
       "name": "Pro Audio Grade IEC Plug 10A Length 1.5M 4.9 Feet",
       "shortName": "Pro Audio Grade IEC Plug 10A Length 1.5M 4.9 Feet",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Power Supply Cables",
       "section": "pro-audio",
       "subcategory": "",
@@ -19193,7 +19193,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "pslin6-9v-3a-center-negative-power-supply-for-line6-pod-go-hx-stomp-hd-series-mugsljut",
       "name": "PSLIN6 9V 3A Center Negative Power Supply for Line6 Pod Go HX Stomp & HD Series",
       "shortName": "PSLIN6 9V 3A Center Negative Power Supply for Line6 Pod Go HX Stomp & HD Series",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -19225,7 +19225,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "id": "qdcrtx-12v-3a-center-negative-studio-grade-power-supply-with-ferrite-core-for-neural-quad-cortex-other-modelers-mugsmtqj",
       "name": "QDCRTX 12v 3A Center Negative Studio Grade Power Supply with Ferrite Core for Neural Quad Cortex & other Modelers",
       "shortName": "QDCRTX 12v 3A Center Negative Studio Grade Power Supply with Ferrite Core for Neural Quad Cortex & other Modelers",
-      "brand": "Arowana Audioglyphs",
+      "brand": "Arowana Audioglyph",
       "category": "Guitar Pedal Power Supply",
       "section": "pro-audio",
       "subcategory": "",
@@ -25780,8 +25780,8 @@ Weight: 1.24 lbs (0.567 kg`,
   var AUDIOKING_BRANDS = [
     {
       "id": "brand_arowana-audioglyphs",
-      "name": "Arowana Audioglyphs",
-      "slug": "arowana-audioglyphs",
+      "name": "Arowana Audioglyph",
+      "slug": "arowana-audioglyph",
       "productCount": 27
     },
     {
@@ -30291,14 +30291,9 @@ Weight: 1.24 lbs (0.567 kg`,
   function renderNavigationBrands(brandsList) {
     let brands = [];
     if (Array.isArray(brandsList) && brandsList.length > 0) {
-      brands = brandsList.map((b) => {
-        let name = (typeof b === "string" ? b : b.name || "").trim();
-        if (name.toLowerCase() === "arowana audioglyph")
-          name = "Arowana Audioglyphs";
-        return name;
-      }).filter(Boolean);
+      brands = brandsList.map((b) => (typeof b === "string" ? b : b.name || "").trim()).filter(Boolean);
     } else {
-      brands = AUDIOKING_BRANDS.map((b) => b.name.toLowerCase() === "arowana audioglyph" ? "Arowana Audioglyphs" : b.name);
+      brands = AUDIOKING_BRANDS.map((b) => (b.name || "").trim()).filter(Boolean);
     }
     const uniqueBrands = Array.from(new Set(brands)).sort((a, b) => {
       const aLower = a.toLowerCase();
@@ -32665,10 +32660,11 @@ Message: ${message}`);
   }
   async function loadLiveCatalog() {
     try {
+      const cacheBuster = `_t=${Date.now()}`;
       const [resProducts, resBrands, resCats] = await Promise.all([
-        fetch(apiUrl("/api/products")),
-        fetch(apiUrl("/api/products/meta/brands")).catch(() => null),
-        fetch(apiUrl("/api/categories")).catch(() => fetch(apiUrl("/api/products/meta/categories"))).catch(() => null)
+        fetch(apiUrl(`/api/products?${cacheBuster}`)),
+        fetch(apiUrl(`/api/products/meta/brands?${cacheBuster}`)).catch(() => null),
+        fetch(apiUrl(`/api/categories?${cacheBuster}`)).catch(() => fetch(apiUrl(`/api/products/meta/categories?${cacheBuster}`))).catch(() => null)
       ]);
       if (resProducts && resProducts.ok) {
         const data = await resProducts.json();
@@ -32750,11 +32746,22 @@ Message: ${message}`);
     const validBrandSet = new Set(
       sourceBrands.map((b) => (b.name || b.label || b.value || "").toLowerCase().trim()).filter(Boolean)
     );
-    const brandById = new Map(
-      sourceBrands.filter((b) => b && b.id).map((b) => [String(b.id).toLowerCase(), b])
-    );
+    const brandById = /* @__PURE__ */ new Map();
+    sourceBrands.forEach((b) => {
+      if (!b)
+        return;
+      if (b.id) {
+        const idKey = String(b.id).toLowerCase();
+        brandById.set(idKey, b);
+        brandById.set(idKey.replace(/_/g, "-"), b);
+        brandById.set(idKey.replace(/-/g, "_"), b);
+      }
+      if (b.slug) {
+        brandById.set(String(b.slug).toLowerCase(), b);
+      }
+    });
     const defaultTopBrands = [
-      { id: "brand-arowana-audioglyphs", value: "Arowana Audioglyphs" },
+      { id: "brand_arowana-audioglyphs", value: "Arowana Audioglyphs" },
       { id: "brand-universal-audio", value: "Universal Audio" },
       { id: "brand-focusrite", value: "Focusrite" },
       { id: "brand-lauten-audio", value: "Lauten Audio" },
@@ -32765,7 +32772,7 @@ Message: ${message}`);
       { id: "brand-focal-professional", value: "Focal Professional" },
       { id: "brand-efnote", value: "Efnote" }
     ].map((b) => {
-      const live = brandById.get(b.id);
+      const live = brandById.get(b.id) || brandById.get(b.id.replace(/_/g, "-")) || brandById.get(b.id.replace(/-/g, "_"));
       const liveName = live && live.name ? live.name : b.value;
       return { label: liveName, value: liveName };
     });
@@ -32833,9 +32840,8 @@ Message: ${message}`);
       return;
     }
     grid.innerHTML = filtered.map((b) => {
-      const isArowana = b.name.toLowerCase().includes("arowana");
-      const displayName = isArowana ? "Arowana Audioglyphs" : b.name;
-      const targetBrandValue = isArowana ? "Arowana Audioglyphs" : b.name;
+      const displayName = b.name;
+      const targetBrandValue = b.name;
       const count = b.product_count !== void 0 ? Number(b.product_count) : 0;
       const countBadge = count > 0 ? `<span class="ak-brand-modal-count">${count} items</span>` : "";
       return `

@@ -294,7 +294,9 @@ router.get('/', (req, res) => {
     const products = rows.map(r => formatProduct(r, activeOffers));
     attachVariantsToProducts(products);
 
-    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     return res.json({
       success: true,
       count: products.length,
@@ -333,6 +335,9 @@ const getPublicBrandsHandler = (req, res) => {
       ORDER BY b.name COLLATE NOCASE ASC
     `).all();
 
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     return res.json({ success: true, count: brands.length, brands });
   } catch (err) {
     console.error('[GET PUBLIC BRANDS ERROR]', err);

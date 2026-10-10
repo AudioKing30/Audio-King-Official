@@ -46,16 +46,12 @@ function dismissDropdown(navItem) {
 export function renderNavigationBrands(brandsList) {
   let brands = [];
   if (Array.isArray(brandsList) && brandsList.length > 0) {
-    brands = brandsList.map(b => {
-      let name = (typeof b === 'string' ? b : (b.name || '')).trim();
-      if (name.toLowerCase() === 'arowana audioglyph') name = 'Arowana Audioglyphs';
-      return name;
-    }).filter(Boolean);
+    brands = brandsList.map(b => (typeof b === 'string' ? b : (b.name || '')).trim()).filter(Boolean);
   } else {
-    brands = AUDIOKING_BRANDS.map(b => (b.name.toLowerCase() === 'arowana audioglyph' ? 'Arowana Audioglyphs' : b.name));
+    brands = AUDIOKING_BRANDS.map(b => (b.name || '').trim()).filter(Boolean);
   }
 
-  // Deduplicate and sort: Arowana Audioglyphs first, then alphabetical
+  // Deduplicate and sort: prioritize Arowana first (if present), then alphabetical
   const uniqueBrands = Array.from(new Set(brands)).sort((a, b) => {
     const aLower = a.toLowerCase();
     const bLower = b.toLowerCase();

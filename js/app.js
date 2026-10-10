@@ -118,10 +118,11 @@ function trackPageView(hash, productId = null) {
  */
 async function loadLiveCatalog() {
   try {
+    const cacheBuster = `_t=${Date.now()}`;
     const [resProducts, resBrands, resCats] = await Promise.all([
-      fetch(apiUrl('/api/products')),
-      fetch(apiUrl('/api/products/meta/brands')).catch(() => null),
-      fetch(apiUrl('/api/categories')).catch(() => fetch(apiUrl('/api/products/meta/categories'))).catch(() => null)
+      fetch(apiUrl(`/api/products?${cacheBuster}`)),
+      fetch(apiUrl(`/api/products/meta/brands?${cacheBuster}`)).catch(() => null),
+      fetch(apiUrl(`/api/categories?${cacheBuster}`)).catch(() => fetch(apiUrl(`/api/products/meta/categories?${cacheBuster}`))).catch(() => null)
     ]);
 
     if (resProducts && resProducts.ok) {
@@ -217,13 +218,23 @@ export function renderTopBrandsRow(brandItems) {
       .map(b => (b.name || b.label || b.value || '').toLowerCase().trim())
       .filter(Boolean)
   );
-  const brandById = new Map(
-    sourceBrands.filter(b => b && b.id).map(b => [String(b.id).toLowerCase(), b])
-  );
+  const brandById = new Map();
+  sourceBrands.forEach(b => {
+    if (!b) return;
+    if (b.id) {
+      const idKey = String(b.id).toLowerCase();
+      brandById.set(idKey, b);
+      brandById.set(idKey.replace(/_/g, '-'), b);
+      brandById.set(idKey.replace(/-/g, '_'), b);
+    }
+    if (b.slug) {
+      brandById.set(String(b.slug).toLowerCase(), b);
+    }
+  });
 
   // Brand ids are stable across admin renames, so resolve the live name via id first
   const defaultTopBrands = [
-    { id: 'brand-arowana-audioglyphs', value: 'Arowana Audioglyphs' },
+    { id: 'brand_arowana-audioglyphs', value: 'Arowana Audioglyphs' },
     { id: 'brand-universal-audio', value: 'Universal Audio' },
     { id: 'brand-focusrite', value: 'Focusrite' },
     { id: 'brand-lauten-audio', value: 'Lauten Audio' },
@@ -234,7 +245,7 @@ export function renderTopBrandsRow(brandItems) {
     { id: 'brand-focal-professional', value: 'Focal Professional' },
     { id: 'brand-efnote', value: 'Efnote' }
   ].map(b => {
-    const live = brandById.get(b.id);
+    const live = brandById.get(b.id) || brandById.get(b.id.replace(/_/g, '-')) || brandById.get(b.id.replace(/-/g, '_'));
     const liveName = live && live.name ? live.name : b.value;
     return { label: liveName, value: liveName };
   });
@@ -321,9 +332,8 @@ function renderAllBrandsModalContent(query = '') {
   }
 
   grid.innerHTML = filtered.map(b => {
-    const isArowana = b.name.toLowerCase().includes('arowana');
-    const displayName = isArowana ? 'Arowana Audioglyphs' : b.name;
-    const targetBrandValue = isArowana ? 'Arowana Audioglyphs' : b.name;
+    const displayName = b.name;
+    const targetBrandValue = b.name;
     const count = b.product_count !== undefined ? Number(b.product_count) : 0;
     const countBadge = count > 0 ? `<span class="ak-brand-modal-count">${count} items</span>` : '';
 
