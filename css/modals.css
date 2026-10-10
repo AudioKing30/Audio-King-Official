@@ -381,10 +381,57 @@
 }
 
 @media (max-width: 768px) {
+  .ak-modal-overlay,
+  .ak-modal {
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
   .ak-modal-container {
-    width: 95vw;
-    max-height: 90vh;
-    border-radius: 8px;
+    width: 100% !important;
+    max-width: 440px !important;
+    max-height: 90vh !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+    margin: 0 auto !important;
+  }
+  .ak-modal-header {
+    padding: 14px 18px !important;
+    box-sizing: border-box !important;
+  }
+  .ak-modal-content {
+    padding: 18px 18px 24px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .ak-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ak-form-group {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .ak-form-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ak-password-wrapper {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ak-password-wrapper input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .ak-proceed-btn,
+  .ak-google-btn {
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
   .ak-legal-modal-title {
     font-size: 20px;

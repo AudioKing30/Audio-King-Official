@@ -297,6 +297,12 @@ app.get(['/admin', '/admin/'], (req, res, next) => {
   res.sendFile(path.join(rootDir, 'admin', 'index.html'));
 });
 
+// Dedicated Admin Policies Page
+app.get(['/admin/policies', '/admin/policies.html'], requireAdminWeb, (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.sendFile(path.join(rootDir, 'admin', 'policies.html'));
+});
+
 // Unified Store & Catalog Redirect: routes directly to the storefront catalog
 app.get(['/store', '/store/*', '/catalog', '/catalog/*'], (req, res) => {
   res.redirect('/#store');

@@ -219,7 +219,7 @@ router.post('/', async (req, res) => {
     if (!customerPhone) customerPhone = authUser.phone_number || '';
   } else {
     if (!customerEmail) {
-      customerEmail = `customer_${Date.now()}@audioking.in`;
+      customerEmail = `customer_${Date.now()}@audioking.co.in`;
     }
 
     const existingUser = db.prepare('SELECT id, full_name, email, phone_number FROM users WHERE email = ? COLLATE NOCASE').get(customerEmail);

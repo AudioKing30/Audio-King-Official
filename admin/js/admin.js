@@ -2950,7 +2950,7 @@ function updateAdminUserDisplay() {
     }
     if (user && user.role === 'admin') {
       const name = user.fullName || user.displayName || 'Administrator';
-      const email = user.email || 'audioking30@gmail.com';
+      const email = user.email || 'info@audioking.co.in';
       document.querySelectorAll('#adminSidebarName').forEach(el => { el.textContent = name; });
       document.querySelectorAll('#adminSidebarRole').forEach(el => { el.textContent = email; });
       const ownerName = document.getElementById('adminSettingsOwnerName');

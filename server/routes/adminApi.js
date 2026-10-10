@@ -1482,7 +1482,7 @@ router.get('/orders', (req, res) => {
         id: ord.id,
         orderNumber: ord.order_number,
         customerName: ord.customer_name || (parsedAddress && (parsedAddress.name || parsedAddress.fullName)) || 'Store Customer',
-        customerEmail: ord.customer_email || (parsedAddress && parsedAddress.email) || 'customer@audioking.in',
+        customerEmail: ord.customer_email || (parsedAddress && parsedAddress.email) || 'customer@audioking.co.in',
         customerPhone: ord.customer_phone || (parsedAddress && (parsedAddress.phone || parsedAddress.phoneNumber)) || 'N/A',
         shippingAddress: parsedAddress,
         paymentMethod: ord.payment_method || 'Prepaid / Online',
@@ -1526,7 +1526,7 @@ router.get('/orders/:id', (req, res) => {
         id: ord.id,
         orderNumber: ord.order_number,
         customerName: ord.customer_name || (shippingAddress && (shippingAddress.name || shippingAddress.fullName)) || 'Store Customer',
-        customerEmail: ord.customer_email || (shippingAddress && shippingAddress.email) || 'customer@audioking.in',
+        customerEmail: ord.customer_email || (shippingAddress && shippingAddress.email) || 'customer@audioking.co.in',
         customerPhone: ord.customer_phone || (shippingAddress && (shippingAddress.phone || shippingAddress.phoneNumber)) || 'N/A',
         totalAmount: ord.total_amount,
         couponCode: ord.coupon_code || null,
@@ -2321,10 +2321,15 @@ router.get('/policies', (req, res) => {
 
 router.put('/policies', (req, res) => {
   try {
-    const { id, title, subtitle, badge, intro, sections, sections_json } = req.body;
-    if (!id) {
+    const { title, subtitle, badge, intro, sections, sections_json } = req.body;
+    let rawId = (req.body.id || req.body.key || '').trim().toLowerCase();
+    if (rawId === 'return-refund' || rawId === 'return_refund') rawId = 'returns';
+    if (rawId === 'shipping-payment' || rawId === 'shipping_payment') rawId = 'shipping';
+
+    if (!rawId) {
       return res.status(400).json({ error: 'Policy ID is required (terms, privacy, shipping, returns).' });
     }
+    const id = rawId;
 
     const now = new Date().toISOString();
     const existing = db.prepare('SELECT * FROM legal_policies WHERE id = ?').get(id);

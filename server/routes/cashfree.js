@@ -63,7 +63,7 @@ router.post('/create-order', requireAuth, async (req, res) => {
     const orderId = clientOrderId || ('ak_order_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
     const customerId = req.user?.id ? req.user.id.replace(/[^a-zA-Z0-9_-]/g, '_') : ('cust_' + Date.now());
     const customerPhone = (customer?.phone || req.user?.phone_number || '9876543210').replace(/[^0-9]/g, '').slice(-10);
-    const customerEmail = customer?.email || req.user?.email || 'customer@audioking.in';
+    const customerEmail = customer?.email || req.user?.email || 'customer@audioking.co.in';
     const customerName = customer?.name || req.user?.fullName || req.user?.display_name || 'Audio Creator';
 
     // If real credentials are provided, call Cashfree PG API

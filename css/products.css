@@ -318,14 +318,19 @@
   padding: 14px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
   position: relative;
   z-index: 1;
 }
 
 .ak-product-card:hover {
-  transform: translateY(-8px) scale(1.035);
+  transform: translateY(-8px) scale(1.035) translateZ(0);
   box-shadow: 0 24px 38px -6px rgba(15, 23, 42, 0.22), 0 8px 16px -2px rgba(234, 88, 12, 0.2), 0 0 0 1px rgba(234, 88, 12, 0.35);
   border-color: rgba(234, 88, 12, 0.5);
   z-index: 10;
@@ -334,6 +339,7 @@
 .ak-product-thumb {
   width: 100%;
   height: 165px;
+  flex-shrink: 0;
   background-color: #FFFFFF;
   border-radius: var(--ak-radius-sm);
   display: flex;
@@ -342,17 +348,24 @@
   overflow: hidden;
   margin-bottom: 12px;
   position: relative;
+  contain: paint;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .ak-product-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   transition: transform 0.35s ease;
 }
 
 .ak-product-card:hover .ak-product-img {
-  transform: scale(1.04);
+  transform: scale(1.04) translateZ(0);
 }
 
 .ak-placeholder-thumb {
@@ -386,7 +399,8 @@
 .ak-product-body {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .ak-product-brand {

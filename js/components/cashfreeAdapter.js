@@ -90,7 +90,7 @@ export class CashfreePaymentAdapter {
           orderId: orderData.orderId || `ak_order_${Date.now()}`,
           customer: {
             name: orderData.customer?.name || orderData.customer?.recipientName || 'Audio Creator',
-            email: orderData.customer?.email || 'customer@audioking.in',
+            email: orderData.customer?.email || 'customer@audioking.co.in',
             phone: orderData.customer?.phone || '9876543210'
           }
         })

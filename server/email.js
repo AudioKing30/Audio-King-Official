@@ -74,7 +74,7 @@ function wrapEmailTemplate(title, bodyContent) {
       <div class="footer">
         <p style="margin:0 0 6px 0;">&copy; ${new Date().getFullYear()} AudioKing India. All rights reserved.</p>
         <p style="margin:0 0 6px 0;">D-101, Bonanza Industrial Estate, Ashok Chakravarty Road, Kandivali East, Mumbai - 400101</p>
-        <p style="margin:0;">Direct Specialist Support: <a href="https://wa.me/918879393743">+91 88793 93743</a> | <a href="mailto:audioking30@gmail.com">audioking30@gmail.com</a></p>
+        <p style="margin:0;">Direct Specialist Support: <a href="https://wa.me/918879393743">+91 88793 93743</a> | <a href="mailto:info@audioking.co.in">info@audioking.co.in</a></p>
       </div>
     </div>
   </body>
@@ -211,7 +211,7 @@ async function sendPasswordResetEmail(email, otp, fullName = 'Musician') {
     </div>
 
     <div class="security-box">
-      <strong>Security Warning:</strong> If you did not request this password reset, someone may be attempting to access your account. Please check your credentials or contact <a href="mailto:audioking30@gmail.com" style="color:#C2410C;">audioking30@gmail.com</a>.
+      <strong>Security Warning:</strong> If you did not request this password reset, someone may be attempting to access your account. Please check your credentials or contact <a href="mailto:info@audioking.co.in" style="color:#C2410C;">info@audioking.co.in</a>.
     </div>
   `);
 
@@ -236,7 +236,7 @@ async function sendChangePasswordOtpEmail(email, otp, fullName = 'Musician') {
     </div>
 
     <div class="security-box">
-      <strong>Security Warning:</strong> If you did not request this password change, someone may be attempting to access your account. Please check your credentials or contact <a href="mailto:audioking30@gmail.com" style="color:#C2410C;">audioking30@gmail.com</a>.
+      <strong>Security Warning:</strong> If you did not request this password change, someone may be attempting to access your account. Please check your credentials or contact <a href="mailto:info@audioking.co.in" style="color:#C2410C;">info@audioking.co.in</a>.
     </div>
   `);
 
@@ -259,7 +259,7 @@ async function sendPasswordChangedEmail(email, fullName = 'Musician') {
       <strong>All Set:</strong> You can now log into your account using your newly set password across all devices.
     </div>
 
-    <p class="paragraph" style="margin-top:20px;">If you did not authorize this change, please immediately contact our emergency security desk at <a href="mailto:audioking30@gmail.com" style="color:#C2410C;">audioking30@gmail.com</a> or WhatsApp <strong>+91 88793 93743</strong>.</p>
+    <p class="paragraph" style="margin-top:20px;">If you did not authorize this change, please immediately contact our emergency security desk at <a href="mailto:info@audioking.co.in" style="color:#C2410C;">info@audioking.co.in</a> or WhatsApp <strong>+91 88793 93743</strong>.</p>
   `);
 
   return sendEmail({ to: email, subject, html, text });

@@ -371,11 +371,20 @@ export function closeLogoutConfirmModal() {
  */
 export async function executeLogout() {
   closeLogoutConfirmModal();
-  await authService.logout();
+  try {
+    await authService.logout();
+  } catch (err) {
+    console.warn('[AUTH] Error during logout:', err);
+  }
   updateHeaderAccountState();
-  showToast('You have been securely logged out.');
-  if (typeof window !== 'undefined' && (window.location.hash.startsWith('#account') || window.location.hash.startsWith('#orders'))) {
-    window.location.hash = '#home';
+
+  try {
+    sessionStorage.setItem('ak_just_logged_out', '1');
+  } catch (_) {}
+
+  // Fully refresh and redirect user to the home page's very first page as if freshly re-entering
+  if (typeof window !== 'undefined') {
+    window.location.href = window.location.origin + '/';
   }
 }
 
@@ -399,6 +408,16 @@ export function openProfileModal() {
  * Initialize all authentication event listeners and session restoration
  */
 export function initAuth() {
+  // Show toast notification if freshly redirected after logout
+  try {
+    if (sessionStorage.getItem('ak_just_logged_out') === '1') {
+      sessionStorage.removeItem('ak_just_logged_out');
+      setTimeout(() => {
+        showToast('You have been securely logged out.');
+      }, 350);
+    }
+  } catch (_) {}
+
   // 1. Subscribe to reactive auth updates
   authService.subscribe((user) => {
     updateHeaderAccountState();

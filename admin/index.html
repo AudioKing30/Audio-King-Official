@@ -90,9 +90,10 @@
 <body>
 
   <!-- SIDEBAR NAVIGATION -->
-  <aside class="admin-sidebar">
+  <aside class="admin-sidebar" id="adminSidebar">
     <div class="sidebar-header">
       <img src="assets/images/logo.png" alt="AudioKing" class="sidebar-logo">
+      <button type="button" class="sidebar-close-btn" onclick="closeAdminMobileMenu()" aria-label="Close navigation">&times;</button>
     </div>
 
     <nav class="sidebar-nav">
@@ -128,9 +129,10 @@
         <span class="nav-icon">👥</span>
         <span>Customers</span>
       </a>
-      <a class="nav-link" data-view="policies" onclick="switchView('policies')">
+      <a href="policies.html" class="nav-link" data-view="policies">
         <span class="nav-icon">📜</span>
         <span>Legal &amp; Policies</span>
+        <span style="margin-left: auto; font-size: 11px; opacity: 0.6;">↗</span>
       </a>
       <a class="nav-link" data-view="settings" onclick="switchView('settings')">
         <span class="nav-icon">⚙️</span>
@@ -148,7 +150,7 @@
         <div class="admin-avatar">AK</div>
         <div class="admin-user-info">
           <div class="admin-name" id="adminSidebarName">Administrator</div>
-          <div class="admin-role" id="adminSidebarRole">Admin Portal</div>
+          <div class="admin-role" id="adminSidebarRole">info@audioking.co.in</div>
         </div>
       </div>
       <button type="button" class="sidebar-btn-logout" onclick="handleLogout()">
@@ -157,8 +159,32 @@
     </div>
   </aside>
 
+  <div class="admin-sidebar-backdrop" id="adminSidebarBackdrop" onclick="closeAdminMobileMenu()"></div>
+
   <!-- MAIN VIEW CONTAINER -->
   <main class="admin-main">
+    <!-- Mobile Topbar Header -->
+    <header class="admin-mobile-header" id="adminMobileHeader">
+      <div class="admin-mobile-logo-wrap">
+        <img src="assets/images/logo.png" alt="AudioKing" class="admin-mobile-logo">
+      </div>
+      <div class="admin-mobile-header-right">
+        <a href="/" class="admin-mobile-store-btn" title="Return to customer storefront">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          <span>Storefront</span>
+          <span style="font-size: 10px;">↗</span>
+        </a>
+        <button type="button" class="admin-mobile-menu-btn" id="adminMobileMenuBtn" aria-label="Open Navigation Menu" onclick="toggleAdminMobileMenu()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="admin-mobile-avatar" id="adminMobileAvatar" title="AudioKing Admin">AK</div>
+      </div>
+    </header>
+
     <!-- Topbar -->
     <header class="admin-topbar">
       <h1 class="topbar-title" id="topbarTitle">Store Dashboard</h1>

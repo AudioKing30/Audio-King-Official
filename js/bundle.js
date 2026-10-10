@@ -26402,7 +26402,7 @@ Weight: 1.24 lbs (0.567 kg`,
             orderId: orderData.orderId || `ak_order_${Date.now()}`,
             customer: {
               name: orderData.customer?.name || orderData.customer?.recipientName || "Audio Creator",
-              email: orderData.customer?.email || "customer@audioking.in",
+              email: orderData.customer?.email || "customer@audioking.co.in",
               phone: orderData.customer?.phone || "9876543210"
             }
           })
@@ -28124,11 +28124,18 @@ Weight: 1.24 lbs (0.567 kg`,
   }
   async function executeLogout() {
     closeLogoutConfirmModal();
-    await authService.logout();
+    try {
+      await authService.logout();
+    } catch (err) {
+      console.warn("[AUTH] Error during logout:", err);
+    }
     updateHeaderAccountState();
-    showToast("You have been securely logged out.");
-    if (typeof window !== "undefined" && (window.location.hash.startsWith("#account") || window.location.hash.startsWith("#orders"))) {
-      window.location.hash = "#home";
+    try {
+      sessionStorage.setItem("ak_just_logged_out", "1");
+    } catch (_) {
+    }
+    if (typeof window !== "undefined") {
+      window.location.href = window.location.origin + "/";
     }
   }
   async function logout() {
@@ -28140,6 +28147,15 @@ Weight: 1.24 lbs (0.567 kg`,
     }
   }
   function initAuth() {
+    try {
+      if (sessionStorage.getItem("ak_just_logged_out") === "1") {
+        sessionStorage.removeItem("ak_just_logged_out");
+        setTimeout(() => {
+          showToast("You have been securely logged out.");
+        }, 350);
+      }
+    } catch (_) {
+    }
     authService.subscribe((user) => {
       updateHeaderAccountState();
     });
