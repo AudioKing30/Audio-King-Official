@@ -24,7 +24,9 @@ const state = {
   selectedOfferProductId: null,
   heroSlides: [],
   lockedFeaturedIds: [],
-  popularCategories: []
+  popularCategories: [],
+  policies: {},
+  activePolicyKey: 'terms'
 };
 
 function escapeHtml(str) {
@@ -269,6 +271,7 @@ function switchView(viewName) {
     customers: 'Registered Customers',
     analytics: 'Website Analytics & Traffic Tracker',
     'homepage-manager': 'Homepage Hero Slideshow & Featured Products',
+    policies: 'Legal Terms & Policies Manager',
     settings: 'Admin Account & Security'
   };
   const topbar = document.getElementById('topbarTitle');
@@ -283,6 +286,7 @@ function switchView(viewName) {
   if (viewName === 'coupons') loadCoupons();
   if (viewName === 'orders') loadOrders();
   if (viewName === 'customers') loadCustomers();
+  if (viewName === 'policies') loadPoliciesAdmin();
   if (viewName === 'analytics') loadAnalytics();
 }
 window.switchView = switchView;
@@ -4786,3 +4790,220 @@ async function printAdminOrderTaxInvoice(orderId) {
   }
 }
 window.printAdminOrderTaxInvoice = printAdminOrderTaxInvoice;
+
+
+// -------------------------------------------------------------
+// LEGAL TERMS & POLICIES CONTROLLER
+// -------------------------------------------------------------
+function formatPolicyTimestamp(isoStr) {
+  if (!isoStr) return 'Not yet updated';
+  try {
+    const d = new Date(isoStr);
+    if (isNaN(d.getTime())) return isoStr;
+    const weekday = d.toLocaleDateString('en-IN', { weekday: 'long' });
+    const day = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    return `${weekday}, ${day} at ${time}`;
+  } catch (e) {
+    return isoStr;
+  }
+}
+window.formatPolicyTimestamp = formatPolicyTimestamp;
+
+async function loadPoliciesAdmin() {
+  try {
+    const res = await adminFetch('/api/admin/policies');
+    if (!res.ok) throw new Error('Failed to load legal policies');
+    const data = await res.json();
+    if (data && data.policies) {
+      state.policies = data.policies;
+    }
+  } catch (err) {
+    console.warn('[POLICIES] Using cached or empty policies:', err.message);
+  }
+  renderPolicyEditor(state.activePolicyKey || 'terms');
+}
+window.loadPoliciesAdmin = loadPoliciesAdmin;
+
+function switchPolicyTab(policyKey) {
+  state.activePolicyKey = policyKey;
+  document.querySelectorAll('.policy-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-policy') === policyKey);
+  });
+  renderPolicyEditor(policyKey);
+}
+window.switchPolicyTab = switchPolicyTab;
+
+function renderPolicyEditor(policyKey) {
+  const policy = (state.policies && state.policies[policyKey]) || {
+    id: policyKey,
+    title: policyKey === 'terms' ? 'Terms & Conditions' :
+           policyKey === 'returns' ? 'Return & Refund Policy' :
+           policyKey === 'privacy' ? 'Privacy Policy' : 'Shipping & Payment Policy',
+    subtitle: 'AudioKing Official Documentation',
+    badge: 'Official Policy',
+    intro: '',
+    sections: [],
+    updated_at: new Date().toISOString()
+  };
+
+  const idInput = document.getElementById('policyEditId');
+  const titleInput = document.getElementById('policyEditTitle');
+  const badgeInput = document.getElementById('policyEditBadge');
+  const introInput = document.getElementById('policyEditIntro');
+  const timestampEl = document.getElementById('policyTimestampDisplay');
+  const sectionsList = document.getElementById('policySectionsList');
+
+  if (idInput) idInput.value = policy.id || policyKey;
+  if (titleInput) titleInput.value = policy.title || '';
+  if (badgeInput) badgeInput.value = policy.badge || 'Official Policy';
+  if (introInput) introInput.value = (policy.intro || '').replace(/<[^>]+>/g, '').trim();
+
+  if (timestampEl) {
+    timestampEl.textContent = formatPolicyTimestamp(policy.updated_at);
+  }
+
+  if (sectionsList) {
+    const sections = Array.isArray(policy.sections) ? policy.sections : [];
+    if (sections.length === 0) {
+      sectionsList.innerHTML = `
+        <div style="text-align: center; padding: 24px; color: var(--ak-text-muted); background: var(--ak-card-sub); border-radius: var(--ak-radius); border: 1px dashed var(--ak-border);">
+          No individual sections found. Click <strong>➕ Add Section</strong> to add one.
+        </div>
+      `;
+    } else {
+      sectionsList.innerHTML = sections.map((sec, idx) => {
+        const cleanBody = (sec.body || '').replace(/<p>/gi, '').replace(/<\/p>/gi, '\n\n').replace(/<br\s*\/?>/gi, '\n').replace(/<\/?(strong|b)>/gi, '').trim();
+        return `
+          <div class="policy-section-card" data-index="${idx}">
+            <div class="policy-section-header">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 800; color: var(--ak-orange); font-size: 14px;">#${sec.number || (idx + 1)}</span>
+                <input type="text" class="form-input policy-sec-heading" value="${escapeHtml(sec.heading || '')}" placeholder="Section Heading" style="font-weight: 700; max-width: 380px;">
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn-secondary" onclick="deletePolicySection(${idx})" style="padding: 4px 8px; color: #EF4444; border-color: #FCA5A5; font-size: 11.5px;" title="Delete this section">
+                  🗑️ Delete
+                </button>
+              </div>
+            </div>
+            <textarea class="form-input policy-sec-body" rows="4" style="resize: vertical; font-size: 13px; line-height: 1.5;" placeholder="Section body text...">${escapeHtml(cleanBody)}</textarea>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+}
+window.renderPolicyEditor = renderPolicyEditor;
+
+function addPolicySection() {
+  const policyKey = state.activePolicyKey || 'terms';
+  if (!state.policies) state.policies = {};
+  if (!state.policies[policyKey]) {
+    state.policies[policyKey] = {
+      id: policyKey,
+      title: 'Policy Document',
+      sections: []
+    };
+  }
+  if (!Array.isArray(state.policies[policyKey].sections)) {
+    state.policies[policyKey].sections = [];
+  }
+  const nextNum = state.policies[policyKey].sections.length + 1;
+  state.policies[policyKey].sections.push({
+    number: nextNum,
+    heading: `Section ${nextNum}`,
+    body: ''
+  });
+  renderPolicyEditor(policyKey);
+}
+window.addPolicySection = addPolicySection;
+
+function deletePolicySection(index) {
+  const policyKey = state.activePolicyKey || 'terms';
+  if (state.policies && state.policies[policyKey] && Array.isArray(state.policies[policyKey].sections)) {
+    if (confirm('Are you sure you want to delete this section?')) {
+      state.policies[policyKey].sections.splice(index, 1);
+      state.policies[policyKey].sections.forEach((s, i) => s.number = i + 1);
+      renderPolicyEditor(policyKey);
+    }
+  }
+}
+window.deletePolicySection = deletePolicySection;
+
+async function handleSaveCurrentPolicy(event) {
+  if (event) event.preventDefault();
+  const policyKey = state.activePolicyKey || 'terms';
+  const saveBtn = document.getElementById('policySaveBtn');
+
+  const titleInput = document.getElementById('policyEditTitle');
+  const badgeInput = document.getElementById('policyEditBadge');
+  const introInput = document.getElementById('policyEditIntro');
+
+  const title = titleInput ? titleInput.value.trim() : 'Policy Document';
+  const badge = badgeInput ? badgeInput.value.trim() : 'Official Policy';
+  const introRaw = introInput ? introInput.value.trim() : '';
+  const introHtml = introRaw ? `<p>${escapeHtml(introRaw).replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>')}</p>` : '';
+
+  // Gather sections from DOM
+  const sectionCards = document.querySelectorAll('#policySectionsList .policy-section-card');
+  const sections = [];
+  sectionCards.forEach((card, idx) => {
+    const headingInput = card.querySelector('.policy-sec-heading');
+    const bodyInput = card.querySelector('.policy-sec-body');
+    const heading = headingInput ? headingInput.value.trim() : `Section ${idx + 1}`;
+    const bodyRaw = bodyInput ? bodyInput.value.trim() : '';
+    const bodyHtml = bodyRaw ? `<p>${escapeHtml(bodyRaw).replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>')}</p>` : '';
+    sections.push({
+      number: idx + 1,
+      heading,
+      body: bodyHtml
+    });
+  });
+
+  const payload = {
+    id: policyKey,
+    title,
+    subtitle: 'AudioKing Official Documentation',
+    badge,
+    intro: introHtml,
+    sections
+  };
+
+  try {
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span>⏳ Saving &amp; Publishing...</span>';
+    }
+
+    const res = await adminFetch('/api/admin/policies', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      if (!state.policies) state.policies = {};
+      state.policies[policyKey] = data.policy;
+
+      const timestampEl = document.getElementById('policyTimestampDisplay');
+      if (timestampEl) {
+        timestampEl.textContent = formatPolicyTimestamp(data.policy.updated_at);
+      }
+
+      alert(`✅ ${title} updated and published successfully!\nTimestamp: ${formatPolicyTimestamp(data.policy.updated_at)}`);
+      renderPolicyEditor(policyKey);
+    } else {
+      alert('Error updating policy: ' + (data.error || 'Server error'));
+    }
+  } catch (err) {
+    alert('Network error saving policy: ' + err.message);
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<span>💾 Save &amp; Publish Policy</span>';
+    }
+  }
+}
+window.handleSaveCurrentPolicy = handleSaveCurrentPolicy;

@@ -375,6 +375,18 @@ function initDatabase() {
       value TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
+
+    -- LEGAL & STORE POLICIES TABLE (Admin editable policies with exact timestamps)
+    CREATE TABLE IF NOT EXISTS legal_policies (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      subtitle TEXT,
+      badge TEXT,
+      intro TEXT,
+      sections_json TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      updated_by TEXT DEFAULT 'Admin'
+    );
   `);
 
   // Safe schema migrations for existing database columns

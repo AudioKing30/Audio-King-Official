@@ -1,673 +1,271 @@
 /**
  * AudioKing Legal Policies
  * Authoritative complete policies for Terms & Conditions, Privacy Policy,
- * Shipping & Delivery, and Returns & Refunds.
- * Last Updated: September 2026
+ * Shipping & Payment, and Returns & Refunds.
+ * Auto-synchronized with Database and Admin Panel.
+ * Last Updated: 2026-10-11T01:15:00+05:30
  */
 
 export const termsPolicy = {
-  id: 'terms',
-  title: 'Terms & Conditions',
-  subtitle: 'AudioKing',
-  badge: 'Official Policy',
-  lastUpdated: 'September 2026',
-  intro: `
-    <p>Welcome to AudioKing. These Terms & Conditions govern your access to and use of the AudioKing website, including browsing, purchasing products, creating an account, placing orders, and using other services provided through the website.</p>
-    <p>By accessing or using this website, you acknowledge that you have read, understood, and agreed to these Terms & Conditions. If you do not agree with these terms, please do not use the website or place an order through it.</p>
-  `,
-  sections: [
+  "id": "terms",
+  "title": "Terms & Conditions",
+  "subtitle": "AudioKing Official Terms of Service",
+  "badge": "Official Policy",
+  "updated_at": "2026-10-11T01:15:00+05:30",
+  "intro": "<p>By accessing and placing an order with AudioKing, you confirm that you are in agreement with and bound by the terms of service contained in the Terms & Conditions outlined below. These terms apply to the entire website and any email or other type of communication between you and AudioKing.</p>",
+  "sections": [
     {
-      number: 1,
-      heading: 'About AudioKing',
-      body: `
-        <p>AudioKing is an online platform for browsing and purchasing musical instruments, professional audio equipment, studio equipment, and related products.</p>
-        <p>AudioKing reserves the right to modify, update, suspend, or discontinue any part of the website or its services without prior notice where reasonably necessary.</p>
-      `
+      "number": 1,
+      "heading": "General Terms",
+      "body": "<p>By accessing and placing an order with AudioKing, you confirm that you are in agreement with and bound by the terms of service contained in the Terms & Conditions outlined below. These terms apply to the entire website and any email or other type of communication between you and AudioKing. Under no circumstances shall AudioKing team be liable for any direct, indirect, special, incidental, or consequential damages, including, but not limited to, loss of data or profit, arising out of the use, or the inability to use, the materials on this site, even if AudioKing team or an authorized representative has been advised of the possibility of such damages. If your use of materials from this site results in the need for servicing, repair, or correction of equipment or data, you assume any costs thereof. AudioKing will not be responsible for any outcome that may occur during the course of usage of our resources. We reserve the right to change prices and revise the resources usage policy at any moment without any prior intimation / notice.</p>"
     },
     {
-      number: 2,
-      heading: 'Eligibility',
-      body: `
-        <p>You must provide accurate and complete information when creating an account or placing an order.</p>
-        <p>By using this website, you confirm that:</p>
-        <ul>
-          <li>The information provided by you is accurate and current.</li>
-          <li>You are legally capable of entering into a purchase agreement.</li>
-          <li>You will use the website only for lawful purposes.</li>
-          <li>You will not misuse, disrupt, or attempt to gain unauthorized access to the website or its systems.</li>
-        </ul>
-      `
+      "number": 2,
+      "heading": "License",
+      "body": "<p>AudioKing grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the website strictly in accordance with the terms of this Agreement. These Terms & Conditions are a contract between you and AudioKing (referred to in these Terms & Conditions as \"AudioKing\", \"us\", \"we\" or \"our\"), the provider of the AudioKing website and the services accessible from the AudioKing website (which are collectively referred to in these Terms & Conditions as the \"AudioKing Service\"). You are agreeing to be bound by these Terms & Conditions. If you do not agree to these Terms & Conditions, please do not use the AudioKing Service. In these Terms & Conditions, \"you\" refers both to you as an individual and to the entity you represent. If you violate any of these Terms & Conditions, we reserve the right to cancel your account or block access to your account without notice.</p>"
     },
     {
-      number: 3,
-      heading: 'Product Information',
-      body: `
-        <p>AudioKing attempts to ensure that product names, specifications, images, prices, availability, and descriptions displayed on the website are accurate.</p>
-        <p>However:</p>
-        <ul>
-          <li>Product images may vary slightly from the actual product due to photography, lighting, display settings, or manufacturer updates.</li>
-          <li>Product specifications may change according to the manufacturer's latest information.</li>
-          <li>Product availability may change without prior notice.</li>
-          <li>Minor typographical or pricing errors may occasionally occur.</li>
-        </ul>
-        <p>AudioKing reserves the right to correct errors and update product information whenever necessary.</p>
-      `
+      "number": 3,
+      "heading": "Definitions and Key Terms",
+      "body": "<p>To help explain things as clearly as possible in this Terms & Conditions, every time any of these terms are referenced, are strictly defined as:</p><ul><li><strong>Cookie:</strong> small amount of data generated by a website and saved by your web browser. It is used to identify your browser, provide analytics, remember information about you such as your language preference or login information.</li><li><strong>Company:</strong> when these terms mention “Company,” “we,” “us,” or “our,” it refers to AudioKing, that is responsible for your information under this Terms & Conditions.</li><li><strong>Country:</strong> where AudioKing or the owners/founders of AudioKing are based, in this case is India.</li><li><strong>Device:</strong> any internet-connected device such as a phone, tablet, computer, or any other device that can be used to visit AudioKing and use the services.</li><li><strong>Service:</strong> refers to the service provided by AudioKing as described in the relative terms (if available) and on this platform.</li><li><strong>Third-party service:</strong> refers to advertisers, contest sponsors, promotional and marketing partners, and others who provide our content or whose products or services we think may interest you.</li><li><strong>Website:</strong> AudioKing’s site, which can be accessed via: <a href=\"https://www.audioking.co.in\" target=\"_blank\">https://www.audioking.co.in</a></li><li><strong>You:</strong> a person or entity that is registered with AudioKing to use the Services.</li></ul>"
     },
     {
-      number: 4,
-      heading: 'Product Pricing',
-      body: `
-        <p>All product prices displayed on the website are in Indian Rupees (₹) unless otherwise stated.</p>
-        <p>Applicable taxes, delivery charges, or other additional charges will be displayed during the checkout process wherever applicable.</p>
-        <p>AudioKing reserves the right to change product prices at any time. Price changes will not affect an order that has already been successfully confirmed, except where an obvious pricing or technical error has occurred.</p>
-      `
+      "number": 4,
+      "heading": "Restrictions",
+      "body": "<p>You agree not to, and you will not permit others to:</p><ol type=\"a\"><li>License, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the website or make the platform available to any third party.</li><li>Modify, make derivative works of, disassemble, decrypt, reverse compile or reverse engineer any part of the website.</li><li>Remove, alter or obscure any proprietary notice (including any notice of copyright or trademark) of AudioKing or its affiliates, partners, suppliers or the licensors of the website.</li></ol>"
     },
     {
-      number: 5,
-      heading: 'Orders',
-      body: `
-        <p>Placing an order through the website constitutes a request to purchase the selected products.</p>
-        <p>An order is considered confirmed only after AudioKing has successfully accepted the order and, where applicable, received confirmation of payment.</p>
-        <p>AudioKing reserves the right to:</p>
-        <ul>
-          <li>Accept or reject an order.</li>
-          <li>Limit quantities of a product.</li>
-          <li>Cancel an order due to product unavailability.</li>
-          <li>Cancel an order due to an obvious pricing or technical error.</li>
-          <li>Cancel an order where fraudulent or suspicious activity is detected.</li>
-        </ul>
-        <p>If an order is cancelled after payment has been received, the applicable amount will be refunded through the appropriate payment method or process.</p>
-      `
+      "number": 5,
+      "heading": "Payment",
+      "body": "<p>If you pay for any of our one-time payment plans, you agree to pay all fees or charges to your account for the Service in accordance with the fees, charges, and billing terms in effect at the time that each fee or charge is due and payable. Your Payment Provider agreement governs your use of the designated credit card account, and you must refer to that agreement and not these Terms to determine your rights and liabilities with respect to your Payment Provider. By providing AudioKing with your credit card number and associated payment information, you agree that AudioKing is authorized to verify information immediately, and subsequently invoice your account for all fees and charges due and payable to AudioKing hereunder and that no additional notice or consent is required. You agree to immediately notify AudioKing of any change in your billing address or the credit card or payment mode used for payment hereunder. AudioKing reserves the right at any time to change its prices and billing methods, either immediately upon posting on our Site or by e-mail delivery to your organization’s administrator(s). Any attorney fees, court costs, or other costs incurred in the collection of delinquent undisputed amounts shall be the responsibility of and paid for by you. No contract will exist between you and AudioKing for the Service until AudioKing accepts your order by a confirmatory e-mail, SMS/MMS message, or other appropriate means of communication. You are responsible for any third-party fees that you may incur when using the Service.</p>"
     },
     {
-      number: 6,
-      heading: 'Payment',
-      body: `
-        <p>AudioKing supports multiple secure digital payment methods, including:</p>
-        <ul>
-          <li>UPI (Google Pay, PhonePe, Paytm, BHIM)</li>
-          <li>Credit and debit cards (Visa, MasterCard, RuPay, Amex)</li>
-          <li>Net banking across all major Indian banks</li>
-          <li>Other secure payment methods displayed during checkout</li>
-        </ul>
-        <p>Online payments are processed through RBI-authorized payment service providers with 256-bit bank-grade encryption.</p>
-        <p>AudioKing does not store complete card details or sensitive payment credentials on its servers.</p>
-      `
+      "number": 6,
+      "heading": "Your Suggestions",
+      "body": "<p>Any feedback, comments, ideas, improvements or suggestions (collectively, \"Suggestions\") provided by you to AudioKing with respect to the website shall remain the sole and exclusive property of AudioKing. AudioKing shall be free to use, copy, modify, publish, or redistribute the Suggestions for any purpose and in any way without any credit or any compensation to you.</p>"
     },
     {
-      number: 7,
-      heading: 'Prepaid Transactions & Fulfillment',
-      body: `
-        <p>All orders placed on AudioKing are processed through 100% verified prepaid online transactions to ensure guaranteed transit insurance and tamper-evident courier dispatch.</p>
-      `
+      "number": 7,
+      "heading": "Your Consent",
+      "body": "<p>We've updated our Terms & Conditions to provide you with complete transparency into what is being set when you visit our site and how it's being used. By using our website, registering an account, or making a purchase, you hereby consent to our Terms & Conditions.</p>"
     },
     {
-      number: 8,
-      heading: 'Shipping & Delivery',
-      body: `
-        <p>AudioKing will make reasonable efforts to dispatch and deliver orders within the estimated delivery period displayed during checkout.</p>
-        <p>Delivery timelines may vary depending on customer location, product availability, courier partner, weather conditions, public holidays, transportation disruptions, or other circumstances beyond AudioKing's reasonable control.</p>
-        <p>Estimated delivery dates are therefore indicative and should not be treated as guaranteed unless explicitly stated. Customers are responsible for providing accurate shipping information.</p>
-      `
+      "number": 8,
+      "heading": "Links to Other Websites",
+      "body": "<p>These Terms & Conditions apply only to the Services provided on our Website. The Services may contain links to other websites not operated or controlled by AudioKing. We are not responsible for the content, accuracy, or opinions expressed in such websites, and such websites are not investigated, monitored, or checked for accuracy or completeness by us. Please remember that when you use a link to go from the Services to another website, our Terms & Conditions are no longer in effect. Your browsing and interaction on any other website, including those that have a link on our platform, is subject to that website’s own rules and policies. Such third parties may use their own cookies or other methods to collect information about you.</p>"
     },
     {
-      number: 9,
-      heading: 'Returns, Replacements & Refunds',
-      body: `
-        <p>Returns, replacements, cancellations, and refunds are subject to AudioKing's applicable Shipping & Delivery and Returns & Refunds policies.</p>
-        <p>Certain products may have specific return or replacement conditions because of their nature, manufacturer restrictions, hygiene considerations, warranty conditions, or other applicable limitations.</p>
-        <p>Customers should inspect products upon delivery and report any damage, missing components, or incorrect products within the applicable reporting period specified by AudioKing.</p>
-      `
+      "number": 9,
+      "heading": "Cookies",
+      "body": "<p>AudioKing uses \"Cookies\" to identify the areas of our website that you have visited. A cookie is a small piece of data stored on your computer or mobile device by your web browser. We use cookies to enhance the performance and functionality of our website but are non-essential to their use. However, without these cookies, certain functionality like videos may become unavailable or you would be required to enter your login details every time you visit the website as we would not be able to remember that you had logged in previously. Most web browsers can be set to disable the use of Cookies. However, if you disable Cookies, you may not be able to access functionality on our website correctly or at all. We never place Personally Identifiable Information in Cookies.</p>"
     },
     {
-      number: 10,
-      heading: 'Manufacturer Warranty',
-      body: `
-        <p>Where applicable, products may be covered by a manufacturer's warranty. Warranty terms, duration, exclusions, and claim procedures may vary by brand and product.</p>
-        <p>AudioKing may assist customers in connecting with the relevant manufacturer or authorized service centre where applicable.</p>
-        <p>Warranty coverage does not automatically include damage caused by misuse, unauthorized modifications, accidents, improper installation, negligence, or normal wear and tear unless covered by the manufacturer's warranty terms.</p>
-      `
+      "number": 10,
+      "heading": "Modifications to Our Website",
+      "body": "<p>AudioKing solely reserves the right to modify, suspend or discontinue, temporarily or permanently, the website or any service to which it connects, with or without notice and without liability to you.</p>"
     },
     {
-      number: 11,
-      heading: 'User Accounts',
-      body: `
-        <p>Certain features may require you to create an AudioKing account. You are responsible for maintaining the confidentiality of your account credentials and for activities conducted through your account.</p>
-        <p>You must immediately notify AudioKing if you believe your account has been accessed without authorization. AudioKing reserves the right to suspend or terminate accounts involved in fraudulent, abusive, unlawful, or otherwise prohibited activity.</p>
-      `
+      "number": 11,
+      "heading": "Updates to Our Website",
+      "body": "<p>AudioKing may from time to time provide enhancements or improvements to the features/ functionality of the Website, which may include patches, bug fixes, updates, upgrades and other modifications (\"Updates\"). Updates may modify or delete certain features and/or functionalities of the website. You agree that AudioKing has no obligation to (i) provide any Updates, or (ii) continue to provide or enable any particular features and/or functionalities of the website to you. You further agree that all Updates will be (i) deemed to constitute an integral part of the website, and (ii) subject to the terms and conditions of this Agreement.</p>"
     },
     {
-      number: 12,
-      heading: 'OTP Verification',
-      body: `
-        <p>AudioKing may use email or other verification mechanisms, including one-time passwords (OTPs), to verify account ownership or certain activities.</p>
-        <p>Users must not share verification codes with other individuals. AudioKing will not be responsible for unauthorized access resulting from a user's voluntary disclosure of their OTP or account credentials.</p>
-      `
+      "number": 12,
+      "heading": "Third-Party Services",
+      "body": "<p>We may display, include or make available third-party content (including data, information, applications, and other products services) or provide links to third-party websites or services (\"Third-Party Services\"). You acknowledge and agree that AudioKing shall not be responsible for any Third-Party Services, including their accuracy, completeness, timeliness, validity, copyright compliance, legality, decency, quality, or any other aspect thereof. AudioKing does not assume and shall not have any liability or responsibility to you or any other person or entity for any Third-Party Services. Third-Party Services and links thereto are provided solely as a convenience to you and you access and use them entirely at your own risk and subject to such third parties terms and conditions.</p>"
     },
     {
-      number: 13,
-      heading: 'Intellectual Property',
-      body: `
-        <p>All website content, including logos, brand elements, text, graphics, images, icons, website design, software, and original content is owned by or licensed to AudioKing or the relevant rights holder unless otherwise stated.</p>
-        <p>You may not reproduce, modify, distribute, sell, publish, or commercially exploit website content without appropriate authorization. Product names, trademarks, and logos belonging to third-party manufacturers remain the property of their respective owners.</p>
-      `
+      "number": 13,
+      "heading": "Term and Termination",
+      "body": "<p>This Agreement shall remain in effect until terminated by you or AudioKing. AudioKing may, in its sole discretion, at any time and for any or no reason, suspend or terminate this Agreement with or without prior notice. This Agreement will terminate immediately, without prior notice from AudioKing, in the event that you fail to comply with any provision of this Agreement. You may also terminate this Agreement by deleting the website and all copies thereof from your computer. Upon termination of this Agreement, you shall cease all use of the Website and delete all copies of the website from your computer. Termination of this Agreement will not limit any of AudioKing's rights or remedies at law or in equity in case of breach by you (during the term of this Agreement) of any of your obligations under the present Agreement.</p>"
     },
     {
-      number: 14,
-      heading: 'Prohibited Use',
-      body: `
-        <p>You agree not to use the website for unlawful purposes, attempt to compromise security, introduce malicious code, scrape or systematically extract data without authorization, create fraudulent accounts or orders, or impersonate another person or entity.</p>
-      `
+      "number": 14,
+      "heading": "Copyright Infringement Notice",
+      "body": "<p>If you are a copyright owner or such owner’s agent and believe any material on our Website constitutes an infringement on your copyright, please contact us setting forth the following information: (a) a physical or electronic signature of the copyright owner or a person authorized to act on his behalf; (b) identification of the material that is claimed to be infringing; (c) your contact information, including your address, telephone number, and an email; (d) a statement by you that you have a good faith belief that use of the material is not authorized by the copyright owners; and (e) the statement that the information in the notification is accurate, and, under penalty of perjury you are authorized to act on behalf of the owner.</p>"
     },
     {
-      number: 15,
-      heading: 'Third-Party Services',
-      body: `
-        <p>AudioKing may use third-party services for payment processing, shipping and logistics, analytics, communication, and customer support. Use of these services may be subject to the respective third party's terms and privacy policies.</p>
-      `
+      "number": 15,
+      "heading": "Indemnification",
+      "body": "<p>You agree to indemnify and hold AudioKing and its parents, subsidiaries, affiliates, officers, employees, agents, partners, and licensors (if any) harmless from any claim or demand, including reasonable attorneys' fees, due to or arising out of your: (a) use of the website; (b) violation of this Agreement or any law or regulation; or (c) violation of any right of a third party.</p>"
     },
     {
-      number: 16,
-      heading: 'Limitation of Liability',
-      body: `
-        <p>AudioKing will make reasonable efforts to maintain the website and provide accurate information. However, to the extent permitted by applicable law, AudioKing will not be responsible for losses resulting from circumstances beyond its reasonable control.</p>
-      `
+      "number": 16,
+      "heading": "No Warranties",
+      "body": "<p>The Website is provided to you \"AS IS\" and \"AS AVAILABLE\" and without warranty of any kind. To the maximum extent permitted under applicable law, AudioKing, on its own behalf and on behalf of its affiliates and its and their respective licensors and service providers, expressly disclaims all warranties, whether express, implied, statutory, or otherwise, with respect to the Website, including all implied warranties of merchantability, fitness for a particular purpose, title and non-infringement, and warranties that may arise out of a course of dealing, course of performance, usage or trade practice. Without limitation to the foregoing, AudioKing provides no warranty or undertaking, and makes no representation of any kind that the website will meet your requirements, achieve any intended results, be compatible or work with any other software, websites, systems or services, operate without interruption, meet any performance or reliability standards or be error-free or that any errors or defects can or will be corrected. Without limiting the foregoing, neither AudioKing nor any AudioKing's service provider makes any representation or warranty of any kind, express or implied: (i) as to the operation or availability of the Website, or the information, content, and materials or products included thereon; (ii) that the Website will be uninterrupted or error-free; (iii) as to the accuracy, reliability, or currency of any information or content provided through the Website; or (iv) that the Website, its servers, the content, or e-mails sent from or on behalf of AudioKing are free of viruses, scripts, trojan horses, worms, malware, timebombs or other harmful components.</p>"
     },
     {
-      number: 17,
-      heading: 'Privacy',
-      body: `
-        <p>Your use of the website is also subject to the AudioKing Privacy Policy, which explains how information may be collected, used, stored, and processed.</p>
-      `
+      "number": 17,
+      "heading": "Limitation of Liability",
+      "body": "<p>Notwithstanding any damages that you might incur, the entire liability of AudioKing and any of its suppliers under any provision of this Agreement and your exclusive remedy for all of the foregoing shall be limited to the amount actually paid by you on the Website. To the maximum extent permitted by applicable law, in no event shall AudioKing or its suppliers be liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited to, damages for loss of profits, for loss of data or other information, for business interruption, for personal injury, for loss of privacy arising out of or in any way related to the use of or inability to use the Website, third-party software and/or third-party hardware used with the Website, or otherwise in connection with any provision of this Agreement), even if AudioKing or any supplier has been advised of the possibility of such damages and even if the remedy fails of its essential purpose.</p>"
     },
     {
-      number: 18,
-      heading: 'Changes to These Terms',
-      body: `
-        <p>AudioKing may update these Terms & Conditions from time to time. Updated terms will be published on this page along with the relevant "Last Updated" date.</p>
-      `
+      "number": 18,
+      "heading": "Severability",
+      "body": "<p>If any provision of this Agreement is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remaining provisions will continue in full force and effect. This Agreement, together with the Privacy Policy and any other policies published by AudioKing on the Services, shall constitute the entire agreement between you and AudioKing concerning the Services. If any provision of this Agreement is deemed invalid by a court of competent jurisdiction, the invalidity of such provision shall not affect the validity of the remaining provisions of this Agreement, which shall remain in full force and effect. No waiver of any term of this Agreement shall be deemed a further or continuing waiver of such term or any other term, and AudioKing’s failure to assert any right or provision under this Agreement shall not constitute a waiver of such right or provision. YOU AND AudioKing AGREE THAT ANY CAUSE OF ACTION ARISING OUT OF OR RELATED TO THE SERVICES MUST COMMENCE WITHIN ONE (1) YEAR AFTER THE CAUSE OF ACTION ACCRUES. OTHERWISE, SUCH CAUSE OF ACTION IS PERMANENTLY BARRED.</p>"
     },
     {
-      number: 19,
-      heading: 'Governing Law',
-      body: `
-        <p>These Terms & Conditions shall be governed by the applicable laws of India. Any disputes shall be subject to the jurisdiction of the courts having appropriate jurisdiction over AudioKing's business operations.</p>
-      `
+      "number": 19,
+      "heading": "Waiver",
+      "body": "<p>Except as provided herein, the failure to exercise a right or to require performance of an obligation under this Agreement shall not affect a party's ability to exercise such right or require such performance at any time thereafter nor shall be the waiver of a breach constitute waiver of any subsequent breach. No failure to exercise and no delay in exercising, on the part of either party, any right or any power under this Agreement shall operate as a waiver of that right or power. Nor shall any single or partial exercise of any right or power under this Agreement preclude further exercise of that or any other right granted herein. In the event of a conflict between this Agreement and any applicable purchase or other terms, the terms of this Agreement shall govern and supersede any such terms.</p>"
     },
     {
-      number: 20,
-      heading: 'Contact',
-      body: `
-        <p>For questions regarding these Terms & Conditions, orders, products, or other website-related matters, customers may contact AudioKing through the contact details provided on the website.</p>
-      `
-    }
-  ]
-};
-
-export const privacyPolicy = {
-  id: 'privacy',
-  title: 'Privacy Policy',
-  subtitle: 'AudioKing',
-  badge: 'Official Policy',
-  lastUpdated: 'September 2026',
-  intro: `
-    <p>AudioKing respects your privacy and is committed to protecting the information you provide while using our website, creating an account, purchasing products, contacting us, or using other services provided through the website.</p>
-    <p>This Privacy Policy explains what information may be collected, how it may be used, and the choices available to you.</p>
-    <p><em>Note: This is a tentative website policy for the frontend prototype and should be reviewed and customized by the business/legal advisor before the website goes live.</em></p>
-  `,
-  sections: [
-    {
-      number: 1,
-      heading: 'Information We Collect',
-      body: `
-        <p>Depending on how you use the website, AudioKing may collect information such as:</p>
-        <ul>
-          <li>First name and last name</li>
-          <li>Email address</li>
-          <li>Phone number</li>
-          <li>Billing and shipping address</li>
-          <li>City, state and PIN code</li>
-          <li>Account credentials</li>
-          <li>Order and purchase information</li>
-          <li>Communication submitted through contact forms</li>
-          <li>Information provided when contacting customer support</li>
-        </ul>
-        <p>AudioKing may also collect limited technical information such as browser type, device information, IP address, pages visited, and website interaction data.</p>
-      `
+      "number": 20,
+      "heading": "Amendments to this Agreement",
+      "body": "<p>AudioKing reserves the right, at its sole discretion, to modify or replace this Agreement at any time without any prior notice / intimation. Hence we request you to check this Agreement from time to time. By continuing to access or use our website after any revisions become effective, it shall be deemed that you agree to be bound by the revised terms. If you do not agree to the new terms, you are no longer authorized to use AudioKing.</p>"
     },
     {
-      number: 2,
-      heading: 'Information Provided During Account Registration',
-      body: `
-        <p>When creating an AudioKing account, you may be required to provide your First Name, Last Name, Email Address, Phone Number, and Password. Email or OTP verification may be used to confirm account ownership.</p>
-      `
+      "number": 21,
+      "heading": "Entire Agreement",
+      "body": "<p>The Agreement constitutes the entire agreement between you and AudioKing regarding your use of the Website and supersedes all prior and contemporaneous written or oral agreements between you and AudioKing. You may be subject to additional terms and conditions that apply when you use or purchase other AudioKing's services, which AudioKing will provide to you at the time of such use or purchase.</p>"
     },
     {
-      number: 3,
-      heading: 'How We Use Your Information',
-      body: `
-        <p>Information collected through the website may be used to create and manage your account, process and manage orders, process payments, arrange product delivery, provide order updates, respond to enquiries, verify account ownership, improve functionality, detect fraud, and maintain security.</p>
-      `
+      "number": 22,
+      "heading": "Intellectual Property",
+      "body": "<p>The Website and its entire contents, features, and functionality (including but not limited to all information, software, text, displays, images, video and audio, and the design, selection, and arrangement thereof), are owned by AudioKing, its licensors or other providers of such material and are protected by India and international copyright, trademark, patent, trade secret and other intellectual property or proprietary rights laws. The material may not be copied, modified, reproduced, downloaded or distributed in any way, in whole or in part, without the express prior written permission of AudioKing, unless and except as is expressly provided in these Terms & Conditions. Any unauthorized use of the material is prohibited.</p>"
     },
     {
-      number: 4,
-      heading: 'Payment Information',
-      body: `
-        <p>Payments may be processed through third-party payment service providers. AudioKing does not intend to directly store complete credit/debit card information on its website unless specifically stated otherwise.</p>
-      `
+      "number": 23,
+      "heading": "Choice of Law and Venue",
+      "body": "<p>The Terms of Use and policies shall be expounded and construed with and by the laws of India, regardless of its conflict to laws and rules in India. Disputes of any sort will be subject to the exclusive jurisdiction of the courts situated within New Delhi / Mumbai and the user hereby will have to comply with the jurisdiction of the courts.</p>"
     },
     {
-      number: 5,
-      heading: 'Cookies and Similar Technologies',
-      body: `
-        <p>AudioKing may use cookies and similar technologies to maintain sessions, remember preferences, understand usage, improve performance, and analyze traffic. You may control cookies through your browser settings.</p>
-      `
+      "number": 24,
+      "heading": "Submissions and Privacy",
+      "body": "<p>In the event that you submit or post any ideas, creative suggestions, designs, photographs, information, advertisements, data, or proposals, including ideas for new or improved products, services, features, technologies, or promotions, you expressly agree that such submissions will automatically be treated as non-confidential and non-proprietary and will become the sole property of AudioKing without any compensation or credit to you whatsoever. AudioKing and its affiliates shall have no obligations with respect to such submissions or posts and may use the ideas contained in such submissions or posts for any purposes in any medium in perpetuity, including, but not limited to, developing manufacturing, and marketing products and services using such ideas.</p>"
     },
     {
-      number: 6,
-      heading: 'Shopping Cart and Order Information',
-      body: `
-        <p>Products added to your shopping cart and information associated with an order may be stored locally or centrally to provide shopping and checkout functionality.</p>
-      `
+      "number": 25,
+      "heading": "Promotions",
+      "body": "<p>AudioKing may, from time to time, include contests, promotions, sweepstakes, or other activities (“Promotions”) that require you to submit material or information concerning yourself. Please note that all Promotions may be governed by separate rules that may contain certain eligibility requirements, such as restrictions as to age and geographic location. You are responsible to read all Promotions rules to determine whether or not you are eligible to participate. If you enter any Promotion, you agree to abide by and to comply with all Promotions Rules. Additional terms and conditions may apply to purchases of goods or services on or through the Services, which terms and conditions are made a part of this Agreement by this reference.</p>"
     },
     {
-      number: 7,
-      heading: 'Communication Through WhatsApp',
-      body: `
-        <p>If you use AudioKing's contact functionality to communicate through WhatsApp, the information you voluntarily provide may be shared with the relevant AudioKing business contact through WhatsApp in accordance with WhatsApp's terms.</p>
-      `
+      "number": 26,
+      "heading": "Typographical Errors",
+      "body": "<p>In the event a product and/or service is listed at an incorrect price or with incorrect information due to typographical error, we shall have the right to refuse or cancel any orders placed for the product and/or service listed at the incorrect price. We shall have the right to refuse or cancel any such order whether or not the order has been confirmed and your credit card charged. If your credit card has already been charged for the purchase and your order is canceled, we shall immediately issue a credit to your credit card account or other payment accounts in the amount of the charge.</p>"
     },
     {
-      number: 8,
-      heading: 'Third-Party Services',
-      body: `
-        <p>AudioKing may use third-party service providers for payment processing, shipping, analytics, authentication, and communication. AudioKing will take reasonable steps to work with providers maintaining appropriate security practices.</p>
-      `
+      "number": 27,
+      "heading": "Miscellaneous",
+      "body": "<p>Any waiver of any provision of these Terms & Conditions will be effective only if in writing and signed by an authorized representative of AudioKing. AudioKing will be entitled to injunctive or other equitable relief (without the obligations of posting any bond or surety) in the event of any breach or anticipatory breach by you. AudioKing operates and controls the AudioKing Service from its offices in India. The Service is not intended for distribution to or use by any person or entity in any jurisdiction or country where such distribution or use would be contrary to law or regulation. Accordingly, those persons who choose to access the AudioKing Service from other locations do so on their own initiative and are solely responsible for compliance with local laws, if and to the extent local laws are applicable. These Terms & Conditions (which include and incorporate the AudioKing Privacy Policy) contains the entire understanding, and supersedes all prior understandings, between you and AudioKing concerning its subject matter, and cannot be changed or modified by you. The section headings used in this Agreement are for convenience only and will not be given any legal import.</p>"
     },
     {
-      number: 9,
-      heading: 'Data Security',
-      body: `
-        <p>AudioKing takes reasonable measures to protect personal information against unauthorized access, misuse, alteration, disclosure, or destruction. Users are responsible for maintaining the confidentiality of their passwords and OTPs.</p>
-      `
+      "number": 28,
+      "heading": "Disclaimer",
+      "body": "<p>AudioKing is not responsible for any content, code or any other imprecision. AudioKing does not provide warranties or guarantees. In no event shall AudioKing be liable for any special, direct, indirect, consequential, or incidental damages or any damages whatsoever, whether in an action of contract, negligence or other torts, arising out of or in connection with the use of the Service or the contents of the Service. The Company reserves the right to make additions, deletions, or modifications to the contents of the Service at any time without prior notice. The AudioKing Service and its contents are provided \"as is\" and \"as available\" without any warranty or representations of any kind, whether express or implied. AudioKing is a distributor and not a publisher of the content supplied by third parties; as such, AudioKing exercises no editorial control over such content and makes no warranty or representation as to the accuracy, reliability, or currency of any information, content, service or merchandise provided through or accessible via the AudioKing Service. Without limiting the foregoing, AudioKing specifically disclaims all warranties and representations in any content transmitted on or in connection with the AudioKing Service or on sites that may appear as links on the AudioKing Service, or in the products provided as a part of, or otherwise in connection with, the AudioKing Service, including without limitation any warranties of merchantability, fitness for a particular purpose or non-infringement of third party rights. No oral advice or written information was given by AudioKing or any of its affiliates, employees, officers, directors, agents, or the like will create a warranty. Price and availability information is subject to change without notice. Without limiting the foregoing, AudioKing does not warrant that the AudioKing Service will be uninterrupted, uncorrupted, timely, or error-free.</p>"
     },
     {
-      number: 10,
-      heading: 'Data Retention',
-      body: `
-        <p>AudioKing may retain personal information for as long as reasonably necessary to provide services, maintain accounts, complete transactions, comply with legal requirements, and resolve disputes.</p>
-      `
-    },
-    {
-      number: 11,
-      heading: 'Sharing of Information',
-      body: `
-        <p>AudioKing does not intend to sell personal information to third parties. Information is shared only where necessary with payment gateways, logistics partners, and where legally required.</p>
-      `
-    },
-    {
-      number: 12,
-      heading: 'Marketing Communications',
-      body: `
-        <p>Where applicable, AudioKing may send promotional communications. You may request to stop receiving promotional communications at any time. Important service and order updates will still be sent.</p>
-      `
-    },
-    {
-      number: 13,
-      heading: "Children's Privacy",
-      body: `
-        <p>The website is not intentionally designed to collect personal information from children under applicable age limits.</p>
-      `
-    },
-    {
-      number: 14,
-      heading: 'Your Privacy Choices',
-      body: `
-        <p>Depending on applicable law, you may have rights relating to your personal information, including accessing, correcting, or requesting deletion of your personal records.</p>
-      `
-    },
-    {
-      number: 15,
-      heading: 'External Websites',
-      body: `
-        <p>The AudioKing website may contain links to third-party services. AudioKing is not responsible for the privacy practices or content of external sites.</p>
-      `
-    },
-    {
-      number: 16,
-      heading: 'Changes to This Privacy Policy',
-      body: `
-        <p>AudioKing may update this Privacy Policy periodically. The updated version will be published on the website with a revised "Last Updated" date.</p>
-      `
-    },
-    {
-      number: 17,
-      heading: 'Contact',
-      body: `
-        <p>For questions or requests relating to this Privacy Policy, customers may contact AudioKing through the contact information provided on the website.</p>
-      `
-    }
-  ]
-};
-
-export const shippingPolicy = {
-  id: 'shipping',
-  title: 'Shipping & Delivery',
-  subtitle: 'AudioKing',
-  badge: 'Official Policy',
-  lastUpdated: 'September 2026',
-  intro: `
-    <p>AudioKing aims to make the delivery process simple, reliable, and transparent. This Shipping & Delivery Policy explains how orders are processed, dispatched, shipped, and delivered after a purchase is successfully placed through the AudioKing website.</p>
-    <p><em>Note: This is a tentative policy prepared for the website prototype. Actual delivery timelines, charges, serviceable locations, courier partners, and business-specific conditions should be finalized and reviewed before the website goes live.</em></p>
-  `,
-  sections: [
-    {
-      number: 1,
-      heading: 'Order Processing',
-      body: `
-        <p>Once an order has been successfully placed, AudioKing will begin processing the order during regular business days. Additional time may be required for high-value equipment requiring specialized inspection.</p>
-      `
-    },
-    {
-      number: 2,
-      heading: 'Order Confirmation',
-      body: `
-        <p>After successfully placing an order, customers receive an order confirmation containing Order ID, purchased items, order value, payment method, shipping address, and dispatch estimates.</p>
-      `
-    },
-    {
-      number: 3,
-      heading: 'Shipping Locations',
-      body: `
-        <p>AudioKing intends to provide delivery services across India, subject to courier serviceability. Certain restricted pin codes may have specific delivery conditions.</p>
-      `
-    },
-    {
-      number: 4,
-      heading: 'Shipping Charges',
-      body: `
-        <p>Applicable delivery charges, if any, are clearly displayed during checkout before order confirmation. Where free delivery is offered, conditions are stated on the product page or checkout summary.</p>
-      `
-    },
-    {
-      number: 5,
-      heading: 'Estimated Delivery Time',
-      body: `
-        <p>As a general indication, orders may be delivered within approximately 3–10 business days, depending on destination and product availability. Specialized gear or pre-orders may require additional handling time.</p>
-      `
-    },
-    {
-      number: 6,
-      heading: 'Dispatch',
-      body: `
-        <p>Once ready for shipment, AudioKing provides courier tracking references via SMS and email where tracking is enabled.</p>
-      `
-    },
-    {
-      number: 7,
-      heading: 'Delivery Attempts',
-      body: `
-        <p>Courier partners will make one or more delivery attempts at the provided address. Please ensure a representative is available and the phone number remains reachable.</p>
-      `
-    },
-    {
-      number: 8,
-      heading: 'Incorrect or Incomplete Address',
-      body: `
-        <p>Customers are responsible for providing complete and accurate shipping information to avoid transit delays or return shipments.</p>
-      `
-    },
-    {
-      number: 9,
-      heading: 'Delayed Deliveries',
-      body: `
-        <p>While we strive for prompt dispatch, occasional delays may occur due to weather, transport disruptions, high-volume sale periods, or courier constraints.</p>
-      `
-    },
-    {
-      number: 10,
-      heading: 'Damaged Packages',
-      body: `
-        <p>Customers are strongly encouraged to inspect the exterior condition upon delivery. If the package appears visibly damaged, photograph the package, notify the delivery agent, and contact AudioKing support promptly.</p>
-      `
-    },
-    {
-      number: 11,
-      heading: 'Incorrect or Missing Products',
-      body: `
-        <p>If you receive an incorrect product or a missing accessory, contact AudioKing support within the reporting window with your Order ID for immediate investigation.</p>
-      `
-    },
-    {
-      number: 12,
-      heading: 'Large or Specialized Equipment',
-      body: `
-        <p>Heavy items such as full-size digital pianos, 8-inch powered studio monitors, drum kits, and studio furniture may require special surface logistics handling.</p>
-      `
-    },
-    {
-      number: 13,
-      heading: 'Pre-Order and Out-of-Stock Products',
-      body: `
-        <p>Products marked as pre-order or back-order will clearly display estimated arrival dates and dispatch timelines.</p>
-      `
-    },
-    {
-      number: 14,
-      heading: 'Prepaid Insured Dispatch',
-      body: `
-        <p>All equipment consignments are dispatched with full transit coverage via insured express courier networks.</p>
-      `
-    },
-    {
-      number: 15,
-      heading: 'Delivery Tracking',
-      body: `
-        <p>Consignment tracking information is supplied directly by third-party logistics partners and updates periodically as packages pass transit hubs.</p>
-      `
-    },
-    {
-      number: 16,
-      heading: 'Delivery to Third Parties',
-      body: `
-        <p>Customers may authorize a reception desk, building security, or colleague to receive the shipment on their behalf.</p>
-      `
-    },
-    {
-      number: 17,
-      heading: 'Changes to Shipping Information',
-      body: `
-        <p>Address modifications can only be accommodated before handover to the shipping carrier.</p>
-      `
-    },
-    {
-      number: 18,
-      heading: 'Shipping & Returns',
-      body: `
-        <p>Return shipments and pickup protocols are governed by our Returns & Refunds Policy.</p>
-      `
-    },
-    {
-      number: 19,
-      heading: 'Contact',
-      body: `
-        <p>For tracking inquiries or logistics questions, contact our support team at info@audioking.co.in or call our hotline.</p>
-      `
+      "number": 29,
+      "heading": "Contact Us",
+      "body": "<p>Don't hesitate to contact us if you have any questions.</p><ul><li><strong>Via Email:</strong> <a href=\"mailto:info@audioking.co.in\">info@audioking.co.in</a></li><li><strong>Via Phone Number:</strong> <a href=\"tel:+918928207822\">+91 8928207822</a></li></ul>"
     }
   ]
 };
 
 export const returnsPolicy = {
-  id: 'returns',
-  title: 'Returns & Refunds',
-  subtitle: 'AudioKing',
-  badge: 'Official Policy',
-  lastUpdated: 'September 2026',
-  intro: `
-    <p>AudioKing aims to ensure that every product reaches customers in proper condition and matches the product ordered. This Returns & Refunds Policy explains the conditions under which products may be returned, replaced, or refunded.</p>
-    <p><em>Note: This is tentative website copy intended for the frontend prototype. The final policy should be reviewed and approved by AudioKing's management and legal advisor before launch.</em></p>
-  `,
-  sections: [
+  "id": "returns",
+  "title": "Return & Refund Policy",
+  "subtitle": "AudioKing Returns & Replacements",
+  "badge": "Official Policy",
+  "updated_at": "2026-10-11T01:15:00+05:30",
+  "intro": "<p>If you are not happy with your purchase, we will accept a return of an unused product within 7 days from the date of delivery of the products.</p>",
+  "sections": [
     {
-      number: 1,
-      heading: 'Eligibility for Returns',
-      body: `
-        <p>A product may be eligible for return, replacement, or refund where:</p>
-        <ul>
-          <li>The product received is damaged during transit.</li>
-          <li>The wrong product was delivered.</li>
-          <li>A product or included component is missing.</li>
-          <li>The product has a verified manufacturing defect covered under warranty conditions.</li>
-          <li>The product received materially differs from the product description.</li>
-        </ul>
-      `
+      "number": 1,
+      "heading": "7-Day Return Window",
+      "body": "<p>If you are not happy with your purchase, we will accept a return of an unused product within 7 days from the date of delivery of the products.</p>"
     },
     {
-      number: 2,
-      heading: 'Return Request Period',
-      body: `
-        <p>Customers must report issues as soon as possible. For eligible return claims, requests must generally be submitted within <strong>7 days of delivery</strong> unless a different period is specifically stated.</p>
-      `
+      "number": 2,
+      "heading": "Refund Process & Warehouse Verification",
+      "body": "<p>Once we receive the returned item, AudioKing will then give a full refund (excluding shipping as we are unable to refund the initial shipping cost of your order) post verification of the product at our warehouse. Refund shall be processed as per the applicable guidelines / notification / law passed by RBI from time to time and it may take 07-14 additional business days to reflect the same in your account.</p>"
     },
     {
-      number: 3,
-      heading: 'Product Condition',
-      body: `
-        <p>Returned products must be unused, in original packaging, with all manuals, power cables, adapters, and accessories intact. Serial numbers must match the delivered unit.</p>
-      `
+      "number": 3,
+      "heading": "Conditions for Return and/or Refund in Case of Transit Breakage",
+      "body": "<ul><li><strong>Intimation:</strong> Intimation must be made within 7 days of delivery.</li><li><strong>Item Condition:</strong> Item condition has to be unopened & unused. We reserve the right to refuse a refund if signs of use are visible on the product.</li><li><strong>Deductions:</strong> Restocking fee of 25 percent on electronics and 20 percent on non-electronics items & the shipping costs (initial and return) will be deducted.</li><li><strong>Verification:</strong> Refund will be initiated after receipt of the item and verification of the same.</li><li><strong>Transit Insurance:</strong> All items are shipped with insurance. In case of loss or breakage, the refund will be initiated on receipt of the insurance amount.</li></ul>"
     },
     {
-      number: 4,
-      heading: 'Unboxing and Damage Documentation',
-      body: `
-        <p>For high-value studio monitors, microphones, and instruments, customers are strongly encouraged to record an unboxing video showing the unopened package and testing sequence.</p>
-      `
+      "number": 4,
+      "heading": "Unboxing Video Requirement (Compulsory)",
+      "body": "<p><strong>An unboxing video is compulsory</strong> for any form of refund or replacement which we need to provide to the insurer or for us to consider a refund directly.</p><p>The unboxing video has to clearly capture:</p><ul><li>The outer shipping label with airway bill details intact</li><li>The continuous uncut unboxing of the package</li><li>The physical condition of the goods inside upon initial reveal</li></ul><p>Without a valid uncut unboxing video, insurance claims cannot be accepted by the insurer or directly by our team.</p>"
+    }
+  ]
+};
+
+export const privacyPolicy = {
+  "id": "privacy",
+  "title": "Privacy Policy",
+  "subtitle": "AudioKing Data Protection & Privacy",
+  "badge": "Official Policy",
+  "updated_at": "2026-10-11T01:15:00+05:30",
+  "intro": "<p>We take security and privacy with the utmost regard. Following is the information about the policies and procedures of AudioKing and the collection, usage, disclosure, and dissemination of information.</p>",
+  "sections": [
+    {
+      "number": 1,
+      "heading": "Privacy Commitment & Scope",
+      "body": "<p>We take security and privacy with the utmost regard. Following is the information about the policies and procedures of AudioKing and the collection, usage, disclosure, and dissemination of information. By visiting this Website you agree to be bound by the terms and conditions of this Privacy Policy. If you do not agree please do not use or access our Website. By use of the Website, you expressly consent to our use and disclosure of your personal information in accordance with this Privacy Policy. Our privacy policy is subject to change at any time without notice. To make sure you are aware of any changes, please review this policy periodically. We receive information about you from various sources, including but not limited to: (i) if you register for the site and the offerings, through your user account on the offerings (your “Account”); (ii) your use of the offerings generally; and (iii) from third-party websites and services. When you use the offerings, you are consenting to the collection, transfer, manipulation, storage, disclosure, and other uses of your information as described in this Privacy Policy. This Privacy Policy covers the treatment of personally identifiable information (“Personal Information”) gathered when you are using or accessing the Offerings.</p><p><strong>Scope of Privacy Policy:</strong> This Privacy Policy does not apply to the practices of third parties that we do not own or control, including but not limited to any third-party websites, services, and applications (“Third Party Services”) that you elect to access through the Offerings or to individuals that we do not manage or employ. We take an effort in selecting and facilitating access to service providers with high privacy and security standards. However, we cannot take responsibility for third party service providers. We urge you to carefully review the privacy policies of any Third Party Services you access.</p>"
     },
     {
-      number: 5,
-      heading: 'Damaged Products',
-      body: `
-        <p>If an item arrives damaged, provide photographs and order details to our support team. Upon courier verification, replacement or refund will be expedited.</p>
-      `
+      "number": 2,
+      "heading": "Information Collection",
+      "body": "<p>We collect information to enable us to provide a safe, personalized, and optimized experience to our users. It helps us improve and update the offerings for the users. We only collect information that we consider necessary to achieve this purpose. You can browse the website anonymously without revealing your identity or any personal information about yourself. Once you give us your personal information, you are not anonymous to us. Where possible, we indicate which fields are required and which fields are optional. You always have the option to not provide information by choosing not to use a particular service or feature on the website. On the usage of our website whether by logging in or simply surfing, we may collect behavioral information. We use this information to analyze users' demographics, interests, and behavior to better understand, protect and serve our users at aggregate levels. This information may include the URL from which the user was directed (whether this URL is on our website or not), the URL which the user leaves for (whether this URL is on our website or not), computer browser information, and the IP address. We use “cookies” for data collection. The information collected is used to analyze the effectiveness of the website features, webpage flow, and experience. Cookies also allow users to enter the password less frequently during a session. You may choose to disable the cookies and still use the website. This may limit certain useful features on the site. We do not control third-party cookies or similar elements on some pages of the website. We may collect different types of information on website usage. We collect information on buying behavior on purchases being made on the website. We also collect additional information, such as a billing address, a credit/debit card number, a credit/debit card expiration date, and/ or other payment instrument details and tracking information from cheques or money orders on transactions. We also collect information from discussions and message boards or feedback. We may retain this information as necessary to resolve disputes, provide customer support and troubleshoot problems as permitted by law. We may also collect information from personal correspondence such as letters and emails sent to us. We collect personally identifiable information (email address, name, phone number, credit card/debit card / other payment instrument details, etc.) from you when you set up a free account with us. While you can browse some sections of our website without being a registered member, certain activities (such as placing an order) do require registration. We do use your contact information to send you offers based on your previous orders and your interests.</p>"
     },
     {
-      number: 6,
-      heading: 'Wrong Product Delivered',
-      body: `
-        <p>In the rare event of an incorrect shipment, AudioKing will coordinate reverse pickup and priority dispatch of the correct gear at no additional cost.</p>
-      `
+      "number": 3,
+      "heading": "Account Information",
+      "body": "<p>When you create an Account, you will provide information that could be Personal Information, such as your username, password, and email address. You acknowledge that this information may be personal to you, and by creating an account on the website and providing Personal Information to us, you allow others, including us, to identify you and therefore may not be anonymous. We may use your contact information to send you information about our offerings, but only rarely when we feel such information is important. You may unsubscribe from these messages through your Account settings, although we, regardless, reserve the right to contact you when we believe it is necessary, such as for account recovery purposes. Usage of certain features on the website may require registration and sharing of information such as email address, name, phone number, credit card/debit card / other payment instrument details, etc. If you choose to buy products / services from the website, we collect information about your buying behavior. If you transact with us, we collect some additional information, such as a billing address, a credit/debit card number, a credit/debit card expiration date, and/ or other payment instrument details and tracking information from cheques or money orders. If you choose to post messages on our message boards, chat rooms, or other message areas or leave feedback, we will collect that information you provide to us. We retain this information as necessary to resolve disputes, provide customer support and troubleshoot problems as permitted by law. If you send us personal correspondence, such as emails or letters, or if other users or third parties send us correspondence about your activities or postings on the Website, we may collect such information into a file specific to you.</p>"
     },
     {
-      number: 7,
-      heading: 'Missing Products or Accessories',
-      body: `
-        <p>Report any missing cables, shockmounts, or power supplies within 48 hours for immediate dispatch of the missing parts.</p>
-      `
+      "number": 4,
+      "heading": "Use of Demographic and Profile Data",
+      "body": "<p>We use your personal information to resolve disputes; troubleshoot problems; help promote a safe service; collect money; measure consumer interest in our products and services, inform you about online and offline offers, products, services, and updates; customize your experience; detect and protect us against error, fraud, and other criminal activity; enforce our terms and conditions; and as otherwise described to you at the time of collection. We will occasionally ask you to complete optional online surveys. These surveys may ask you for contact information and demographic information (like pin code, age, education, or income). We use this data to tailor your experience at our website, providing you with content that we think you might be interested in and displaying the content according to your preferences.</p>"
     },
     {
-      number: 8,
-      heading: 'Manufacturing Defects',
-      body: `
-        <p>Defects arising after initial use are covered under the respective manufacturer warranty terms (e.g., Yamaha, Focusrite, Shure, Fender authorized service centres).</p>
-      `
+      "number": 5,
+      "heading": "Sharing of Personal Information",
+      "body": "<p>We may share personal information with our other corporate entities and affiliates to help detect and prevent identity theft, fraud, and other potentially illegal acts; correlate related or multiple accounts to prevent abuse of our services, and facilitate joint or co-branded services that you request where such services are provided by more than one corporate entity. Those entities and affiliates may not market to you as a result of such sharing unless you explicitly opt-in. We may disclose personal information if required to do so by law or in the good faith belief that such disclosure is reasonably necessary to respond to subpoenas, court orders, or another legal process. We may disclose personal information to law enforcement offices, third party rights owners, or others in the good faith belief that such disclosure is reasonably necessary to: (i) enforce our Terms or Privacy Policy; (ii) respond to claims that an advertisement, posting or other content violates the rights of a third party; or (iii) protect the rights, property or personal safety of our users or the general public. We may use third party service providers to provide website and application development, hosting, maintenance, backup, storage, payment processing, analysis and other services for us, which may require them to access or use information about you. If a service provider needs to access information about you to perform services on our behalf, they do so under close instruction from us, including policies and procedures designed to protect your information. All of our service providers and partners agree to strict confidentiality obligations.</p>"
     },
     {
-      number: 9,
-      heading: 'Products That May Not Be Eligible for Return',
-      body: `
-        <p>Non-returnable items include activated software licenses, in-ear earphones (due to hygiene regulations), custom-cut audio cables, and opened guitar strings.</p>
-      `
+      "number": 6,
+      "heading": "Links to Other Sites & Security Safeguards",
+      "body": "<p>Our website links to other websites that may collect personally identifiable information about you. AudioKing is not responsible for the privacy practices or the content of those linked websites.</p><p><strong>Access or Control your Information:</strong> You have been provided with tools to manage your information. You have the right to access, rectify, update or delete the information that you provide to us by contacting <a href=\"mailto:info@audioking.co.in\">info@audioking.co.in</a>.</p><p><strong>Steps taken by us to secure your Information:</strong> We follow generally accepted industry standards to protect the personal information submitted to us. All your information, not just the sensitive information mentioned above, is restricted in our offices. Only employees who need the information to perform a specific job are granted access to personally identifiable information. If you have any questions about the security at our website, please email us at info@audioking.co.in. While we implement safeguards designed to protect your information, no security system is impenetrable and due to the inherent nature of the internet, we cannot guarantee that data, during transmission through the internet or while stored on our systems or otherwise in our care, is absolutely safe from intrusion by others. When our registration/order process asks you to enter sensitive information (such as a credit card number), such information is encrypted and is protected with bank-grade encryption software.</p><p><strong>Information kept by us:</strong> We keep your personal information only as long as you use our service and also as permitted/required by applicable law. In practice, we delete or anonymize your information upon deletion of your account, unless the same is required to comply with legal obligations, fraud prevention, take actions we deem necessary to protect the integrity of our Website and App or our users, to resolve disputes, to enforce our agreements, to support business operations, and to continue to develop and improve our services. We retain information for better services, and we only use the information to analyze about the use of our services, not to specifically analyze personal characteristics about you.</p>"
     },
     {
-      number: 10,
-      heading: 'Change-of-Mind Returns',
-      body: `
-        <p>Change-of-mind returns are evaluated on a case-by-case basis and may incur restocking and reverse shipping deductions.</p>
-      `
+      "number": 7,
+      "heading": "Grievance Officer & Support",
+      "body": "<p>In accordance with Information Technology Act 2000 and rules made thereunder, the name and contact details of the Grievance Officer are provided below:</p><ul><li><strong>Entity:</strong> AudioKing</li><li><strong>Address:</strong> D101 Bonanza Industrial Estate, Ashok Chakravarthy Road, Kandivali East, Mumbai – 400101</li><li><strong>Phone:</strong> <a href=\"tel:+918928207822\">+91 8928207822</a></li><li><strong>Email:</strong> <a href=\"mailto:info@audioking.co.in\">info@audioking.co.in</a></li><li><strong>Hours:</strong> Monday to Friday (9:00 AM to 6:00 PM IST)</li></ul><p>Please contact us with any questions regarding this statement at <a href=\"mailto:info@audioking.co.in\">info@audioking.co.in</a>.</p>"
+    }
+  ]
+};
+
+export const shippingPolicy = {
+  "id": "shipping",
+  "title": "Shipping & Payment Policy",
+  "subtitle": "AudioKing Pan-India Logistics & Payments",
+  "badge": "Official Policy",
+  "updated_at": "2026-10-11T01:15:00+05:30",
+  "intro": "<p>We endeavour to dispatch all products ordered within 48 hours after the order has been placed and accepted by us. You will be given an indication of the expected delivery time when you place your order online.</p>",
+  "sections": [
+    {
+      "number": 1,
+      "heading": "Dispatch Timelines & Transit Insurance",
+      "body": "<p>We endeavour to dispatch all products ordered within 48 hours after the order has been placed and accepted by us. You will be given an indication of the expected delivery time when you place your order online. AudioKing insures each order through transit up until it is delivered to you or is collected. You need to sign a confirmation of receipt of the products when the products are collected and by doing so, you accept the responsibility for the products ordered from that moment on. If the recipient or collector is not the original purchaser, or in case of delivery of a gift, then you accept this signature as evidence of delivery and fulfillment of your order.</p>"
     },
     {
-      number: 11,
-      heading: 'Compatibility and Product Selection',
-      body: `
-        <p>Customers are responsible for verifying technical compatibility (OS version, phantom power requirements, impedance) before unsealing equipment.</p>
-      `
+      "number": 2,
+      "heading": "Delivery Charges & Zero Hidden Fees",
+      "body": "<ul><li><strong>DELIVERY CHARGES (based on selection):</strong> All domestic orders above the mentioned threshold are delivered free of charge.</li><li><strong>ADDITIONAL CHARGES:</strong> There are no additional charges. The total payable amount is indicated on the individual items inclusive of all applicable taxes.</li></ul>"
     },
     {
-      number: 12,
-      heading: 'Return Shipping',
-      body: `
-        <p>For verified transit damage or incorrect items, AudioKing covers 100% of reverse courier fees.</p>
-      `
+      "number": 3,
+      "heading": "Delivery Time & Areas",
+      "body": "<ul><li><strong>DELIVERY TIME:</strong> This may vary depending on the delivery location and services of our logistics partner. However, we endeavour to deliver orders within 4 to 7 Business days (excludes public holidays).</li><li><strong>DELIVERY AREAS:</strong> We deliver PAN India. For further information please call us on <a href=\"tel:+918928207822\">+91 8928207822</a> from 10:00 AM to 5:00 PM, Monday to Saturday on business days (excludes public holidays) or write to us at <a href=\"mailto:info@audioking.co.in\">info@audioking.co.in</a>.</li></ul>"
     },
     {
-      number: 13,
-      heading: 'Return Inspection',
-      body: `
-        <p>Returned items undergo technical inspection at our Mumbai central depot before refund release.</p>
-      `
-    },
-    {
-      number: 14,
-      heading: 'Refund Processing',
-      body: `
-        <p>Approved refunds are credited to the original payment method within 5–7 business days of inspection clearance.</p>
-      `
-    },
-    {
-      number: 15,
-      heading: 'Prepaid Source Refunds',
-      body: `
-        <p>Refunds are transferred back to the original source payment instrument (UPI ID, bank account, or credit/debit card).</p>
-      `
-    },
-    {
-      number: 16,
-      heading: 'Refund Amount',
-      body: `
-        <p>Refunds comprise the eligible item price minus any non-refundable express logistics charges where applicable.</p>
-      `
-    },
-    {
-      number: 17,
-      heading: 'Order Cancellation',
-      body: `
-        <p>Orders may be cancelled free of charge prior to warehouse dispatch.</p>
-      `
-    },
-    {
-      number: 18,
-      heading: 'Sale and Promotional Products',
-      body: `
-        <p>Clearance and b-stock items follow specific warranty and return terms indicated on the product page.</p>
-      `
-    },
-    {
-      number: 19,
-      heading: 'Refund Timeline',
-      body: `
-        <p>Banking and UPI gateway settlements typically reflect within 3–7 business days following refund issuance.</p>
-      `
-    },
-    {
-      number: 20,
-      heading: 'How to Request a Return',
-      body: `
-        <p>To initiate a return, contact info@audioking.co.in with your Order ID, reason for return, and photographic proof.</p>
-      `
-    },
-    {
-      number: 21,
-      heading: 'Final Resolution',
-      body: `
-        <p>Resolutions include replacement with fresh stock, authorized repair, store credit, or direct refund.</p>
-      `
-    },
-    {
-      number: 22,
-      heading: 'Contact',
-      body: `
-        <p>Reach out to our customer care team via WhatsApp or phone for immediate return assistance.</p>
-      `
+      "number": 4,
+      "heading": "Payment Modes",
+      "body": "<p>AudioKing supports 100% secure payment methods:</p><ul><li>Online through Instant UPI (Google Pay, PhonePe, Paytm, BHIM)</li><li>Internet banking across all major Indian commercial and private banks</li><li>Credit & Debit cards (Visa, MasterCard, American Express, Maestro, RuPay)</li><li>IMPS & Bank Wire Transfer</li><li>Cash on Delivery (COD) on eligible pin codes</li></ul>"
     }
   ]
 };
@@ -677,7 +275,7 @@ export const aboutPolicy = {
   title: 'About AudioKing',
   subtitle: 'Official Mumbai Pro Audio & Instruments Destination',
   badge: 'Certified Audio Specialists',
-  lastUpdated: 'September 2026',
+  updated_at: '2026-10-11T01:15:00+05:30',
   intro: `
     <p>AudioKing is India's premier pro audio retailer and studio equipment specialist. Based in Mumbai, Maharashtra, we provide music producers, sound engineers, broadcasting studios, and touring musicians with 100% genuine gear backed by official manufacturer warranties and expert sound engineering consultancy.</p>
   `,
@@ -700,7 +298,7 @@ export const aboutPolicy = {
       number: 3,
       heading: 'Direct Specialist Helpline',
       body: `
-        <p>Need acoustic guidance or help building your studio chain? Our audio engineers are available Monday to Saturday, 10:00 AM to 07:00 PM at +91 88793 93743 or via email at audioking30@gmail.com.</p>
+        <p>Need acoustic guidance or help building your studio chain? Our audio engineers are available Monday to Saturday, 10:00 AM to 07:00 PM at +91 8928207822 or via email at info@audioking.co.in.</p>
       `
     }
   ]

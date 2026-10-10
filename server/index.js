@@ -174,6 +174,31 @@ app.get('/api/popular-categories', (req, res) => {
   }
 });
 
+// Public Legal Policies Endpoint
+app.get('/api/policies', (req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM legal_policies').all();
+    const policies = {};
+    for (const r of rows) {
+      let sections = [];
+      try { sections = JSON.parse(r.sections_json); } catch (e) {}
+      policies[r.id] = {
+        id: r.id,
+        title: r.title,
+        subtitle: r.subtitle,
+        badge: r.badge,
+        intro: r.intro,
+        sections,
+        updated_at: r.updated_at,
+        updated_by: r.updated_by
+      };
+    }
+    res.json({ success: true, policies });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
 // Admin APIs (Protected by requireAdminApi inside adminApi.js)
 app.use('/api/admin/auth', adminAuthRoutes);
 app.use('/api/admin', adminApiRoutes);

@@ -13,6 +13,51 @@ import { showToast } from './toast.js';
 
 let lastActiveTrigger = null;
 let isAnimatingClose = false;
+let livePolicies = null;
+
+/**
+ * Formats a timestamp into exact Day, Date, and Time string
+ * Example: "Sunday, 11 October 2026 at 01:15:00 AM"
+ */
+export function formatExactDateDayTime(isoOrDateStr) {
+  if (!isoOrDateStr) return 'Recently Updated';
+  try {
+    const d = new Date(isoOrDateStr);
+    if (isNaN(d.getTime())) return isoOrDateStr;
+    const weekday = d.toLocaleDateString('en-IN', { weekday: 'long' });
+    const day = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    const time = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    return `${weekday}, ${day} at ${time}`;
+  } catch (e) {
+    return isoOrDateStr;
+  }
+}
+
+/**
+ * Fetches live legal policies from server
+ */
+export async function fetchLivePolicies() {
+  try {
+    const res = await fetch('/api/policies');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.policies) {
+        livePolicies = data.policies;
+        Object.keys(data.policies).forEach(k => {
+          LEGAL_DOCUMENTS[k] = data.policies[k];
+        });
+        if (data.policies.returns) {
+          LEGAL_DOCUMENTS.cancellation = data.policies.returns;
+        }
+        if (data.policies.terms) {
+          LEGAL_DOCUMENTS.warranty = data.policies.terms;
+        }
+      }
+    }
+  } catch (e) {
+    // Keep local fallback
+  }
+}
 
 /**
  * Open unified reusable legal modal
@@ -20,10 +65,20 @@ let isAnimatingClose = false;
  * @param {HTMLElement} [triggerEl] - Link/button that triggered the modal
  */
 export function openLegalModal(docKey, triggerEl = null) {
-  const doc = LEGAL_DOCUMENTS[docKey];
+  const doc = (livePolicies && livePolicies[docKey]) || LEGAL_DOCUMENTS[docKey];
   if (!doc) {
     console.warn(`[LegalModal] Unknown document key "${docKey}"`);
     return;
+  }
+
+  // Preload live policies asynchronously if not loaded
+  if (!livePolicies) {
+    fetchLivePolicies().then(() => {
+      const modal = document.getElementById('akLegalModal');
+      if (modal && modal.classList.contains('open') && livePolicies && livePolicies[docKey]) {
+        openLegalModal(docKey, lastActiveTrigger);
+      }
+    });
   }
 
   const modal = document.getElementById('akLegalModal');
@@ -40,10 +95,14 @@ export function openLegalModal(docKey, triggerEl = null) {
   if (title) title.textContent = doc.title;
   if (subtitle) subtitle.textContent = doc.subtitle || 'AudioKing';
 
-  // Build semantic content
+  const exactTimeStr = formatExactDateDayTime(doc.updated_at || doc.updatedAt || doc.lastUpdated);
+
+  // Build semantic content with exact timestamp
   let contentHtml = `
     <div class="ak-legal-meta-strip">
-      <span>Last Updated: ${doc.lastUpdated}</span> &bull; <span>${doc.badge || 'Official AudioKing Policy'}</span>
+      <span class="ak-legal-timestamp"><strong>🕒 Last Updated:</strong> ${exactTimeStr}</span>
+      <span class="ak-legal-dot">&bull;</span>
+      <span class="ak-legal-badge">${doc.badge || 'Official AudioKing Policy'}</span>
     </div>
     <div class="ak-legal-intro">
       ${doc.intro || ''}

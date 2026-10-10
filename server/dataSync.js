@@ -13,6 +13,7 @@ const CUSTOMERS_MASTER_PATH = path.join(DATA_DIR, 'customers_master.json');
 const ORDERS_MASTER_PATH = path.join(DATA_DIR, 'orders_master.json');
 const COUPONS_MASTER_PATH = path.join(DATA_DIR, 'coupons_master.json');
 const POPULAR_CATEGORIES_MASTER_PATH = path.join(DATA_DIR, 'popular_categories_master.json');
+const POLICIES_MASTER_PATH = path.join(DATA_DIR, 'policies_master.json');
 
 /**
  * Safely writes JSON data with atomic temporary file swapping
@@ -265,8 +266,60 @@ function hydrateDatabaseFromMaster(db) {
         dynamicInsertOrIgnore(db, 'popular_categories', pc);
       }
     }
+
+    // 5. Hydrate Legal Policies
+    const polData = safeReadJson(POLICIES_MASTER_PATH, null);
+    if (polData && polData.policies) {
+      const pEntries = Object.values(polData.policies);
+      for (const pol of pEntries) {
+        const row = {
+          id: pol.id,
+          title: pol.title,
+          subtitle: pol.subtitle || 'AudioKing',
+          badge: pol.badge || 'Official Policy',
+          intro: pol.intro || '',
+          sections_json: JSON.stringify(pol.sections || []),
+          updated_at: pol.updated_at || new Date().toISOString(),
+          updated_by: 'Admin'
+        };
+        dynamicInsertOrIgnore(db, 'legal_policies', row);
+      }
+      console.log(`[HYDRATION] Hydrated ${pEntries.length} legal policies from policies_master.json`);
+    }
   } catch (err) {
     console.error('[HYDRATION ERROR] Failed to hydrate database:', err);
+  }
+}
+
+/**
+ * Mirrors legal policies to policies_master.json
+ */
+function syncPoliciesMaster(db) {
+  try {
+    if (!db) return;
+    const rows = db.prepare('SELECT * FROM legal_policies').all();
+    const policies = {};
+    for (const r of rows) {
+      let sections = [];
+      try { sections = JSON.parse(r.sections_json); } catch (e) {}
+      policies[r.id] = {
+        id: r.id,
+        title: r.title,
+        subtitle: r.subtitle,
+        badge: r.badge,
+        updated_at: r.updated_at,
+        intro: r.intro,
+        sections
+      };
+    }
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      policies
+    };
+    safeWriteJson(POLICIES_MASTER_PATH, payload);
+    console.log(`[DATA SYNC] Mirrored ${rows.length} legal policies to policies_master.json`);
+  } catch (err) {
+    console.error('[DATA SYNC ERROR] syncPoliciesMaster:', err.message);
   }
 }
 
@@ -275,6 +328,7 @@ module.exports = {
   syncOrdersMaster,
   syncCouponsMaster,
   syncPopularCategoriesMaster,
+  syncPoliciesMaster,
   exportAllMasterData,
   hydrateDatabaseFromMaster
 };

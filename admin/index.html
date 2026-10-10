@@ -128,6 +128,10 @@
         <span class="nav-icon">👥</span>
         <span>Customers</span>
       </a>
+      <a class="nav-link" data-view="policies" onclick="switchView('policies')">
+        <span class="nav-icon">📜</span>
+        <span>Legal &amp; Policies</span>
+      </a>
       <a class="nav-link" data-view="settings" onclick="switchView('settings')">
         <span class="nav-icon">⚙️</span>
         <span>Settings</span>
@@ -1179,7 +1183,96 @@
 
 
       <!-- =========================================================
-           8. SETTINGS VIEW (CHANGE PASSWORD)
+           8. LEGAL & POLICIES VIEW
+           ========================================================= -->
+      <section id="view-policies" class="panel-view">
+        <div class="admin-card">
+          <div class="card-header-bar">
+            <div>
+              <h2 class="card-heading">📜 Legal Terms &amp; Policies Manager</h2>
+              <p class="card-desc">Update website Terms &amp; Conditions, Return &amp; Refund Policy, Privacy Policy, and Shipping &amp; Payment Policy. Every publication automatically updates the live storefront and records the exact date, day, and time timestamp.</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button type="button" class="btn-primary" onclick="handleSaveCurrentPolicy(event)" id="policySaveBtn">
+                <span>💾 Save &amp; Publish Policy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Policy Tab Selector -->
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--ak-border);">
+            <button type="button" class="policy-tab-btn active" data-policy="terms" onclick="switchPolicyTab('terms')">
+              📜 Terms &amp; Conditions
+            </button>
+            <button type="button" class="policy-tab-btn" data-policy="returns" onclick="switchPolicyTab('returns')">
+              🔄 Return &amp; Refund Policy
+            </button>
+            <button type="button" class="policy-tab-btn" data-policy="privacy" onclick="switchPolicyTab('privacy')">
+              🔒 Privacy Policy
+            </button>
+            <button type="button" class="policy-tab-btn" data-policy="shipping" onclick="switchPolicyTab('shipping')">
+              🚚 Shipping &amp; Payment Policy
+            </button>
+          </div>
+
+          <!-- Live Timestamp & Status Banner -->
+          <div style="background: var(--ak-card-sub); padding: 14px 18px; border-radius: var(--ak-radius); border: 1px solid var(--ak-border); margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 20px;">🕒</span>
+              <div>
+                <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--ak-text-muted); letter-spacing: 0.05em;">Published Timestamp (Storefront Display)</div>
+                <div id="policyTimestampDisplay" style="font-size: 14px; font-weight: 700; color: var(--ak-text-primary);">Loading timestamp...</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="policy-status-pill" id="policyStatusPill" style="background: #DCFCE7; color: #16A34A; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: 1px solid #BBF7D0;">
+                ● Live on Storefront
+              </span>
+            </div>
+          </div>
+
+          <!-- Policy Form -->
+          <form id="policyEditForm" onsubmit="handleSaveCurrentPolicy(event)">
+            <input type="hidden" id="policyEditId" value="terms">
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="policyEditTitle">Policy Document Title *</label>
+                <input type="text" id="policyEditTitle" class="form-input" required placeholder="e.g. Terms & Conditions">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="policyEditBadge">Badge / Subtitle Label</label>
+                <input type="text" id="policyEditBadge" class="form-input" placeholder="e.g. Official Policy">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 24px;">
+              <label class="form-label" for="policyEditIntro">Introductory Summary / Preamble</label>
+              <textarea id="policyEditIntro" class="form-input" rows="3" style="resize: vertical;" placeholder="Introductory paragraph displayed at the top of the modal..."></textarea>
+            </div>
+
+            <!-- Sections List -->
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <h3 style="font-size: 15px; font-weight: 700; color: var(--ak-text-primary); margin: 0;">Document Sections</h3>
+                <button type="button" class="btn-secondary" onclick="addPolicySection()" style="font-size: 12px; padding: 6px 12px;">
+                  <span>➕ Add Section</span>
+                </button>
+              </div>
+              <div id="policySectionsList" style="display: flex; flex-direction: column; gap: 14px;"></div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--ak-border);">
+              <button type="submit" class="btn-primary" style="padding: 10px 24px;">
+                <span>💾 Save &amp; Publish Policy</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           9. SETTINGS VIEW (CHANGE PASSWORD)
            ========================================================= -->
       <section id="view-settings" class="panel-view">
         <div class="admin-card" style="max-width: 600px; margin: 0 auto;">

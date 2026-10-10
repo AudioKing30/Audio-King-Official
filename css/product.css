@@ -560,7 +560,15 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
 }
 
 .pp-btn-buy-now, .pp-btn-buy {
-  padding: 12px 28px;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+  min-height: 42px;
+  height: 42px;
+  padding: 0 28px !important;
   background: #0B2545;
   color: #FFFFFF;
   border: none;
@@ -568,11 +576,16 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s;
+  box-sizing: border-box !important;
+  transition: background 0.2s, transform 0.18s;
 }
 
 .pp-btn-buy-now:hover:not(:disabled) {
   background: #0F172A;
+}
+
+.pp-btn-buy-now:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 /* INFO CARDS */
@@ -1750,6 +1763,11 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
     font-size: 13px !important;
   }
   .pp-btn-add-cart {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1 !important;
     min-width: 0 !important;
     width: 100% !important;
     height: 40px !important;
@@ -1759,6 +1777,11 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
     box-sizing: border-box !important;
   }
   .pp-btn-buy-now {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    line-height: 1 !important;
     min-width: 0 !important;
     width: 100% !important;
     height: 40px !important;

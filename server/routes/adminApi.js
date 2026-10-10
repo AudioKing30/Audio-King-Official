@@ -2286,4 +2286,104 @@ router.post('/backup/import', (req, res) => {
   }
 });
 
+
+/**
+ * -------------------------------------------------------------
+ * LEGAL POLICIES MANAGEMENT
+ * GET /api/admin/policies
+ * PUT /api/admin/policies
+ * -------------------------------------------------------------
+ */
+router.get('/policies', (req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM legal_policies').all();
+    const policies = {};
+    for (const r of rows) {
+      let sections = [];
+      try { sections = JSON.parse(r.sections_json); } catch (e) {}
+      policies[r.id] = {
+        id: r.id,
+        title: r.title,
+        subtitle: r.subtitle,
+        badge: r.badge,
+        intro: r.intro,
+        sections,
+        updated_at: r.updated_at,
+        updated_by: r.updated_by
+      };
+    }
+    return res.json({ success: true, policies });
+  } catch (err) {
+    console.error('[GET POLICIES ERROR]', err);
+    return res.status(500).json({ error: 'Failed to fetch policies: ' + err.message });
+  }
+});
+
+router.put('/policies', (req, res) => {
+  try {
+    const { id, title, subtitle, badge, intro, sections, sections_json } = req.body;
+    if (!id) {
+      return res.status(400).json({ error: 'Policy ID is required (terms, privacy, shipping, returns).' });
+    }
+
+    const now = new Date().toISOString();
+    const existing = db.prepare('SELECT * FROM legal_policies WHERE id = ?').get(id);
+
+    let cleanSections = [];
+    if (Array.isArray(sections)) {
+      cleanSections = sections;
+    } else if (typeof sections_json === 'string') {
+      try { cleanSections = JSON.parse(sections_json); } catch (e) {}
+    } else if (existing) {
+      try { cleanSections = JSON.parse(existing.sections_json); } catch (e) {}
+    }
+
+    const finalSectionsJson = JSON.stringify(cleanSections);
+    const finalTitle = title || (existing ? existing.title : 'Policy Document');
+    const finalSubtitle = subtitle !== undefined ? subtitle : (existing ? existing.subtitle : 'AudioKing');
+    const finalBadge = badge !== undefined ? badge : (existing ? existing.badge : 'Official Policy');
+    const finalIntro = intro !== undefined ? intro : (existing ? existing.intro : '');
+
+    if (existing) {
+      db.prepare(`
+        UPDATE legal_policies 
+        SET title = ?, subtitle = ?, badge = ?, intro = ?, sections_json = ?, updated_at = ?, updated_by = ?
+        WHERE id = ?
+      `).run(finalTitle, finalSubtitle, finalBadge, finalIntro, finalSectionsJson, now, req.user?.username || 'Admin', id);
+    } else {
+      db.prepare(`
+        INSERT INTO legal_policies (id, title, subtitle, badge, intro, sections_json, updated_at, updated_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(id, finalTitle, finalSubtitle, finalBadge, finalIntro, finalSectionsJson, now, req.user?.username || 'Admin');
+    }
+
+    // Mirror to master file
+    const { syncPoliciesMaster } = require('../dataSync');
+    syncPoliciesMaster(db);
+
+    const updated = db.prepare('SELECT * FROM legal_policies WHERE id = ?').get(id);
+    let parsedSections = [];
+    try { parsedSections = JSON.parse(updated.sections_json); } catch (_) {}
+
+    return res.json({
+      success: true,
+      message: `${finalTitle} updated successfully.`,
+      policy: {
+        id: updated.id,
+        title: updated.title,
+        subtitle: updated.subtitle,
+        badge: updated.badge,
+        intro: updated.intro,
+        sections: parsedSections,
+        updated_at: updated.updated_at,
+        updated_by: updated.updated_by
+      }
+    });
+  } catch (err) {
+    console.error('[PUT POLICY ERROR]', err);
+    return res.status(500).json({ error: 'Failed to update policy: ' + err.message });
+  }
+});
+
 module.exports = router;
+
