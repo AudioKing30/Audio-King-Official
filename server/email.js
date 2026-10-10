@@ -9,10 +9,11 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const GMAIL_USER = (process.env.GMAIL_USER || '').trim();
+const GMAIL_USER = (process.env.GMAIL_USER || 'audioking30@gmail.com').trim();
 const GMAIL_APP_PASSWORD = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
-const EMAIL_FROM = process.env.EMAIL_FROM || `AudioKing <${GMAIL_USER || 'audioking30@gmail.com'}>`;
+const EMAIL_FROM = process.env.EMAIL_FROM || 'AudioKing <info@audioking.co.in>';
+const EMAIL_REPLY_TO = process.env.EMAIL_REPLY_TO || 'info@audioking.co.in';
 const EMAIL_LOG_PATH = path.join(__dirname, 'data', 'email_log.json');
 
 // Initialize Nodemailer Gmail Transporter
@@ -93,12 +94,17 @@ async function sendEmail({ to, subject, html, text }) {
     try {
       const info = await gmailTransporter.sendMail({
         from: EMAIL_FROM,
+        replyTo: EMAIL_REPLY_TO,
+        envelope: {
+          from: 'info@audioking.co.in',
+          to: Array.isArray(to) ? to : [to]
+        },
         to: to,
         subject: subject,
         text: text,
         html: html
       });
-      console.log(`[EMAIL SUCCESS] Dispatched via Gmail SMTP (Message ID: ${info.messageId}) to ${to}`);
+      console.log(`[EMAIL SUCCESS] Dispatched from ${EMAIL_FROM} via Gmail SMTP (Message ID: ${info.messageId}) to ${to}`);
       return { success: true, messageId: info.messageId, provider: 'gmail_smtp' };
     } catch (smtpErr) {
       console.error(`[EMAIL SMTP WARNING] Gmail SMTP dispatch failed: ${smtpErr.message}`);
@@ -269,31 +275,36 @@ async function sendPasswordChangedEmail(email, fullName = 'Musician') {
  * 4. Send Community Newsletter Welcome Email
  */
 async function sendCommunityWelcomeEmail({ email, fullName = 'Creator' }) {
-  const subject = 'Welcome to the AudioKing Pro Audio Creator Community 🎧';
-  const text = `Hello ${fullName},\n\nWelcome to the AudioKing Creator Community!\n\nUse code AUDIOKING10 at checkout for 10% off your next studio gear purchase.\n\nExplore gear: http://localhost:3000/#catalog\nDirect Specialist WhatsApp: +91 88793 93743\n\nAudioKing Pro Audio India`;
+  const subject = 'You have officially joined the AudioKing community — Welcome to the community! 🎧';
+  const text = `Hello ${fullName},\n\nYou have officially joined the AudioKing community! Welcome to the community.\n\nThank you for joining India's dedicated network of pro audio producers, sound engineers, recording artists, and gear enthusiasts.\n\nUse code AUDIOKING10 at checkout for 10% off your next studio gear purchase.\n\nExplore gear: http://localhost:3000/#catalog\nDirect Specialist Support: info@audioking.co.in | WhatsApp: +91 88793 93743\n\nAudioKing Pro Audio India`;
 
   const html = wrapEmailTemplate('Welcome to the AudioKing Community', `
-    <h2 class="headline">Welcome to the AudioKing Creator Community! 🎶</h2>
+    <h2 class="headline" style="color: #0F172A;">Welcome to the AudioKing Community! 🎶</h2>
     <p class="paragraph">Hello <strong>${fullName}</strong>,</p>
-    <p class="paragraph">Thank you for joining India's dedicated network of pro audio producers, sound engineers, recording artists, and gear enthusiasts.</p>
+    <p class="paragraph" style="font-size: 16px; font-weight: 600; color: #EA580C; line-height: 1.5;">
+      You have officially joined the AudioKing community! Welcome to the community.
+    </p>
+    <p class="paragraph">
+      Thank you for connecting with India's premier pro audio network. From authorized studio hardware to acoustically tuned instruments, your journey into professional sound starts here.
+    </p>
     
     <div class="perk-box">
       <div class="perk-item">
         <span class="perk-tick">✓</span>
-        <span><strong>Authorized Distributor Warranty:</strong> Efficient warranty coverage and genuine manufacturer serials on all gear.</span>
+        <span><strong>Authorized Distributor Warranty:</strong> Full manufacturer guarantee and genuine serial registration on all gear.</span>
       </div>
       <div class="perk-item">
         <span class="perk-tick">✓</span>
-        <span><strong>Direct Acoustic Specialists:</strong> Chat with working sound engineers before you buy via WhatsApp or phone.</span>
+        <span><strong>Direct Acoustic Specialists:</strong> Chat with working sound engineers at <a href="mailto:info@audioking.co.in">info@audioking.co.in</a> or WhatsApp before you buy.</span>
       </div>
       <div class="perk-item">
         <span class="perk-tick">✓</span>
-        <span><strong>VIP Early Drops:</strong> First access to limited studio monitors, microphones, and analog effects.</span>
+        <span><strong>VIP Early Drops:</strong> Priority alerts for limited analog outboard gear, studio monitors, and new releases.</span>
       </div>
     </div>
 
     <div class="coupon-box">
-      <div style="font-size: 12px; font-weight: 700; color: #2563EB; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Community Welcome Perk</div>
+      <div style="font-size: 12px; font-weight: 700; color: #2563EB; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Exclusive Community Welcome Voucher</div>
       <div class="coupon-code">AUDIOKING10</div>
       <div style="font-size: 12px; color: #475569; margin-top: 6px;">Enjoy 10% OFF on your next order at checkout</div>
     </div>
@@ -303,7 +314,7 @@ async function sendCommunityWelcomeEmail({ email, fullName = 'Creator' }) {
     </div>
 
     <p class="paragraph" style="font-size:13px; color:#64748B;">
-      Have questions about studio monitor placement, vocal microphone pairings, or pedalboard routing? Reach out to our specialists on WhatsApp at <strong>+91 88793 93743</strong>.
+      Have questions about studio monitor placement, vocal microphone pairings, or pedalboard routing? Reach out to our specialists at <a href="mailto:info@audioking.co.in" style="color: #EA580C; font-weight: 600;">info@audioking.co.in</a> or WhatsApp <strong>+91 88793 93743</strong>.
     </p>
   `);
 

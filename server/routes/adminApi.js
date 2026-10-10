@@ -1554,10 +1554,22 @@ router.get('/orders/:id', (req, res) => {
 
 router.patch('/orders/:id/status', async (req, res) => {
   try {
-    const { status } = req.body || {};
-    const validStatuses = ['Confirmed', 'Dispatched', 'Delivered', 'Cancelled', 'Returned', 'Pending', 'Shipped'];
+    let { status } = req.body || {};
+    if (!status || typeof status !== 'string') {
+      return res.status(400).json({ error: 'Order status is required.' });
+    }
 
-    if (!status || !validStatuses.includes(status)) {
+    const trimmedStatus = status.trim();
+    let canonicalStatus = trimmedStatus;
+    if (/^confirmed$/i.test(trimmedStatus)) canonicalStatus = 'Confirmed';
+    else if (/^(dispatched|shipped)$/i.test(trimmedStatus)) canonicalStatus = 'Dispatched';
+    else if (/^delivered$/i.test(trimmedStatus)) canonicalStatus = 'Delivered';
+    else if (/^cancel{1,2}ed$/i.test(trimmedStatus)) canonicalStatus = 'Cancelled';
+    else if (/^returned$/i.test(trimmedStatus)) canonicalStatus = 'Returned';
+    else if (/^pending$/i.test(trimmedStatus)) canonicalStatus = 'Pending';
+
+    const validStatuses = ['Confirmed', 'Dispatched', 'Delivered', 'Cancelled', 'Returned', 'Pending', 'Shipped'];
+    if (!validStatuses.includes(canonicalStatus)) {
       return res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
     }
 
@@ -1573,7 +1585,7 @@ router.patch('/orders/:id/status', async (req, res) => {
     }
 
     const now = new Date().toISOString();
-    db.prepare('UPDATE orders SET status = ?, updated_at = ? WHERE id = ?').run(status, now, req.params.id);
+    db.prepare('UPDATE orders SET status = ?, updated_at = ? WHERE id = ?').run(canonicalStatus, now, req.params.id);
     syncOrdersMaster(db);
 
     // Fetch items for email template
@@ -1585,45 +1597,76 @@ router.patch('/orders/:id/status', async (req, res) => {
       shippingAddress = { address: ord.shipping_address }; 
     }
 
-    const customerEmail = ord.email || (shippingAddress && shippingAddress.email);
-    const customerName = ord.full_name || (shippingAddress && (shippingAddress.name || shippingAddress.fullName)) || 'Musician';
+    let customerEmail = ord.email || (shippingAddress && shippingAddress.email);
+    let customerName = ord.full_name || (shippingAddress && (shippingAddress.name || shippingAddress.fullName));
 
-    // Dispatch status-specific email notification
-    if (status === 'Confirmed') {
-      sendOrderConfirmedEmail({
-        email: customerEmail,
-        fullName: customerName,
-        orderNumber: ord.order_number,
-        totalAmount: ord.total_amount,
-        items,
-        shippingAddress
-      }).catch(e => console.error('[ORDER EMAIL ERROR - CONFIRMED]', e));
-    } else if (status === 'Dispatched' || status === 'Shipped') {
-      sendOrderDispatchedEmail({
-        email: customerEmail,
-        fullName: customerName,
-        orderNumber: ord.order_number,
-        totalAmount: ord.total_amount,
-        items,
-        shippingAddress
-      }).catch(e => console.error('[ORDER EMAIL ERROR - DISPATCHED]', e));
-    } else if (status === 'Delivered') {
-      sendOrderDeliveredEmail({
-        email: customerEmail,
-        fullName: customerName,
-        orderNumber: ord.order_number,
-        totalAmount: ord.total_amount,
-        items
-      }).catch(e => console.error('[ORDER EMAIL ERROR - DELIVERED]', e));
-    } else if (status === 'Cancelled') {
-      sendOrderCancelledEmail({
-        email: customerEmail,
-        fullName: customerName,
-        orderNumber: ord.order_number
-      }).catch(e => console.error('[ORDER EMAIL ERROR - CANCELLED]', e));
+    // Fallback: If not found in order row, look up in users table by user_id
+    if (!customerEmail && ord.user_id) {
+      try {
+        const u = db.prepare('SELECT email, full_name FROM users WHERE id = ?').get(ord.user_id);
+        if (u) {
+          customerEmail = u.email;
+          if (!customerName) customerName = u.full_name;
+        }
+      } catch (e) {}
+    }
+    if (!customerName) customerName = 'Valued Customer';
+
+    // Dispatch status-specific email notification via official brand email (info@audioking.co.in)
+    let emailDispatched = false;
+    if (customerEmail && customerEmail.includes('@')) {
+      try {
+        if (canonicalStatus === 'Confirmed') {
+          await sendOrderConfirmedEmail({
+            email: customerEmail,
+            fullName: customerName,
+            orderNumber: ord.order_number,
+            totalAmount: ord.total_amount,
+            items,
+            shippingAddress
+          });
+          emailDispatched = true;
+          console.log(`[ORDER STATUS EMAIL] Dispatched Confirmed email to ${customerEmail} for #${ord.order_number}`);
+        } else if (canonicalStatus === 'Dispatched') {
+          await sendOrderDispatchedEmail({
+            email: customerEmail,
+            fullName: customerName,
+            orderNumber: ord.order_number,
+            totalAmount: ord.total_amount,
+            items,
+            shippingAddress
+          });
+          emailDispatched = true;
+          console.log(`[ORDER STATUS EMAIL] Dispatched Dispatched email to ${customerEmail} for #${ord.order_number}`);
+        } else if (canonicalStatus === 'Delivered') {
+          await sendOrderDeliveredEmail({
+            email: customerEmail,
+            fullName: customerName,
+            orderNumber: ord.order_number,
+            totalAmount: ord.total_amount,
+            items
+          });
+          emailDispatched = true;
+          console.log(`[ORDER STATUS EMAIL] Dispatched Delivered email to ${customerEmail} for #${ord.order_number}`);
+        } else if (canonicalStatus === 'Cancelled') {
+          await sendOrderCancelledEmail({
+            email: customerEmail,
+            fullName: customerName,
+            orderNumber: ord.order_number
+          });
+          emailDispatched = true;
+          console.log(`[ORDER STATUS EMAIL] Dispatched Cancelled email to ${customerEmail} for #${ord.order_number}`);
+        }
+      } catch (e) {
+        console.error(`[ORDER STATUS EMAIL ERROR - ${canonicalStatus}]`, e);
+      }
     }
 
-    return res.json({ success: true, message: `Order status updated to ${status}.` });
+    return res.json({
+      success: true,
+      message: `Order status updated to ${canonicalStatus}.${emailDispatched ? ' Customer notified via info@audioking.co.in.' : ''}`,
+      emailSent: emailDispatched
+    });
   } catch (err) {
     console.error('[ADMIN UPDATE ORDER STATUS ERROR]', err);
     return res.status(500).json({ error: 'Failed to update order status.' });

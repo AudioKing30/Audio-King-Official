@@ -270,7 +270,7 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
     return res.json({
       success: true,
       emailSent,
-      message: 'You are officially part of the AudioKing community! Check your email for your welcome perk & voucher.'
+      message: 'You have been officially subscribed to the AudioKing community! Welcome to the community. Check your email for your welcome perk & voucher.'
     });
   } catch (err) {
     console.error('[NEWSLETTER ERROR]:', err);

@@ -3880,6 +3880,7 @@ function openCommunityWelcomeModal(email) {
   }
   if (modal) {
     modal.style.display = 'flex';
+    modal.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 }
@@ -3887,6 +3888,7 @@ function openCommunityWelcomeModal(email) {
 function closeCommunityWelcomeModal() {
   const modal = document.getElementById('akCommunityWelcomeModal');
   if (modal) {
+    modal.classList.remove('open');
     modal.style.display = 'none';
     document.body.style.overflow = '';
   }
@@ -3936,7 +3938,7 @@ function initNewsletter() {
         const data = await res.json();
         if (data.success) {
           openCommunityWelcomeModal(email);
-          showToast('You are officially part of the AudioKing community!', getIcon('check', '', 20));
+          showToast('You have been officially subscribed to the AudioKing community!', getIcon('check', '', 20));
           if (input) input.value = '';
         } else {
           showToast(data.message || 'Subscription failed. Please check your email.', 'error');

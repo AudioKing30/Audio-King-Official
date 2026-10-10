@@ -35939,12 +35939,14 @@ Message: ${message}`);
     }
     if (modal) {
       modal.style.display = "flex";
+      modal.classList.add("open");
       document.body.style.overflow = "hidden";
     }
   }
   function closeCommunityWelcomeModal() {
     const modal = document.getElementById("akCommunityWelcomeModal");
     if (modal) {
+      modal.classList.remove("open");
       modal.style.display = "none";
       document.body.style.overflow = "";
     }
@@ -35991,7 +35993,7 @@ Message: ${message}`);
           const data = await res.json();
           if (data.success) {
             openCommunityWelcomeModal(email);
-            showToast("You are officially part of the AudioKing community!", getIcon("check", "", 20));
+            showToast("You have been officially subscribed to the AudioKing community!", getIcon("check", "", 20));
             if (input)
               input.value = "";
           } else {
