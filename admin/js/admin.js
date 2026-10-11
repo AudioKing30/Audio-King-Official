@@ -273,6 +273,7 @@ function switchView(viewName) {
     analytics: 'Website Analytics & Traffic Tracker',
     'homepage-manager': 'Homepage Hero Slideshow & Featured Products',
     policies: 'Legal Terms & Policies Manager',
+    testimonials: 'Customer Testimonials Manager',
     settings: 'Admin Account & Security'
   };
   const topbar = document.getElementById('topbarTitle');
@@ -288,6 +289,7 @@ function switchView(viewName) {
   if (viewName === 'orders') loadOrders();
   if (viewName === 'customers') loadCustomers();
   if (viewName === 'policies') loadPoliciesAdmin();
+  if (viewName === 'testimonials') loadAdminTestimonials();
   if (viewName === 'analytics') loadAnalytics();
 }
 window.switchView = switchView;
@@ -5229,3 +5231,305 @@ async function handleSaveCurrentPolicy(event) {
   }
 }
 window.handleSaveCurrentPolicy = handleSaveCurrentPolicy;
+
+// =========================================================================
+// CUSTOMER TESTIMONIALS CONTROLLER
+// =========================================================================
+let adminTestimonialsCache = [];
+
+function handleTestimonialCharCount(textarea) {
+  if (!textarea) return;
+  if (textarea.value.length > 150) {
+    textarea.value = textarea.value.slice(0, 150);
+  }
+  const count = textarea.value.length;
+  const counter = document.getElementById('testimonialCharCounter');
+  if (counter) {
+    counter.textContent = `${count} / 150`;
+    if (count >= 150) {
+      counter.style.color = '#DC2626';
+    } else if (count >= 130) {
+      counter.style.color = '#EA580C';
+    } else {
+      counter.style.color = '#64748B';
+    }
+  }
+}
+window.handleTestimonialCharCount = handleTestimonialCharCount;
+
+function updateTestimonialPreview() {
+  const url = (document.getElementById('testimonialImageUrl')?.value || '').trim();
+  const preview = document.getElementById('testimonialImagePreview');
+  if (!preview) return;
+  if (url) {
+    preview.style.backgroundImage = `url("${url}")`;
+    preview.innerHTML = '';
+  } else {
+    preview.style.backgroundImage = 'none';
+    preview.innerHTML = '<span>No Pic</span>';
+  }
+}
+window.updateTestimonialPreview = updateTestimonialPreview;
+
+async function handleTestimonialFileUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const preview = document.getElementById('testimonialImagePreview');
+  if (preview) preview.innerHTML = '<span style="font-size:10px;">Uploading...</span>';
+
+  const formData = new FormData();
+  formData.append('images', file);
+
+  try {
+    const res = await adminFetch('/api/admin/upload/images', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (res.ok && data.success && data.files && data.files.length > 0) {
+      const uploadedPath = data.files[0].path;
+      const urlInput = document.getElementById('testimonialImageUrl');
+      if (urlInput) {
+        urlInput.value = uploadedPath;
+        updateTestimonialPreview();
+      }
+    } else {
+      alert('Failed to upload image: ' + (data.error || 'Server error'));
+      updateTestimonialPreview();
+    }
+  } catch (err) {
+    alert('Upload error: ' + err.message);
+    updateTestimonialPreview();
+  }
+}
+window.handleTestimonialFileUpload = handleTestimonialFileUpload;
+
+function openAddTestimonialModal() {
+  document.getElementById('testimonialModalTitle').textContent = 'Add Customer Testimonial';
+  document.getElementById('testimonialSaveBtn').textContent = 'Save Testimonial';
+  document.getElementById('testimonialId').value = '';
+  document.getElementById('testimonialName').value = '';
+  document.getElementById('testimonialImageUrl').value = '';
+  document.getElementById('testimonialRating').value = '5';
+  const captionEl = document.getElementById('testimonialCaption');
+  captionEl.value = '';
+  handleTestimonialCharCount(captionEl);
+  document.getElementById('testimonialSortOrder').value = (adminTestimonialsCache.length + 1);
+  document.getElementById('testimonialIsActive').checked = true;
+  updateTestimonialPreview();
+  openModal('testimonialModal');
+}
+window.openAddTestimonialModal = openAddTestimonialModal;
+
+function openEditTestimonialModal(id) {
+  const item = adminTestimonialsCache.find(t => String(t.id) === String(id));
+  if (!item) return;
+
+  document.getElementById('testimonialModalTitle').textContent = 'Edit Customer Testimonial';
+  document.getElementById('testimonialSaveBtn').textContent = 'Update Testimonial';
+  document.getElementById('testimonialId').value = item.id;
+  document.getElementById('testimonialName').value = item.name || '';
+  document.getElementById('testimonialImageUrl').value = item.image || '';
+  document.getElementById('testimonialRating').value = String(item.rating || 5);
+  const captionEl = document.getElementById('testimonialCaption');
+  captionEl.value = (item.caption || '').slice(0, 150);
+  handleTestimonialCharCount(captionEl);
+  document.getElementById('testimonialSortOrder').value = item.sort_order ?? 0;
+  document.getElementById('testimonialIsActive').checked = item.is_active !== 0 && item.is_active !== false && item.is_active !== '0';
+  updateTestimonialPreview();
+  openModal('testimonialModal');
+}
+window.openEditTestimonialModal = openEditTestimonialModal;
+
+function closeTestimonialModal() {
+  closeModal('testimonialModal');
+}
+window.closeTestimonialModal = closeTestimonialModal;
+
+async function handleTestimonialFormSubmit(e) {
+  e.preventDefault();
+  const id = document.getElementById('testimonialId').value.trim();
+  const name = document.getElementById('testimonialName').value.trim();
+  const image = document.getElementById('testimonialImageUrl').value.trim();
+  const rating = parseInt(document.getElementById('testimonialRating').value, 10) || 5;
+  const captionEl = document.getElementById('testimonialCaption');
+  let caption = captionEl.value.trim();
+
+  if (!name) {
+    alert('Please enter customer name.');
+    return;
+  }
+  if (!caption) {
+    alert('Please enter testimonial caption review.');
+    return;
+  }
+  if (caption.length > 150) {
+    caption = caption.slice(0, 150);
+  }
+
+  const sortOrder = parseInt(document.getElementById('testimonialSortOrder').value, 10) || 0;
+  const isActive = document.getElementById('testimonialIsActive').checked ? 1 : 0;
+
+  const payload = {
+    name,
+    image,
+    rating,
+    caption,
+    sort_order: sortOrder,
+    is_active: isActive
+  };
+
+  const saveBtn = document.getElementById('testimonialSaveBtn');
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+  }
+
+  try {
+    const isEdit = Boolean(id);
+    const endpoint = isEdit ? `/api/admin/testimonials/${encodeURIComponent(id)}` : '/api/admin/testimonials';
+    const method = isEdit ? 'PUT' : 'POST';
+
+    const res = await adminFetch(endpoint, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      closeTestimonialModal();
+      showToast(isEdit ? 'Testimonial updated successfully' : 'Testimonial added successfully', 'success');
+      loadAdminTestimonials();
+    } else {
+      alert('Failed to save testimonial: ' + (data.error || 'Server error'));
+    }
+  } catch (err) {
+    alert('Error saving testimonial: ' + err.message);
+  } finally {
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.textContent = id ? 'Update Testimonial' : 'Save Testimonial';
+    }
+  }
+}
+window.handleTestimonialFormSubmit = handleTestimonialFormSubmit;
+
+async function deleteTestimonial(id, name) {
+  if (!confirm(`Are you sure you want to delete the testimonial from "${name || 'this customer'}"?`)) {
+    return;
+  }
+
+  try {
+    const res = await adminFetch(`/api/admin/testimonials/${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showToast('Testimonial deleted successfully', 'success');
+      loadAdminTestimonials();
+    } else {
+      alert('Failed to delete testimonial: ' + (data.error || 'Server error'));
+    }
+  } catch (err) {
+    alert('Error deleting testimonial: ' + err.message);
+  }
+}
+window.deleteTestimonial = deleteTestimonial;
+
+async function loadAdminTestimonials() {
+  const tbody = document.getElementById('adminTestimonialsTableBody');
+  if (!tbody) return;
+
+  tbody.innerHTML = `
+    <tr>
+      <td colspan="6" style="text-align: center; padding: 32px; color: var(--ak-text-muted);">
+        <span>Loading testimonials...</span>
+      </td>
+    </tr>
+  `;
+
+  try {
+    const res = await adminFetch('/api/admin/testimonials');
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 24px; color: #DC2626;">
+            Error loading testimonials: ${escapeHtml(data.error || 'Server error')}
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    adminTestimonialsCache = data.testimonials || [];
+
+    if (adminTestimonialsCache.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 36px; color: var(--ak-text-muted);">
+            No testimonials found. Click "+ Add Testimonial" to create your first review.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = adminTestimonialsCache.map(item => {
+      const stars = '★'.repeat(item.rating || 5) + '☆'.repeat(5 - (item.rating || 5));
+      const hasPic = Boolean(item.image && item.image.trim());
+      const picHtml = hasPic
+        ? `<img src="${escapeHtml(item.image)}" alt="" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--ak-border); display: block;" onerror="this.onerror=null; this.src='assets/images/logo.png';">`
+        : `<div style="width: 38px; height: 38px; border-radius: 50%; background: #0F172A; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700;">${escapeHtml((item.name || 'AK').slice(0, 2).toUpperCase())}</div>`;
+      
+      const charCount = (item.caption || '').length;
+      const statusBadge = (item.is_active !== 0 && item.is_active !== false && item.is_active !== '0')
+        ? '<span class="badge" style="background:#DCFCE7; color:#15803D; font-weight:700; padding:3px 8px; border-radius:4px; font-size:11px;">Active</span>'
+        : '<span class="badge" style="background:#F1F5F9; color:#64748B; font-weight:700; padding:3px 8px; border-radius:4px; font-size:11px;">Hidden</span>';
+
+      return `
+        <tr>
+          <td style="vertical-align: middle;">${picHtml}</td>
+          <td style="font-weight: 700; color: var(--ak-text-primary); vertical-align: middle;">
+            ${escapeHtml(item.name)}
+            <div style="font-size: 11px; color: var(--ak-text-muted); font-weight: 400;">Order: ${item.sort_order ?? 0}</div>
+          </td>
+          <td style="color: #EAB308; font-size: 14px; letter-spacing: 1px; vertical-align: middle;">
+            ${stars}
+            <span style="font-size: 11px; color: var(--ak-text-muted); margin-left: 4px;">(${item.rating}/5)</span>
+          </td>
+          <td style="vertical-align: middle;">
+            <div style="font-size: 13px; line-height: 1.45; color: var(--ak-text-primary); max-width: 480px;">
+              "${escapeHtml(item.caption)}"
+            </div>
+            <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 2px;">
+              ${charCount} / 150 characters
+            </div>
+          </td>
+          <td style="vertical-align: middle;">${statusBadge}</td>
+          <td style="text-align: right; vertical-align: middle;">
+            <div style="display: inline-flex; gap: 6px;">
+              <button type="button" class="btn-sm btn-secondary" onclick="openEditTestimonialModal('${escapeHtml(item.id)}')" title="Edit testimonial">
+                ✏️ Edit
+              </button>
+              <button type="button" class="btn-sm btn-danger" onclick="deleteTestimonial('${escapeHtml(item.id)}', '${escapeHtml(item.name)}')" title="Delete testimonial">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  } catch (err) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 24px; color: #DC2626;">
+          Network error: ${escapeHtml(err.message)}
+        </td>
+      </tr>
+    `;
+  }
+}
+window.loadAdminTestimonials = loadAdminTestimonials;

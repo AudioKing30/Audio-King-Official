@@ -31375,14 +31375,72 @@ Weight: 1.24 lbs (0.567 kg`,
   // js/components/testimonials.js
   var ADVANCE_INTERVAL = 7e3;
   var TRANSITION_DURATION = 520;
-  function initTestimonials() {
+  var avatarGradients = [
+    ["#0F172A", "#1E3A8A"],
+    ["#4C0519", "#9D174D"],
+    ["#064E3B", "#047857"],
+    ["#78350F", "#C2410C"],
+    ["#1E1B4B", "#4338CA"]
+  ];
+  function escapeHtml2(str) {
+    if (!str)
+      return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+  async function initTestimonials() {
     const track = document.getElementById("akTCardTrack");
     const viewport = document.getElementById("akTCardViewport");
-    const dots = Array.from(document.querySelectorAll(".ak-tcard-dot"));
     const prevBtn = document.getElementById("akTCardPrevBtn");
     const nextBtn = document.getElementById("akTCardNextBtn");
+    const dotsContainer = document.getElementById("akTCardDots");
     if (!track || !viewport)
       return;
+    try {
+      const res = await fetch("/api/testimonials");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
+          track.innerHTML = data.testimonials.map((t, idx) => {
+            const stars = "\u2605".repeat(t.rating || 5) + "\u2606".repeat(5 - (t.rating || 5));
+            const grad = avatarGradients[idx % avatarGradients.length];
+            const hasCustomImg = Boolean(t.image && t.image.trim());
+            const photoHtml = hasCustomImg ? `<img src="${escapeHtml2(t.image)}" alt="${escapeHtml2(t.name)}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.onerror=null; this.src='assets/images/logo.png';">` : `
+              <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                <defs>
+                  <linearGradient id="akAvatarDyn${idx}" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="${grad[0]}"/>
+                    <stop offset="100%" stop-color="${grad[1]}"/>
+                  </linearGradient>
+                </defs>
+                <rect width="115" height="130" fill="url(#akAvatarDyn${idx})"/>
+                <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+              </svg>
+            `;
+            return `
+            <div class="ak-tcard">
+              <div class="ak-tcard-photo-col">
+                <div class="ak-tcard-photo-wrap">
+                  ${photoHtml}
+                </div>
+                <div class="ak-tcard-name">${escapeHtml2(t.name)}</div>
+              </div>
+              <div class="ak-tcard-review-col">
+                <div class="ak-tcard-stars">${stars}</div>
+                <blockquote class="ak-tcard-quote">${escapeHtml2(t.caption)}</blockquote>
+              </div>
+            </div>
+          `;
+          }).join("");
+          if (dotsContainer) {
+            dotsContainer.innerHTML = data.testimonials.map((_, idx) => `
+            <button class="ak-tcard-dot ${idx === 0 ? "active" : ""}" data-slide="${idx}" aria-label="Review ${idx + 1}"></button>
+          `).join("");
+          }
+        }
+      }
+    } catch (_) {
+    }
     track.querySelectorAll('[data-clone="true"]').forEach((el) => el.remove());
     const originalCards = Array.from(track.querySelectorAll('.ak-tcard:not([data-clone="true"])'));
     const originalCount = originalCards.length || 5;
@@ -31392,6 +31450,7 @@ Weight: 1.24 lbs (0.567 kg`,
       clone.setAttribute("aria-hidden", "true");
       track.appendChild(clone);
     });
+    const dots = Array.from(document.querySelectorAll(".ak-tcard-dot"));
     let currentIndex = 0;
     let isAnimating = false;
     let autoTimer = null;
@@ -32879,7 +32938,7 @@ Message: ${message}`);
   var activeVariant = null;
   var currentCheckoutItems = [];
   var appliedDedicatedCoupon = null;
-  function escapeHtml2(str) {
+  function escapeHtml3(str) {
     if (!str)
       return "";
     return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -32932,7 +32991,7 @@ Message: ${message}`);
       }
       noticeEl.innerHTML = `
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml2(matching.code)}</span> code to get ${discountText} discount on this product</span>
+      <span>Apply <span class="ak-coupon-code-tag">${escapeHtml3(matching.code)}</span> code to get ${discountText} discount on this product</span>
     `;
       noticeEl.style.display = "flex";
     } else {
@@ -33180,7 +33239,11 @@ Message: ${message}`);
     document.querySelectorAll(".ak-expert-phone-target").forEach((el) => {
       el.textContent = numberStr;
       if (el.tagName === "A") {
-        el.href = `tel:+${cleanDigits}`;
+        if (el.classList.contains("ak-expert-wa-target") || el.closest("#ppOutOfStockBadge")) {
+          el.href = waUrl;
+        } else {
+          el.href = `tel:+${cleanDigits}`;
+        }
       }
     });
     document.querySelectorAll(".ak-action-phone").forEach((el) => {
@@ -33861,13 +33924,15 @@ Message: ${message}`);
           if (vOutOfStock) {
             const activePhone = window._activeWhatsAppNumber || localStorage.getItem("audioking_active_whatsapp") || AUDIOKING_CONFIG.expertPhone || "+91 88793 93743";
             const cleanPhone = String(activePhone).replace(/[^0-9]/g, "");
+            const waProdText = encodeURIComponent(`Hi AudioKing, I am inquiring about the out of stock product: ${product.name || "Audio Gear"}`);
+            const waUrl = `https://wa.me/${cleanPhone}?text=${waProdText}`;
             ppOutOfStockBadge.className = "pp-stock-badge outstock";
             ppOutOfStockBadge.style.background = "#FEE2E2";
             ppOutOfStockBadge.style.color = "#DC2626";
             ppOutOfStockBadge.style.borderColor = "#FECACA";
             ppOutOfStockBadge.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <span>Availability: Out of Stock \xB7 Please reach out to us at <a href="tel:+${cleanPhone}" class="ak-expert-phone-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+            <span>Availability: Out of Stock \xB7 Please reach out to us at <a href="${waUrl}" target="_blank" rel="noopener" class="ak-expert-phone-target ak-expert-wa-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
           `;
           }
         }
@@ -34109,6 +34174,8 @@ Message: ${message}`);
       } else if (isOutOfStock) {
         const activePhone = window._activeWhatsAppNumber || localStorage.getItem("audioking_active_whatsapp") || AUDIOKING_CONFIG.expertPhone || "+91 88793 93743";
         const cleanPhone = String(activePhone).replace(/[^0-9]/g, "");
+        const waProdText = encodeURIComponent(`Hi AudioKing, I am inquiring about the out of stock product: ${product.name || "Audio Gear"}`);
+        const waUrl = `https://wa.me/${cleanPhone}?text=${waProdText}`;
         ppOutOfStockBadge.style.display = "inline-flex";
         ppOutOfStockBadge.className = "pp-stock-badge outstock";
         ppOutOfStockBadge.style.background = "#FEE2E2";
@@ -34116,7 +34183,7 @@ Message: ${message}`);
         ppOutOfStockBadge.style.borderColor = "#FECACA";
         ppOutOfStockBadge.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Availability: Out of Stock \xB7 Please reach out to us at <a href="tel:+${cleanPhone}" class="ak-expert-phone-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+        <span>Availability: Out of Stock \xB7 Please reach out to us at <a href="${waUrl}" target="_blank" rel="noopener" class="ak-expert-phone-target ak-expert-wa-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
       `;
       } else {
         ppOutOfStockBadge.style.display = "none";
@@ -34272,6 +34339,58 @@ Message: ${message}`);
       } else {
         panelFullDesc.innerHTML = `<p>The ${product.name} from ${product.brand} offers uncompromising acoustic fidelity, tour-grade construction, and pristine audio capture designed for industry professionals and discerning creators.</p>`;
       }
+    }
+    function openMobileProductImageLightbox(src, alt) {
+      if (window.innerWidth > 768)
+        return;
+      const lightbox = document.getElementById("akMobileImgLightbox");
+      const img = document.getElementById("akMobileLightboxImg");
+      if (!lightbox || !img)
+        return;
+      img.src = src;
+      img.alt = alt || "Fullscreen Product Image";
+      lightbox.style.display = "flex";
+      requestAnimationFrame(() => {
+        lightbox.classList.add("is-open");
+        lightbox.setAttribute("aria-hidden", "false");
+      });
+      document.body.style.overflow = "hidden";
+    }
+    function closeMobileProductImageLightbox() {
+      const lightbox = document.getElementById("akMobileImgLightbox");
+      if (!lightbox)
+        return;
+      lightbox.classList.remove("is-open");
+      lightbox.setAttribute("aria-hidden", "true");
+      setTimeout(() => {
+        lightbox.style.display = "none";
+        document.body.style.overflow = "";
+      }, 200);
+    }
+    window.openMobileProductImageLightbox = openMobileProductImageLightbox;
+    window.closeMobileProductImageLightbox = closeMobileProductImageLightbox;
+    const lbCloseBtn = document.getElementById("akMobileLightboxClose");
+    const lbModal = document.getElementById("akMobileImgLightbox");
+    if (lbCloseBtn) {
+      lbCloseBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMobileProductImageLightbox();
+      };
+    }
+    if (lbModal) {
+      lbModal.onclick = (e) => {
+        if (e.target === lbModal || e.target.id === "akMobileLightboxContent") {
+          closeMobileProductImageLightbox();
+        }
+      };
+    }
+    if (!window._akLightboxKeyBound) {
+      window._akLightboxKeyBound = true;
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape")
+          closeMobileProductImageLightbox();
+      });
     }
     const defaultImg = resolveProductImage(product.image || product.primaryImage || product.images && product.images[0]);
     const track = document.getElementById("ppCarouselTrack");
@@ -34511,13 +34630,24 @@ Message: ${message}`);
     if (viewport) {
       let touchStartX = 0;
       let touchStartY = 0;
+      let touchMoved = false;
       viewport.addEventListener("touchstart", (e) => {
         if (e.target && (e.target.closest(".pp-slide-video") || e.target.tagName === "IFRAME")) {
           return;
         }
+        touchMoved = false;
         if (e.touches && e.touches.length > 0) {
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+      viewport.addEventListener("touchmove", (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const diffX = Math.abs(e.touches[0].clientX - touchStartX);
+          const diffY = Math.abs(e.touches[0].clientY - touchStartY);
+          if (diffX > 10 || diffY > 10) {
+            touchMoved = true;
+          }
         }
       }, { passive: true });
       viewport.addEventListener("touchend", (e) => {
@@ -34536,6 +34666,23 @@ Message: ${message}`);
           }
         }
       }, { passive: true });
+      if (track) {
+        track.onclick = (e) => {
+          if (window.innerWidth > 768)
+            return;
+          if (touchMoved)
+            return;
+          const slide = e.target.closest(".pp-slide-image");
+          if (slide && !slide.closest(".pp-slide-video")) {
+            const clickedImg = slide.querySelector("img") || (e.target.tagName === "IMG" ? e.target : null);
+            if (clickedImg && clickedImg.src) {
+              e.preventDefault();
+              e.stopPropagation();
+              openMobileProductImageLightbox(clickedImg.src, clickedImg.alt);
+            }
+          }
+        };
+      }
     }
     if (viewport) {
       let resetImageZoom = function() {
@@ -35114,13 +35261,13 @@ Message: ${message}`);
     const remaining = checkoutAddressesList.slice(3);
     const renderBarHtml = (addr) => {
       const isChecked = addr.id === selectedCheckoutAddressId;
-      const recipient = escapeHtml2(addr.recipient_name || addr.name || "Valued Customer");
-      const phone = escapeHtml2(addr.phone || "");
-      const street = escapeHtml2(addr.street || "");
-      const city = escapeHtml2(addr.city || "Mumbai");
-      const state = escapeHtml2(addr.state || "Maharashtra");
-      const pin = escapeHtml2(addr.pin || "");
-      const tag = escapeHtml2(addr.tag || "Home");
+      const recipient = escapeHtml3(addr.recipient_name || addr.name || "Valued Customer");
+      const phone = escapeHtml3(addr.phone || "");
+      const street = escapeHtml3(addr.street || "");
+      const city = escapeHtml3(addr.city || "Mumbai");
+      const state = escapeHtml3(addr.state || "Maharashtra");
+      const pin = escapeHtml3(addr.pin || "");
+      const tag = escapeHtml3(addr.tag || "Home");
       return `
       <div class="ak-checkout-address-bar ${isChecked ? "selected" : ""}" data-addr-id="${addr.id}">
         <input type="radio" name="akSelectedShippingAddress" class="ak-addr-bar-radio" value="${addr.id}" ${isChecked ? "checked" : ""} aria-label="Select address">
@@ -35229,7 +35376,7 @@ Message: ${message}`);
       return `
       <div class="ak-summary-item-row">
         <div class="ak-summary-item-left">
-          <span class="ak-summary-item-title">${escapeHtml2(item.name)}</span>
+          <span class="ak-summary-item-title">${escapeHtml3(item.name)}</span>
           <span class="ak-summary-item-qty">Qty: ${item.quantity || item.qty || 1} \xD7 ${formatINR(item.price)}</span>
         </div>
         <div class="ak-summary-item-price">${formatINR(itemTotal)}</div>
@@ -35442,18 +35589,18 @@ Message: ${message}`);
             <div class="ak-coupon-picker-card ${isApplied ? "applied" : c.eligible ? "eligible" : "ineligible"}" style="padding: 10px 12px; border: 1px solid ${isApplied ? "var(--ak-orange, #EA580C)" : "#E2E8F0"}; border-radius: 8px; background: #FFFFFF; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
               <div style="flex: 1; min-width: 0;">
                 <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                  <strong style="font-size: 13px; color: #0F172A; letter-spacing: 0.5px;">${escapeHtml2(c.code)}</strong>
+                  <strong style="font-size: 13px; color: #0F172A; letter-spacing: 0.5px;">${escapeHtml3(c.code)}</strong>
                   <span style="font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #DCFCE7; color: #166534;">${discountLabel}</span>
                   ${isApplied ? '<span style="font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #EA580C; color: #FFFFFF;">APPLIED</span>' : ""}
                 </div>
-                <div style="font-size: 11px; color: #64748B; margin-top: 3px;">${escapeHtml2(c.shortTerms || "")}</div>
-                ${!c.eligible && c.reason ? `<div style="font-size: 11px; color: #DC2626; margin-top: 2px;">\u26A0\uFE0F ${escapeHtml2(c.reason)}</div>` : ""}
+                <div style="font-size: 11px; color: #64748B; margin-top: 3px;">${escapeHtml3(c.shortTerms || "")}</div>
+                ${!c.eligible && c.reason ? `<div style="font-size: 11px; color: #DC2626; margin-top: 2px;">\u26A0\uFE0F ${escapeHtml3(c.reason)}</div>` : ""}
               </div>
               <div>
                 ${isApplied ? `
                   <button type="button" class="ak-btn-dedicated-coupon-remove" style="padding: 4px 10px; font-size: 11.5px; font-weight: 700; border-radius: 4px; border: 1px solid #DC2626; background: #FFF; color: #DC2626; cursor: pointer;">Remove</button>
                 ` : `
-                  <button type="button" class="ak-btn-dedicated-coupon-apply" data-code="${escapeHtml2(c.code)}" ${c.eligible ? "" : "disabled"} style="padding: 5px 12px; font-size: 11.5px; font-weight: 700; border-radius: 4px; border: none; background: ${c.eligible ? "#EA580C" : "#CBD5E1"}; color: ${c.eligible ? "#FFF" : "#94A3B8"}; cursor: ${c.eligible ? "pointer" : "not-allowed"};">Apply</button>
+                  <button type="button" class="ak-btn-dedicated-coupon-apply" data-code="${escapeHtml3(c.code)}" ${c.eligible ? "" : "disabled"} style="padding: 5px 12px; font-size: 11.5px; font-weight: 700; border-radius: 4px; border: none; background: ${c.eligible ? "#EA580C" : "#CBD5E1"}; color: ${c.eligible ? "#FFF" : "#94A3B8"}; cursor: ${c.eligible ? "pointer" : "not-allowed"};">Apply</button>
                 `}
               </div>
             </div>
@@ -36314,11 +36461,11 @@ Message: ${message}`);
             const catName = cat.category_name || cat.name;
             const imgSrc = resolveProductImage(cat.image_url || cat.image);
             return `
-            <a href="#store?category=${encodeURIComponent(catName)}" class="ak-cat-box-card" data-filter="${escapeHtml2(catName)}">
+            <a href="#store?category=${encodeURIComponent(catName)}" class="ak-cat-box-card" data-filter="${escapeHtml3(catName)}">
               <div class="ak-cat-box">
-                <img src="${imgSrc}" alt="${escapeHtml2(catName)}" class="ak-cat-box-img ak-cat-img-lg" loading="lazy" onerror="this.src='assets/images/placeholder.svg'">
+                <img src="${imgSrc}" alt="${escapeHtml3(catName)}" class="ak-cat-box-img ak-cat-img-lg" loading="lazy" onerror="this.src='assets/images/placeholder.svg'">
               </div>
-              <span class="ak-cat-box-label">${escapeHtml2(catName)}</span>
+              <span class="ak-cat-box-label">${escapeHtml3(catName)}</span>
             </a>
           `;
           }).join("");

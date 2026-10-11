@@ -133,6 +133,10 @@
         <span class="nav-icon">📜</span>
         <span>Legal &amp; Policies</span>
       </a>
+      <a class="nav-link" data-view="testimonials" onclick="switchView('testimonials')">
+        <span class="nav-icon">💬</span>
+        <span>Testimonials</span>
+      </a>
       <a class="nav-link" data-view="settings" onclick="switchView('settings')">
         <span class="nav-icon">⚙️</span>
         <span>Settings</span>
@@ -1346,6 +1350,41 @@
       </section>
 
       <!-- =========================================================
+           TESTIMONIALS MANAGER VIEW
+           ========================================================= -->
+      <section id="view-testimonials" class="panel-view">
+        <div class="admin-card">
+          <div class="card-header-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 class="card-heading">Customer Testimonials</h2>
+              <p class="card-desc">Manage customer reviews, star ratings, and captions displayed on the storefront (Max 150 characters)</p>
+            </div>
+            <button type="button" class="btn-primary" onclick="openAddTestimonialModal()">
+              <span>➕ Add Testimonial</span>
+            </button>
+          </div>
+
+          <div class="table-container" style="overflow-x: auto; margin-top: 16px;">
+            <table class="admin-table" id="adminTestimonialsTable">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">Photo</th>
+                  <th style="width: 160px;">Customer Name</th>
+                  <th style="width: 120px;">Rating</th>
+                  <th>Review Caption (Limit 150 Chars)</th>
+                  <th style="width: 80px;">Status</th>
+                  <th style="width: 140px; text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminTestimonialsTableBody">
+                <!-- Dynamically loaded by admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
            9. SETTINGS VIEW (CHANGE PASSWORD)
            ========================================================= -->
       <section id="view-settings" class="panel-view">
@@ -1715,6 +1754,83 @@
         <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
           <button type="button" class="btn-secondary" onclick="closeHeroSlideModal()">Cancel</button>
           <button type="submit" class="btn-primary" id="heroSlideSaveBtn">Save Slide</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Testimonial Add / Edit Modal -->
+  <div id="testimonialModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 540px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-size: 18px; font-weight: 800;" id="testimonialModalTitle">Add Customer Testimonial</h3>
+        <button type="button" class="modal-close" onclick="closeTestimonialModal()">&times;</button>
+      </div>
+      <form id="testimonialForm" onsubmit="handleTestimonialFormSubmit(event)">
+        <input type="hidden" id="testimonialId">
+
+        <!-- Customer Name -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="testimonialName">1. Customer Name *</label>
+          <input type="text" id="testimonialName" class="form-input" placeholder="e.g. Rohan Varma" required>
+        </div>
+
+        <!-- Image URL or Upload -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label">2. Customer Photo / Avatar (Optional)</label>
+          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+            <input type="text" id="testimonialImageUrl" class="form-input" placeholder="Image URL or uploaded file path" style="flex: 1;" oninput="updateTestimonialPreview()">
+            <button type="button" class="btn-secondary" onclick="document.getElementById('testimonialFileInput').click()">Browse Photo</button>
+          </div>
+          <input type="file" id="testimonialFileInput" accept="image/jpeg,image/png,image/webp" style="display: none;" onchange="handleTestimonialFileUpload(event)">
+          <!-- Live Preview Box -->
+          <div style="display: flex; align-items: center; gap: 12px; margin-top: 6px;">
+            <div id="testimonialImagePreview" style="width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ak-border); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; color: var(--ak-text-muted); font-size: 11px; overflow: hidden; background-color: #F1F5F9; flex-shrink: 0;">
+              <span>No Pic</span>
+            </div>
+            <span style="font-size: 12px; color: var(--ak-text-muted);">Optional. If blank, a stylized gradient avatar is shown automatically on the storefront.</span>
+          </div>
+        </div>
+
+        <!-- Star Rating -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label class="form-label" for="testimonialRating">3. Star Rating *</label>
+          <select id="testimonialRating" class="form-select" style="font-weight: 700; color: #EAB308;">
+            <option value="5" selected>★★★★★ (5 Stars)</option>
+            <option value="4">★★★★☆ (4 Stars)</option>
+            <option value="3">★★★☆☆ (3 Stars)</option>
+            <option value="2">★★☆☆☆ (2 Stars)</option>
+            <option value="1">★☆☆☆☆ (1 Star)</option>
+          </select>
+        </div>
+
+        <!-- Review Caption with 150 char limit -->
+        <div class="form-group" style="margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <label class="form-label" for="testimonialCaption" style="margin-bottom: 0;">4. Review Caption / Quote *</label>
+            <span id="testimonialCharCounter" style="font-size: 12px; font-weight: 700; color: #64748B;">0 / 150</span>
+          </div>
+          <textarea id="testimonialCaption" class="form-textarea" rows="3" maxlength="150" placeholder="Write the customer's testimonial review (strictly 150 characters maximum)..." required oninput="handleTestimonialCharCount(this)"></textarea>
+          <div style="font-size: 11px; color: var(--ak-text-muted); margin-top: 4px;">Limit: 150 characters strictly enforced.</div>
+        </div>
+
+        <!-- Sort Order & Active -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="testimonialSortOrder">5. Display Order</label>
+            <input type="number" id="testimonialSortOrder" class="form-input" value="1" min="0" step="1">
+          </div>
+          <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: flex-end;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; padding: 10px 0;">
+              <input type="checkbox" id="testimonialIsActive" checked style="accent-color: var(--ak-orange); width: 16px; height: 16px;">
+              <span>Active on Storefront</span>
+            </label>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" class="btn-secondary" onclick="closeTestimonialModal()">Cancel</button>
+          <button type="submit" class="btn-primary" id="testimonialSaveBtn">Save Testimonial</button>
         </div>
       </form>
     </div>

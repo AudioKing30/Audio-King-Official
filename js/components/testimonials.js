@@ -7,14 +7,83 @@
 const ADVANCE_INTERVAL = 7000; // 7s per block move (slowed down from 1.5s)
 const TRANSITION_DURATION = 520; // 0.52s smooth cubic-bezier slide
 
-export function initTestimonials() {
+const avatarGradients = [
+  ['#0F172A', '#1E3A8A'],
+  ['#4C0519', '#9D174D'],
+  ['#064E3B', '#047857'],
+  ['#78350F', '#C2410C'],
+  ['#1E1B4B', '#4338CA']
+];
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export async function initTestimonials() {
   const track = document.getElementById('akTCardTrack');
   const viewport = document.getElementById('akTCardViewport');
-  const dots = Array.from(document.querySelectorAll('.ak-tcard-dot'));
   const prevBtn = document.getElementById('akTCardPrevBtn');
   const nextBtn = document.getElementById('akTCardNextBtn');
+  const dotsContainer = document.getElementById('akTCardDots');
 
   if (!track || !viewport) return;
+
+  // Try to load live active testimonials from backend
+  try {
+    const res = await fetch('/api/testimonials');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
+        track.innerHTML = data.testimonials.map((t, idx) => {
+          const stars = '★'.repeat(t.rating || 5) + '☆'.repeat(5 - (t.rating || 5));
+          const grad = avatarGradients[idx % avatarGradients.length];
+          const hasCustomImg = Boolean(t.image && t.image.trim());
+          const photoHtml = hasCustomImg
+            ? `<img src="${escapeHtml(t.image)}" alt="${escapeHtml(t.name)}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.onerror=null; this.src='assets/images/logo.png';">`
+            : `
+              <svg viewBox="0 0 115 130" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+                <defs>
+                  <linearGradient id="akAvatarDyn${idx}" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="${grad[0]}"/>
+                    <stop offset="100%" stop-color="${grad[1]}"/>
+                  </linearGradient>
+                </defs>
+                <rect width="115" height="130" fill="url(#akAvatarDyn${idx})"/>
+                <circle cx="57.5" cy="48" r="22" fill="#FFFFFF" fill-opacity="0.88"/>
+                <path d="M24 114 C24 90, 38 80, 57.5 80 C77 80, 91 90, 91 114 Z" fill="#FFFFFF" fill-opacity="0.88"/>
+              </svg>
+            `;
+
+          return `
+            <div class="ak-tcard">
+              <div class="ak-tcard-photo-col">
+                <div class="ak-tcard-photo-wrap">
+                  ${photoHtml}
+                </div>
+                <div class="ak-tcard-name">${escapeHtml(t.name)}</div>
+              </div>
+              <div class="ak-tcard-review-col">
+                <div class="ak-tcard-stars">${stars}</div>
+                <blockquote class="ak-tcard-quote">${escapeHtml(t.caption)}</blockquote>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        if (dotsContainer) {
+          dotsContainer.innerHTML = data.testimonials.map((_, idx) => `
+            <button class="ak-tcard-dot ${idx === 0 ? 'active' : ''}" data-slide="${idx}" aria-label="Review ${idx + 1}"></button>
+          `).join('');
+        }
+      }
+    }
+  } catch (_) {}
 
   // Clean up any existing clones
   track.querySelectorAll('[data-clone="true"]').forEach(el => el.remove());
@@ -30,6 +99,8 @@ export function initTestimonials() {
     clone.setAttribute('aria-hidden', 'true');
     track.appendChild(clone);
   });
+
+  const dots = Array.from(document.querySelectorAll('.ak-tcard-dot'));
 
   let currentIndex = 0;
   let isAnimating = false;

@@ -2478,5 +2478,109 @@ router.put('/policies', (req, res) => {
   }
 });
 
+// =========================================================================
+// CUSTOMER TESTIMONIALS MANAGER
+// =========================================================================
+
+// GET /api/admin/testimonials - List all testimonials
+router.get('/testimonials', (req, res) => {
+  try {
+    const list = db.prepare('SELECT * FROM testimonials ORDER BY sort_order ASC, created_at ASC').all();
+    res.json({ success: true, count: list.length, testimonials: list });
+  } catch (err) {
+    console.error('[GET ADMIN TESTIMONIALS ERROR]', err);
+    res.status(500).json({ success: false, error: 'Failed to fetch testimonials: ' + err.message });
+  }
+});
+
+// POST /api/admin/testimonials - Create new testimonial
+router.post('/testimonials', (req, res) => {
+  try {
+    const { name, image, rating, caption, sort_order, is_active } = req.body;
+    if (!name || !name.trim()) {
+      return res.status(400).json({ success: false, error: 'Customer name is required.' });
+    }
+    if (!caption || !caption.trim()) {
+      return res.status(400).json({ success: false, error: 'Testimonial caption/review is required.' });
+    }
+    const cleanCaption = caption.trim();
+    if (cleanCaption.length > 150) {
+      return res.status(400).json({ success: false, error: 'Testimonial caption cannot exceed 150 characters.' });
+    }
+    const starRating = Math.max(1, Math.min(5, parseInt(rating, 10) || 5));
+    const id = `testim-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
+    const nowIso = new Date().toISOString();
+    const order = parseInt(sort_order, 10) || 0;
+    const active = is_active !== 0 && is_active !== false && is_active !== '0' ? 1 : 0;
+
+    db.prepare(`
+      INSERT INTO testimonials (id, name, image, rating, caption, sort_order, is_active, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, name.trim(), (image || '').trim(), starRating, cleanCaption, order, active, nowIso, nowIso);
+
+    const created = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(id);
+    res.json({ success: true, message: 'Testimonial created successfully.', testimonial: created });
+  } catch (err) {
+    console.error('[POST ADMIN TESTIMONIAL ERROR]', err);
+    res.status(500).json({ success: false, error: 'Failed to create testimonial: ' + err.message });
+  }
+});
+
+// PUT /api/admin/testimonials/:id - Update existing testimonial
+router.put('/testimonials/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'Testimonial not found.' });
+    }
+    const { name, image, rating, caption, sort_order, is_active } = req.body;
+    const cleanName = name !== undefined ? name.trim() : existing.name;
+    if (!cleanName) {
+      return res.status(400).json({ success: false, error: 'Customer name cannot be empty.' });
+    }
+    const cleanCaption = caption !== undefined ? caption.trim() : existing.caption;
+    if (!cleanCaption) {
+      return res.status(400).json({ success: false, error: 'Testimonial caption cannot be empty.' });
+    }
+    if (cleanCaption.length > 150) {
+      return res.status(400).json({ success: false, error: 'Testimonial caption cannot exceed 150 characters.' });
+    }
+    const starRating = rating !== undefined ? Math.max(1, Math.min(5, parseInt(rating, 10) || 5)) : existing.rating;
+    const cleanImage = image !== undefined ? (image || '').trim() : existing.image;
+    const order = sort_order !== undefined ? (parseInt(sort_order, 10) || 0) : existing.sort_order;
+    const active = is_active !== undefined ? (is_active !== 0 && is_active !== false && is_active !== '0' ? 1 : 0) : existing.is_active;
+    const nowIso = new Date().toISOString();
+
+    db.prepare(`
+      UPDATE testimonials
+      SET name = ?, image = ?, rating = ?, caption = ?, sort_order = ?, is_active = ?, updated_at = ?
+      WHERE id = ?
+    `).run(cleanName, cleanImage, starRating, cleanCaption, order, active, nowIso, id);
+
+    const updated = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(id);
+    res.json({ success: true, message: 'Testimonial updated successfully.', testimonial: updated });
+  } catch (err) {
+    console.error('[PUT ADMIN TESTIMONIAL ERROR]', err);
+    res.status(500).json({ success: false, error: 'Failed to update testimonial: ' + err.message });
+  }
+});
+
+// DELETE /api/admin/testimonials/:id - Delete testimonial
+router.delete('/testimonials/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const existing = db.prepare('SELECT * FROM testimonials WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ success: false, error: 'Testimonial not found.' });
+    }
+    db.prepare('DELETE FROM testimonials WHERE id = ?').run(id);
+    res.json({ success: true, message: 'Testimonial deleted successfully.' });
+  } catch (err) {
+    console.error('[DELETE ADMIN TESTIMONIAL ERROR]', err);
+    res.status(500).json({ success: false, error: 'Failed to delete testimonial: ' + err.message });
+  }
+});
+
 module.exports = router;
 

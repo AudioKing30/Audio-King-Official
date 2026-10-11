@@ -387,6 +387,21 @@ function initDatabase() {
       updated_at TEXT NOT NULL,
       updated_by TEXT DEFAULT 'Admin'
     );
+
+    -- TESTIMONIALS TABLE
+    CREATE TABLE IF NOT EXISTS testimonials (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      image TEXT,
+      rating INTEGER NOT NULL DEFAULT 5,
+      caption TEXT NOT NULL,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_testimonials_sort ON testimonials(sort_order ASC, is_active);
   `);
 
   // Safe schema migrations for existing database columns
@@ -656,6 +671,66 @@ function initDatabase() {
       }
     } catch (e) {
       console.warn('[SEED FEATURED SETTINGS WARN]', e.message);
+    }
+
+    // Seed default testimonials if empty
+    try {
+      const testimCount = db.prepare('SELECT COUNT(*) AS count FROM testimonials').get();
+      if (testimCount && testimCount.count === 0) {
+        const nowIso = new Date().toISOString();
+        const defaultTestimonials = [
+          {
+            id: 'testim-1',
+            name: 'Rohan Varma',
+            image: '',
+            rating: 5,
+            caption: "First of all, everything's available here & they're very professional. Shipping is great. This is my favourite online audio store in the country. I'll continue shopping here.",
+            sort_order: 1
+          },
+          {
+            id: 'testim-2',
+            name: 'Pooja Nair',
+            image: '',
+            rating: 5,
+            caption: "Amazing experience! The team helped me choose the right studio monitors and vocal microphones. Products arrived perfectly packed and the quality is unbeatable.",
+            sort_order: 2
+          },
+          {
+            id: 'testim-3',
+            name: 'Kabir Malhotra',
+            image: '',
+            rating: 5,
+            caption: "Ordered a UA Apollo interface and studio gear, received within 2 days with proper packaging. 100% genuine with official warranty cards. Highly recommend AudioKing!",
+            sort_order: 3
+          },
+          {
+            id: 'testim-4',
+            name: 'Tanvi Deshmukh',
+            image: '',
+            rating: 5,
+            caption: "Bought a Neumann mic and ADAM Audio monitors. The post-purchase support was exceptional. They even helped optimize my acoustic setup over a call. 10/10!",
+            sort_order: 4
+          },
+          {
+            id: 'testim-5',
+            name: 'Arjun Mehta',
+            image: '',
+            rating: 5,
+            caption: "AudioKing has never disappointed me — quick delivery, great prices, and genuine concert & studio gear every single time. Best pro audio destination in India!",
+            sort_order: 5
+          }
+        ];
+
+        const insertTestim = db.prepare(`
+          INSERT INTO testimonials (id, name, image, rating, caption, sort_order, is_active, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?)
+        `);
+        for (const t of defaultTestimonials) {
+          insertTestim.run(t.id, t.name, t.image, t.rating, t.caption.slice(0, 150), t.sort_order, nowIso, nowIso);
+        }
+      }
+    } catch (e) {
+      console.warn('[SEED TESTIMONIALS WARN]', e.message);
     }
 
     // Seed default WhatsApp support hotline if empty

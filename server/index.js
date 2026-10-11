@@ -152,6 +152,16 @@ app.get('/api/hero-slides', (req, res) => {
   }
 });
 
+// Public Testimonials Endpoint
+app.get('/api/testimonials', (req, res) => {
+  try {
+    const list = db.prepare('SELECT * FROM testimonials WHERE is_active = 1 ORDER BY sort_order ASC, created_at ASC').all();
+    res.json({ success: true, count: list.length, testimonials: list });
+  } catch (e) {
+    res.status(500).json({ success: false, error: e.message });
+  }
+});
+
 app.get('/api/featured-settings', (req, res) => {
   try {
     const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'locked_product_ids'").get();

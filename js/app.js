@@ -389,7 +389,11 @@ export function applyWhatsAppNumberToStorefront(numberStr, customUrl) {
   document.querySelectorAll('.ak-expert-phone-target').forEach(el => {
     el.textContent = numberStr;
     if (el.tagName === 'A') {
-      el.href = `tel:+${cleanDigits}`;
+      if (el.classList.contains('ak-expert-wa-target') || el.closest('#ppOutOfStockBadge')) {
+        el.href = waUrl;
+      } else {
+        el.href = `tel:+${cleanDigits}`;
+      }
     }
   });
 
@@ -1229,13 +1233,15 @@ export function renderProductVariants(product) {
         if (vOutOfStock) {
           const activePhone = window._activeWhatsAppNumber || localStorage.getItem('audioking_active_whatsapp') || AUDIOKING_CONFIG.expertPhone || '+91 88793 93743';
           const cleanPhone = String(activePhone).replace(/[^0-9]/g, '');
+          const waProdText = encodeURIComponent(`Hi AudioKing, I am inquiring about the out of stock product: ${product.name || 'Audio Gear'}`);
+          const waUrl = `https://wa.me/${cleanPhone}?text=${waProdText}`;
           ppOutOfStockBadge.className = 'pp-stock-badge outstock';
           ppOutOfStockBadge.style.background = '#FEE2E2';
           ppOutOfStockBadge.style.color = '#DC2626';
           ppOutOfStockBadge.style.borderColor = '#FECACA';
           ppOutOfStockBadge.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <span>Availability: Out of Stock · Please reach out to us at <a href="tel:+${cleanPhone}" class="ak-expert-phone-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+            <span>Availability: Out of Stock · Please reach out to us at <a href="${waUrl}" target="_blank" rel="noopener" class="ak-expert-phone-target ak-expert-wa-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
           `;
         }
       }
@@ -1499,6 +1505,8 @@ export async function showProduct(productOrId, updateHash = true) {
     } else if (isOutOfStock) {
       const activePhone = window._activeWhatsAppNumber || localStorage.getItem('audioking_active_whatsapp') || AUDIOKING_CONFIG.expertPhone || '+91 88793 93743';
       const cleanPhone = String(activePhone).replace(/[^0-9]/g, '');
+      const waProdText = encodeURIComponent(`Hi AudioKing, I am inquiring about the out of stock product: ${product.name || 'Audio Gear'}`);
+      const waUrl = `https://wa.me/${cleanPhone}?text=${waProdText}`;
       ppOutOfStockBadge.style.display = 'inline-flex';
       ppOutOfStockBadge.className = 'pp-stock-badge outstock';
       ppOutOfStockBadge.style.background = '#FEE2E2';
@@ -1506,7 +1514,7 @@ export async function showProduct(productOrId, updateHash = true) {
       ppOutOfStockBadge.style.borderColor = '#FECACA';
       ppOutOfStockBadge.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Availability: Out of Stock · Please reach out to us at <a href="tel:+${cleanPhone}" class="ak-expert-phone-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+        <span>Availability: Out of Stock · Please reach out to us at <a href="${waUrl}" target="_blank" rel="noopener" class="ak-expert-phone-target ak-expert-wa-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
       `;
     } else {
       ppOutOfStockBadge.style.display = 'none';
@@ -1675,6 +1683,60 @@ export async function showProduct(productOrId, updateHash = true) {
     } else {
       panelFullDesc.innerHTML = `<p>The ${product.name} from ${product.brand} offers uncompromising acoustic fidelity, tour-grade construction, and pristine audio capture designed for industry professionals and discerning creators.</p>`;
     }
+  }
+
+  // Mobile Fullscreen Product Image Lightbox (Strictly Mobile <= 768px)
+  function openMobileProductImageLightbox(src, alt) {
+    if (window.innerWidth > 768) return; // Strictly mobile only
+    const lightbox = document.getElementById('akMobileImgLightbox');
+    const img = document.getElementById('akMobileLightboxImg');
+    if (!lightbox || !img) return;
+    img.src = src;
+    img.alt = alt || 'Fullscreen Product Image';
+    lightbox.style.display = 'flex';
+    requestAnimationFrame(() => {
+      lightbox.classList.add('is-open');
+      lightbox.setAttribute('aria-hidden', 'false');
+    });
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileProductImageLightbox() {
+    const lightbox = document.getElementById('akMobileImgLightbox');
+    if (!lightbox) return;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    setTimeout(() => {
+      lightbox.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 200);
+  }
+
+  window.openMobileProductImageLightbox = openMobileProductImageLightbox;
+  window.closeMobileProductImageLightbox = closeMobileProductImageLightbox;
+
+  // Global lightbox close triggers
+  const lbCloseBtn = document.getElementById('akMobileLightboxClose');
+  const lbModal = document.getElementById('akMobileImgLightbox');
+  if (lbCloseBtn) {
+    lbCloseBtn.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeMobileProductImageLightbox();
+    };
+  }
+  if (lbModal) {
+    lbModal.onclick = (e) => {
+      if (e.target === lbModal || e.target.id === 'akMobileLightboxContent') {
+        closeMobileProductImageLightbox();
+      }
+    };
+  }
+  if (!window._akLightboxKeyBound) {
+    window._akLightboxKeyBound = true;
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMobileProductImageLightbox();
+    });
   }
 
   // Amazon / Flipkart Style Manual Media Carousel (Images + Video)
@@ -1934,18 +1996,30 @@ export async function showProduct(productOrId, updateHash = true) {
     });
   }
 
-  // Touch Swipe gestures on mobile carousel
+  // Touch Swipe gestures and Fullscreen Tap on mobile carousel
   if (viewport) {
     let touchStartX = 0;
     let touchStartY = 0;
+    let touchMoved = false;
 
     viewport.addEventListener('touchstart', (e) => {
       if (e.target && (e.target.closest('.pp-slide-video') || e.target.tagName === 'IFRAME')) {
         return;
       }
+      touchMoved = false;
       if (e.touches && e.touches.length > 0) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches.length > 0) {
+        const diffX = Math.abs(e.touches[0].clientX - touchStartX);
+        const diffY = Math.abs(e.touches[0].clientY - touchStartY);
+        if (diffX > 10 || diffY > 10) {
+          touchMoved = true;
+        }
       }
     }, { passive: true });
 
@@ -1965,6 +2039,23 @@ export async function showProduct(productOrId, updateHash = true) {
         }
       }
     }, { passive: true });
+
+    // Strictly mobile responsive tap on image to open fullscreen viewer with cross button
+    if (track) {
+      track.onclick = (e) => {
+        if (window.innerWidth > 768) return; // STRICTLY mobile only
+        if (touchMoved) return; // Ignore if user was swiping
+        const slide = e.target.closest('.pp-slide-image');
+        if (slide && !slide.closest('.pp-slide-video')) {
+          const clickedImg = slide.querySelector('img') || (e.target.tagName === 'IMG' ? e.target : null);
+          if (clickedImg && clickedImg.src) {
+            e.preventDefault();
+            e.stopPropagation();
+            openMobileProductImageLightbox(clickedImg.src, clickedImg.alt);
+          }
+        }
+      };
+    }
   }
 
   // Interactive Desktop/Laptop Hover Zoom Lens on Product Images
