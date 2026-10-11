@@ -17,7 +17,7 @@ const STORAGE_KEY = AUDIOKING_CONFIG.cartStorageKey;
 let cart = [];
 
 const loaded = getStorage(STORAGE_KEY, []);
-cart = Array.isArray(loaded) ? loaded : [];
+cart = (Array.isArray(loaded) && authService.isAuthenticated()) ? loaded : [];
 
 function saveCart(syncWithServer = false) {
   setStorage(STORAGE_KEY, cart);
@@ -166,7 +166,7 @@ if (typeof window !== 'undefined') {
  * Add product to cart.
  * Writes immediately to SQLite database when user is authenticated.
  */
-export async function addToCart(product, qty = 1, silent = false) {
+export function addToCart(product, qty = 1, silent = false) {
   if (!product) return false;
 
   // Strict Sign-In Gate: Users must be authenticated before adding items to cart
@@ -205,22 +205,19 @@ export async function addToCart(product, qty = 1, silent = false) {
     showToast(`Added ${product.name.substring(0, 26)}... to cart`, getIcon('check', '', 18));
   }
 
-  // If authenticated, persist immediately to database
+  // If authenticated, persist immediately to database in background
   if (authService.isAuthenticated()) {
-    try {
-      const res = await authService.safeFetch('/api/user/cart/items', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: pId, qty: quantity })
-      });
-      if (res.ok && Array.isArray(res.data?.cart)) {
+    authService.safeFetch('/api/user/cart/items', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId: pId, qty: quantity })
+    }).then(res => {
+      if (res && res.ok && Array.isArray(res.data?.cart)) {
         hydrateFromList(res.data.cart);
-      } else if (!res.ok) {
-        showToast('Failed to save cart to server. Please check your connection.', 'error');
       }
-    } catch (e) {
-      showToast('Failed to save cart to server.', 'error');
-    }
+    }).catch(e => {
+      console.warn('[Cart Sync Warning]', e);
+    });
   }
   return true;
 }
@@ -477,8 +474,10 @@ export function initCart() {
     }
   });
 
-  // On initial page load: if authenticated, hydrate directly from server
+  // On initial page load: if authenticated, hydrate directly from server; if guest, keep cart empty
   if (authService.isAuthenticated()) {
     hydrateCartFromServer();
+  } else {
+    handleLogoutCartReset();
   }
 }

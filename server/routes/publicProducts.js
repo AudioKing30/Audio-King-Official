@@ -417,6 +417,23 @@ router.get('/featured-settings', (req, res) => {
 });
 
 /**
+ * GET STORE TOP 6 SETTINGS (Admin prioritized Top 6 products in All Available Gear)
+ * GET /api/products/store-top6-settings
+ */
+router.get('/store-top6-settings', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'store_top6_product_ids'").get();
+    let top6ProductIds = [];
+    if (row && row.value_json) {
+      try { top6ProductIds = JSON.parse(row.value_json); } catch (e) {}
+    }
+    return res.json({ success: true, top6ProductIds });
+  } catch (err) {
+    return res.status(500).json({ error: 'Failed to retrieve store top 6 settings.' });
+  }
+});
+
+/**
  * 3. GET SINGLE PRODUCT DETAIL
  * GET /api/products/:id
  */

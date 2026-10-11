@@ -63,19 +63,42 @@ let lastOrderData = null;
 
 export function showOrderConfirmation(orderData) {
   lastOrderData = orderData;
-  const mainView = document.getElementById('akMainContent');
-  const catalogView = document.getElementById('catalogPage');
-  const productView = document.getElementById('productPage');
-  const orderView = document.getElementById('akOrderConfirmationView');
 
-  if (mainView) mainView.style.display = 'none';
-  if (catalogView) catalogView.style.display = 'none';
-  if (productView) productView.style.display = 'none';
+  // Cleanly hide all other views
+  const viewsToHide = [
+    'akMainContent',
+    'catalogPage',
+    'productPage',
+    'akCheckoutPage',
+    'akContactPage',
+    'akAccountSettingsPage',
+    'adminPage'
+  ];
+  viewsToHide.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = 'none';
+      el.classList.remove('active');
+    }
+  });
+
+  // Ensure modal is closed and scroll unlocked
+  const checkoutModal = document.getElementById('akCheckoutModal');
+  if (checkoutModal) checkoutModal.classList.remove('open');
+  document.body.style.overflow = '';
+
+  const orderView = document.getElementById('akOrderConfirmationView');
 
   if (orderView) {
     orderView.style.display = 'block';
     orderView.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+      try {
+        window.history.replaceState(null, '', window.location.pathname + '#order-confirmed');
+      } catch (_) {}
+    }
 
     const items = (orderData && orderData.items && orderData.items.length) ? orderData.items : [{
       brand: 'SHURE',

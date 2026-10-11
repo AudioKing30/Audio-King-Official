@@ -8,6 +8,9 @@ import { AUDIOKING_PRODUCTS } from '../data/products.js';
 import { AUDIOKING_BRANDS } from '../data/brands.js';
 import { formatINR, calculateDiscountPercent, getProductOfferStampHtml, resolveProductImage } from '../utils/formatters.js';
 import { addToCart, getCartItemQuantity, updateCartItemQty } from './cart.js';
+import { openAuthModal } from './auth.js';
+import { authService } from '../services/authService.js';
+import { showToast } from './toast.js';
 
 let allProducts = [];
 let filteredProducts = [];
@@ -26,6 +29,36 @@ let currentSearchQuery = '';
 
 let onProductClickCallback = null;
 
+let storeTop6Ids = [];
+try {
+  const cachedTop6 = localStorage.getItem('audioking_store_top6');
+  if (cachedTop6) storeTop6Ids = JSON.parse(cachedTop6).map(String);
+} catch (e) {}
+
+export async function fetchStoreTop6Settings() {
+  try {
+    const res = await fetch('/api/products/store-top6-settings');
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.top6ProductIds)) {
+        storeTop6Ids = data.top6ProductIds.map(String);
+        try {
+          localStorage.setItem('audioking_store_top6', JSON.stringify(storeTop6Ids));
+        } catch (e) {}
+        applyFilters(false);
+      }
+    }
+  } catch (err) {
+    try {
+      const cached = localStorage.getItem('audioking_store_top6');
+      if (cached) {
+        storeTop6Ids = JSON.parse(cached).map(String);
+        applyFilters(false);
+      }
+    } catch (_) {}
+  }
+}
+
 export function setProductClickCallback(fn) {
   onProductClickCallback = fn;
 }
@@ -37,6 +70,7 @@ export function initStore() {
   buildCategoryFilterList();
   buildBrandFilterList();
   bindFilterEvents();
+  fetchStoreTop6Settings();
   applyFilters();
 
   window.addEventListener('ak:cart-updated', () => {
@@ -55,6 +89,18 @@ export function initStore() {
     if (catalogPage && catalogPage.style.display !== 'none') {
       renderStorePage();
     }
+  });
+
+  window.addEventListener('ak:store-top6-sync', (e) => {
+    if (e.detail && Array.isArray(e.detail.top6ProductIds)) {
+      storeTop6Ids = e.detail.top6ProductIds.map(String);
+    } else {
+      try {
+        const local = localStorage.getItem('audioking_store_top6');
+        if (local) storeTop6Ids = JSON.parse(local).map(String);
+      } catch (err) {}
+    }
+    applyFilters(false);
   });
 }
 
@@ -549,6 +595,42 @@ function applyFilters(emitEvent = true) {
     filteredProducts.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
   }
 
+  // If viewing "All Available Gear" under default sort, prioritize admin-managed Top 6 products in positions #1 to #6
+  const isAllAvailableGear = (currentCategoryFilter === 'All' || !currentCategoryFilter) && !currentSearchQuery && !selectedBrand;
+  if (isAllAvailableGear && currentSort === 'featured' && Array.isArray(storeTop6Ids) && storeTop6Ids.length > 0) {
+    const top6Map = new Map();
+    storeTop6Ids.forEach((id, index) => {
+      top6Map.set(String(id), index);
+    });
+
+    const topItems = [];
+    const otherItems = [];
+    const foundIds = new Set();
+
+    filteredProducts.forEach(p => {
+      if (top6Map.has(String(p.id))) {
+        topItems.push(p);
+        foundIds.add(String(p.id));
+      } else {
+        otherItems.push(p);
+      }
+    });
+
+    // Check allProducts in case an item was not in filteredProducts
+    storeTop6Ids.forEach(id => {
+      if (!foundIds.has(String(id))) {
+        const prod = allProducts.find(p => String(p.id) === String(id));
+        if (prod) {
+          topItems.push(prod);
+          foundIds.add(String(id));
+        }
+      }
+    });
+
+    topItems.sort((a, b) => top6Map.get(String(a.id)) - top6Map.get(String(b.id)));
+    filteredProducts = [...topItems, ...otherItems];
+  }
+
   updateStoreHeader();
   renderStorePage();
 
@@ -681,7 +763,7 @@ function renderStorePage() {
       offerStampHtml = '';
     }
 
-    const cartQty = getCartItemQuantity(product.id);
+    const cartQty = authService.isAuthenticated() ? getCartItemQuantity(product.id) : 0;
     let actionBtnHtml = '';
 
     if (isPreOrder) {
@@ -777,6 +859,11 @@ function renderStorePage() {
   grid.querySelectorAll('.ak-store-btn-add').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (!authService.isAuthenticated()) {
+        showToast('Please sign in to add products to your cart', 'error');
+        openAuthModal('signin', 'Please sign in to add items to your cart.');
+        return;
+      }
       const pid = btn.dataset.id;
       const product = allProducts.find(p => p.id === pid);
       if (product && product.hasVariants) {
@@ -787,7 +874,7 @@ function renderStorePage() {
       const isOutOfStock = Boolean(product && !isPreOrder && (product.stock === 0 || product.inStock === false || product.isOutOfStock === true || product.stockStatus === 'outofstock'));
       if (product && !isOutOfStock) {
         const added = addToCart(product, 1);
-        if (added !== false) {
+        if (added) {
           renderStorePage();
         }
       }
@@ -797,6 +884,11 @@ function renderStorePage() {
   grid.querySelectorAll('.ak-store-qty-btn.ak-minus').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (!authService.isAuthenticated()) {
+        showToast('Please sign in to manage your cart.', 'error');
+        openAuthModal('signin', 'Please sign in to manage your cart.');
+        return;
+      }
       updateCartItemQty(btn.dataset.id, -1);
       renderStorePage();
     });
@@ -805,6 +897,11 @@ function renderStorePage() {
   grid.querySelectorAll('.ak-store-qty-btn.ak-plus').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (!authService.isAuthenticated()) {
+        showToast('Please sign in to manage your cart.', 'error');
+        openAuthModal('signin', 'Please sign in to manage your cart.');
+        return;
+      }
       updateCartItemQty(btn.dataset.id, 1);
       renderStorePage();
     });

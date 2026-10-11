@@ -14,6 +14,7 @@ const ORDERS_MASTER_PATH = path.join(DATA_DIR, 'orders_master.json');
 const COUPONS_MASTER_PATH = path.join(DATA_DIR, 'coupons_master.json');
 const POPULAR_CATEGORIES_MASTER_PATH = path.join(DATA_DIR, 'popular_categories_master.json');
 const POLICIES_MASTER_PATH = path.join(DATA_DIR, 'policies_master.json');
+const STORE_TOP6_MASTER_PATH = path.join(DATA_DIR, 'store_top6_master.json');
 
 /**
  * Safely writes JSON data with atomic temporary file swapping
@@ -286,6 +287,17 @@ function hydrateDatabaseFromMaster(db) {
       }
       console.log(`[HYDRATION] Hydrated ${pEntries.length} legal policies from policies_master.json`);
     }
+
+    // 6. Hydrate Store Top 6 Priority Products
+    const top6Data = safeReadJson(STORE_TOP6_MASTER_PATH, null);
+    if (top6Data && Array.isArray(top6Data.top6ProductIds)) {
+      db.prepare(`
+        INSERT INTO featured_settings (key, value_json, updated_at)
+        VALUES ('store_top6_product_ids', ?, datetime('now'))
+        ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at
+      `).run(JSON.stringify(top6Data.top6ProductIds));
+      console.log(`[HYDRATION] Hydrated ${top6Data.top6ProductIds.length} store top 6 products from store_top6_master.json`);
+    }
   } catch (err) {
     console.error('[HYDRATION ERROR] Failed to hydrate database:', err);
   }
@@ -323,12 +335,35 @@ function syncPoliciesMaster(db) {
   }
 }
 
+/**
+ * Mirrors store top 6 products to store_top6_master.json
+ */
+function syncStoreTop6Master(db, customIds = null) {
+  try {
+    if (!db) return;
+    let list = customIds;
+    if (!list) {
+      const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'store_top6_product_ids'").get();
+      try { list = row ? JSON.parse(row.value_json) : []; } catch (e) { list = []; }
+    }
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      top6ProductIds: list || []
+    };
+    safeWriteJson(STORE_TOP6_MASTER_PATH, payload);
+    console.log(`[DATA SYNC] Mirrored ${(list || []).length} store top 6 products to store_top6_master.json`);
+  } catch (err) {
+    console.error('[DATA SYNC ERROR] syncStoreTop6Master:', err.message);
+  }
+}
+
 module.exports = {
   syncCustomersMaster,
   syncOrdersMaster,
   syncCouponsMaster,
   syncPopularCategoriesMaster,
   syncPoliciesMaster,
+  syncStoreTop6Master,
   exportAllMasterData,
   hydrateDatabaseFromMaster
 };

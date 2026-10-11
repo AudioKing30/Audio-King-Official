@@ -19,7 +19,7 @@ const { exec } = require('child_process');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
 const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
-const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, exportAllMasterData } = require('../dataSync');
+const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, syncStoreTop6Master, exportAllMasterData } = require('../dataSync');
 
 const router = express.Router();
 
@@ -2142,6 +2142,47 @@ router.put('/featured-settings', (req, res) => {
   } catch (err) {
     console.error('[ADMIN SAVE FEATURED SETTINGS ERROR]', err);
     return res.status(500).json({ error: 'Failed to save featured settings.' });
+  }
+});
+
+// STOREFRONT "ALL AVAILABLE GEAR" TOP 6 PRIORITY PRODUCTS SETTINGS
+router.get('/store-top6-settings', (req, res) => {
+  try {
+    const row = db.prepare("SELECT value_json FROM featured_settings WHERE key = 'store_top6_product_ids'").get();
+    let top6ProductIds = [];
+    if (row && row.value_json) {
+      try { top6ProductIds = JSON.parse(row.value_json); } catch (e) {}
+    }
+    return res.json({ success: true, top6ProductIds });
+  } catch (err) {
+    console.error('[ADMIN GET STORE TOP6 SETTINGS ERROR]', err);
+    return res.status(500).json({ error: 'Failed to fetch store top 6 settings.' });
+  }
+});
+
+router.put('/store-top6-settings', (req, res) => {
+  try {
+    const { top6ProductIds: rawIds } = req.body || {};
+    if (!Array.isArray(rawIds)) {
+      return res.status(400).json({ error: 'top6ProductIds must be an array of product IDs.' });
+    }
+    // De-duplicate and cap at exactly 6 products
+    const top6ProductIds = [...new Set(rawIds.map(String).filter(Boolean))].slice(0, 6);
+
+    const valueJson = JSON.stringify(top6ProductIds);
+    db.prepare(`
+      INSERT INTO featured_settings (key, value_json, updated_at)
+      VALUES ('store_top6_product_ids', ?, datetime('now'))
+      ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at
+    `).run(valueJson);
+
+    // Sync to master json
+    syncStoreTop6Master(db, top6ProductIds);
+
+    return res.json({ success: true, top6ProductIds });
+  } catch (err) {
+    console.error('[ADMIN SAVE STORE TOP6 SETTINGS ERROR]', err);
+    return res.status(500).json({ error: 'Failed to save store top 6 settings.' });
   }
 });
 

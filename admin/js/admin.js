@@ -26,7 +26,8 @@ const state = {
   lockedFeaturedIds: [],
   popularCategories: [],
   policies: {},
-  activePolicyKey: 'terms'
+  activePolicyKey: 'terms',
+  storeTop6Ids: []
 };
 
 function escapeHtml(str) {
@@ -739,6 +740,7 @@ async function loadProducts() {
         </div>
       `).join('');
     }
+    loadStoreTop6Settings();
   } catch (err) {
     tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 32px; color: var(--ak-danger);">Failed to load products.</td></tr>`;
     const mobileContainer = document.getElementById('productsMobileCardsContainer');
@@ -747,6 +749,226 @@ async function loadProducts() {
     }
   }
 }
+
+// -------------------------------------------------------------
+// 2B. STOREFRONT "ALL AVAILABLE GEAR" TOP 6 PRIORITY PRODUCTS MANAGER
+// -------------------------------------------------------------
+async function loadStoreTop6Settings() {
+  try {
+    const res = await adminFetch('/api/admin/store-top6-settings');
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      state.storeTop6Ids = (data.top6ProductIds || []).map(String);
+      try {
+        localStorage.setItem('audioking_store_top6', JSON.stringify(state.storeTop6Ids));
+      } catch (err) {}
+    } else {
+      const local = localStorage.getItem('audioking_store_top6');
+      if (local) state.storeTop6Ids = JSON.parse(local).map(String);
+    }
+  } catch (err) {
+    const local = localStorage.getItem('audioking_store_top6');
+    if (local) {
+      try { state.storeTop6Ids = JSON.parse(local).map(String); } catch (_) {}
+    }
+  }
+  renderStoreTop6Manager();
+  populateStoreTop6Dropdown();
+}
+
+function populateStoreTop6Dropdown() {
+  const dropdown = document.getElementById('adminStoreTop6CatalogDropdown');
+  if (!dropdown) return;
+  const allProducts = (state.products && state.products.length > 0) ? state.products : (window.AUDIOKING_PRODUCTS || []);
+  const top6Set = new Set((state.storeTop6Ids || []).map(String));
+
+  let html = '<option value="">-- Select a product to prioritize in Top 6 --</option>';
+  allProducts.forEach(p => {
+    const isChosen = top6Set.has(String(p.id));
+    const slotIndex = isChosen ? (state.storeTop6Ids.indexOf(String(p.id)) + 1) : null;
+    html += `<option value="${p.id}" ${isChosen ? 'disabled' : ''}>${escapeHtml(p.name)} (${p.brand || 'No Brand'}) - ₹${p.price} ${isChosen ? `[Already in Slot #${slotIndex}]` : ''}</option>`;
+  });
+  dropdown.innerHTML = html;
+}
+
+function renderStoreTop6Manager() {
+  const container = document.getElementById('storeTop6SlotsContainer');
+  const countBadge = document.getElementById('storeTop6CountBadge');
+  if (!container) return;
+
+  const list = state.storeTop6Ids || [];
+  const allProducts = (state.products && state.products.length > 0) ? state.products : (window.AUDIOKING_PRODUCTS || []);
+  const pMap = new Map();
+  allProducts.forEach(p => pMap.set(String(p.id), p));
+
+  if (countBadge) {
+    if (list.length === 0) {
+      countBadge.textContent = 'Default Order';
+      countBadge.className = 'badge-pending';
+    } else {
+      countBadge.textContent = `${list.length} of 6 Customized`;
+      countBadge.className = 'badge-active';
+    }
+  }
+
+  let html = '';
+  for (let i = 0; i < 6; i++) {
+    const pid = list[i];
+    const prod = pid ? pMap.get(String(pid)) : null;
+
+    if (prod) {
+      html += `
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #FFFFFF; border: 1.5px solid #10B981; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+          <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+            <div style="font-weight: 800; font-size: 13px; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 6px; white-space: nowrap;">
+              #${i + 1}
+            </div>
+            <img src="${resolveAdminThumb(prod.image)}" style="width: 44px; height: 44px; object-fit: contain; border-radius: 6px; background: #F8FAFC; border: 1px solid #E2E8F0; flex-shrink: 0;" alt="${escapeHtml(prod.name)}" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">
+            <div style="min-width: 0; flex: 1;">
+              <div style="font-weight: 700; font-size: 13px; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(prod.name)}">${escapeHtml(prod.name)}</div>
+              <div style="font-size: 11.5px; color: var(--ak-text-muted);">${escapeHtml(prod.brand || '')} · ₹${prod.price || 0}</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+            ${i > 0 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${prod.id}', -1)" title="Move Up" style="padding: 4px 6px; font-size: 12px;">▲</button>` : ''}
+            ${i < list.length - 1 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${prod.id}', 1)" title="Move Down" style="padding: 4px 6px; font-size: 12px;">▼</button>` : ''}
+            <button type="button" class="btn-icon" onclick="removeStoreTop6Product('${prod.id}')" title="Remove from Top 6" style="padding: 4px 6px; font-size: 12px; color: #EF4444; border-color: #FECACA;">✕</button>
+          </div>
+        </div>
+      `;
+    } else {
+      html += `
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-weight: 800; font-size: 13px; color: #94A3B8; background: #E2E8F0; padding: 4px 8px; border-radius: 6px; white-space: nowrap;">
+              #${i + 1}
+            </div>
+            <div>
+              <div style="font-weight: 600; font-size: 12.5px; color: #64748B;">Slot #${i + 1} Default</div>
+              <div style="font-size: 11px; color: #94A3B8;">Displays natural catalog product</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  container.innerHTML = html;
+}
+
+async function handleAddStoreTop6Product() {
+  const dropdown = document.getElementById('adminStoreTop6CatalogDropdown');
+  const slotInput = document.getElementById('adminNewStoreTop6Slot');
+  if (!dropdown || !slotInput) return;
+
+  const productId = dropdown.value;
+  if (!productId) {
+    alert('Please select a product from the dropdown to prioritize in Top 6.');
+    return;
+  }
+
+  const slotNum = parseInt(slotInput.value, 10);
+  const targetIndex = (!isNaN(slotNum) && slotNum >= 1 && slotNum <= 6) ? slotNum - 1 : state.storeTop6Ids.length;
+
+  let list = [...(state.storeTop6Ids || [])].map(String);
+  list = list.filter(id => id !== String(productId));
+
+  if (targetIndex >= list.length) {
+    list.push(String(productId));
+  } else {
+    list.splice(targetIndex, 0, String(productId));
+  }
+  list = list.slice(0, 6);
+
+  state.storeTop6Ids = list;
+  await saveStoreTop6SettingsToServer(false);
+  dropdown.value = '';
+}
+
+async function removeStoreTop6Product(productId) {
+  state.storeTop6Ids = (state.storeTop6Ids || []).filter(id => id !== String(productId));
+  await saveStoreTop6SettingsToServer(false);
+}
+
+async function moveStoreTop6Product(productId, delta) {
+  const list = [...(state.storeTop6Ids || [])];
+  const idx = list.indexOf(String(productId));
+  if (idx < 0) return;
+  const targetIdx = idx + delta;
+  if (targetIdx < 0 || targetIdx >= list.length) return;
+
+  const temp = list[idx];
+  list[idx] = list[targetIdx];
+  list[targetIdx] = temp;
+
+  state.storeTop6Ids = list;
+  await saveStoreTop6SettingsToServer(false);
+}
+
+async function saveStoreTop6SettingsToServer(showSuccessAlert = true) {
+  const list = (state.storeTop6Ids || []).slice(0, 6);
+  try {
+    const res = await adminFetch('/api/admin/store-top6-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ top6ProductIds: list })
+    });
+    if (res.ok) {
+      state.storeTop6Ids = list;
+      try {
+        localStorage.setItem('audioking_store_top6', JSON.stringify(list));
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:store-top6-sync', { detail: { top6ProductIds: list } }));
+      renderStoreTop6Manager();
+      populateStoreTop6Dropdown();
+      if (showSuccessAlert) {
+        alert('🎯 Storefront Top 6 products successfully saved! The storefront "All Available Gear" now features these items in slots 1–6.');
+      }
+      return true;
+    } else {
+      alert('Failed to save Top 6 settings to server.');
+      return false;
+    }
+  } catch (err) {
+    alert('Network error while saving Top 6 settings: ' + err.message);
+    return false;
+  }
+}
+
+async function resetStoreTop6Settings() {
+  if (!confirm('Are you sure you want to reset the Top 6 products? The storefront "All Available Gear" will revert to default catalog ordering.')) {
+    return;
+  }
+  state.storeTop6Ids = [];
+  try {
+    const res = await adminFetch('/api/admin/store-top6-settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ top6ProductIds: [] })
+    });
+    if (res.ok) {
+      try {
+        localStorage.removeItem('audioking_store_top6');
+      } catch (err) {}
+      window.dispatchEvent(new CustomEvent('ak:store-top6-sync', { detail: { top6ProductIds: [] } }));
+      renderStoreTop6Manager();
+      populateStoreTop6Dropdown();
+      alert('✓ Reset to default order! The storefront now displays natural catalog sorting.');
+    } else {
+      alert('Failed to reset Top 6 settings.');
+    }
+  } catch (err) {
+    alert('Network error while resetting Top 6 settings.');
+  }
+}
+
+window.loadStoreTop6Settings = loadStoreTop6Settings;
+window.renderStoreTop6Manager = renderStoreTop6Manager;
+window.handleAddStoreTop6Product = handleAddStoreTop6Product;
+window.removeStoreTop6Product = removeStoreTop6Product;
+window.moveStoreTop6Product = moveStoreTop6Product;
+window.saveStoreTop6SettingsToServer = saveStoreTop6SettingsToServer;
+window.resetStoreTop6Settings = resetStoreTop6Settings;
 
 // -------------------------------------------------------------
 // 3. ADD / EDIT PRODUCT FORM CONTROLLER
