@@ -13,6 +13,7 @@ import { showToast } from './toast.js';
 import { getIcon } from '../../assets/icons/icons.js';
 import { ordersService } from '../services/ordersService.js';
 import { resolveProductImage } from '../utils/formatters.js';
+import { showOrderConfirmation } from './orderSuccess.js';
 
 let isFormDirty = false;
 let initialFormData = {};
@@ -484,36 +485,56 @@ export async function renderOrdersList() {
     return;
   }
 
-  container.innerHTML = orders.map(order => {
+  container.innerHTML = orders.map((order, orderIndex) => {
     const d = new Date(order.createdAt || Date.now());
     const dateFormatted = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
     const items = order.items || [];
     const totalAmount = Number(order.totalAmount || 0);
 
+    const rawStatus = String(order.status || 'Confirmed').trim();
+    let displayStatus = 'Confirmed';
+    let statusClass = 'status-confirmed';
+    let isCancelled = false;
+
+    if (/cancel/i.test(rawStatus)) {
+      displayStatus = 'Canceled';
+      statusClass = 'status-canceled';
+      isCancelled = true;
+    } else if (/dispatch|shipped/i.test(rawStatus)) {
+      displayStatus = 'Dispatched';
+      statusClass = 'status-dispatched';
+    } else if (/deliver/i.test(rawStatus)) {
+      displayStatus = 'Delivered';
+      statusClass = 'status-delivered';
+    } else {
+      displayStatus = 'Confirmed';
+      statusClass = 'status-confirmed';
+    }
+
     return `
-      <div class="ak-order-history-card">
+      <div class="ak-order-history-card ${isCancelled ? 'ak-order-card-cancelled' : ''}" data-order-idx="${orderIndex}" style="cursor: pointer; ${isCancelled ? 'opacity: 0.62; filter: grayscale(0.7); background: #F8FAFC;' : ''}" title="Click to view order confirmation & bill">
         <div class="ak-order-card-header">
           <div class="ak-order-meta-col">
             <span class="ak-order-number">ORDER #${order.orderNumber}</span>
             <span class="ak-order-date">Placed on ${dateFormatted}</span>
           </div>
-          <div class="ak-order-status-badge">
-            <span class="ak-status-dot"></span>
-            <span>${order.status || 'Confirmed'} · Preparing for Dispatch</span>
+          <div class="ak-order-status-badge ${statusClass}" ${isCancelled ? 'style="color: #DC2626 !important; background: #FEF2F2 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important;"' : ''}>
+            <span class="ak-status-dot" ${isCancelled ? 'style="background: #DC2626 !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2) !important;"' : ''}></span>
+            <span>${displayStatus}</span>
           </div>
         </div>
 
         <div class="ak-order-card-items">
           ${items.map(item => `
-            <div class="ak-order-card-item-row" data-product-id="${item.productId || item.id || ''}" style="cursor: pointer;" title="Click to view product details">
+            <div class="ak-order-card-item-row" data-order-idx="${orderIndex}" style="cursor: pointer;" title="Click to view order confirmation & bill">
               <div class="ak-order-item-img-box">
                 <img src="${resolveProductImage(item.image)}" alt="${item.name}">
               </div>
               <div class="ak-order-item-info">
                 <h4 class="ak-order-item-name">${item.name}</h4>
-                <div class="ak-order-item-pricing">Qty: ${item.quantity} · ₹${Number(item.unitPrice || 0).toLocaleString('en-IN')}</div>
+                <div class="ak-order-item-pricing">Qty: ${item.quantity || item.qty || 1} · ₹${Number(item.unitPrice != null ? item.unitPrice : item.price || 0).toLocaleString('en-IN')}</div>
               </div>
-              <div class="ak-order-item-subtotal">₹${Number(item.subtotal || 0).toLocaleString('en-IN')}</div>
+              <div class="ak-order-item-subtotal">₹${Number(item.subtotal != null ? item.subtotal : ((item.unitPrice || item.price || 0) * (item.quantity || item.qty || 1))).toLocaleString('en-IN')}</div>
             </div>
           `).join('')}
         </div>
@@ -532,19 +553,49 @@ export async function renderOrdersList() {
     `;
   }).join('');
 
-  // Wire direct click navigation on each product row
-  container.querySelectorAll('.ak-order-card-item-row').forEach(row => {
-    row.addEventListener('click', () => {
-      const pid = row.dataset.productId;
-      if (pid) {
-        const settingsPage = document.getElementById('akAccountSettingsPage');
-        if (settingsPage) settingsPage.style.display = 'none';
-        if (typeof window !== 'undefined' && window.showProduct) {
-          window.showProduct(pid);
-        } else {
-          window.location.hash = `#product?id=${encodeURIComponent(pid)}`;
-        }
+  // Wire clicking on an order card or its items to redirect to order confirmation bill without animation
+  container.querySelectorAll('.ak-order-history-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = Number(card.dataset.orderIdx);
+      const order = orders[idx];
+      if (!order) return;
+
+      const settingsPage = document.getElementById('akAccountSettingsPage');
+      if (settingsPage) {
+        settingsPage.style.display = 'none';
+        settingsPage.classList.remove('active');
       }
+
+      const formattedOrder = {
+        orderId: order.orderNumber || order.id,
+        orderNumber: order.orderNumber,
+        status: order.status,
+        date: order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : null,
+        createdAt: order.createdAt,
+        paymentMethod: order.paymentMethod || 'Online / Prepaid (UPI)',
+        customer: typeof order.shippingAddress === 'string' ? JSON.parse(order.shippingAddress) : (order.shippingAddress || {}),
+        shippingAddress: order.shippingAddress,
+        couponCode: order.couponCode,
+        discountAmount: Number(order.discountAmount) || 0,
+        total: Number(order.totalAmount != null ? order.totalAmount : order.total) || 0,
+        totalAmount: Number(order.totalAmount != null ? order.totalAmount : order.total) || 0,
+        gstNumber: order.gstNumber,
+        items: (order.items || []).map(it => ({
+          id: it.id,
+          productId: it.productId || it.id,
+          name: it.name,
+          image: it.image,
+          price: Number(it.unitPrice != null ? it.unitPrice : it.price) || 0,
+          unitPrice: Number(it.unitPrice != null ? it.unitPrice : it.price) || 0,
+          qty: Number(it.quantity != null ? it.quantity : it.qty) || 1,
+          quantity: Number(it.quantity != null ? it.quantity : it.qty) || 1,
+          subtotal: Number(it.subtotal != null ? it.subtotal : ((it.unitPrice || it.price || 0) * (it.quantity || it.qty || 1))) || 0,
+          brand: it.brand || 'Pro Audio',
+          category: it.category || 'Gear'
+        }))
+      };
+
+      showOrderConfirmation(formattedOrder);
     });
   });
 }

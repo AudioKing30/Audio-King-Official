@@ -399,8 +399,9 @@
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 4px;
-  background: var(--ak-success-soft, #DCFCE7);
-  color: var(--ak-success, #16A34A);
+  background: #DCFCE7 !important;
+  color: #16A34A !important;
+  border: 1px solid rgba(22, 163, 74, 0.25) !important;
   vertical-align: middle;
 }
 

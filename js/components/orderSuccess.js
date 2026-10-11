@@ -110,28 +110,91 @@ export function showOrderConfirmation(orderData) {
 
     const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some(it => it.isPreOrder || (it.badge && it.badge.toLowerCase().includes('pre-order')) || it.stockStatus === 'preorder'));
 
-    // Dynamic title & subtitle for pre-order vs standard orders
+    const rawStatus = String(orderData?.status || '').trim();
+    const isCancelled = /cancel/i.test(rawStatus);
+    const isDispatched = /dispatch|shipped/i.test(rawStatus);
+    const isDelivered = /deliver/i.test(rawStatus);
+
+    const iconWrap = orderView.querySelector('.ak-bill-icon-wrap');
+    if (iconWrap) {
+      if (isCancelled) {
+        iconWrap.style.background = '#FEF2F2';
+        iconWrap.style.borderColor = 'rgba(220, 38, 38, 0.3)';
+        iconWrap.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        `;
+      } else {
+        iconWrap.style.background = '';
+        iconWrap.style.borderColor = '';
+        iconWrap.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+      }
+    }
+
+    // Dynamic title & subtitle for status
     const billTitle = orderView.querySelector('.ak-bill-title');
     const billSubtitle = orderView.querySelector('.ak-bill-subtitle');
     const orderBadge = orderView.querySelector('.ak-order-confirmed-badge');
 
     if (billTitle) {
-      billTitle.textContent = isPreOrderOrder ? 'Pre order has been placed!' : 'Thank you for your order!';
+      if (isCancelled) {
+        billTitle.textContent = 'Order Canceled';
+      } else if (isDelivered) {
+        billTitle.textContent = 'Order Delivered!';
+      } else if (isDispatched) {
+        billTitle.textContent = 'Order Dispatched!';
+      } else {
+        billTitle.textContent = isPreOrderOrder ? 'Pre order has been placed!' : 'Order Confirmed!';
+      }
     }
     if (billSubtitle) {
-      billSubtitle.textContent = isPreOrderOrder
-        ? 'Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days.'
-        : 'Your Audio King purchase has been placed successfully. This is a demo order confirmation page.';
+      if (isCancelled) {
+        billSubtitle.textContent = 'This order has been canceled. Please reach out to AudioKing support if you need any assistance.';
+      } else if (isDelivered) {
+        billSubtitle.textContent = 'This order has been successfully delivered to your shipping address.';
+      } else if (isDispatched) {
+        billSubtitle.textContent = 'Your order is currently in transit with full pan-India transit insurance.';
+      } else if (isPreOrderOrder) {
+        billSubtitle.textContent = 'Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days.';
+      } else {
+        billSubtitle.textContent = 'Your official Audio King order receipt and invoice details.';
+      }
     }
     if (orderBadge) {
-      orderBadge.textContent = isPreOrderOrder ? 'Pre-Order Confirmed' : 'Order Confirmed';
+      if (isCancelled) {
+        orderBadge.textContent = 'Order Canceled';
+        orderBadge.style.background = '#FEF2F2';
+        orderBadge.style.color = '#DC2626';
+        orderBadge.style.borderColor = 'rgba(220, 38, 38, 0.3)';
+      } else if (isDelivered) {
+        orderBadge.textContent = 'Delivered';
+        orderBadge.style.background = '#ECFDF5';
+        orderBadge.style.color = '#047857';
+        orderBadge.style.borderColor = 'rgba(5, 150, 105, 0.3)';
+      } else if (isDispatched) {
+        orderBadge.textContent = 'Dispatched';
+        orderBadge.style.background = '#EFF6FF';
+        orderBadge.style.color = '#1D4ED8';
+        orderBadge.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+      } else {
+        orderBadge.textContent = isPreOrderOrder ? 'Pre-Order Confirmed' : 'Order Confirmed';
+        orderBadge.style.background = '';
+        orderBadge.style.color = '';
+        orderBadge.style.borderColor = '';
+      }
     }
 
-    const orderId = orderData.orderId || generateOrderId();
+    const orderId = orderData.orderId || orderData.orderNumber || generateOrderId();
 
-    const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1), 0);
+    const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price != null ? item.price : item.unitPrice) || 0) * (Number(item.qty || item.quantity) || 1), 0);
     const discount = Number(orderData.discountAmount) || 0;
-    const totalAmount = orderData.total != null ? Number(orderData.total) : Math.max(0, itemsSubtotal - discount);
+    const totalAmount = orderData.total != null ? Number(orderData.total) : (orderData.totalAmount != null ? Number(orderData.totalAmount) : Math.max(0, itemsSubtotal - discount));
 
     // 1. Order ID Header
     const orderIdEl = document.getElementById('akOrderIdVal');
@@ -142,7 +205,8 @@ export function showOrderConfirmation(orderData) {
     if (itemsContainer) {
       itemsContainer.innerHTML = items.map(item => {
         const qty = item.qty || item.quantity || 1;
-        const linePrice = (Number(item.price) || 0) * qty;
+        const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
+        const linePrice = unitP * qty;
         return `
           <div class="ak-order-item-row">
             <div class="ak-order-item-thumb">
@@ -162,14 +226,16 @@ export function showOrderConfirmation(orderData) {
 
     // 3. Order Details Section
     const dateEl = document.getElementById('akOrderDateVal');
-    if (dateEl) dateEl.textContent = orderData.date || formatDate();
+    if (dateEl) {
+      dateEl.textContent = orderData.date || (orderData.createdAt ? new Date(orderData.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : formatDate());
+    }
 
     const paymentEl = document.getElementById('akOrderPaymentVal');
     if (paymentEl) paymentEl.textContent = orderData.paymentMethod || 'Online / Prepaid (UPI)';
 
     // 4. Shipping Details Section
-    const cust = orderData.customer || {
-      name: 'Demo Customer',
+    const cust = orderData.customer || (typeof orderData.shippingAddress === 'object' && orderData.shippingAddress !== null ? orderData.shippingAddress : null) || {
+      name: 'Valued Customer',
       city: 'Mumbai',
       state: 'Maharashtra',
       line1: '123 Audio King Demo Address',
@@ -177,20 +243,33 @@ export function showOrderConfirmation(orderData) {
     };
 
     const custEl = document.getElementById('akOrderCustomerVal');
-    if (custEl) custEl.textContent = cust.name;
+    if (custEl) custEl.textContent = cust.name || cust.fullName || 'Valued Customer';
 
     const cityEl = document.getElementById('akOrderCityVal');
-    if (cityEl) cityEl.textContent = `${cust.city}, ${cust.state || ''}`;
+    if (cityEl) cityEl.textContent = cust.city ? `${cust.city}${cust.state ? ', ' + cust.state : ''}` : '';
 
     const addrEl = document.getElementById('akOrderAddressVal');
-    if (addrEl) addrEl.textContent = `${cust.line1 || cust.address || ''}${cust.line2 ? ', ' + cust.line2 : ''}${cust.pin || cust.pincode ? ', ' + (cust.pin || cust.pincode) : ''}`;
+    if (addrEl) {
+      const parts = [
+        cust.line1 || cust.address || '',
+        cust.line2 || '',
+        cust.pin || cust.pincode ? String(cust.pin || cust.pincode) : ''
+      ].filter(Boolean);
+      addrEl.textContent = parts.length ? parts.join(', ') : (cust.city || 'Address provided at checkout');
+    }
+
+    const disclaimerBox = orderView.querySelector('.ak-order-disclaimer-box');
+    if (disclaimerBox) {
+      disclaimerBox.style.display = 'none';
+    }
 
     // 5. Order Summary Card (Right Column)
     const sumItemsContainer = document.getElementById('akSumItemsContainer');
     if (sumItemsContainer) {
       let linesHtml = items.map(item => {
         const qty = item.qty || item.quantity || 1;
-        const linePrice = (Number(item.price) || 0) * qty;
+        const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
+        const linePrice = unitP * qty;
         return `
           <div class="ak-sum-line">
             <span>${item.name} × ${qty}</span>
@@ -213,6 +292,10 @@ export function showOrderConfirmation(orderData) {
     const totalEl = document.getElementById('akSumTotalVal');
     if (totalEl) totalEl.textContent = formatINR(totalAmount);
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.showOrderConfirmation = showOrderConfirmation;
 }
 
 export function initOrderSuccess() {

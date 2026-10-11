@@ -1188,8 +1188,13 @@ export function renderProductVariants(product) {
     }
 
     if (ppDiscountBadge) {
-      ppDiscountBadge.textContent = '';
-      ppDiscountBadge.style.display = 'none';
+      if (hasDiscount && discountPct > 0) {
+        ppDiscountBadge.textContent = `${discountPct}% OFF`;
+        ppDiscountBadge.style.display = 'inline-flex';
+      } else {
+        ppDiscountBadge.textContent = '';
+        ppDiscountBadge.style.display = 'none';
+      }
     }
 
     if (ppOfferStampContainer) {
@@ -1473,8 +1478,13 @@ export async function showProduct(productOrId, updateHash = true) {
   }
   const ppDiscountBadge = document.getElementById('ppDiscountBadge');
   if (ppDiscountBadge) {
-    ppDiscountBadge.textContent = '';
-    ppDiscountBadge.style.display = 'none';
+    if (prodHasDiscount && prodDiscountPct > 0) {
+      ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
+      ppDiscountBadge.style.display = 'inline-flex';
+    } else {
+      ppDiscountBadge.textContent = '';
+      ppDiscountBadge.style.display = 'none';
+    }
   }
 
   // Stock status (supports in-stock, out-of-stock, and pre-order / coming soon)

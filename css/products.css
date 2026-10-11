@@ -1045,9 +1045,7 @@ span.ak-req, .ak-req {
 .ak-offer-stamp-badge,
 .ak-offer-stamp,
 .ak-offer-stamp-modal,
-.pp-offer-stamp-container,
-.pp-discount-badge,
-.badge-discount {
+.pp-offer-stamp-container {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;

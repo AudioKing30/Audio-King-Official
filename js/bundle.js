@@ -26948,22 +26948,85 @@ Weight: 1.24 lbs (0.567 kg`,
         qty: 1
       }];
       const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
+      const rawStatus = String(orderData?.status || "").trim();
+      const isCancelled = /cancel/i.test(rawStatus);
+      const isDispatched = /dispatch|shipped/i.test(rawStatus);
+      const isDelivered = /deliver/i.test(rawStatus);
+      const iconWrap = orderView.querySelector(".ak-bill-icon-wrap");
+      if (iconWrap) {
+        if (isCancelled) {
+          iconWrap.style.background = "#FEF2F2";
+          iconWrap.style.borderColor = "rgba(220, 38, 38, 0.3)";
+          iconWrap.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        `;
+        } else {
+          iconWrap.style.background = "";
+          iconWrap.style.borderColor = "";
+          iconWrap.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+        }
+      }
       const billTitle = orderView.querySelector(".ak-bill-title");
       const billSubtitle = orderView.querySelector(".ak-bill-subtitle");
       const orderBadge = orderView.querySelector(".ak-order-confirmed-badge");
       if (billTitle) {
-        billTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Thank you for your order!";
+        if (isCancelled) {
+          billTitle.textContent = "Order Canceled";
+        } else if (isDelivered) {
+          billTitle.textContent = "Order Delivered!";
+        } else if (isDispatched) {
+          billTitle.textContent = "Order Dispatched!";
+        } else {
+          billTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Order Confirmed!";
+        }
       }
       if (billSubtitle) {
-        billSubtitle.textContent = isPreOrderOrder ? "Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days." : "Your Audio King purchase has been placed successfully. This is a demo order confirmation page.";
+        if (isCancelled) {
+          billSubtitle.textContent = "This order has been canceled. Please reach out to AudioKing support if you need any assistance.";
+        } else if (isDelivered) {
+          billSubtitle.textContent = "This order has been successfully delivered to your shipping address.";
+        } else if (isDispatched) {
+          billSubtitle.textContent = "Your order is currently in transit with full pan-India transit insurance.";
+        } else if (isPreOrderOrder) {
+          billSubtitle.textContent = "Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days.";
+        } else {
+          billSubtitle.textContent = "Your official Audio King order receipt and invoice details.";
+        }
       }
       if (orderBadge) {
-        orderBadge.textContent = isPreOrderOrder ? "Pre-Order Confirmed" : "Order Confirmed";
+        if (isCancelled) {
+          orderBadge.textContent = "Order Canceled";
+          orderBadge.style.background = "#FEF2F2";
+          orderBadge.style.color = "#DC2626";
+          orderBadge.style.borderColor = "rgba(220, 38, 38, 0.3)";
+        } else if (isDelivered) {
+          orderBadge.textContent = "Delivered";
+          orderBadge.style.background = "#ECFDF5";
+          orderBadge.style.color = "#047857";
+          orderBadge.style.borderColor = "rgba(5, 150, 105, 0.3)";
+        } else if (isDispatched) {
+          orderBadge.textContent = "Dispatched";
+          orderBadge.style.background = "#EFF6FF";
+          orderBadge.style.color = "#1D4ED8";
+          orderBadge.style.borderColor = "rgba(59, 130, 246, 0.3)";
+        } else {
+          orderBadge.textContent = isPreOrderOrder ? "Pre-Order Confirmed" : "Order Confirmed";
+          orderBadge.style.background = "";
+          orderBadge.style.color = "";
+          orderBadge.style.borderColor = "";
+        }
       }
-      const orderId = orderData.orderId || generateOrderId();
-      const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.qty || item.quantity) || 1), 0);
+      const orderId = orderData.orderId || orderData.orderNumber || generateOrderId();
+      const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price != null ? item.price : item.unitPrice) || 0) * (Number(item.qty || item.quantity) || 1), 0);
       const discount = Number(orderData.discountAmount) || 0;
-      const totalAmount = orderData.total != null ? Number(orderData.total) : Math.max(0, itemsSubtotal - discount);
+      const totalAmount = orderData.total != null ? Number(orderData.total) : orderData.totalAmount != null ? Number(orderData.totalAmount) : Math.max(0, itemsSubtotal - discount);
       const orderIdEl = document.getElementById("akOrderIdVal");
       if (orderIdEl)
         orderIdEl.textContent = orderId;
@@ -26971,7 +27034,8 @@ Weight: 1.24 lbs (0.567 kg`,
       if (itemsContainer) {
         itemsContainer.innerHTML = items.map((item) => {
           const qty = item.qty || item.quantity || 1;
-          const linePrice = (Number(item.price) || 0) * qty;
+          const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
+          const linePrice = unitP * qty;
           return `
           <div class="ak-order-item-row">
             <div class="ak-order-item-thumb">
@@ -26989,13 +27053,14 @@ Weight: 1.24 lbs (0.567 kg`,
         }).join("");
       }
       const dateEl = document.getElementById("akOrderDateVal");
-      if (dateEl)
-        dateEl.textContent = orderData.date || formatDate();
+      if (dateEl) {
+        dateEl.textContent = orderData.date || (orderData.createdAt ? new Date(orderData.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : formatDate());
+      }
       const paymentEl = document.getElementById("akOrderPaymentVal");
       if (paymentEl)
         paymentEl.textContent = orderData.paymentMethod || "Online / Prepaid (UPI)";
-      const cust = orderData.customer || {
-        name: "Demo Customer",
+      const cust = orderData.customer || (typeof orderData.shippingAddress === "object" && orderData.shippingAddress !== null ? orderData.shippingAddress : null) || {
+        name: "Valued Customer",
         city: "Mumbai",
         state: "Maharashtra",
         line1: "123 Audio King Demo Address",
@@ -27003,18 +27068,29 @@ Weight: 1.24 lbs (0.567 kg`,
       };
       const custEl = document.getElementById("akOrderCustomerVal");
       if (custEl)
-        custEl.textContent = cust.name;
+        custEl.textContent = cust.name || cust.fullName || "Valued Customer";
       const cityEl = document.getElementById("akOrderCityVal");
       if (cityEl)
-        cityEl.textContent = `${cust.city}, ${cust.state || ""}`;
+        cityEl.textContent = cust.city ? `${cust.city}${cust.state ? ", " + cust.state : ""}` : "";
       const addrEl = document.getElementById("akOrderAddressVal");
-      if (addrEl)
-        addrEl.textContent = `${cust.line1 || cust.address || ""}${cust.line2 ? ", " + cust.line2 : ""}${cust.pin || cust.pincode ? ", " + (cust.pin || cust.pincode) : ""}`;
+      if (addrEl) {
+        const parts = [
+          cust.line1 || cust.address || "",
+          cust.line2 || "",
+          cust.pin || cust.pincode ? String(cust.pin || cust.pincode) : ""
+        ].filter(Boolean);
+        addrEl.textContent = parts.length ? parts.join(", ") : cust.city || "Address provided at checkout";
+      }
+      const disclaimerBox = orderView.querySelector(".ak-order-disclaimer-box");
+      if (disclaimerBox) {
+        disclaimerBox.style.display = "none";
+      }
       const sumItemsContainer = document.getElementById("akSumItemsContainer");
       if (sumItemsContainer) {
         let linesHtml = items.map((item) => {
           const qty = item.qty || item.quantity || 1;
-          const linePrice = (Number(item.price) || 0) * qty;
+          const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
+          const linePrice = unitP * qty;
           return `
           <div class="ak-sum-line">
             <span>${item.name} \xD7 ${qty}</span>
@@ -27036,6 +27112,9 @@ Weight: 1.24 lbs (0.567 kg`,
       if (totalEl)
         totalEl.textContent = formatINR(totalAmount);
     }
+  }
+  if (typeof window !== "undefined") {
+    window.showOrderConfirmation = showOrderConfirmation;
   }
   function initOrderSuccess() {
     const continueBtn = document.getElementById("akOrderContinueBtn");
@@ -29161,35 +29240,53 @@ Weight: 1.24 lbs (0.567 kg`,
       });
       return;
     }
-    container.innerHTML = orders.map((order) => {
+    container.innerHTML = orders.map((order, orderIndex) => {
       const d = new Date(order.createdAt || Date.now());
       const dateFormatted = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
       const items = order.items || [];
       const totalAmount = Number(order.totalAmount || 0);
+      const rawStatus = String(order.status || "Confirmed").trim();
+      let displayStatus = "Confirmed";
+      let statusClass = "status-confirmed";
+      let isCancelled = false;
+      if (/cancel/i.test(rawStatus)) {
+        displayStatus = "Canceled";
+        statusClass = "status-canceled";
+        isCancelled = true;
+      } else if (/dispatch|shipped/i.test(rawStatus)) {
+        displayStatus = "Dispatched";
+        statusClass = "status-dispatched";
+      } else if (/deliver/i.test(rawStatus)) {
+        displayStatus = "Delivered";
+        statusClass = "status-delivered";
+      } else {
+        displayStatus = "Confirmed";
+        statusClass = "status-confirmed";
+      }
       return `
-      <div class="ak-order-history-card">
+      <div class="ak-order-history-card ${isCancelled ? "ak-order-card-cancelled" : ""}" data-order-idx="${orderIndex}" style="cursor: pointer; ${isCancelled ? "opacity: 0.62; filter: grayscale(0.7); background: #F8FAFC;" : ""}" title="Click to view order confirmation & bill">
         <div class="ak-order-card-header">
           <div class="ak-order-meta-col">
             <span class="ak-order-number">ORDER #${order.orderNumber}</span>
             <span class="ak-order-date">Placed on ${dateFormatted}</span>
           </div>
-          <div class="ak-order-status-badge">
-            <span class="ak-status-dot"></span>
-            <span>${order.status || "Confirmed"} \xB7 Preparing for Dispatch</span>
+          <div class="ak-order-status-badge ${statusClass}" ${isCancelled ? 'style="color: #DC2626 !important; background: #FEF2F2 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important;"' : ""}>
+            <span class="ak-status-dot" ${isCancelled ? 'style="background: #DC2626 !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2) !important;"' : ""}></span>
+            <span>${displayStatus}</span>
           </div>
         </div>
 
         <div class="ak-order-card-items">
           ${items.map((item) => `
-            <div class="ak-order-card-item-row" data-product-id="${item.productId || item.id || ""}" style="cursor: pointer;" title="Click to view product details">
+            <div class="ak-order-card-item-row" data-order-idx="${orderIndex}" style="cursor: pointer;" title="Click to view order confirmation & bill">
               <div class="ak-order-item-img-box">
                 <img src="${resolveProductImage(item.image)}" alt="${item.name}">
               </div>
               <div class="ak-order-item-info">
                 <h4 class="ak-order-item-name">${item.name}</h4>
-                <div class="ak-order-item-pricing">Qty: ${item.quantity} \xB7 \u20B9${Number(item.unitPrice || 0).toLocaleString("en-IN")}</div>
+                <div class="ak-order-item-pricing">Qty: ${item.quantity || item.qty || 1} \xB7 \u20B9${Number(item.unitPrice != null ? item.unitPrice : item.price || 0).toLocaleString("en-IN")}</div>
               </div>
-              <div class="ak-order-item-subtotal">\u20B9${Number(item.subtotal || 0).toLocaleString("en-IN")}</div>
+              <div class="ak-order-item-subtotal">\u20B9${Number(item.subtotal != null ? item.subtotal : (item.unitPrice || item.price || 0) * (item.quantity || item.qty || 1)).toLocaleString("en-IN")}</div>
             </div>
           `).join("")}
         </div>
@@ -29207,19 +29304,46 @@ Weight: 1.24 lbs (0.567 kg`,
       </div>
     `;
     }).join("");
-    container.querySelectorAll(".ak-order-card-item-row").forEach((row) => {
-      row.addEventListener("click", () => {
-        const pid = row.dataset.productId;
-        if (pid) {
-          const settingsPage = document.getElementById("akAccountSettingsPage");
-          if (settingsPage)
-            settingsPage.style.display = "none";
-          if (typeof window !== "undefined" && window.showProduct) {
-            window.showProduct(pid);
-          } else {
-            window.location.hash = `#product?id=${encodeURIComponent(pid)}`;
-          }
+    container.querySelectorAll(".ak-order-history-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const idx = Number(card.dataset.orderIdx);
+        const order = orders[idx];
+        if (!order)
+          return;
+        const settingsPage = document.getElementById("akAccountSettingsPage");
+        if (settingsPage) {
+          settingsPage.style.display = "none";
+          settingsPage.classList.remove("active");
         }
+        const formattedOrder = {
+          orderId: order.orderNumber || order.id,
+          orderNumber: order.orderNumber,
+          status: order.status,
+          date: order.createdAt ? new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : null,
+          createdAt: order.createdAt,
+          paymentMethod: order.paymentMethod || "Online / Prepaid (UPI)",
+          customer: typeof order.shippingAddress === "string" ? JSON.parse(order.shippingAddress) : order.shippingAddress || {},
+          shippingAddress: order.shippingAddress,
+          couponCode: order.couponCode,
+          discountAmount: Number(order.discountAmount) || 0,
+          total: Number(order.totalAmount != null ? order.totalAmount : order.total) || 0,
+          totalAmount: Number(order.totalAmount != null ? order.totalAmount : order.total) || 0,
+          gstNumber: order.gstNumber,
+          items: (order.items || []).map((it) => ({
+            id: it.id,
+            productId: it.productId || it.id,
+            name: it.name,
+            image: it.image,
+            price: Number(it.unitPrice != null ? it.unitPrice : it.price) || 0,
+            unitPrice: Number(it.unitPrice != null ? it.unitPrice : it.price) || 0,
+            qty: Number(it.quantity != null ? it.quantity : it.qty) || 1,
+            quantity: Number(it.quantity != null ? it.quantity : it.qty) || 1,
+            subtotal: Number(it.subtotal != null ? it.subtotal : (it.unitPrice || it.price || 0) * (it.quantity || it.qty || 1)) || 0,
+            brand: it.brand || "Pro Audio",
+            category: it.category || "Gear"
+          }))
+        };
+        showOrderConfirmation(formattedOrder);
       });
     });
   }
@@ -33701,8 +33825,13 @@ Message: ${message}`);
         }
       }
       if (ppDiscountBadge) {
-        ppDiscountBadge.textContent = "";
-        ppDiscountBadge.style.display = "none";
+        if (hasDiscount && discountPct > 0) {
+          ppDiscountBadge.textContent = `${discountPct}% OFF`;
+          ppDiscountBadge.style.display = "inline-flex";
+        } else {
+          ppDiscountBadge.textContent = "";
+          ppDiscountBadge.style.display = "none";
+        }
       }
       if (ppOfferStampContainer) {
         ppOfferStampContainer.innerHTML = "";
@@ -33962,8 +34091,13 @@ Message: ${message}`);
     }
     const ppDiscountBadge = document.getElementById("ppDiscountBadge");
     if (ppDiscountBadge) {
-      ppDiscountBadge.textContent = "";
-      ppDiscountBadge.style.display = "none";
+      if (prodHasDiscount && prodDiscountPct > 0) {
+        ppDiscountBadge.textContent = `${prodDiscountPct}% OFF`;
+        ppDiscountBadge.style.display = "inline-flex";
+      } else {
+        ppDiscountBadge.textContent = "";
+        ppDiscountBadge.style.display = "none";
+      }
     }
     const isPreOrder = Boolean(product.isPreOrder || product.badge && product.badge.toLowerCase().includes("pre-order") || product.stockStatus === "preorder");
     const isOutOfStock = Boolean(!isPreOrder && (product.stock === 0 || product.inStock === false || product.isOutOfStock === true || product.stockStatus === "outofstock"));

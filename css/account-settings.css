@@ -833,6 +833,7 @@
   border-radius: 20px;
   font-size: 12.5px;
   font-weight: 600;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .ak-status-dot {
@@ -841,6 +842,59 @@
   border-radius: 50%;
   background: #10B981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.ak-order-status-badge.status-confirmed {
+  background: #ECFDF5;
+  color: #065F46;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+.ak-order-status-badge.status-confirmed .ak-status-dot {
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.ak-order-status-badge.status-dispatched {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border-color: rgba(59, 130, 246, 0.2);
+}
+.ak-order-status-badge.status-dispatched .ak-status-dot {
+  background: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.ak-order-status-badge.status-delivered {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: rgba(5, 150, 105, 0.2);
+}
+.ak-order-status-badge.status-delivered .ak-status-dot {
+  background: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2);
+}
+
+.ak-order-status-badge.status-canceled,
+.ak-order-status-badge.status-cancelled {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+  border-color: rgba(220, 38, 38, 0.25) !important;
+}
+.ak-order-status-badge.status-canceled .ak-status-dot,
+.ak-order-status-badge.status-cancelled .ak-status-dot {
+  background: #DC2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2) !important;
+}
+
+.ak-order-history-card.ak-order-card-cancelled {
+  opacity: 0.62;
+  filter: grayscale(0.7);
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+}
+.ak-order-history-card.ak-order-card-cancelled:hover {
+  opacity: 0.88;
+  filter: grayscale(0.35);
 }
 
 .ak-order-card-items {
