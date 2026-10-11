@@ -129,10 +129,9 @@
         <span class="nav-icon">👥</span>
         <span>Customers</span>
       </a>
-      <a href="policies.html" class="nav-link" data-view="policies">
+      <a class="nav-link" data-view="policies" onclick="switchView('policies')">
         <span class="nav-icon">📜</span>
         <span>Legal &amp; Policies</span>
-        <span style="margin-left: auto; font-size: 11px; opacity: 0.6;">↗</span>
       </a>
       <a class="nav-link" data-view="settings" onclick="switchView('settings')">
         <span class="nav-icon">⚙️</span>
@@ -1218,7 +1217,10 @@
               <h2 class="card-heading">📜 Legal Terms &amp; Policies Manager</h2>
               <p class="card-desc">Update website Terms &amp; Conditions, Return &amp; Refund Policy, Privacy Policy, and Shipping &amp; Payment Policy. Every publication automatically updates the live storefront and records the exact date, day, and time timestamp.</p>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <a href="policies.html" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 9px 14px;">
+                <span>🔗 Open Separate Page ↗</span>
+              </a>
               <button type="button" class="btn-primary" onclick="handleSaveCurrentPolicy(event)" id="policySaveBtn">
                 <span>💾 Save &amp; Publish Policy</span>
               </button>

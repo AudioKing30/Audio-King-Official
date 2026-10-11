@@ -276,6 +276,60 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
   }
 });
 
+// Diagnostic System Email Status API
+app.get('/api/system/email-status', async (req, res) => {
+  try {
+    const { createSmtpTransporter } = require('./email');
+    const t465 = createSmtpTransporter(465, true);
+    const t587 = createSmtpTransporter(587, false);
+
+    let verify465 = 'not_configured';
+    let verify587 = 'not_configured';
+
+    if (t465) {
+      try {
+        await t465.verify();
+        verify465 = 'connected';
+      } catch (e) {
+        verify465 = 'failed: ' + e.message;
+      }
+    }
+
+    if (t587) {
+      try {
+        await t587.verify();
+        verify587 = 'connected';
+      } catch (e) {
+        verify587 = 'failed: ' + e.message;
+      }
+    }
+
+    let logs = [];
+    try {
+      const logPath = path.join(__dirname, 'data', 'email_log.json');
+      if (fs.existsSync(logPath)) {
+        logs = JSON.parse(fs.readFileSync(logPath, 'utf8')).slice(0, 5);
+      }
+    } catch (_) {}
+
+    res.json({
+      success: true,
+      env: {
+        hasGmailUser: !!process.env.GMAIL_USER,
+        hasGmailAppPassword: !!process.env.GMAIL_APP_PASSWORD,
+        hasSmtpHost: !!process.env.SMTP_HOST,
+        emailFrom: process.env.EMAIL_FROM || 'AudioKing <info@audioking.co.in>',
+        emailReplyTo: process.env.EMAIL_REPLY_TO || 'info@audioking.co.in'
+      },
+      smtp465: verify465,
+      smtp587: verify587,
+      recentLogs: logs
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const rootDir = path.resolve(__dirname, '..');
 
 // Dedicated Admin Login Route

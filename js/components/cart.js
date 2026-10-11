@@ -341,11 +341,11 @@ export function closeCartDrawer() {
 }
 
 export function updateCartBadge() {
-  const badge = document.getElementById('akCartBadge');
   const count = getCartCount();
-  if (badge) {
+  const badges = document.querySelectorAll('.ak-cart-badge, #akCartBadge, #akCartBadgeMobile');
+  badges.forEach(badge => {
     badge.textContent = count;
-  }
+  });
 }
 
 export function renderCartDrawer() {

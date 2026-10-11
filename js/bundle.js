@@ -30427,11 +30427,11 @@ Weight: 1.24 lbs (0.567 kg`,
     }
   }
   function updateCartBadge() {
-    const badge = document.getElementById("akCartBadge");
     const count = getCartCount();
-    if (badge) {
+    const badges = document.querySelectorAll(".ak-cart-badge, #akCartBadge, #akCartBadgeMobile");
+    badges.forEach((badge) => {
       badge.textContent = count;
-    }
+    });
   }
   function renderCartDrawer() {
     const container = document.getElementById("akCartItemsList");

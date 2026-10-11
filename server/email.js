@@ -38,10 +38,10 @@ function createSmtpTransporter(overridePort = null, overrideSecure = null) {
     port,
     secure,
     auth: { user, pass },
-    family: 4,               // Force IPv4 to prevent 75s IPv6 stall
-    connectionTimeout: 4000, // 4s max to establish TCP connection
-    greetingTimeout: 4000,   // 4s max for SMTP greeting
-    socketTimeout: 6000      // 6s max for socket inactivity
+    family: 4,                // Force IPv4 to prevent 75s IPv6 stall
+    connectionTimeout: 10000, // 10s max to establish TCP connection
+    greetingTimeout: 10000,   // 10s max for SMTP greeting
+    socketTimeout: 15000      // 15s max for socket inactivity
   });
 }
 
@@ -105,16 +105,21 @@ function wrapEmailTemplate(title, bodyContent) {
  */
 async function sendEmail({ to, subject, html, text }) {
   console.log(`[EMAIL] Preparing to dispatch "${subject}" to ${to}...`);
+  const activeUser = SMTP_USER || GMAIL_USER;
 
   // 1. Primary: SMTP Port 465 SSL
   const primaryTransporter = createSmtpTransporter(465, true);
   if (primaryTransporter) {
     try {
       const info = await new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('SMTP port 465 connection timeout')), 4500);
+        const timer = setTimeout(() => reject(new Error('SMTP port 465 connection timeout')), 12000);
         primaryTransporter.sendMail({
           from: EMAIL_FROM,
           replyTo: EMAIL_REPLY_TO,
+          envelope: {
+            from: activeUser, // Return-path matches SMTP authenticated account -> SPF PASS!
+            to: Array.isArray(to) ? to : [to]
+          },
           to: to,
           subject: subject,
           text: text,
@@ -136,10 +141,14 @@ async function sendEmail({ to, subject, html, text }) {
       if (fallbackTransporter) {
         try {
           const fbInfo = await new Promise((resolve, reject) => {
-            const timer = setTimeout(() => reject(new Error('SMTP port 587 connection timeout')), 4500);
+            const timer = setTimeout(() => reject(new Error('SMTP port 587 connection timeout')), 12000);
             fallbackTransporter.sendMail({
               from: EMAIL_FROM,
               replyTo: EMAIL_REPLY_TO,
+              envelope: {
+                from: activeUser,
+                to: Array.isArray(to) ? to : [to]
+              },
               to: to,
               subject: subject,
               text: text,
@@ -612,6 +621,7 @@ async function sendOrderCancelledEmail({ email, fullName = 'Valued Customer', or
 }
 
 module.exports = {
+  createSmtpTransporter,
   sendEmail,
   sendSignupVerificationEmail,
   sendPasswordResetEmail,
