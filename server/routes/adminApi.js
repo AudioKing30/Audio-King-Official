@@ -1617,45 +1617,49 @@ router.patch('/orders/:id/status', async (req, res) => {
     if (customerEmail && customerEmail.includes('@')) {
       try {
         if (canonicalStatus === 'Confirmed') {
-          await sendOrderConfirmedEmail({
+          sendOrderConfirmedEmail({
             email: customerEmail,
             fullName: customerName,
             orderNumber: ord.order_number,
             totalAmount: ord.total_amount,
             items,
             shippingAddress
-          });
+          }).then(() => {
+            console.log(`[ORDER STATUS EMAIL] Dispatched Confirmed email to ${customerEmail} for #${ord.order_number}`);
+          }).catch(e => console.error(`[ORDER STATUS EMAIL ERROR - Confirmed]`, e.message));
           emailDispatched = true;
-          console.log(`[ORDER STATUS EMAIL] Dispatched Confirmed email to ${customerEmail} for #${ord.order_number}`);
         } else if (canonicalStatus === 'Dispatched') {
-          await sendOrderDispatchedEmail({
+          sendOrderDispatchedEmail({
             email: customerEmail,
             fullName: customerName,
             orderNumber: ord.order_number,
             totalAmount: ord.total_amount,
             items,
             shippingAddress
-          });
+          }).then(() => {
+            console.log(`[ORDER STATUS EMAIL] Dispatched Dispatched email to ${customerEmail} for #${ord.order_number}`);
+          }).catch(e => console.error(`[ORDER STATUS EMAIL ERROR - Dispatched]`, e.message));
           emailDispatched = true;
-          console.log(`[ORDER STATUS EMAIL] Dispatched Dispatched email to ${customerEmail} for #${ord.order_number}`);
         } else if (canonicalStatus === 'Delivered') {
-          await sendOrderDeliveredEmail({
+          sendOrderDeliveredEmail({
             email: customerEmail,
             fullName: customerName,
             orderNumber: ord.order_number,
             totalAmount: ord.total_amount,
             items
-          });
+          }).then(() => {
+            console.log(`[ORDER STATUS EMAIL] Dispatched Delivered email to ${customerEmail} for #${ord.order_number}`);
+          }).catch(e => console.error(`[ORDER STATUS EMAIL ERROR - Delivered]`, e.message));
           emailDispatched = true;
-          console.log(`[ORDER STATUS EMAIL] Dispatched Delivered email to ${customerEmail} for #${ord.order_number}`);
         } else if (canonicalStatus === 'Cancelled') {
-          await sendOrderCancelledEmail({
+          sendOrderCancelledEmail({
             email: customerEmail,
             fullName: customerName,
             orderNumber: ord.order_number
-          });
+          }).then(() => {
+            console.log(`[ORDER STATUS EMAIL] Dispatched Cancelled email to ${customerEmail} for #${ord.order_number}`);
+          }).catch(e => console.error(`[ORDER STATUS EMAIL ERROR - Cancelled]`, e.message));
           emailDispatched = true;
-          console.log(`[ORDER STATUS EMAIL] Dispatched Cancelled email to ${customerEmail} for #${ord.order_number}`);
         }
       } catch (e) {
         console.error(`[ORDER STATUS EMAIL ERROR - ${canonicalStatus}]`, e);

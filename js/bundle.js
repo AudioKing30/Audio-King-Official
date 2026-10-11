@@ -28135,7 +28135,16 @@ Weight: 1.24 lbs (0.567 kg`,
     } catch (_) {
     }
     if (typeof window !== "undefined") {
-      window.location.href = window.location.origin + "/";
+      try {
+        window.scrollTo(0, 0);
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, "", window.location.pathname + "#home");
+        } else {
+          window.location.hash = "#home";
+        }
+      } catch (_) {
+      }
+      window.location.reload();
     }
   }
   async function logout() {
@@ -35984,12 +35993,16 @@ Message: ${message}`);
           submitBtn.disabled = true;
           submitBtn.textContent = "Joining...";
         }
+        const controller = new AbortController();
+        const fetchTimer = setTimeout(() => controller.abort(), 6e3);
         try {
           const res = await fetch(apiUrl("/api/newsletter/subscribe"), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email }),
+            signal: controller.signal
           });
+          clearTimeout(fetchTimer);
           const data = await res.json();
           if (data.success) {
             openCommunityWelcomeModal(email);
@@ -36000,6 +36013,7 @@ Message: ${message}`);
             showToast(data.message || "Subscription failed. Please check your email.", "error");
           }
         } catch (err) {
+          clearTimeout(fetchTimer);
           console.error("[Newsletter submit error]", err);
           openCommunityWelcomeModal(email);
           if (input)

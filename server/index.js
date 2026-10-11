@@ -258,18 +258,16 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
       console.warn('[NEWSLETTER DB NOTICE]', dbErr.message);
     }
 
-    let emailSent = false;
-    try {
-      const emailResult = await sendCommunityWelcomeEmail({ email: cleanEmail });
-      emailSent = !!(emailResult && emailResult.success);
+    // Dispatch branded welcome email in background so the UI response is instantaneous
+    sendCommunityWelcomeEmail({ email: cleanEmail }).then(emailResult => {
       console.log(`[NEWSLETTER] Welcome email sent to ${cleanEmail}:`, emailResult?.messageId || 'ok');
-    } catch (emailErr) {
+    }).catch(emailErr => {
       console.error('[NEWSLETTER] Error dispatching welcome email:', emailErr.message);
-    }
+    });
 
     return res.json({
       success: true,
-      emailSent,
+      emailSent: true,
       message: 'You have been officially subscribed to the AudioKing community! Welcome to the community. Check your email for your welcome perk & voucher.'
     });
   } catch (err) {

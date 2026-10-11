@@ -10,21 +10,38 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const GMAIL_USER = (process.env.GMAIL_USER || 'audioking30@gmail.com').trim();
-const GMAIL_APP_PASSWORD = (process.env.GMAIL_APP_PASSWORD || '').trim().replace(/\s+/g, '');
+const GMAIL_APP_PASSWORD = (process.env.GMAIL_APP_PASSWORD || 'shojvtbwiaagjben').trim().replace(/\s+/g, '');
+const SMTP_HOST = (process.env.SMTP_HOST || '').trim();
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
+const SMTP_USER = (process.env.SMTP_USER || '').trim();
+const SMTP_PASS = (process.env.SMTP_PASS || '').trim().replace(/\s+/g, '');
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
 const EMAIL_FROM = process.env.EMAIL_FROM || 'AudioKing <info@audioking.co.in>';
 const EMAIL_REPLY_TO = process.env.EMAIL_REPLY_TO || 'info@audioking.co.in';
 const EMAIL_LOG_PATH = path.join(__dirname, 'data', 'email_log.json');
 
-// Initialize Nodemailer Gmail Transporter
-let gmailTransporter = null;
-if (GMAIL_USER && GMAIL_APP_PASSWORD) {
-  gmailTransporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: GMAIL_USER,
-      pass: GMAIL_APP_PASSWORD
-    }
+/**
+ * Build a resilient Nodemailer transporter
+ * Enforces family: 4 (IPv4) to prevent 75s Windows/Linux IPv6 DNS delays.
+ */
+function createSmtpTransporter(overridePort = null, overrideSecure = null) {
+  const host = SMTP_HOST || 'smtp.gmail.com';
+  const port = overridePort !== null ? overridePort : (SMTP_PORT || 465);
+  const secure = overrideSecure !== null ? overrideSecure : (port === 465);
+  const user = SMTP_USER || GMAIL_USER;
+  const pass = SMTP_PASS || GMAIL_APP_PASSWORD;
+
+  if (!user || !pass) return null;
+
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    auth: { user, pass },
+    family: 4,               // Force IPv4 to prevent 75s IPv6 stall
+    connectionTimeout: 4000, // 4s max to establish TCP connection
+    greetingTimeout: 4000,   // 4s max for SMTP greeting
+    socketTimeout: 6000      // 6s max for socket inactivity
   });
 }
 
@@ -84,32 +101,62 @@ function wrapEmailTemplate(title, bodyContent) {
 }
 
 /**
- * Send Transactional Email via Gmail SMTP, Resend API, or Local Dev Audit Logger
+ * Send Transactional Email via SMTP (Port 465 SSL with Port 587 Fallback), Resend API, or Local Dev Audit Logger
  */
 async function sendEmail({ to, subject, html, text }) {
   console.log(`[EMAIL] Preparing to dispatch "${subject}" to ${to}...`);
 
-  // 1. Primary: Nodemailer Gmail SMTP Dispatch
-  if (gmailTransporter && GMAIL_USER && GMAIL_APP_PASSWORD) {
+  // 1. Primary: SMTP Port 465 SSL
+  const primaryTransporter = createSmtpTransporter(465, true);
+  if (primaryTransporter) {
     try {
-      const info = await gmailTransporter.sendMail({
-        from: EMAIL_FROM,
-        replyTo: EMAIL_REPLY_TO,
-        envelope: {
-          from: 'info@audioking.co.in',
-          to: Array.isArray(to) ? to : [to]
-        },
-        to: to,
-        subject: subject,
-        text: text,
-        html: html
+      const info = await new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error('SMTP port 465 connection timeout')), 4500);
+        primaryTransporter.sendMail({
+          from: EMAIL_FROM,
+          replyTo: EMAIL_REPLY_TO,
+          to: to,
+          subject: subject,
+          text: text,
+          html: html
+        }, (err, res) => {
+          clearTimeout(timer);
+          if (err) reject(err);
+          else resolve(res);
+        });
       });
-      console.log(`[EMAIL SUCCESS] Dispatched from ${EMAIL_FROM} via Gmail SMTP (Message ID: ${info.messageId}) to ${to}`);
-      return { success: true, messageId: info.messageId, provider: 'gmail_smtp' };
+
+      console.log(`[EMAIL SUCCESS] Dispatched from ${EMAIL_FROM} via SMTP:465 (Message ID: ${info.messageId}) to ${to}`);
+      return { success: true, messageId: info.messageId, provider: 'smtp_465' };
     } catch (smtpErr) {
-      console.error(`[EMAIL SMTP WARNING] Gmail SMTP dispatch failed: ${smtpErr.message}`);
-      console.log(`[EMAIL TIP] To enable live Google SMTP, generate a 16-character App Password at https://myaccount.google.com/apppasswords`);
-      // Fall through to secondary or audit logger so the frontend is never blocked
+      console.warn(`[EMAIL SMTP NOTICE] Port 465 dispatch notice: ${smtpErr.message}. Attempting Port 587 STARTTLS...`);
+      
+      // Fallback: SMTP Port 587 STARTTLS
+      const fallbackTransporter = createSmtpTransporter(587, false);
+      if (fallbackTransporter) {
+        try {
+          const fbInfo = await new Promise((resolve, reject) => {
+            const timer = setTimeout(() => reject(new Error('SMTP port 587 connection timeout')), 4500);
+            fallbackTransporter.sendMail({
+              from: EMAIL_FROM,
+              replyTo: EMAIL_REPLY_TO,
+              to: to,
+              subject: subject,
+              text: text,
+              html: html
+            }, (err, res) => {
+              clearTimeout(timer);
+              if (err) reject(err);
+              else resolve(res);
+            });
+          });
+
+          console.log(`[EMAIL SUCCESS] Dispatched from ${EMAIL_FROM} via SMTP:587 (Message ID: ${fbInfo.messageId}) to ${to}`);
+          return { success: true, messageId: fbInfo.messageId, provider: 'smtp_587' };
+        } catch (fbErr) {
+          console.warn(`[EMAIL SMTP NOTICE] Port 587 also failed: ${fbErr.message}`);
+        }
+      }
     }
   }
 

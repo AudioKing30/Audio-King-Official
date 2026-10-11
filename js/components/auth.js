@@ -382,9 +382,17 @@ export async function executeLogout() {
     sessionStorage.setItem('ak_just_logged_out', '1');
   } catch (_) {}
 
-  // Fully refresh and redirect user to the home page's very first page as if freshly re-entering
+  // Refresh the page in-place and return user to the top of the home page without modifying host/origin
   if (typeof window !== 'undefined') {
-    window.location.href = window.location.origin + '/';
+    try {
+      window.scrollTo(0, 0);
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname + '#home');
+      } else {
+        window.location.hash = '#home';
+      }
+    } catch (_) {}
+    window.location.reload();
   }
 }
 

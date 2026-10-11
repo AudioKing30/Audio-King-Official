@@ -3929,12 +3929,17 @@ function initNewsletter() {
         submitBtn.textContent = 'Joining...';
       }
 
+      const controller = new AbortController();
+      const fetchTimer = setTimeout(() => controller.abort(), 6000);
+
       try {
         const res = await fetch(apiUrl('/api/newsletter/subscribe'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
+          body: JSON.stringify({ email }),
+          signal: controller.signal
         });
+        clearTimeout(fetchTimer);
         const data = await res.json();
         if (data.success) {
           openCommunityWelcomeModal(email);
@@ -3944,6 +3949,7 @@ function initNewsletter() {
           showToast(data.message || 'Subscription failed. Please check your email.', 'error');
         }
       } catch (err) {
+        clearTimeout(fetchTimer);
         console.error('[Newsletter submit error]', err);
         openCommunityWelcomeModal(email);
         if (input) input.value = '';

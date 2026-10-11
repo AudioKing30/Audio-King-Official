@@ -194,8 +194,12 @@ router.post('/signup', async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, 0, 0, ?)
     `).run(codeId, userId, cleanEmail, otpHash, 'signup', metadata, expiresAt, now);
 
-    // Send transactional verification email
-    await sendSignupVerificationEmail(cleanEmail, otp, fullName);
+    // Dispatch transactional verification email in background for instant UI transition
+    sendSignupVerificationEmail(cleanEmail, otp, fullName).then(res => {
+      console.log(`[SIGNUP] Verification email dispatched to ${cleanEmail}:`, res?.messageId || 'ok');
+    }).catch(err => {
+      console.error(`[SIGNUP] Verification email dispatch notice for ${cleanEmail}:`, err.message);
+    });
 
     return res.json({
       success: true,
@@ -405,7 +409,9 @@ router.post('/resend-signup-otp', async (req, res) => {
     `).run(codeId, existing.user_id, cleanEmail, otpHash, 'signup', existing.metadata, expiresAt, new Date().toISOString());
 
     const meta = JSON.parse(existing.metadata || '{}');
-    await sendSignupVerificationEmail(cleanEmail, otp, meta.fullName || 'Musician');
+    sendSignupVerificationEmail(cleanEmail, otp, meta.fullName || 'Musician').catch(err => {
+      console.error(`[RESEND OTP ERROR] Failed dispatch to ${cleanEmail}:`, err.message);
+    });
 
     return res.json({ success: true, message: 'A fresh verification code has been sent.' });
   } catch (err) {
@@ -1003,7 +1009,9 @@ router.post('/forgot-password', async (req, res) => {
         VALUES (?, ?, ?, ?, 'password_reset', null, ?, 0, 0, ?)
       `).run(codeId, user.id, cleanEmail, otpHash, expiresAt, new Date().toISOString());
 
-      await sendPasswordResetEmail(cleanEmail, otp, user.full_name);
+      sendPasswordResetEmail(cleanEmail, otp, user.full_name).catch(err => {
+        console.error(`[FORGOT PASSWORD ERROR] Failed dispatch to ${cleanEmail}:`, err.message);
+      });
     } else {
       // Fake delay to prevent user enumeration
       await new Promise(r => setTimeout(r, 400));
@@ -1133,8 +1141,10 @@ router.post('/reset-password', async (req, res) => {
     db.prepare('DELETE FROM sessions WHERE user_id = ?').run(user.id);
     res.clearCookie('audioking_session');
 
-    // Send confirmation email
-    await sendPasswordChangedEmail(user.email, user.full_name);
+    // Send confirmation email in background
+    sendPasswordChangedEmail(user.email, user.full_name).catch(err => {
+      console.error(`[RESET PASSWORD EMAIL ERROR] Failed dispatch to ${user.email}:`, err.message);
+    });
 
     return res.json({
       success: true,
@@ -1196,7 +1206,9 @@ router.post('/change-password-otp', requireAuth, async (req, res) => {
       VALUES (?, ?, ?, ?, 'change_password', null, ?, 0, 0, ?)
     `).run(codeId, req.user.id, req.user.email, otpHash, expiresAt, new Date().toISOString());
 
-    await sendChangePasswordOtpEmail(req.user.email, otp, req.user.fullName);
+    sendChangePasswordOtpEmail(req.user.email, otp, req.user.fullName).catch(err => {
+      console.error(`[CHANGE PASSWORD OTP ERROR] Failed dispatch to ${req.user.email}:`, err.message);
+    });
 
     return res.json({
       success: true,
@@ -1270,8 +1282,10 @@ router.post('/change-password', requireAuth, async (req, res) => {
     db.prepare('UPDATE users SET password_hash = ?, updated_at = ? WHERE id = ?')
       .run(newHash, now, req.user.id);
 
-    // Send security notification
-    await sendPasswordChangedEmail(req.user.email, req.user.fullName);
+    // Send security notification in background
+    sendPasswordChangedEmail(req.user.email, req.user.fullName).catch(err => {
+      console.error(`[CHANGE PASSWORD ALERT ERROR] Failed dispatch to ${req.user.email}:`, err.message);
+    });
 
     return res.json({ success: true, message: 'Password updated successfully!' });
   } catch (err) {
