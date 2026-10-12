@@ -63,6 +63,9 @@ function syncMasterFiles(oldBrandName, newBrandName) {
         videoType: p.video_type || null,
         videoUrl: p.video_url || null,
         youtubeVideoId: p.youtube_video_id || null,
+        youtubeVideos: (() => {
+          try { return JSON.parse(p.youtube_videos_json || '[]'); } catch (e) { return []; }
+        })(),
         specs: specs,
         deepSpecs: deepSpecs
       };
@@ -771,6 +774,9 @@ router.get('/products', (req, res) => {
         videoType: r.video_type || null,
         videoUrl: r.video_url || null,
         youtubeVideoId: r.youtube_video_id || null,
+        youtubeVideos: (() => {
+          try { return JSON.parse(r.youtube_videos_json || '[]'); } catch (e) { return []; }
+        })(),
         createdAt: r.created_at,
         updatedAt: r.updated_at
       };
@@ -798,6 +804,15 @@ router.get('/products/:id', (req, res) => {
     let deepSpecs = [];
     try { deepSpecs = JSON.parse(r.deep_specs_json || '[]'); } catch (e) {}
 
+    let youtubeVideos = [];
+    try { youtubeVideos = JSON.parse(r.youtube_videos_json || '[]'); } catch (e) {}
+    if (!youtubeVideos.length && r.youtube_video_id) {
+      youtubeVideos = [{
+        id: r.youtube_video_id,
+        url: r.video_url || `https://www.youtube.com/watch?v=${r.youtube_video_id}`
+      }];
+    }
+
     const mrp = Number(r.original_price) || Number(r.price) || 0;
     const sellingPrice = Number(r.price) || mrp;
     const discountPercent = mrp > sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0;
@@ -822,9 +837,10 @@ router.get('/products/:id', (req, res) => {
         description: r.description || '',
         image: r.image || images[0] || 'assets/images/placeholder.svg',
         images,
-        videoType: r.video_type || null,
-        videoUrl: r.video_url || null,
-        youtubeVideoId: r.youtube_video_id || null,
+        videoType: r.video_type || (youtubeVideos.length ? 'youtube' : null),
+        videoUrl: r.video_url || (youtubeVideos[0]?.url || null),
+        youtubeVideoId: r.youtube_video_id || (youtubeVideos[0]?.id || null),
+        youtubeVideos,
         specs,
         deepSpecs,
         createdAt: r.created_at,
@@ -838,9 +854,9 @@ router.get('/products/:id', (req, res) => {
 
 // Helper: Extract YouTube ID from URL or return raw ID
 function parseYouTubeId(input) {
-  if (!input) return null;
+  if (!input || typeof input !== 'string') return null;
   const str = input.trim();
-  const match = str.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  const match = str.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?(?:.*&)?v=|shorts\/|live\/))([\w-]{11})/i);
   if (match) return match[1];
   if (/^[\w-]{11}$/.test(str)) return str;
   return null;

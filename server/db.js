@@ -574,7 +574,7 @@ function initDatabase() {
           subtitle: 'Professional gear for studios, creators, and performers. Find the right equipment for every sound.',
           image_url: 'assets/images/hero/hero-slide-1.png',
           cta_text: 'Explore Pro Audio',
-          cta_link: '#catalog',
+          cta_link: '#store?category=Audio%20Interfaces',
           sort_order: 1
         },
         {
@@ -585,7 +585,7 @@ function initDatabase() {
           subtitle: 'Everything you need to create, connect, and make every session worth remembering.',
           image_url: 'assets/images/hero/hero-slide-2.png',
           cta_text: 'Explore Musical Instruments',
-          cta_link: '#catalog',
+          cta_link: '#store?category=Keyboards',
           sort_order: 2
         },
         {
@@ -596,7 +596,7 @@ function initDatabase() {
           subtitle: 'The right tools help your ideas move faster, sound better, and become something worth sharing.',
           image_url: 'assets/images/hero/hero-slide-create.png',
           cta_text: 'Build Your Setup',
-          cta_link: '#catalog',
+          cta_link: '#store',
           sort_order: 3
         }
       ];

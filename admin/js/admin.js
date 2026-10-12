@@ -1636,6 +1636,15 @@ function renderYouTubeVideoInputs() {
 }
 
 function addYouTubeVideoInputRow() {
+  const inputs = document.querySelectorAll('#productYouTubeInputsList input.form-input');
+  if (inputs.length > 0) {
+    if (!state.formYouTubeVideos) state.formYouTubeVideos = [];
+    inputs.forEach((input, i) => {
+      if (input.value && input.value.trim()) {
+        state.formYouTubeVideos[i] = input.value.trim();
+      }
+    });
+  }
   if (!state.formYouTubeVideos) state.formYouTubeVideos = [];
   state.formYouTubeVideos.push('');
   renderYouTubeVideoInputs();
@@ -1673,22 +1682,26 @@ function updateAllYouTubeVideoPreviews() {
   previewBox.style.display = 'block';
   previewBox.innerHTML = `
     <div style="display: flex; flex-direction: column; gap: 8px;">
-      <div style="font-size: 12px; font-weight: 700; color: #0F172A;">
-        Connected YouTube Demonstration Videos (${validVideos.length}):
+      <div style="font-size: 12px; font-weight: 700; color: #0F172A; display: flex; justify-content: space-between; align-items: center;">
+        <span>Connected YouTube Demonstration Videos (${validVideos.length}):</span>
+        <span style="font-size: 11px; color: #64748B;">Both/all videos playable below</span>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
         ${validVideos.map((v, i) => `
-          <div style="border: 1px solid var(--ak-border); border-radius: 6px; overflow: hidden; background: #0F172A;">
-            <div style="padding: 4px 8px; background: #1E293B; color: #FFF; font-size: 11px; font-weight: 700; display: flex; justify-content: space-between;">
-              <span>Video #${i + 1}</span>
-              <span style="color: #38BDF8;">${v.id}</span>
+          <div style="border: 1px solid var(--ak-border, #E2E8F0); border-radius: 8px; overflow: hidden; background: #0F172A; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="padding: 6px 10px; background: #1E293B; color: #FFF; font-size: 11.5px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+              <span>Demonstration Video #${i + 1}</span>
+              <span style="color: #38BDF8; font-family: monospace; font-size: 11px;">${v.id}</span>
             </div>
-            <iframe 
-              src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?playsinline=1&modestbranding=1&rel=0" 
-              style="width: 100%; height: 140px; border: none; display: block;" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-              allowfullscreen>
-            </iframe>
+            <div style="position: relative; width: 100%; padding-bottom: 56.25%; background: #000;">
+              <iframe 
+                src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0" 
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin"
+                playsinline webkit-playsinline allowfullscreen>
+              </iframe>
+            </div>
           </div>
         `).join('')}
       </div>
@@ -1739,10 +1752,11 @@ async function handleVideoFileUpload(event) {
 }
 
 function parseYouTubeId(input) {
-  if (!input) return null;
-  const match = input.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+  if (!input || typeof input !== 'string') return null;
+  const str = input.trim();
+  const match = str.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?(?:.*&)?v=|shorts\/|live\/))([\w-]{11})/i);
   if (match) return match[1];
-  if (/^[\w-]{11}$/.test(input.trim())) return input.trim();
+  if (/^[\w-]{11}$/.test(str)) return str;
   return null;
 }
 

@@ -529,9 +529,9 @@ if (typeof document !== 'undefined') {
       renderFeaturedProducts();
     });
 
-    // Set store product click callback to open product in a separate page
-    setProductClickCallback((productId) => {
-      openProductInNewPage(productId);
+    // Set store product click callback to open product in same tab (or new tab if modifier key used)
+    setProductClickCallback((productId, event) => {
+      openProductInNewPage(productId, event);
     });
 
     // 2. Interactive features & handlers
@@ -640,7 +640,7 @@ if (typeof document !== 'undefined') {
         const tab = params.tab || parsed.subRoute || 'account';
         showAccountSettings(tab, false);
       } else if (route === 'catalog' || route === 'store' || route === 'pro-audio' || route === 'musical-instruments') {
-        const category = params.category || (route === 'pro-audio' ? 'Studio Monitors' : (route === 'musical-instruments' ? 'Keyboards' : null));
+        const category = params.category || (route === 'pro-audio' ? 'Audio Interfaces' : (route === 'musical-instruments' ? 'Keyboards' : null));
         const brand = params.brand || null;
         const search = params.search || null;
 
@@ -1370,14 +1370,22 @@ export function renderProductVariants(product) {
 }
 
 /**
- * Opens a product in a separate dedicated browser page / tab
+ * Opens a product in the same tab by default (SPA navigation),
+ * or in a new browser tab if Ctrl / Cmd / Middle-click is used.
  */
-export function openProductInNewPage(productOrId) {
+export function openProductInNewPage(productOrId, event) {
   const pId = (productOrId && typeof productOrId === 'object') ? productOrId.id : productOrId;
   if (!pId) return;
   try { recordProductClick(pId); } catch (e) {}
-  const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
-  window.open(targetUrl, '_blank');
+
+  const isModifier = Boolean(event && (event.ctrlKey || event.metaKey || event.button === 1));
+  if (isModifier) {
+    if (event && typeof event.preventDefault === 'function') event.preventDefault();
+    const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
+    window.open(targetUrl, '_blank');
+  } else {
+    showProduct(pId, true);
+  }
 }
 
 /**
@@ -1392,13 +1400,13 @@ export async function showProduct(productOrId, updateHash = true) {
     recordProductClick(productId);
   }
 
-  // If not in memory or missing variant data, await fetch from server
-  if ((!product || product.variantGroups === undefined) && productId) {
+  // Always fetch latest live product details (videos, variants, stock status) from server
+  if (productId) {
     try {
       const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
       if (res.ok) {
         const data = await res.json();
-        if (data.product) {
+        if (data && data.product) {
           product = data.product;
           const idx = AUDIOKING_PRODUCTS.findIndex(p => String(p.id) === String(product.id));
           if (idx >= 0) {
@@ -1411,24 +1419,6 @@ export async function showProduct(productOrId, updateHash = true) {
     } catch (e) {
       console.warn('[AUDIOKING] Could not fetch single product:', e);
     }
-  } else if (productId) {
-    // If product is already in memory, fetch fresh data in background without blocking UI
-    fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`))
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data && data.product) {
-          const fresh = data.product;
-          const idx = AUDIOKING_PRODUCTS.findIndex(p => String(p.id) === String(fresh.id));
-          if (idx >= 0) AUDIOKING_PRODUCTS[idx] = fresh;
-          else AUDIOKING_PRODUCTS.push(fresh);
-
-          if (activeProduct && String(activeProduct.id) === String(fresh.id)) {
-            activeProduct = fresh;
-            renderProductVariants(fresh);
-          }
-        }
-      })
-      .catch(() => {});
   }
 
   if (!product) return;
@@ -2168,6 +2158,22 @@ export async function showProduct(productOrId, updateHash = true) {
       }
     }
 
+    const carouselPrevBtn = document.getElementById('ppVideoCarouselPrev');
+    const carouselNextBtn = document.getElementById('ppVideoCarouselNext');
+    const carouselCounter = document.getElementById('ppVideoCarouselCounter');
+    const carouselDots = document.getElementById('ppVideoCarouselDots');
+
+    function updateCarouselIndicators(vidIndex) {
+      if (carouselCounter) {
+        carouselCounter.textContent = `Video ${vidIndex + 1} of ${ytVideosList.length}`;
+      }
+      if (carouselDots) {
+        carouselDots.querySelectorAll('.pp-video-carousel-dot').forEach((dot, idx) => {
+          dot.classList.toggle('active', idx === vidIndex);
+        });
+      }
+    }
+
     function setDedicatedVideo(vidIndex, autoPlay = false) {
       currentYtIndex = vidIndex;
       activeYtId = ytVideosList[vidIndex]?.id || ytVideosList[0]?.id;
@@ -2191,6 +2197,8 @@ export async function showProduct(productOrId, updateHash = true) {
         dedicatedShieldTitle.textContent = ytVideosList[vidIndex]?.title || `${product.name} Demonstration #${vidIndex + 1}`;
       }
 
+      updateCarouselIndicators(vidIndex);
+
       const playlistContainer = document.getElementById('ppVideoPlaylistContainer');
       if (playlistContainer) {
         playlistContainer.querySelectorAll('.pp-video-playlist-item').forEach((item, idx) => {
@@ -2204,6 +2212,56 @@ export async function showProduct(productOrId, updateHash = true) {
       }
 
       syncDedicatedToggleState(autoPlay);
+    }
+
+    // Configure Controllable Carousel (Manual Prev / Next, Dots & Playlist)
+    if (ytVideosList.length > 1) {
+      if (carouselPrevBtn) {
+        carouselPrevBtn.style.display = 'flex';
+        carouselPrevBtn.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetIdx = (currentYtIndex - 1 + ytVideosList.length) % ytVideosList.length;
+          setDedicatedVideo(targetIdx, isDedicatedPlaying);
+        };
+      }
+      if (carouselNextBtn) {
+        carouselNextBtn.style.display = 'flex';
+        carouselNextBtn.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetIdx = (currentYtIndex + 1) % ytVideosList.length;
+          setDedicatedVideo(targetIdx, isDedicatedPlaying);
+        };
+      }
+      if (carouselCounter) {
+        carouselCounter.style.display = 'block';
+        carouselCounter.textContent = `Video 1 of ${ytVideosList.length}`;
+      }
+      if (carouselDots) {
+        carouselDots.style.display = 'flex';
+        carouselDots.innerHTML = ytVideosList.map((_, i) => `
+          <button type="button" class="pp-video-carousel-dot ${i === 0 ? 'active' : ''}" data-video-index="${i}" aria-label="Go to demonstration video ${i + 1}"></button>
+        `).join('');
+        carouselDots.querySelectorAll('.pp-video-carousel-dot').forEach(dot => {
+          dot.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const idx = parseInt(dot.getAttribute('data-video-index'), 10);
+            if (!isNaN(idx)) {
+              setDedicatedVideo(idx, isDedicatedPlaying);
+            }
+          };
+        });
+      }
+    } else {
+      if (carouselPrevBtn) carouselPrevBtn.style.display = 'none';
+      if (carouselNextBtn) carouselNextBtn.style.display = 'none';
+      if (carouselCounter) carouselCounter.style.display = 'none';
+      if (carouselDots) {
+        carouselDots.style.display = 'none';
+        carouselDots.innerHTML = '';
+      }
     }
 
     if (activeYtId) {
@@ -2432,10 +2490,10 @@ function renderRelatedProducts(product) {
   `).join('');
 
   track.querySelectorAll('.pp-related-card').forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
       const pid = card.dataset.id;
       recordProductClick(pid);
-      openProductInNewPage(pid);
+      openProductInNewPage(pid, e);
     });
   });
 
@@ -2618,6 +2676,8 @@ export function switchProductPanel(tabKey) {
     }
   }
 }
+window.switchProductPanel = switchProductPanel;
+
 
 /**
  * View 4: Contact Us View (Matching reference image)
@@ -3405,7 +3465,11 @@ function setupAppEventListeners() {
   });
 
   window.addEventListener('ak:search-prod', (e) => {
-    openProductInNewPage(e.detail);
+    if (e.detail && typeof e.detail === 'object' && e.detail.id) {
+      openProductInNewPage(e.detail.id, e.detail.event);
+    } else {
+      openProductInNewPage(e.detail);
+    }
   });
 
   window.addEventListener('ak:search-submit', (e) => {
@@ -3884,7 +3948,7 @@ function attachProductCardListeners(container = document) {
       }
       const pId = card.dataset.id;
       if (!pId) return;
-      openProductInNewPage(pId);
+      openProductInNewPage(pId, e);
     };
   });
 }

@@ -433,9 +433,7 @@ export function initNavigation() {
         document.activeElement.blur();
       }
       setActiveNavItem(musicalItem);
-      const firstMusicalEl = musicalItem.querySelector('.ak-cat-filter-link');
-      const firstCatName = firstMusicalEl?.dataset?.cat || firstMusicalEl?.textContent?.trim() || 'Keyboards';
-      window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: firstCatName }));
+      window.dispatchEvent(new CustomEvent('ak:filter-category', { detail: 'Keyboards' }));
     });
   }
 

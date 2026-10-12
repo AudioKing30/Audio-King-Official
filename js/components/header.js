@@ -110,10 +110,10 @@ export function initHeader() {
         });
       });
       suggestionsBox.querySelectorAll('.ak-search-prod-click').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
           const pId = item.dataset.id;
           suggestionsBox.classList.remove('active');
-          window.dispatchEvent(new CustomEvent('ak:search-prod', { detail: pId }));
+          window.dispatchEvent(new CustomEvent('ak:search-prod', { detail: { id: pId, event: e } }));
         });
       });
     });

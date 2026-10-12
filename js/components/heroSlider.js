@@ -19,7 +19,17 @@ export function renderHeroSlidesHtml(slides) {
     const subtitleHtml = slide.subtitle ? `<p class="ak-hero-subtitle">${slide.subtitle}</p>` : '';
     const rawCta = slide.cta_text || slide.ctaText || 'Explore Pro Audio';
     const cleanCtaText = String(rawCta).replace(/(&rarr;|&gt;|→|->|>)+$/gi, '').trim() || 'Explore Pro Audio';
-    const ctaLink = slide.cta_link || slide.ctaLink || '#catalog';
+    let ctaLink = slide.cta_link || slide.ctaLink || '#store';
+    if (!ctaLink || ctaLink === '#catalog' || ctaLink === '#store') {
+      const lower = cleanCtaText.toLowerCase();
+      if (lower.includes('pro audio')) {
+        ctaLink = '#store?category=Audio%20Interfaces';
+      } else if (lower.includes('musical')) {
+        ctaLink = '#store?category=Keyboards';
+      } else if (lower.includes('build your setup')) {
+        ctaLink = '#store';
+      }
+    }
 
     return `
       <div class="ak-hero-slide ${idx === 0 ? 'active' : ''}" style="background-image: url('${bgUrl}');">

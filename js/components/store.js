@@ -851,7 +851,7 @@ function renderStorePage() {
     card.addEventListener('click', (e) => {
       if (e.target.closest('.ak-store-btn-add') || e.target.closest('.ak-store-qty-control')) return;
       if (onProductClickCallback) {
-        onProductClickCallback(pid);
+        onProductClickCallback(pid, e);
       }
     });
   });
@@ -867,7 +867,7 @@ function renderStorePage() {
       const pid = btn.dataset.id;
       const product = allProducts.find(p => p.id === pid);
       if (product && product.hasVariants) {
-        if (onProductClickCallback) onProductClickCallback(pid);
+        if (onProductClickCallback) onProductClickCallback(pid, e);
         return;
       }
       const isPreOrder = Boolean(product && (product.isPreOrder || product.stockStatus === 'preorder' || (product.badge && product.badge.toLowerCase().includes('pre-order'))));

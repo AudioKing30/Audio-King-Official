@@ -30788,10 +30788,10 @@ Weight: 1.24 lbs (0.567 kg`,
           });
         });
         suggestionsBox.querySelectorAll(".ak-search-prod-click").forEach((item) => {
-          item.addEventListener("click", () => {
+          item.addEventListener("click", (e2) => {
             const pId = item.dataset.id;
             suggestionsBox.classList.remove("active");
-            window.dispatchEvent(new CustomEvent("ak:search-prod", { detail: pId }));
+            window.dispatchEvent(new CustomEvent("ak:search-prod", { detail: { id: pId, event: e2 } }));
           });
         });
       });
@@ -31181,9 +31181,7 @@ Weight: 1.24 lbs (0.567 kg`,
           document.activeElement.blur();
         }
         setActiveNavItem(musicalItem);
-        const firstMusicalEl = musicalItem.querySelector(".ak-cat-filter-link");
-        const firstCatName = firstMusicalEl?.dataset?.cat || firstMusicalEl?.textContent?.trim() || "Keyboards";
-        window.dispatchEvent(new CustomEvent("ak:filter-category", { detail: firstCatName }));
+        window.dispatchEvent(new CustomEvent("ak:filter-category", { detail: "Keyboards" }));
       });
     }
     const mobileBtn = document.getElementById("akMobileMenuBtn");
@@ -31246,7 +31244,17 @@ Weight: 1.24 lbs (0.567 kg`,
       const subtitleHtml = slide.subtitle ? `<p class="ak-hero-subtitle">${slide.subtitle}</p>` : "";
       const rawCta = slide.cta_text || slide.ctaText || "Explore Pro Audio";
       const cleanCtaText = String(rawCta).replace(/(&rarr;|&gt;|→|->|>)+$/gi, "").trim() || "Explore Pro Audio";
-      const ctaLink = slide.cta_link || slide.ctaLink || "#catalog";
+      let ctaLink = slide.cta_link || slide.ctaLink || "#store";
+      if (!ctaLink || ctaLink === "#catalog" || ctaLink === "#store") {
+        const lower = cleanCtaText.toLowerCase();
+        if (lower.includes("pro audio")) {
+          ctaLink = "#store?category=Audio%20Interfaces";
+        } else if (lower.includes("musical")) {
+          ctaLink = "#store?category=Keyboards";
+        } else if (lower.includes("build your setup")) {
+          ctaLink = "#store";
+        }
+      }
       return `
       <div class="ak-hero-slide ${idx === 0 ? "active" : ""}" style="background-image: url('${bgUrl}');">
         <div class="ak-hero-overlay"></div>
@@ -32846,7 +32854,7 @@ Message: ${message}`);
         if (e.target.closest(".ak-store-btn-add") || e.target.closest(".ak-store-qty-control"))
           return;
         if (onProductClickCallback) {
-          onProductClickCallback(pid);
+          onProductClickCallback(pid, e);
         }
       });
     });
@@ -32862,7 +32870,7 @@ Message: ${message}`);
         const product = allProducts.find((p) => p.id === pid);
         if (product && product.hasVariants) {
           if (onProductClickCallback)
-            onProductClickCallback(pid);
+            onProductClickCallback(pid, e);
           return;
         }
         const isPreOrder = Boolean(product && (product.isPreOrder || product.stockStatus === "preorder" || product.badge && product.badge.toLowerCase().includes("pre-order")));
@@ -33380,8 +33388,8 @@ Message: ${message}`);
         }
         renderFeaturedProducts();
       });
-      setProductClickCallback((productId) => {
-        openProductInNewPage(productId);
+      setProductClickCallback((productId, event) => {
+        openProductInNewPage(productId, event);
       });
       initProductTabs();
       initBrandRow();
@@ -33465,7 +33473,7 @@ Message: ${message}`);
           const tab = params.tab || parsed.subRoute || "account";
           showAccountSettings(tab, false);
         } else if (route === "catalog" || route === "store" || route === "pro-audio" || route === "musical-instruments") {
-          const category = params.category || (route === "pro-audio" ? "Studio Monitors" : route === "musical-instruments" ? "Keyboards" : null);
+          const category = params.category || (route === "pro-audio" ? "Audio Interfaces" : route === "musical-instruments" ? "Keyboards" : null);
           const brand = params.brand || null;
           const search = params.search || null;
           if (search) {
@@ -34079,7 +34087,7 @@ Message: ${message}`);
     renderVariantsUI();
     updateVariantDisplay();
   }
-  function openProductInNewPage(productOrId) {
+  function openProductInNewPage(productOrId, event) {
     const pId = productOrId && typeof productOrId === "object" ? productOrId.id : productOrId;
     if (!pId)
       return;
@@ -34087,8 +34095,15 @@ Message: ${message}`);
       recordProductClick(pId);
     } catch (e) {
     }
-    const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
-    window.open(targetUrl, "_blank");
+    const isModifier = Boolean(event && (event.ctrlKey || event.metaKey || event.button === 1));
+    if (isModifier) {
+      if (event && typeof event.preventDefault === "function")
+        event.preventDefault();
+      const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
+      window.open(targetUrl, "_blank");
+    } else {
+      showProduct(pId, true);
+    }
   }
   async function showProduct(productOrId, updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash)))
@@ -34098,12 +34113,12 @@ Message: ${message}`);
     if (productId) {
       recordProductClick(productId);
     }
-    if ((!product || product.variantGroups === void 0) && productId) {
+    if (productId) {
       try {
         const res = await fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`));
         if (res.ok) {
           const data = await res.json();
-          if (data.product) {
+          if (data && data.product) {
             product = data.product;
             const idx = AUDIOKING_PRODUCTS.findIndex((p) => String(p.id) === String(product.id));
             if (idx >= 0) {
@@ -34116,22 +34131,6 @@ Message: ${message}`);
       } catch (e) {
         console.warn("[AUDIOKING] Could not fetch single product:", e);
       }
-    } else if (productId) {
-      fetch(apiUrl(`/api/products/${encodeURIComponent(productId)}`)).then((res) => res.ok ? res.json() : null).then((data) => {
-        if (data && data.product) {
-          const fresh = data.product;
-          const idx = AUDIOKING_PRODUCTS.findIndex((p) => String(p.id) === String(fresh.id));
-          if (idx >= 0)
-            AUDIOKING_PRODUCTS[idx] = fresh;
-          else
-            AUDIOKING_PRODUCTS.push(fresh);
-          if (activeProduct && String(activeProduct.id) === String(fresh.id)) {
-            activeProduct = fresh;
-            renderProductVariants(fresh);
-          }
-        }
-      }).catch(() => {
-      });
     }
     if (!product)
       return;
@@ -34794,6 +34793,15 @@ Message: ${message}`);
           if (label)
             label.textContent = playing ? "Pause" : "Play";
         }
+      }, updateCarouselIndicators = function(vidIndex) {
+        if (carouselCounter) {
+          carouselCounter.textContent = `Video ${vidIndex + 1} of ${ytVideosList.length}`;
+        }
+        if (carouselDots) {
+          carouselDots.querySelectorAll(".pp-video-carousel-dot").forEach((dot, idx) => {
+            dot.classList.toggle("active", idx === vidIndex);
+          });
+        }
       }, setDedicatedVideo = function(vidIndex, autoPlay = false) {
         currentYtIndex = vidIndex;
         activeYtId = ytVideosList[vidIndex]?.id || ytVideosList[0]?.id;
@@ -34816,6 +34824,7 @@ Message: ${message}`);
         if (dedicatedShieldTitle) {
           dedicatedShieldTitle.textContent = ytVideosList[vidIndex]?.title || `${product.name} Demonstration #${vidIndex + 1}`;
         }
+        updateCarouselIndicators(vidIndex);
         const playlistContainer2 = document.getElementById("ppVideoPlaylistContainer");
         if (playlistContainer2) {
           playlistContainer2.querySelectorAll(".pp-video-playlist-item").forEach((item, idx) => {
@@ -34845,6 +34854,61 @@ Message: ${message}`);
       if (dedicatedShieldTitle)
         dedicatedShieldTitle.textContent = ytVideosList[0]?.title || `${product.name} Demonstration`;
       let isDedicatedPlaying = false;
+      const carouselPrevBtn = document.getElementById("ppVideoCarouselPrev");
+      const carouselNextBtn = document.getElementById("ppVideoCarouselNext");
+      const carouselCounter = document.getElementById("ppVideoCarouselCounter");
+      const carouselDots = document.getElementById("ppVideoCarouselDots");
+      if (ytVideosList.length > 1) {
+        if (carouselPrevBtn) {
+          carouselPrevBtn.style.display = "flex";
+          carouselPrevBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetIdx = (currentYtIndex - 1 + ytVideosList.length) % ytVideosList.length;
+            setDedicatedVideo(targetIdx, isDedicatedPlaying);
+          };
+        }
+        if (carouselNextBtn) {
+          carouselNextBtn.style.display = "flex";
+          carouselNextBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const targetIdx = (currentYtIndex + 1) % ytVideosList.length;
+            setDedicatedVideo(targetIdx, isDedicatedPlaying);
+          };
+        }
+        if (carouselCounter) {
+          carouselCounter.style.display = "block";
+          carouselCounter.textContent = `Video 1 of ${ytVideosList.length}`;
+        }
+        if (carouselDots) {
+          carouselDots.style.display = "flex";
+          carouselDots.innerHTML = ytVideosList.map((_, i) => `
+          <button type="button" class="pp-video-carousel-dot ${i === 0 ? "active" : ""}" data-video-index="${i}" aria-label="Go to demonstration video ${i + 1}"></button>
+        `).join("");
+          carouselDots.querySelectorAll(".pp-video-carousel-dot").forEach((dot) => {
+            dot.onclick = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const idx = parseInt(dot.getAttribute("data-video-index"), 10);
+              if (!isNaN(idx)) {
+                setDedicatedVideo(idx, isDedicatedPlaying);
+              }
+            };
+          });
+        }
+      } else {
+        if (carouselPrevBtn)
+          carouselPrevBtn.style.display = "none";
+        if (carouselNextBtn)
+          carouselNextBtn.style.display = "none";
+        if (carouselCounter)
+          carouselCounter.style.display = "none";
+        if (carouselDots) {
+          carouselDots.style.display = "none";
+          carouselDots.innerHTML = "";
+        }
+      }
       if (activeYtId) {
         setDedicatedVideo(0, false);
       }
@@ -35046,10 +35110,10 @@ Message: ${message}`);
     </article>
   `).join("");
     track.querySelectorAll(".pp-related-card").forEach((card) => {
-      card.addEventListener("click", () => {
+      card.addEventListener("click", (e) => {
         const pid = card.dataset.id;
         recordProductClick(pid);
-        openProductInNewPage(pid);
+        openProductInNewPage(pid, e);
       });
     });
     const prevBtn = document.getElementById("ppRelatedPrevBtn");
@@ -35196,6 +35260,7 @@ Message: ${message}`);
       }
     }
   }
+  window.switchProductPanel = switchProductPanel;
   function showContact(updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showContact(updateHash)))
       return;
@@ -35892,7 +35957,11 @@ Message: ${message}`);
       showCatalog(e.detail, "category");
     });
     window.addEventListener("ak:search-prod", (e) => {
-      openProductInNewPage(e.detail);
+      if (e.detail && typeof e.detail === "object" && e.detail.id) {
+        openProductInNewPage(e.detail.id, e.detail.event);
+      } else {
+        openProductInNewPage(e.detail);
+      }
     });
     window.addEventListener("ak:search-submit", (e) => {
       showCatalog(e.detail, "search");
@@ -36284,7 +36353,7 @@ Message: ${message}`);
         const pId = card.dataset.id;
         if (!pId)
           return;
-        openProductInNewPage(pId);
+        openProductInNewPage(pId, e);
       };
     });
   }

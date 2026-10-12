@@ -579,7 +579,7 @@
             <span class="ak-hero-eyebrow">PROFESSIONAL AUDIO</span>
             <h1 class="ak-hero-title">Sound. <span class="ak-hero-accent">Built Better.</span></h1>
             <p class="ak-hero-subtitle">Professional gear for studios, creators, and performers. Find the right equipment for every sound.</p>
-            <a href="#catalog" class="ak-hero-cta">Explore Pro Audio <span class="ak-cta-arrow">&rarr;</span></a>
+            <a href="#store?category=Audio%20Interfaces" class="ak-hero-cta">Explore Pro Audio <span class="ak-cta-arrow">&rarr;</span></a>
           </div>
         </div>
 
@@ -590,7 +590,7 @@
             <span class="ak-hero-eyebrow">MAKE MUSIC TOGETHER</span>
             <h1 class="ak-hero-title">Your Sound. Your People. Your <span class="ak-hero-accent">Moment.</span></h1>
             <p class="ak-hero-subtitle">Everything you need to create, connect, and make every session worth remembering.</p>
-            <a href="#catalog" class="ak-hero-cta">Explore Musical Instruments <span class="ak-cta-arrow">&rarr;</span></a>
+            <a href="#store?category=Keyboards" class="ak-hero-cta">Explore Musical Instruments <span class="ak-cta-arrow">&rarr;</span></a>
           </div>
         </div>
 
@@ -600,7 +600,7 @@
           <div class="ak-hero-content">
             <h1 class="ak-hero-title">Turn Ideas Into <span class="ak-hero-accent">Sound.</span></h1>
             <p class="ak-hero-subtitle">The right tools help your ideas move faster, sound better, and become something worth sharing.</p>
-            <a href="#catalog" class="ak-hero-cta">Build Your Setup <span class="ak-cta-arrow">&rarr;</span></a>
+            <a href="#store" class="ak-hero-cta">Build Your Setup <span class="ak-cta-arrow">&rarr;</span></a>
           </div>
         </div>
       </div>
@@ -620,7 +620,7 @@
 
     <!-- SECTION 2: THREE MAIN CATEGORY CARDS -->
     <section class="ak-major-categories ak-reveal">
-      <div class="ak-category-card" onclick="window.location.hash='catalog'">
+      <div class="ak-category-card" onclick="window.location.hash='#store?category=Audio%20Interfaces'">
         <div class="ak-cat-card-bg" style="background-image: url('assets/images/hero/category-pro-audio.jpg');"></div>
         <div class="ak-cat-card-overlay"></div>
         <div class="ak-cat-card-content">
@@ -630,7 +630,7 @@
         </div>
       </div>
 
-      <div class="ak-category-card" onclick="window.location.hash='catalog'">
+      <div class="ak-category-card" onclick="window.location.hash='#store?category=Keyboards'">
         <div class="ak-cat-card-bg" style="background-image: url('assets/images/hero/category-musical.jpg');"></div>
         <div class="ak-cat-card-overlay"></div>
         <div class="ak-cat-card-content">
@@ -1408,9 +1408,21 @@
                       <span class="ak-yt-cover-sub">Studio Acoustics & Performance Demo</span>
                     </div>
                   </div>
+
+                  <!-- Controllable Video Carousel Prev / Next Buttons (Manual Control) -->
+                  <button type="button" class="pp-video-carousel-btn prev" id="ppVideoCarouselPrev" aria-label="Previous Demonstration Video" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  </button>
+                  <button type="button" class="pp-video-carousel-btn next" id="ppVideoCarouselNext" aria-label="Next Demonstration Video" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                  <div class="pp-video-carousel-counter" id="ppVideoCarouselCounter" style="display: none;">Video 1 of 2</div>
+                </div>
+
+                <!-- Carousel Pagination Dots -->
+                <div class="pp-video-carousel-dots" id="ppVideoCarouselDots" style="display: none;"></div>
+                <div id="ppVideoPlaylistContainer" class="pp-video-playlist" style="display: none;"></div>
               </div>
-              <div id="ppVideoPlaylistContainer" class="pp-video-playlist" style="display: none;"></div>
-            </div>
           </div>
         </div>
       </div>

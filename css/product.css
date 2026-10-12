@@ -2119,5 +2119,109 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
   }
 }
 
+/* ========================================================
+   CONTROLLABLE PRODUCT VIDEO CAROUSEL
+   ======================================================== */
+.pp-video-player-wrapper {
+  position: relative;
+}
 
+.pp-video-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
 
+.pp-video-carousel-btn:hover {
+  background: var(--ak-orange, #EA580C);
+  border-color: var(--ak-orange, #EA580C);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.45);
+}
+
+.pp-video-carousel-btn.prev {
+  left: 12px;
+}
+
+.pp-video-carousel-btn.next {
+  right: 12px;
+}
+
+.pp-video-carousel-counter {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #F8FAFC;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 9;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pp-video-carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pp-video-carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #CBD5E1;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pp-video-carousel-dot:hover {
+  background: #94A3B8;
+}
+
+.pp-video-carousel-dot.active {
+  background: var(--ak-orange, #EA580C);
+  width: 26px;
+  border-radius: 12px;
+}
+
+@media (max-width: 640px) {
+  .pp-video-carousel-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .pp-video-carousel-btn.prev {
+    left: 8px;
+  }
+  .pp-video-carousel-btn.next {
+    right: 8px;
+  }
+  .pp-video-carousel-counter {
+    top: 8px;
+    right: 8px;
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
