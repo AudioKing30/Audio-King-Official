@@ -784,7 +784,7 @@ function populateStoreTop6Dropdown() {
   const allProducts = (state.products && state.products.length > 0) ? state.products : (window.AUDIOKING_PRODUCTS || []);
   const top6Set = new Set((state.storeTop6Ids || []).map(String));
 
-  let html = '<option value="">-- Select a product to prioritize in Top 6 --</option>';
+  let html = '<option value="">-- Select a product to prioritize in Top 12 --</option>';
   allProducts.forEach(p => {
     const isChosen = top6Set.has(String(p.id));
     const slotIndex = isChosen ? (state.storeTop6Ids.indexOf(String(p.id)) + 1) : null;
@@ -808,13 +808,13 @@ function renderStoreTop6Manager() {
       countBadge.textContent = 'Default Order';
       countBadge.className = 'badge-pending';
     } else {
-      countBadge.textContent = `${list.length} of 6 Customized`;
+      countBadge.textContent = `${list.length} of 12 Customized`;
       countBadge.className = 'badge-active';
     }
   }
 
   let html = '';
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 12; i++) {
     const pid = list[i];
     const prod = pid ? pMap.get(String(pid)) : null;
 
@@ -834,7 +834,7 @@ function renderStoreTop6Manager() {
           <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
             ${i > 0 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${prod.id}', -1)" title="Move Up" style="padding: 4px 6px; font-size: 12px;">▲</button>` : ''}
             ${i < list.length - 1 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${prod.id}', 1)" title="Move Down" style="padding: 4px 6px; font-size: 12px;">▼</button>` : ''}
-            <button type="button" class="btn-icon" onclick="removeStoreTop6Product('${prod.id}')" title="Remove from Top 6" style="padding: 4px 6px; font-size: 12px; color: #EF4444; border-color: #FECACA;">✕</button>
+            <button type="button" class="btn-icon" onclick="removeStoreTop6Product('${prod.id}')" title="Remove from Top 12" style="padding: 4px 6px; font-size: 12px; color: #EF4444; border-color: #FECACA;">✕</button>
           </div>
         </div>
       `;
@@ -865,12 +865,12 @@ async function handleAddStoreTop6Product() {
 
   const productId = dropdown.value;
   if (!productId) {
-    alert('Please select a product from the dropdown to prioritize in Top 6.');
+    alert('Please select a product from the dropdown to prioritize in Top 12.');
     return;
   }
 
   const slotNum = parseInt(slotInput.value, 10);
-  const targetIndex = (!isNaN(slotNum) && slotNum >= 1 && slotNum <= 6) ? slotNum - 1 : state.storeTop6Ids.length;
+  const targetIndex = (!isNaN(slotNum) && slotNum >= 1 && slotNum <= 12) ? slotNum - 1 : state.storeTop6Ids.length;
 
   let list = [...(state.storeTop6Ids || [])].map(String);
   list = list.filter(id => id !== String(productId));
@@ -880,7 +880,7 @@ async function handleAddStoreTop6Product() {
   } else {
     list.splice(targetIndex, 0, String(productId));
   }
-  list = list.slice(0, 6);
+  list = list.slice(0, 12);
 
   state.storeTop6Ids = list;
   await saveStoreTop6SettingsToServer(false);
@@ -908,7 +908,7 @@ async function moveStoreTop6Product(productId, delta) {
 }
 
 async function saveStoreTop6SettingsToServer(showSuccessAlert = true) {
-  const list = (state.storeTop6Ids || []).slice(0, 6);
+  const list = (state.storeTop6Ids || []).slice(0, 12);
   try {
     const res = await adminFetch('/api/admin/store-top6-settings', {
       method: 'PUT',
@@ -924,11 +924,11 @@ async function saveStoreTop6SettingsToServer(showSuccessAlert = true) {
       renderStoreTop6Manager();
       populateStoreTop6Dropdown();
       if (showSuccessAlert) {
-        alert('🎯 Storefront Top 6 products successfully saved! The storefront "All Available Gear" now features these items in slots 1–6.');
+        alert('🎯 Storefront Top 12 products successfully saved! The storefront "All Available Gear" now features these items in slots 1–12.');
       }
       return true;
     } else {
-      alert('Failed to save Top 6 settings to server.');
+      alert('Failed to save Top 12 settings to server.');
       return false;
     }
   } catch (err) {

@@ -1810,10 +1810,10 @@ export async function showProduct(productOrId, updateHash = true) {
       if (slide.type === 'video') {
         return `
           <div class="pp-carousel-slide pp-slide-video" data-index="${idx}">
-            <div class="ak-yt-wrapper" id="ppCarouselYtWrapper">
-              <iframe id="ppCarouselVideoIframe" class="pp-video-iframe" src="about:blank" data-src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(slide.videoId)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3" title="${slide.alt}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" playsinline webkit-playsinline allowfullscreen></iframe>
+            <div class="ak-yt-wrapper pp-carousel-yt-wrapper">
+              <iframe class="pp-video-iframe pp-carousel-video-iframe" src="about:blank" data-src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(slide.videoId)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3" title="${slide.alt}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" playsinline webkit-playsinline allowfullscreen></iframe>
               <!-- Top Shield: Shields YouTube title, channel avatar & share popup -->
-              <div class="ak-yt-shield-top" id="ppCarouselShieldTop" title="Toggle Play / Pause">
+              <div class="ak-yt-shield-top pp-carousel-shield-top" title="Toggle Play / Pause">
                 <div class="ak-yt-shield-brand">
                   <span class="ak-yt-dot"></span>
                   <span>AudioKing Studio Player</span>
@@ -1821,8 +1821,8 @@ export async function showProduct(productOrId, updateHash = true) {
                 <span class="ak-yt-shield-title">${slide.alt}</span>
               </div>
               <!-- Bottom Shield: Shields 'Watch on YouTube', logo watermark & link icons -->
-              <div class="ak-yt-shield-bottom" id="ppCarouselShieldBottom">
-                <button type="button" class="ak-yt-bottom-play-toggle" id="ppCarouselBottomToggle" aria-label="Toggle Play / Pause">
+              <div class="ak-yt-shield-bottom pp-carousel-shield-bottom">
+                <button type="button" class="ak-yt-bottom-play-toggle pp-carousel-bottom-toggle" aria-label="Toggle Play / Pause">
                   <svg class="ak-play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
                   <svg class="ak-pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
                   <span class="ak-toggle-label">Play</span>
@@ -1831,7 +1831,7 @@ export async function showProduct(productOrId, updateHash = true) {
                 <span class="ak-yt-corner-badge">AudioKing HD</span>
               </div>
               <!-- Play Cover: Custom poster with central play button -->
-              <div class="ak-yt-play-cover" id="ppCarouselYtCover" role="button" aria-label="Play In-Studio Demonstration Video">
+              <div class="ak-yt-play-cover pp-carousel-yt-cover" role="button" aria-label="Play In-Studio Demonstration Video">
                 <img class="ak-yt-cover-bg" src="https://img.youtube.com/vi/${encodeURIComponent(slide.videoId)}/hqdefault.jpg" alt="${slide.alt}" />
                 <div class="ak-yt-cover-content">
                   <div class="ak-yt-play-btn">
@@ -1852,74 +1852,85 @@ export async function showProduct(productOrId, updateHash = true) {
       `;
     }).join('');
 
-    // Wire up Carousel Video Cover and Shields
-    const carouselCover = track.querySelector('#ppCarouselYtCover');
-    const carouselIframe = track.querySelector('#ppCarouselVideoIframe');
-    const carouselShieldTop = track.querySelector('#ppCarouselShieldTop');
-    const carouselBottomToggle = track.querySelector('#ppCarouselBottomToggle');
-    let isCarouselPlaying = false;
+    // Wire up ALL Carousel Video Slides independently (Supports multiple videos)
+    track.querySelectorAll('.pp-slide-video').forEach((videoSlide) => {
+      const carouselCover = videoSlide.querySelector('.pp-carousel-yt-cover');
+      const carouselIframe = videoSlide.querySelector('.pp-carousel-video-iframe');
+      const carouselShieldTop = videoSlide.querySelector('.pp-carousel-shield-top');
+      const carouselBottomToggle = videoSlide.querySelector('.pp-carousel-bottom-toggle');
+      let isCarouselPlaying = false;
 
-    function syncCarouselToggleState(playing) {
-      isCarouselPlaying = playing;
-      if (carouselBottomToggle) {
-        const playIcon = carouselBottomToggle.querySelector('.ak-play-icon');
-        const pauseIcon = carouselBottomToggle.querySelector('.ak-pause-icon');
-        const label = carouselBottomToggle.querySelector('.ak-toggle-label');
-        if (playIcon) playIcon.style.display = playing ? 'none' : 'inline-block';
-        if (pauseIcon) pauseIcon.style.display = playing ? 'inline-block' : 'none';
-        if (label) label.textContent = playing ? 'Pause' : 'Play';
+      function syncToggle(playing) {
+        isCarouselPlaying = playing;
+        if (carouselBottomToggle) {
+          const playIcon = carouselBottomToggle.querySelector('.ak-play-icon');
+          const pauseIcon = carouselBottomToggle.querySelector('.ak-pause-icon');
+          const label = carouselBottomToggle.querySelector('.ak-toggle-label');
+          if (playIcon) playIcon.style.display = playing ? 'none' : 'inline-block';
+          if (pauseIcon) pauseIcon.style.display = playing ? 'inline-block' : 'none';
+          if (label) label.textContent = playing ? 'Pause' : 'Play';
+        }
       }
-    }
 
-    if (carouselCover && carouselIframe) {
-      carouselCover.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        carouselCover.classList.add('hidden');
-        if (!carouselIframe.src || !carouselIframe.src.includes('embed')) {
-          carouselIframe.src = carouselIframe.dataset.src + '&autoplay=1';
-        } else {
-          sendYtCommand(carouselIframe, 'playVideo');
+      function startVideoPlayback() {
+        if (carouselCover) carouselCover.classList.add('hidden');
+        if (carouselIframe) {
+          if (!carouselIframe.src || !carouselIframe.src.includes('embed')) {
+            carouselIframe.src = (carouselIframe.dataset.src || '') + '&autoplay=1';
+          } else {
+            sendYtCommand(carouselIframe, 'playVideo');
+          }
         }
-        syncCarouselToggleState(true);
-      };
-    }
+        syncToggle(true);
+      }
 
-    if (carouselBottomToggle && carouselIframe) {
-      carouselBottomToggle.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (carouselCover && !carouselCover.classList.contains('hidden')) {
-          carouselCover.click();
-          return;
-        }
-        if (isCarouselPlaying) {
+      function pauseVideoPlayback() {
+        if (carouselIframe) {
           sendYtCommand(carouselIframe, 'pauseVideo');
-          syncCarouselToggleState(false);
-        } else {
-          sendYtCommand(carouselIframe, 'playVideo');
-          syncCarouselToggleState(true);
         }
-      };
-    }
+        syncToggle(false);
+      }
 
-    if (carouselShieldTop && carouselIframe) {
-      carouselShieldTop.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (carouselCover && !carouselCover.classList.contains('hidden')) {
-          carouselCover.click();
-          return;
-        }
-        if (isCarouselPlaying) {
-          sendYtCommand(carouselIframe, 'pauseVideo');
-          syncCarouselToggleState(false);
-        } else {
-          sendYtCommand(carouselIframe, 'playVideo');
-          syncCarouselToggleState(true);
-        }
-      };
-    }
+      if (carouselCover && carouselIframe) {
+        carouselCover.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          startVideoPlayback();
+        };
+      }
+
+      if (carouselBottomToggle && carouselIframe) {
+        carouselBottomToggle.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (carouselCover && !carouselCover.classList.contains('hidden')) {
+            startVideoPlayback();
+            return;
+          }
+          if (isCarouselPlaying) {
+            pauseVideoPlayback();
+          } else {
+            startVideoPlayback();
+          }
+        };
+      }
+
+      if (carouselShieldTop && carouselIframe) {
+        carouselShieldTop.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (carouselCover && !carouselCover.classList.contains('hidden')) {
+            startVideoPlayback();
+            return;
+          }
+          if (isCarouselPlaying) {
+            pauseVideoPlayback();
+          } else {
+            startVideoPlayback();
+          }
+        };
+      }
+    });
   }
 
   // Populate Thumbnails Strip Below
@@ -1960,22 +1971,36 @@ export async function showProduct(productOrId, updateHash = true) {
         img.style.transform = 'scale(1)';
       });
       track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
-      // Lazy load video src when video slide is reached, and unload when navigating away to stop audio
-      const videoIframe = track.querySelector('#ppCarouselVideoIframe');
-      const carouselCover = track.querySelector('#ppCarouselYtCover');
-      if (videoIframe) {
-        if (slidesData[currentSlideIndex].type === 'video') {
-          if (!videoIframe.src || !videoIframe.src.includes('embed')) {
-            videoIframe.src = videoIframe.dataset.src;
+
+      // Manage all video slide states independently on slide transition
+      track.querySelectorAll('.pp-slide-video').forEach((videoSlide) => {
+        const sIdx = parseInt(videoSlide.dataset.index, 10);
+        const vIframe = videoSlide.querySelector('.pp-carousel-video-iframe');
+        const vCover = videoSlide.querySelector('.pp-carousel-yt-cover');
+        const vToggle = videoSlide.querySelector('.pp-carousel-bottom-toggle');
+
+        if (sIdx === currentSlideIndex) {
+          if (vIframe && (!vIframe.src || !vIframe.src.includes('embed'))) {
+            vIframe.src = vIframe.dataset.src;
           }
         } else {
-          sendYtCommand(videoIframe, 'pauseVideo');
-          if (videoIframe.src && videoIframe.src.includes('embed')) {
-            videoIframe.src = 'about:blank';
+          if (vIframe) {
+            sendYtCommand(vIframe, 'pauseVideo');
+            if (vIframe.src && vIframe.src.includes('embed')) {
+              vIframe.src = 'about:blank';
+            }
           }
-          if (carouselCover) carouselCover.classList.remove('hidden');
+          if (vCover) vCover.classList.remove('hidden');
+          if (vToggle) {
+            const playIcon = vToggle.querySelector('.ak-play-icon');
+            const pauseIcon = vToggle.querySelector('.ak-pause-icon');
+            const label = vToggle.querySelector('.ak-toggle-label');
+            if (playIcon) playIcon.style.display = 'inline-block';
+            if (pauseIcon) pauseIcon.style.display = 'none';
+            if (label) label.textContent = 'Play';
+          }
         }
-      }
+      });
     }
 
     if (counter) {

@@ -77,20 +77,103 @@
 
 .ak-cart-empty {
   text-align: center;
-  padding: 60px 10px;
+  padding: 50px 16px;
   color: var(--ak-text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.ak-cart-empty-icon {
-  width: 64px;
-  height: 64px;
+.ak-cart-empty-icon-wrap {
+  width: 76px;
+  height: 76px;
   border-radius: 50%;
-  background-color: #F8FAFC;
+  background-color: #FFF7ED;
+  border: 1.5px solid #FFEDD5;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px;
-  color: var(--ak-text-muted);
+  color: var(--ak-orange, #EA580C);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.08);
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.ak-cart-empty-svg {
+  width: 34px;
+  height: 34px;
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.ak-cart-empty-icon {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background-color: #FFF7ED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--ak-orange, #EA580C);
+  overflow: visible;
+}
+
+.ak-cart-empty-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 6px;
+}
+
+.ak-cart-empty-sub {
+  font-size: 13px;
+  color: #64748B;
+  line-height: 1.5;
+  max-width: 260px;
+  margin: 0 0 16px;
+}
+
+.ak-cart-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--ak-orange, #EA580C);
+  color: #FFFFFF !important;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 11px 22px;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.28);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ak-cart-empty-btn:hover {
+  background-color: #C2410C;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.38);
+  color: #FFFFFF !important;
+}
+
+.ak-cart-empty-btn:active {
+  transform: translateY(0);
+}
+
+.ak-cart-empty-btn svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.ak-cart-empty-btn:hover svg {
+  transform: translateX(3px);
 }
 
 .ak-cart-item {

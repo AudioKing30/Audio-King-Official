@@ -30581,12 +30581,37 @@ Weight: 1.24 lbs (0.567 kg`,
     if (cart.length === 0) {
       container.innerHTML = `
       <div class="ak-cart-empty">
-        <svg class="ak-cart-empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="ak-cart-empty-icon-wrap" aria-hidden="true">
+          <svg class="ak-cart-empty-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="2"></circle>
+            <circle cx="19" cy="21" r="2"></circle>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+          </svg>
+        </div>
         <p class="ak-cart-empty-title">Your cart is empty</p>
         <p class="ak-cart-empty-sub">Explore our studio pro audio gear and add products to your setup.</p>
-        <a href="#store" class="ak-cart-empty-btn" onclick="closeCartDrawer()">Start Shopping</a>
+        <button type="button" class="ak-cart-empty-btn" id="akEmptyCartShopBtn">
+          <span>Start Shopping</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
       </div>
     `;
+      const emptyShopBtn = container.querySelector("#akEmptyCartShopBtn");
+      if (emptyShopBtn) {
+        emptyShopBtn.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          closeCartDrawer();
+          if (typeof window.showCatalog === "function") {
+            window.showCatalog("All", "all");
+          } else {
+            window.location.hash = "#store";
+          }
+        };
+      }
       if (subtotalEl)
         subtotalEl.textContent = formatINR(0);
       if (totalEl)
@@ -30698,6 +30723,10 @@ Weight: 1.24 lbs (0.567 kg`,
     } else {
       handleLogoutCartReset();
     }
+  }
+  if (typeof window !== "undefined") {
+    window.closeCartDrawer = closeCartDrawer;
+    window.openCartDrawer = openCartDrawer;
   }
 
   // js/components/header.js
@@ -34503,28 +34532,14 @@ Message: ${message}`);
       }
     }
     if (track) {
-      let syncCarouselToggleState = function(playing) {
-        isCarouselPlaying = playing;
-        if (carouselBottomToggle) {
-          const playIcon = carouselBottomToggle.querySelector(".ak-play-icon");
-          const pauseIcon = carouselBottomToggle.querySelector(".ak-pause-icon");
-          const label = carouselBottomToggle.querySelector(".ak-toggle-label");
-          if (playIcon)
-            playIcon.style.display = playing ? "none" : "inline-block";
-          if (pauseIcon)
-            pauseIcon.style.display = playing ? "inline-block" : "none";
-          if (label)
-            label.textContent = playing ? "Pause" : "Play";
-        }
-      };
       track.innerHTML = slidesData.map((slide, idx) => {
         if (slide.type === "video") {
           return `
           <div class="pp-carousel-slide pp-slide-video" data-index="${idx}">
-            <div class="ak-yt-wrapper" id="ppCarouselYtWrapper">
-              <iframe id="ppCarouselVideoIframe" class="pp-video-iframe" src="about:blank" data-src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(slide.videoId)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3" title="${slide.alt}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" playsinline webkit-playsinline allowfullscreen></iframe>
+            <div class="ak-yt-wrapper pp-carousel-yt-wrapper">
+              <iframe class="pp-video-iframe pp-carousel-video-iframe" src="about:blank" data-src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(slide.videoId)}?enablejsapi=1&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3" title="${slide.alt}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" playsinline webkit-playsinline allowfullscreen></iframe>
               <!-- Top Shield: Shields YouTube title, channel avatar & share popup -->
-              <div class="ak-yt-shield-top" id="ppCarouselShieldTop" title="Toggle Play / Pause">
+              <div class="ak-yt-shield-top pp-carousel-shield-top" title="Toggle Play / Pause">
                 <div class="ak-yt-shield-brand">
                   <span class="ak-yt-dot"></span>
                   <span>AudioKing Studio Player</span>
@@ -34532,8 +34547,8 @@ Message: ${message}`);
                 <span class="ak-yt-shield-title">${slide.alt}</span>
               </div>
               <!-- Bottom Shield: Shields 'Watch on YouTube', logo watermark & link icons -->
-              <div class="ak-yt-shield-bottom" id="ppCarouselShieldBottom">
-                <button type="button" class="ak-yt-bottom-play-toggle" id="ppCarouselBottomToggle" aria-label="Toggle Play / Pause">
+              <div class="ak-yt-shield-bottom pp-carousel-shield-bottom">
+                <button type="button" class="ak-yt-bottom-play-toggle pp-carousel-bottom-toggle" aria-label="Toggle Play / Pause">
                   <svg class="ak-play-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
                   <svg class="ak-pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
                   <span class="ak-toggle-label">Play</span>
@@ -34542,7 +34557,7 @@ Message: ${message}`);
                 <span class="ak-yt-corner-badge">AudioKing HD</span>
               </div>
               <!-- Play Cover: Custom poster with central play button -->
-              <div class="ak-yt-play-cover" id="ppCarouselYtCover" role="button" aria-label="Play In-Studio Demonstration Video">
+              <div class="ak-yt-play-cover pp-carousel-yt-cover" role="button" aria-label="Play In-Studio Demonstration Video">
                 <img class="ak-yt-cover-bg" src="https://img.youtube.com/vi/${encodeURIComponent(slide.videoId)}/hqdefault.jpg" alt="${slide.alt}" />
                 <div class="ak-yt-cover-content">
                   <div class="ak-yt-play-btn">
@@ -34562,58 +34577,82 @@ Message: ${message}`);
         </div>
       `;
       }).join("");
-      const carouselCover = track.querySelector("#ppCarouselYtCover");
-      const carouselIframe = track.querySelector("#ppCarouselVideoIframe");
-      const carouselShieldTop = track.querySelector("#ppCarouselShieldTop");
-      const carouselBottomToggle = track.querySelector("#ppCarouselBottomToggle");
-      let isCarouselPlaying = false;
-      if (carouselCover && carouselIframe) {
-        carouselCover.onclick = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          carouselCover.classList.add("hidden");
-          if (!carouselIframe.src || !carouselIframe.src.includes("embed")) {
-            carouselIframe.src = carouselIframe.dataset.src + "&autoplay=1";
-          } else {
-            sendYtCommand(carouselIframe, "playVideo");
+      track.querySelectorAll(".pp-slide-video").forEach((videoSlide) => {
+        const carouselCover = videoSlide.querySelector(".pp-carousel-yt-cover");
+        const carouselIframe = videoSlide.querySelector(".pp-carousel-video-iframe");
+        const carouselShieldTop = videoSlide.querySelector(".pp-carousel-shield-top");
+        const carouselBottomToggle = videoSlide.querySelector(".pp-carousel-bottom-toggle");
+        let isCarouselPlaying = false;
+        function syncToggle(playing) {
+          isCarouselPlaying = playing;
+          if (carouselBottomToggle) {
+            const playIcon = carouselBottomToggle.querySelector(".ak-play-icon");
+            const pauseIcon = carouselBottomToggle.querySelector(".ak-pause-icon");
+            const label = carouselBottomToggle.querySelector(".ak-toggle-label");
+            if (playIcon)
+              playIcon.style.display = playing ? "none" : "inline-block";
+            if (pauseIcon)
+              pauseIcon.style.display = playing ? "inline-block" : "none";
+            if (label)
+              label.textContent = playing ? "Pause" : "Play";
           }
-          syncCarouselToggleState(true);
-        };
-      }
-      if (carouselBottomToggle && carouselIframe) {
-        carouselBottomToggle.onclick = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (carouselCover && !carouselCover.classList.contains("hidden")) {
-            carouselCover.click();
-            return;
+        }
+        function startVideoPlayback() {
+          if (carouselCover)
+            carouselCover.classList.add("hidden");
+          if (carouselIframe) {
+            if (!carouselIframe.src || !carouselIframe.src.includes("embed")) {
+              carouselIframe.src = (carouselIframe.dataset.src || "") + "&autoplay=1";
+            } else {
+              sendYtCommand(carouselIframe, "playVideo");
+            }
           }
-          if (isCarouselPlaying) {
+          syncToggle(true);
+        }
+        function pauseVideoPlayback() {
+          if (carouselIframe) {
             sendYtCommand(carouselIframe, "pauseVideo");
-            syncCarouselToggleState(false);
-          } else {
-            sendYtCommand(carouselIframe, "playVideo");
-            syncCarouselToggleState(true);
           }
-        };
-      }
-      if (carouselShieldTop && carouselIframe) {
-        carouselShieldTop.onclick = (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (carouselCover && !carouselCover.classList.contains("hidden")) {
-            carouselCover.click();
-            return;
-          }
-          if (isCarouselPlaying) {
-            sendYtCommand(carouselIframe, "pauseVideo");
-            syncCarouselToggleState(false);
-          } else {
-            sendYtCommand(carouselIframe, "playVideo");
-            syncCarouselToggleState(true);
-          }
-        };
-      }
+          syncToggle(false);
+        }
+        if (carouselCover && carouselIframe) {
+          carouselCover.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            startVideoPlayback();
+          };
+        }
+        if (carouselBottomToggle && carouselIframe) {
+          carouselBottomToggle.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (carouselCover && !carouselCover.classList.contains("hidden")) {
+              startVideoPlayback();
+              return;
+            }
+            if (isCarouselPlaying) {
+              pauseVideoPlayback();
+            } else {
+              startVideoPlayback();
+            }
+          };
+        }
+        if (carouselShieldTop && carouselIframe) {
+          carouselShieldTop.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (carouselCover && !carouselCover.classList.contains("hidden")) {
+              startVideoPlayback();
+              return;
+            }
+            if (isCarouselPlaying) {
+              pauseVideoPlayback();
+            } else {
+              startVideoPlayback();
+            }
+          };
+        }
+      });
     }
     if (thumbs) {
       thumbs.innerHTML = slidesData.map((slide, idx) => {
@@ -34649,22 +34688,37 @@ Message: ${message}`);
           img.style.transform = "scale(1)";
         });
         track.style.transform = `translateX(-${currentSlideIndex * 100}%)`;
-        const videoIframe = track.querySelector("#ppCarouselVideoIframe");
-        const carouselCover = track.querySelector("#ppCarouselYtCover");
-        if (videoIframe) {
-          if (slidesData[currentSlideIndex].type === "video") {
-            if (!videoIframe.src || !videoIframe.src.includes("embed")) {
-              videoIframe.src = videoIframe.dataset.src;
+        track.querySelectorAll(".pp-slide-video").forEach((videoSlide) => {
+          const sIdx = parseInt(videoSlide.dataset.index, 10);
+          const vIframe = videoSlide.querySelector(".pp-carousel-video-iframe");
+          const vCover = videoSlide.querySelector(".pp-carousel-yt-cover");
+          const vToggle = videoSlide.querySelector(".pp-carousel-bottom-toggle");
+          if (sIdx === currentSlideIndex) {
+            if (vIframe && (!vIframe.src || !vIframe.src.includes("embed"))) {
+              vIframe.src = vIframe.dataset.src;
             }
           } else {
-            sendYtCommand(videoIframe, "pauseVideo");
-            if (videoIframe.src && videoIframe.src.includes("embed")) {
-              videoIframe.src = "about:blank";
+            if (vIframe) {
+              sendYtCommand(vIframe, "pauseVideo");
+              if (vIframe.src && vIframe.src.includes("embed")) {
+                vIframe.src = "about:blank";
+              }
             }
-            if (carouselCover)
-              carouselCover.classList.remove("hidden");
+            if (vCover)
+              vCover.classList.remove("hidden");
+            if (vToggle) {
+              const playIcon = vToggle.querySelector(".ak-play-icon");
+              const pauseIcon = vToggle.querySelector(".ak-pause-icon");
+              const label = vToggle.querySelector(".ak-toggle-label");
+              if (playIcon)
+                playIcon.style.display = "inline-block";
+              if (pauseIcon)
+                pauseIcon.style.display = "none";
+              if (label)
+                label.textContent = "Play";
+            }
           }
-        }
+        });
       }
       if (counter) {
         counter.textContent = `${currentSlideIndex + 1} / ${slidesData.length}`;

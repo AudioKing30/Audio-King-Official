@@ -356,12 +356,39 @@ export function renderCartDrawer() {
   if (cart.length === 0) {
     container.innerHTML = `
       <div class="ak-cart-empty">
-        <svg class="ak-cart-empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <div class="ak-cart-empty-icon-wrap" aria-hidden="true">
+          <svg class="ak-cart-empty-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="2"></circle>
+            <circle cx="19" cy="21" r="2"></circle>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+          </svg>
+        </div>
         <p class="ak-cart-empty-title">Your cart is empty</p>
         <p class="ak-cart-empty-sub">Explore our studio pro audio gear and add products to your setup.</p>
-        <a href="#store" class="ak-cart-empty-btn" onclick="closeCartDrawer()">Start Shopping</a>
+        <button type="button" class="ak-cart-empty-btn" id="akEmptyCartShopBtn">
+          <span>Start Shopping</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="M12 5l7 7-7 7"></path>
+          </svg>
+        </button>
       </div>
     `;
+
+    const emptyShopBtn = container.querySelector('#akEmptyCartShopBtn');
+    if (emptyShopBtn) {
+      emptyShopBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeCartDrawer();
+        if (typeof window.showCatalog === 'function') {
+          window.showCatalog('All', 'all');
+        } else {
+          window.location.hash = '#store';
+        }
+      };
+    }
+
     if (subtotalEl) subtotalEl.textContent = formatINR(0);
     if (totalEl) totalEl.textContent = formatINR(0);
     if (checkoutBtn) {
@@ -480,4 +507,9 @@ export function initCart() {
   } else {
     handleLogoutCartReset();
   }
+}
+
+if (typeof window !== 'undefined') {
+  window.closeCartDrawer = closeCartDrawer;
+  window.openCartDrawer = openCartDrawer;
 }

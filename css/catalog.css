@@ -358,6 +358,9 @@
 .ak-store-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: max-content;
+  align-items: start;
+  align-content: start;
   gap: 20px;
   width: 100%;
 }
@@ -374,6 +377,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-self: start;
+  height: auto;
   cursor: pointer;
   position: relative;
   -webkit-transform: translateZ(0);
@@ -382,6 +387,20 @@
   backface-visibility: hidden;
   will-change: transform, box-shadow;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+
+/* Safari WebKit: Strictly prevent vertical card elongation when 3 or fewer items are in row */
+@supports (-webkit-touch-callout: none) or (-webkit-backdrop-filter: blur(1px)) {
+  .ak-store-grid {
+    align-items: start !important;
+    align-content: start !important;
+    grid-auto-rows: max-content !important;
+  }
+  .ak-store-card {
+    align-self: start !important;
+    height: auto !important;
+    flex-grow: 0 !important;
+  }
 }
 
 .ak-store-card:hover {

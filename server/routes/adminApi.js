@@ -2182,8 +2182,8 @@ router.put('/store-top6-settings', (req, res) => {
     if (!Array.isArray(rawIds)) {
       return res.status(400).json({ error: 'top6ProductIds must be an array of product IDs.' });
     }
-    // De-duplicate and cap at exactly 6 products
-    const top6ProductIds = [...new Set(rawIds.map(String).filter(Boolean))].slice(0, 6);
+    // De-duplicate and cap at exactly 12 products
+    const top6ProductIds = [...new Set(rawIds.map(String).filter(Boolean))].slice(0, 12);
 
     const valueJson = JSON.stringify(top6ProductIds);
     db.prepare(`
