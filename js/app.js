@@ -3677,7 +3677,7 @@ export function renderFeaturedProducts(items) {
       if (cartQty > 0) {
         actionHtml = `
           <div class="ak-card-qty-control" data-id="${p.id}">
-            <span class="ak-card-qty-tick">✓ In Cart</span>
+            <span class="ak-card-qty-tick"><span class="ak-tick-icon">✓</span><span class="ak-tick-text"> In Cart</span></span>
             <div class="ak-card-qty-actions">
               <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">−</button>
               <span class="ak-card-qty-val">${cartQty}</span>
@@ -3701,7 +3701,7 @@ export function renderFeaturedProducts(items) {
     } else if (cartQty > 0) {
       actionHtml = `
         <div class="ak-card-qty-control" data-id="${p.id}">
-          <span class="ak-card-qty-tick">✓ In Cart</span>
+          <span class="ak-card-qty-tick"><span class="ak-tick-icon">✓</span><span class="ak-tick-text"> In Cart</span></span>
           <div class="ak-card-qty-actions">
             <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">−</button>
             <span class="ak-card-qty-val">${cartQty}</span>
@@ -3875,7 +3875,13 @@ function attachProductCardListeners(container = document) {
   container.querySelectorAll('.ak-product-card').forEach(card => {
     card.style.cursor = 'pointer';
     card.onclick = (e) => {
-      if (e.target.closest('.ak-add-btn') || e.target.closest('.ak-card-qty-control')) return;
+      if (e.target.closest('.ak-add-btn') || 
+          e.target.closest('.ak-card-qty-control') || 
+          e.target.closest('.ak-card-qty-actions') || 
+          e.target.closest('.ak-card-qty-btn') ||
+          e.target.closest('button')) {
+        return;
+      }
       const pId = card.dataset.id;
       if (!pId) return;
       openProductInNewPage(pId);
@@ -3897,7 +3903,9 @@ function attachAddToCartListeners(container = document) {
 
   container.querySelectorAll('.ak-add-btn').forEach(btn => {
     btn.onclick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation();
       if (!authService.isAuthenticated()) {
         showToast('Please sign in to add products to your cart', 'error');
         openAuthModal('signin', 'Please sign in to add items to your cart.');
@@ -3916,7 +3924,9 @@ function attachAddToCartListeners(container = document) {
 
   container.querySelectorAll('.ak-card-qty-btn.ak-minus').forEach(btn => {
     btn.onclick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation();
       if (!authService.isAuthenticated()) {
         showToast('Please sign in to manage your cart.', 'error');
         openAuthModal('signin', 'Please sign in to manage your cart.');
@@ -3930,7 +3940,9 @@ function attachAddToCartListeners(container = document) {
 
   container.querySelectorAll('.ak-card-qty-btn.ak-plus').forEach(btn => {
     btn.onclick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation();
       if (!authService.isAuthenticated()) {
         showToast('Please sign in to manage your cart.', 'error');
         openAuthModal('signin', 'Please sign in to manage your cart.');

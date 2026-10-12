@@ -31934,38 +31934,37 @@ Weight: 1.24 lbs (0.567 kg`,
         const data = await res.json();
         if (data && data.policies) {
           livePolicies = data.policies;
-          Object.keys(data.policies).forEach((k) => {
-            LEGAL_DOCUMENTS[k] = data.policies[k];
-          });
           if (data.policies.returns) {
-            LEGAL_DOCUMENTS.cancellation = data.policies.returns;
+            livePolicies.cancellation = data.policies.returns;
           }
           if (data.policies.terms) {
-            LEGAL_DOCUMENTS.warranty = data.policies.terms;
+            livePolicies.warranty = data.policies.terms;
           }
+          Object.keys(livePolicies).forEach((k) => {
+            LEGAL_DOCUMENTS[k] = livePolicies[k];
+          });
+          return livePolicies;
         }
       }
     } catch (e) {
     }
+    return null;
   }
-  function openLegalModal(docKey, triggerEl = null) {
-    const doc = livePolicies && livePolicies[docKey] || LEGAL_DOCUMENTS[docKey];
+  async function openLegalModal(docKey, triggerEl = null) {
+    try {
+      await fetchLivePolicies();
+    } catch (_) {
+    }
+    let key = (docKey || "terms").toLowerCase();
+    if (key === "cancellation")
+      key = "returns";
+    if (key === "warranty")
+      key = "terms";
+    const doc = livePolicies && (livePolicies[key] || livePolicies[docKey]) || LEGAL_DOCUMENTS[key] || LEGAL_DOCUMENTS[docKey];
     if (!doc) {
       console.warn(`[LegalModal] Unknown document key "${docKey}"`);
       return;
     }
-    fetchLivePolicies().then(() => {
-      const modal2 = document.getElementById("akLegalModal");
-      if (modal2 && modal2.classList.contains("open")) {
-        const freshDoc = livePolicies && livePolicies[docKey] || LEGAL_DOCUMENTS[docKey];
-        if (freshDoc) {
-          const timeEl = modal2.querySelector(".ak-legal-timestamp");
-          if (timeEl) {
-            timeEl.innerHTML = `<strong>\u{1F552} Last Updated:</strong> ${formatExactDateDayTime(freshDoc.updated_at || freshDoc.updatedAt || freshDoc.lastUpdated)}`;
-          }
-        }
-      }
-    });
     const modal = document.getElementById("akLegalModal");
     const title = document.getElementById("akLegalModalTitle");
     const subtitle = document.getElementById("akLegalModalSub");
@@ -31983,7 +31982,7 @@ Weight: 1.24 lbs (0.567 kg`,
     <div class="ak-legal-meta-strip">
       <span class="ak-legal-timestamp"><strong>\u{1F552} Last Updated:</strong> ${exactTimeStr}</span>
       <span class="ak-legal-dot">&bull;</span>
-      <span class="ak-legal-badge">${doc.badge || "Official AudioKing Policy"}</span>
+      <span class="ak-legal-badge">${doc.badge || "Official Policy"}</span>
     </div>
     <div class="ak-legal-intro">
       ${doc.intro || ""}
@@ -32101,6 +32100,15 @@ Message: ${message}`);
         document.body.style.overflow = "";
       }
     });
+    window.addEventListener("ak:policy-updated", () => {
+      fetchLivePolicies();
+    });
+  }
+  if (typeof window !== "undefined") {
+    window.openLegalModal = openLegalModal;
+    window.closeLegalModal = closeLegalModal;
+    window.fetchLivePolicies = fetchLivePolicies;
+    window.formatExactDateDayTime = formatExactDateDayTime;
   }
 
   // js/components/store.js
@@ -36107,7 +36115,7 @@ Message: ${message}`);
         if (cartQty > 0) {
           actionHtml = `
           <div class="ak-card-qty-control" data-id="${p.id}">
-            <span class="ak-card-qty-tick">\u2713 In Cart</span>
+            <span class="ak-card-qty-tick"><span class="ak-tick-icon">\u2713</span><span class="ak-tick-text"> In Cart</span></span>
             <div class="ak-card-qty-actions">
               <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">\u2212</button>
               <span class="ak-card-qty-val">${cartQty}</span>
@@ -36131,7 +36139,7 @@ Message: ${message}`);
       } else if (cartQty > 0) {
         actionHtml = `
         <div class="ak-card-qty-control" data-id="${p.id}">
-          <span class="ak-card-qty-tick">\u2713 In Cart</span>
+          <span class="ak-card-qty-tick"><span class="ak-tick-icon">\u2713</span><span class="ak-tick-text"> In Cart</span></span>
           <div class="ak-card-qty-actions">
             <button type="button" class="ak-card-qty-btn ak-minus" data-id="${p.id}" aria-label="Decrease quantity">\u2212</button>
             <span class="ak-card-qty-val">${cartQty}</span>
@@ -36270,8 +36278,9 @@ Message: ${message}`);
     container.querySelectorAll(".ak-product-card").forEach((card) => {
       card.style.cursor = "pointer";
       card.onclick = (e) => {
-        if (e.target.closest(".ak-add-btn") || e.target.closest(".ak-card-qty-control"))
+        if (e.target.closest(".ak-add-btn") || e.target.closest(".ak-card-qty-control") || e.target.closest(".ak-card-qty-actions") || e.target.closest(".ak-card-qty-btn") || e.target.closest("button")) {
           return;
+        }
         const pId = card.dataset.id;
         if (!pId)
           return;
@@ -36287,7 +36296,9 @@ Message: ${message}`);
     };
     container.querySelectorAll(".ak-add-btn").forEach((btn) => {
       btn.onclick = (e) => {
+        e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         if (!authService.isAuthenticated()) {
           showToast("Please sign in to add products to your cart", "error");
           openAuthModal("signin", "Please sign in to add items to your cart.");
@@ -36305,7 +36316,9 @@ Message: ${message}`);
     });
     container.querySelectorAll(".ak-card-qty-btn.ak-minus").forEach((btn) => {
       btn.onclick = (e) => {
+        e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         if (!authService.isAuthenticated()) {
           showToast("Please sign in to manage your cart.", "error");
           openAuthModal("signin", "Please sign in to manage your cart.");
@@ -36318,7 +36331,9 @@ Message: ${message}`);
     });
     container.querySelectorAll(".ak-card-qty-btn.ak-plus").forEach((btn) => {
       btn.onclick = (e) => {
+        e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         if (!authService.isAuthenticated()) {
           showToast("Please sign in to manage your cart.", "error");
           openAuthModal("signin", "Please sign in to manage your cart.");

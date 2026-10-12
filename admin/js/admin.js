@@ -5217,6 +5217,14 @@ async function handleSaveCurrentPolicy(event) {
         timestampEl.textContent = formatPolicyTimestamp(data.policy.updated_at);
       }
 
+      // Sync storefront policies immediately
+      try {
+        if (typeof window.fetchLivePolicies === 'function') {
+          window.fetchLivePolicies();
+        }
+        window.dispatchEvent(new CustomEvent('ak:policy-updated', { detail: data.policy }));
+      } catch (_) {}
+
       alert(`✅ ${title} updated and published successfully!\nTimestamp: ${formatPolicyTimestamp(data.policy.updated_at)}`);
       renderPolicyEditor(policyKey);
     } else {

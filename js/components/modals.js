@@ -43,47 +43,44 @@ export async function fetchLivePolicies() {
       const data = await res.json();
       if (data && data.policies) {
         livePolicies = data.policies;
-        Object.keys(data.policies).forEach(k => {
-          LEGAL_DOCUMENTS[k] = data.policies[k];
-        });
         if (data.policies.returns) {
-          LEGAL_DOCUMENTS.cancellation = data.policies.returns;
+          livePolicies.cancellation = data.policies.returns;
         }
         if (data.policies.terms) {
-          LEGAL_DOCUMENTS.warranty = data.policies.terms;
+          livePolicies.warranty = data.policies.terms;
         }
+        Object.keys(livePolicies).forEach(k => {
+          LEGAL_DOCUMENTS[k] = livePolicies[k];
+        });
+        return livePolicies;
       }
     }
   } catch (e) {
     // Keep local fallback
   }
+  return null;
 }
 
 /**
  * Open unified reusable legal modal
- * @param {string} docKey - 'terms' | 'privacy' | 'shipping' | 'returns'
+ * @param {string} docKey - 'terms' | 'privacy' | 'shipping' | 'returns' | 'cancellation' | 'warranty'
  * @param {HTMLElement} [triggerEl] - Link/button that triggered the modal
  */
-export function openLegalModal(docKey, triggerEl = null) {
-  const doc = (livePolicies && livePolicies[docKey]) || LEGAL_DOCUMENTS[docKey];
+export async function openLegalModal(docKey, triggerEl = null) {
+  // Always fetch latest live policies from server so digital timestamp is guaranteed latest
+  try {
+    await fetchLivePolicies();
+  } catch (_) {}
+
+  let key = (docKey || 'terms').toLowerCase();
+  if (key === 'cancellation') key = 'returns';
+  if (key === 'warranty') key = 'terms';
+
+  const doc = (livePolicies && (livePolicies[key] || livePolicies[docKey])) || LEGAL_DOCUMENTS[key] || LEGAL_DOCUMENTS[docKey];
   if (!doc) {
     console.warn(`[LegalModal] Unknown document key "${docKey}"`);
     return;
   }
-
-  // Always refresh live policies in background so digital timestamp is guaranteed latest
-  fetchLivePolicies().then(() => {
-    const modal = document.getElementById('akLegalModal');
-    if (modal && modal.classList.contains('open')) {
-      const freshDoc = (livePolicies && livePolicies[docKey]) || LEGAL_DOCUMENTS[docKey];
-      if (freshDoc) {
-        const timeEl = modal.querySelector('.ak-legal-timestamp');
-        if (timeEl) {
-          timeEl.innerHTML = `<strong>🕒 Last Updated:</strong> ${formatExactDateDayTime(freshDoc.updated_at || freshDoc.updatedAt || freshDoc.lastUpdated)}`;
-        }
-      }
-    }
-  });
 
   const modal = document.getElementById('akLegalModal');
   const title = document.getElementById('akLegalModalTitle');
@@ -106,7 +103,7 @@ export function openLegalModal(docKey, triggerEl = null) {
     <div class="ak-legal-meta-strip">
       <span class="ak-legal-timestamp"><strong>🕒 Last Updated:</strong> ${exactTimeStr}</span>
       <span class="ak-legal-dot">&bull;</span>
-      <span class="ak-legal-badge">${doc.badge || 'Official AudioKing Policy'}</span>
+      <span class="ak-legal-badge">${doc.badge || 'Official Policy'}</span>
     </div>
     <div class="ak-legal-intro">
       ${doc.intro || ''}
@@ -255,4 +252,17 @@ export function initModals() {
       document.body.style.overflow = '';
     }
   });
+
+  // 5. Live Policy Sync Listener
+  window.addEventListener('ak:policy-updated', () => {
+    fetchLivePolicies();
+  });
 }
+
+if (typeof window !== 'undefined') {
+  window.openLegalModal = openLegalModal;
+  window.closeLegalModal = closeLegalModal;
+  window.fetchLivePolicies = fetchLivePolicies;
+  window.formatExactDateDayTime = formatExactDateDayTime;
+}
+
