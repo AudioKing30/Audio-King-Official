@@ -2384,6 +2384,9 @@ router.post('/backup/import', (req, res) => {
  */
 router.get('/policies', (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     const rows = db.prepare('SELECT * FROM legal_policies').all();
     const policies = {};
     for (const r of rows) {
@@ -2409,7 +2412,7 @@ router.get('/policies', (req, res) => {
 
 router.put('/policies', (req, res) => {
   try {
-    const { title, subtitle, badge, intro, sections, sections_json } = req.body;
+    const { title, subtitle, badge, intro, sections, sections_json, updated_at } = req.body;
     let rawId = (req.body.id || req.body.key || '').trim().toLowerCase();
     if (rawId === 'return-refund' || rawId === 'return_refund') rawId = 'returns';
     if (rawId === 'shipping-payment' || rawId === 'shipping_payment') rawId = 'shipping';
@@ -2419,7 +2422,7 @@ router.put('/policies', (req, res) => {
     }
     const id = rawId;
 
-    const now = new Date().toISOString();
+    const now = (updated_at && !isNaN(new Date(updated_at).getTime())) ? new Date(updated_at).toISOString() : new Date().toISOString();
     const existing = db.prepare('SELECT * FROM legal_policies WHERE id = ?').get(id);
 
     let cleanSections = [];

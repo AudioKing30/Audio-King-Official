@@ -187,6 +187,9 @@ app.get('/api/popular-categories', (req, res) => {
 // Public Legal Policies Endpoint
 app.get('/api/policies', (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     const rows = db.prepare('SELECT * FROM legal_policies').all();
     const policies = {};
     for (const r of rows) {

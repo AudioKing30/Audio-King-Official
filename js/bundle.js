@@ -31094,6 +31094,22 @@ Weight: 1.24 lbs (0.567 kg`,
         }
       });
     });
+    document.querySelectorAll(".ak-mobile-store-link").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const mobileDrawer2 = document.getElementById("akMobileDrawer");
+        if (mobileDrawer2) {
+          mobileDrawer2.classList.remove("open");
+          document.body.style.overflow = "";
+        }
+        setActiveNavItem("akNavItemStore");
+        if (typeof window.showCatalog === "function") {
+          window.showCatalog("All", "category");
+        } else {
+          window.location.hash = "#store";
+        }
+      });
+    });
     document.getElementById("akMobProfileTrigger")?.addEventListener("click", (e) => {
       e.preventDefault();
       const mobileDrawer2 = document.getElementById("akMobileDrawer");
@@ -31195,7 +31211,9 @@ Weight: 1.24 lbs (0.567 kg`,
           document.body.style.overflow = "";
         }
       });
-      mobileDrawer.querySelectorAll(".ak-mobile-sub-link, .ak-drawer-nav-link, .ak-contact-trigger").forEach((link) => {
+      mobileDrawer.querySelectorAll("a").forEach((link) => {
+        if (link.classList.contains("ak-mobile-accordion-toggle"))
+          return;
         link.addEventListener("click", () => {
           mobileDrawer.classList.remove("open");
           document.body.style.overflow = "";
@@ -31911,7 +31929,7 @@ Weight: 1.24 lbs (0.567 kg`,
   }
   async function fetchLivePolicies() {
     try {
-      const res = await fetch("/api/policies");
+      const res = await fetch(`/api/policies?t=${Date.now()}`, { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         if (data && data.policies) {
@@ -31936,14 +31954,18 @@ Weight: 1.24 lbs (0.567 kg`,
       console.warn(`[LegalModal] Unknown document key "${docKey}"`);
       return;
     }
-    if (!livePolicies) {
-      fetchLivePolicies().then(() => {
-        const modal2 = document.getElementById("akLegalModal");
-        if (modal2 && modal2.classList.contains("open") && livePolicies && livePolicies[docKey]) {
-          openLegalModal(docKey, lastActiveTrigger);
+    fetchLivePolicies().then(() => {
+      const modal2 = document.getElementById("akLegalModal");
+      if (modal2 && modal2.classList.contains("open")) {
+        const freshDoc = livePolicies && livePolicies[docKey] || LEGAL_DOCUMENTS[docKey];
+        if (freshDoc) {
+          const timeEl = modal2.querySelector(".ak-legal-timestamp");
+          if (timeEl) {
+            timeEl.innerHTML = `<strong>\u{1F552} Last Updated:</strong> ${formatExactDateDayTime(freshDoc.updated_at || freshDoc.updatedAt || freshDoc.lastUpdated)}`;
+          }
         }
-      });
-    }
+      }
+    });
     const modal = document.getElementById("akLegalModal");
     const title = document.getElementById("akLegalModalTitle");
     const subtitle = document.getElementById("akLegalModalSub");
@@ -32012,6 +32034,7 @@ Weight: 1.24 lbs (0.567 kg`,
     }
   }
   function initModals() {
+    fetchLivePolicies();
     document.addEventListener("click", (e) => {
       const link = e.target.closest("[data-legal-modal]");
       if (link) {
@@ -33407,6 +33430,11 @@ Message: ${message}`);
         el.textContent = AUDIOKING_CONFIG.expertPhone;
       });
       const handleHashRoute = () => {
+        const mobDrawer = document.getElementById("akMobileDrawer");
+        if (mobDrawer && mobDrawer.classList.contains("open")) {
+          mobDrawer.classList.remove("open");
+          document.body.style.overflow = "";
+        }
         let currentHash = window.location.hash;
         if (!currentHash || currentHash === "#home") {
           const path = (window.location.pathname || "").toLowerCase();
@@ -33645,6 +33673,11 @@ Message: ${message}`);
         v.classList.remove("active");
       }
     });
+    const mobDrawer = document.getElementById("akMobileDrawer");
+    if (mobDrawer && mobDrawer.classList.contains("open")) {
+      mobDrawer.classList.remove("open");
+      document.body.style.overflow = "";
+    }
     const header = document.querySelector(".ak-header");
     const footer = document.querySelector(".ak-footer");
     const nav = document.querySelector(".ak-nav-bar");

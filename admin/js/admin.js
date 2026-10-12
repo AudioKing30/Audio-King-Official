@@ -5036,7 +5036,7 @@ window.formatPolicyTimestamp = formatPolicyTimestamp;
 
 async function loadPoliciesAdmin() {
   try {
-    const res = await adminFetch('/api/admin/policies');
+    const res = await adminFetch(`/api/admin/policies?t=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to load legal policies');
     const data = await res.json();
     if (data && data.policies) {
@@ -5191,7 +5191,8 @@ async function handleSaveCurrentPolicy(event) {
     subtitle: 'AudioKing Official Documentation',
     badge,
     intro: introHtml,
-    sections
+    sections,
+    updated_at: new Date().toISOString()
   };
 
   try {

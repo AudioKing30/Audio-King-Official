@@ -610,6 +610,13 @@ if (typeof document !== 'undefined') {
 
     // Comprehensive SPA Hash Router & State Restoration
     const handleHashRoute = () => {
+      // Automatically close mobile nav drawer on any page redirection
+      const mobDrawer = document.getElementById('akMobileDrawer');
+      if (mobDrawer && mobDrawer.classList.contains('open')) {
+        mobDrawer.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
       let currentHash = window.location.hash;
       if (!currentHash || currentHash === '#home') {
         const path = (window.location.pathname || '').toLowerCase();
@@ -880,6 +887,13 @@ function hideAllViews() {
       v.classList.remove('active');
     }
   });
+
+  // Automatically close mobile nav drawer on any view change
+  const mobDrawer = document.getElementById('akMobileDrawer');
+  if (mobDrawer && mobDrawer.classList.contains('open')) {
+    mobDrawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
 
   const header = document.querySelector('.ak-header');
   const footer = document.querySelector('.ak-footer');

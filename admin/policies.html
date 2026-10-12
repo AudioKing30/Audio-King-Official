@@ -397,7 +397,7 @@
 
     async function loadPoliciesPage() {
       try {
-        const res = await fetch('/api/policies');
+        const res = await fetch(`/api/policies?t=${Date.now()}`, { cache: 'no-store' });
         if (!res.ok) throw new Error('Could not fetch policies');
         const data = await res.json();
         state.policies = data.policies || {};
@@ -540,7 +540,8 @@
             subtitle: currentDoc.subtitle,
             badge: currentDoc.badge,
             intro: currentDoc.intro,
-            sections: currentDoc.sections
+            sections: currentDoc.sections,
+            updated_at: new Date().toISOString()
           })
         });
 

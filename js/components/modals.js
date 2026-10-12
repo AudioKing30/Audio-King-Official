@@ -38,7 +38,7 @@ export function formatExactDateDayTime(isoOrDateStr) {
  */
 export async function fetchLivePolicies() {
   try {
-    const res = await fetch('/api/policies');
+    const res = await fetch(`/api/policies?t=${Date.now()}`, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
       if (data && data.policies) {
@@ -71,15 +71,19 @@ export function openLegalModal(docKey, triggerEl = null) {
     return;
   }
 
-  // Preload live policies asynchronously if not loaded
-  if (!livePolicies) {
-    fetchLivePolicies().then(() => {
-      const modal = document.getElementById('akLegalModal');
-      if (modal && modal.classList.contains('open') && livePolicies && livePolicies[docKey]) {
-        openLegalModal(docKey, lastActiveTrigger);
+  // Always refresh live policies in background so digital timestamp is guaranteed latest
+  fetchLivePolicies().then(() => {
+    const modal = document.getElementById('akLegalModal');
+    if (modal && modal.classList.contains('open')) {
+      const freshDoc = (livePolicies && livePolicies[docKey]) || LEGAL_DOCUMENTS[docKey];
+      if (freshDoc) {
+        const timeEl = modal.querySelector('.ak-legal-timestamp');
+        if (timeEl) {
+          timeEl.innerHTML = `<strong>🕒 Last Updated:</strong> ${formatExactDateDayTime(freshDoc.updated_at || freshDoc.updatedAt || freshDoc.lastUpdated)}`;
+        }
       }
-    });
-  }
+    }
+  });
 
   const modal = document.getElementById('akLegalModal');
   const title = document.getElementById('akLegalModalTitle');
@@ -176,6 +180,9 @@ export function closeContactModal() {
 }
 
 export function initModals() {
+  // Preload live policies immediately on startup
+  fetchLivePolicies();
+
   // 1. Attach document-level delegation to all legal modal triggers (footer links & inline links)
   document.addEventListener('click', (e) => {
     const link = e.target.closest('[data-legal-modal]');

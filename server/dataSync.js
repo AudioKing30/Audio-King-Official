@@ -330,6 +330,73 @@ function syncPoliciesMaster(db) {
     };
     safeWriteJson(POLICIES_MASTER_PATH, payload);
     console.log(`[DATA SYNC] Mirrored ${rows.length} legal policies to policies_master.json`);
+
+    // Also mirror to storefront js/data/legal.js so code bundles stay strictly updated
+    const legalJsPath = path.join(__dirname, '..', 'js', 'data', 'legal.js');
+    if (fs.existsSync(legalJsPath) && policies.terms && policies.returns && policies.privacy && policies.shipping) {
+      const legalJsContent = `/**
+ * AudioKing Legal Policies
+ * Authoritative complete policies for Terms & Conditions, Privacy Policy,
+ * Shipping & Payment, and Returns & Refunds.
+ * Auto-synchronized with Database and Admin Panel.
+ * Last Updated: ${new Date().toISOString()}
+ */
+
+export const termsPolicy = ${JSON.stringify(policies.terms, null, 2)};
+
+export const returnsPolicy = ${JSON.stringify(policies.returns, null, 2)};
+
+export const privacyPolicy = ${JSON.stringify(policies.privacy, null, 2)};
+
+export const shippingPolicy = ${JSON.stringify(policies.shipping, null, 2)};
+
+export const aboutPolicy = {
+  id: 'about',
+  title: 'About AudioKing',
+  subtitle: 'Official Mumbai Pro Audio & Instruments Destination',
+  badge: 'Certified Audio Specialists',
+  updated_at: '${policies.terms.updated_at}',
+  intro: \`
+    <p>AudioKing is India's premier pro audio retailer and studio equipment specialist. Based in Mumbai, Maharashtra, we provide music producers, sound engineers, broadcasting studios, and touring musicians with 100% genuine gear backed by official manufacturer warranties and expert sound engineering consultancy.</p>
+  \`,
+  sections: [
+    {
+      number: 1,
+      heading: 'Mumbai Experience Centre & Showroom',
+      body: \`
+        <p>Located at D-101, Bonanza Industrial Estate, Ashok Chakravarty Road, Kandivali East, Mumbai - 400101, our experience centre offers hands-on listening sessions for studio monitors, vocal booth testing for world-class microphones, and dedicated stages for synthesizers and digital pianos.</p>
+      \`
+    },
+    {
+      number: 2,
+      heading: 'Authorized Brand Distribution',
+      body: \`
+        <p>We are authorized dealers for leading international audio brands including ADAM Audio, Focusrite, Nord, Lauten Audio, Universal Audio, Focal Professional, BluGuitar, Audix, Novation, Eikon, Proel, Native Instruments, and more.</p>
+      \`
+    },
+    {
+      number: 3,
+      heading: 'Direct Specialist Helpline',
+      body: \`
+        <p>Need acoustic guidance or help building your studio chain? Our audio engineers are available Monday to Saturday, 10:00 AM to 07:00 PM at +91 8928207822 or via email at info@audioking.co.in.</p>
+      \`
+    }
+  ]
+};
+
+export const LEGAL_DOCUMENTS = {
+  terms: termsPolicy,
+  privacy: privacyPolicy,
+  shipping: shippingPolicy,
+  returns: returnsPolicy,
+  cancellation: returnsPolicy,
+  warranty: termsPolicy,
+  about: aboutPolicy
+};
+`;
+      fs.writeFileSync(legalJsPath, legalJsContent, 'utf8');
+      console.log('[DATA SYNC] Mirrored legal policies to js/data/legal.js');
+    }
   } catch (err) {
     console.error('[DATA SYNC ERROR] syncPoliciesMaster:', err.message);
   }

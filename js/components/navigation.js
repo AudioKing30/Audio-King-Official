@@ -333,6 +333,24 @@ export function initNavigation() {
     });
   });
 
+  // Mobile drawer links: Store navigation
+  document.querySelectorAll('.ak-mobile-store-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const mobileDrawer = document.getElementById('akMobileDrawer');
+      if (mobileDrawer) {
+        mobileDrawer.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      setActiveNavItem('akNavItemStore');
+      if (typeof window.showCatalog === 'function') {
+        window.showCatalog('All', 'category');
+      } else {
+        window.location.hash = '#store';
+      }
+    });
+  });
+
   // Mobile drawer links: Account / Orders
   document.getElementById('akMobProfileTrigger')?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -448,7 +466,8 @@ export function initNavigation() {
       }
     });
 
-    mobileDrawer.querySelectorAll('.ak-mobile-sub-link, .ak-drawer-nav-link, .ak-contact-trigger').forEach(link => {
+    mobileDrawer.querySelectorAll('a').forEach(link => {
+      if (link.classList.contains('ak-mobile-accordion-toggle')) return;
       link.addEventListener('click', () => {
         mobileDrawer.classList.remove('open');
         document.body.style.overflow = '';
