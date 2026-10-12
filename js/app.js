@@ -1078,14 +1078,20 @@ export function showCatalog(categoryOrBrand, filterType = 'all', updateHash = tr
     openStoreWithBrand(categoryOrBrand);
     resolvedBrand = categoryOrBrand;
   } else if (categoryOrBrand && categoryOrBrand !== 'All') {
-    resolvedCategory = categoryOrBrand;
-    const catLower = (categoryOrBrand || '').toLowerCase();
+    let targetCat = categoryOrBrand;
+    const catLower = (categoryOrBrand || '').toLowerCase().trim();
+    if (catLower === 'musical instruments' || catLower === 'musical-instruments' || catLower === 'musical' || catLower === 'instruments') {
+      targetCat = 'Keyboards';
+    } else if (catLower === 'pro audio' || catLower === 'pro-audio' || catLower === 'proaudio') {
+      targetCat = 'Audio Interfaces';
+    }
+    resolvedCategory = targetCat;
     if (catLower.includes('drum') || catLower.includes('piano') || catLower.includes('instrument') || catLower.includes('key')) {
       setActiveNavItem('akNavItemMusical');
     } else {
       setActiveNavItem('akNavItemProAudio');
     }
-    openStoreWithCategory(categoryOrBrand);
+    openStoreWithCategory(targetCat);
   } else {
     // Generic store view: do NOT default to Brands!
     setActiveNavItem(null);
@@ -1378,12 +1384,18 @@ export function openProductInNewPage(productOrId, event) {
   if (!pId) return;
   try { recordProductClick(pId); } catch (e) {}
 
-  const isModifier = Boolean(event && (event.ctrlKey || event.metaKey || event.button === 1));
+  const evt = event || (typeof window !== 'undefined' ? window.event : null);
+  const isModifier = Boolean(evt && (evt.ctrlKey || evt.metaKey || evt.button === 1));
+
   if (isModifier) {
-    if (event && typeof event.preventDefault === 'function') event.preventDefault();
-    const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
+    if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
+    const baseUri = (typeof window !== 'undefined' && window.location && window.location.href) 
+      ? window.location.href.split('#')[0] 
+      : '';
+    const targetUrl = `${baseUri}#product?id=${encodeURIComponent(pId)}`;
     window.open(targetUrl, '_blank');
   } else {
+    if (evt && typeof evt.preventDefault === 'function') evt.preventDefault();
     showProduct(pId, true);
   }
 }

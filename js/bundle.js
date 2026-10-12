@@ -32212,8 +32212,10 @@ Message: ${message}`);
     if (!catName || catName.toLowerCase() === "all")
       return "All";
     const clean = catName.trim().toLowerCase();
-    if (clean === "synthesizers")
+    if (clean === "synthesizers" || clean === "musical instruments" || clean === "musical-instruments" || clean === "musical" || clean === "instruments")
       return "Keyboards";
+    if (clean === "pro audio" || clean === "pro-audio" || clean === "proaudio")
+      return "Audio Interfaces";
     if (clean === "monitor speakers" || clean === "monitors")
       return "Studio Monitors";
     if (clean === "pre amps" || clean === "preamp" || clean === "preamps")
@@ -32848,14 +32850,31 @@ Message: ${message}`);
       gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing">' + displayPriceHtml + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
     });
     grid.innerHTML = gridHtml;
+    function handleStoreCardNavigation(pid, e) {
+      if (onProductClickCallback) {
+        onProductClickCallback(pid, e);
+      } else if (typeof window.openProductInNewPage === "function") {
+        window.openProductInNewPage(pid, e);
+      }
+    }
     grid.querySelectorAll(".ak-store-card").forEach((card) => {
       const pid = card.dataset.productId;
       card.addEventListener("click", (e) => {
         if (e.target.closest(".ak-store-btn-add") || e.target.closest(".ak-store-qty-control"))
           return;
-        if (onProductClickCallback) {
-          onProductClickCallback(pid, e);
+        handleStoreCardNavigation(pid, e);
+      });
+      card.addEventListener("auxclick", (e) => {
+        if (e.button === 1) {
+          handleStoreCardNavigation(pid, e);
         }
+      });
+    });
+    grid.querySelectorAll(".ak-store-btn-view").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const pid = btn.dataset.id;
+        handleStoreCardNavigation(pid, e);
       });
     });
     grid.querySelectorAll(".ak-store-btn-add").forEach((btn) => {
@@ -33842,14 +33861,20 @@ Message: ${message}`);
       openStoreWithBrand(categoryOrBrand);
       resolvedBrand = categoryOrBrand;
     } else if (categoryOrBrand && categoryOrBrand !== "All") {
-      resolvedCategory = categoryOrBrand;
-      const catLower = (categoryOrBrand || "").toLowerCase();
+      let targetCat = categoryOrBrand;
+      const catLower = (categoryOrBrand || "").toLowerCase().trim();
+      if (catLower === "musical instruments" || catLower === "musical-instruments" || catLower === "musical" || catLower === "instruments") {
+        targetCat = "Keyboards";
+      } else if (catLower === "pro audio" || catLower === "pro-audio" || catLower === "proaudio") {
+        targetCat = "Audio Interfaces";
+      }
+      resolvedCategory = targetCat;
       if (catLower.includes("drum") || catLower.includes("piano") || catLower.includes("instrument") || catLower.includes("key")) {
         setActiveNavItem("akNavItemMusical");
       } else {
         setActiveNavItem("akNavItemProAudio");
       }
-      openStoreWithCategory(categoryOrBrand);
+      openStoreWithCategory(targetCat);
     } else {
       setActiveNavItem(null);
       openStoreWithCategory("All");
@@ -34095,13 +34120,17 @@ Message: ${message}`);
       recordProductClick(pId);
     } catch (e) {
     }
-    const isModifier = Boolean(event && (event.ctrlKey || event.metaKey || event.button === 1));
+    const evt = event || (typeof window !== "undefined" ? window.event : null);
+    const isModifier = Boolean(evt && (evt.ctrlKey || evt.metaKey || evt.button === 1));
     if (isModifier) {
-      if (event && typeof event.preventDefault === "function")
-        event.preventDefault();
-      const targetUrl = `${window.location.origin}${window.location.pathname}#product?id=${encodeURIComponent(pId)}`;
+      if (evt && typeof evt.preventDefault === "function")
+        evt.preventDefault();
+      const baseUri = typeof window !== "undefined" && window.location && window.location.href ? window.location.href.split("#")[0] : "";
+      const targetUrl = `${baseUri}#product?id=${encodeURIComponent(pId)}`;
       window.open(targetUrl, "_blank");
     } else {
+      if (evt && typeof evt.preventDefault === "function")
+        evt.preventDefault();
       showProduct(pId, true);
     }
   }

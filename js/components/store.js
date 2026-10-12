@@ -107,7 +107,8 @@ export function initStore() {
 export function resolveCategoryName(catName) {
   if (!catName || catName.toLowerCase() === 'all') return 'All';
   const clean = catName.trim().toLowerCase();
-  if (clean === 'synthesizers') return 'Keyboards';
+  if (clean === 'synthesizers' || clean === 'musical instruments' || clean === 'musical-instruments' || clean === 'musical' || clean === 'instruments') return 'Keyboards';
+  if (clean === 'pro audio' || clean === 'pro-audio' || clean === 'proaudio') return 'Audio Interfaces';
   if (clean === 'monitor speakers' || clean === 'monitors') return 'Studio Monitors';
   if (clean === 'pre amps' || clean === 'preamp' || clean === 'preamps') return 'Preamps & Channel Strips';
   if (clean === 'power supply cabels' || clean === 'power supply cables') return 'Power Supply Cables';
@@ -846,13 +847,32 @@ function renderStorePage() {
 
   grid.innerHTML = gridHtml;
 
+  function handleStoreCardNavigation(pid, e) {
+    if (onProductClickCallback) {
+      onProductClickCallback(pid, e);
+    } else if (typeof window.openProductInNewPage === 'function') {
+      window.openProductInNewPage(pid, e);
+    }
+  }
+
   grid.querySelectorAll('.ak-store-card').forEach(card => {
     const pid = card.dataset.productId;
     card.addEventListener('click', (e) => {
       if (e.target.closest('.ak-store-btn-add') || e.target.closest('.ak-store-qty-control')) return;
-      if (onProductClickCallback) {
-        onProductClickCallback(pid, e);
+      handleStoreCardNavigation(pid, e);
+    });
+    card.addEventListener('auxclick', (e) => {
+      if (e.button === 1) {
+        handleStoreCardNavigation(pid, e);
       }
+    });
+  });
+
+  grid.querySelectorAll('.ak-store-btn-view').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const pid = btn.dataset.id;
+      handleStoreCardNavigation(pid, e);
     });
   });
 

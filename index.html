@@ -40,11 +40,11 @@
   <link rel="stylesheet" href="css/testimonials.css?v=202610010908">
   <link rel="stylesheet" href="css/modals.css?v=202609271405">
   <link rel="stylesheet" href="css/catalog.css">
-  <link rel="stylesheet" href="css/product.css">
+  <link rel="stylesheet" href="css/product.css?v=20261013_v5">
   <link rel="stylesheet" href="css/contact.css">
   <link rel="stylesheet" href="css/checkout-page.css">
   <link rel="stylesheet" href="css/account-settings.css?v=202609271405">
-  <link rel="stylesheet" href="admin/css/admin.css?v=20261006_v2">
+  <link rel="stylesheet" href="admin/css/admin.css?v=20261013_v5">
   <link rel="stylesheet" href="css/tax-invoice.css">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
@@ -620,7 +620,7 @@
 
     <!-- SECTION 2: THREE MAIN CATEGORY CARDS -->
     <section class="ak-major-categories ak-reveal">
-      <div class="ak-category-card" onclick="window.location.hash='#store?category=Audio%20Interfaces'">
+      <div class="ak-category-card" id="akMajorCatProAudio" role="button" tabindex="0" onclick="if(window.showCatalog){window.showCatalog('Audio Interfaces','category');}else{window.location.hash='#store?category=Audio%20Interfaces';}">
         <div class="ak-cat-card-bg" style="background-image: url('assets/images/hero/category-pro-audio.jpg');"></div>
         <div class="ak-cat-card-overlay"></div>
         <div class="ak-cat-card-content">
@@ -630,7 +630,7 @@
         </div>
       </div>
 
-      <div class="ak-category-card" onclick="window.location.hash='#store?category=Keyboards'">
+      <div class="ak-category-card" id="akMajorCatMusical" role="button" tabindex="0" onclick="if(window.showCatalog){window.showCatalog('Keyboards','category');}else{window.location.hash='#store?category=Keyboards';}">
         <div class="ak-cat-card-bg" style="background-image: url('assets/images/hero/category-musical.jpg');"></div>
         <div class="ak-cat-card-overlay"></div>
         <div class="ak-cat-card-content">
@@ -4702,7 +4702,7 @@
   </a>
 
   <!-- ==================== APPLICATION SCRIPTS ==================== -->
-  <script src="js/bundle.js?v=20261010_v3"></script>
-  <script src="admin/js/admin.js?v=20261010_v3"></script>
+  <script src="js/bundle.js?v=20261013_v5"></script>
+  <script src="admin/js/admin.js?v=20261013_v5"></script>
 </body>
 </html>
