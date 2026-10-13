@@ -492,11 +492,34 @@
 .pp-qty-input::-webkit-inner-spin-button,
 input[type="number"].pp-qty-input::-webkit-inner-spin-button,
 input[type="number"].pp-qty-input::-webkit-outer-spin-button,
-#ppQtyInput::-webkit-outer-spin-button,
 #ppQtyInput::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
   margin: 0 !important;
   display: none !important;
+}
+
+/* Disabled Quantity Stepper */
+.pp-qty-picker.disabled,
+.pp-qty-picker:has(input:disabled) {
+  opacity: 0.55 !important;
+  background: #F1F5F9 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+.pp-qty-btn:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background: #E2E8F0 !important;
+}
+
+.pp-qty-picker input:disabled,
+.pp-qty-input:disabled,
+#ppQtyInput:disabled {
+  background: transparent !important;
+  color: #94A3B8 !important;
+  cursor: not-allowed !important;
 }
 
 /* Pre-order Delivery Notice Banner (20% increased font size: 13px -> 15.6px) */
@@ -561,7 +584,7 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
 }
 
 .pp-btn-buy-now, .pp-btn-buy {
-  display: inline-flex !important;
+  display: inline-flex;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
@@ -579,6 +602,13 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
   cursor: pointer;
   box-sizing: border-box !important;
   transition: background 0.2s, transform 0.18s;
+}
+
+.pp-btn-buy-now[style*="display: none"],
+.pp-btn-buy-now.is-hidden,
+#ppBuyNowBtn[style*="display: none"],
+#ppBuyNowBtn.is-hidden {
+  display: none !important;
 }
 
 .pp-btn-buy-now:hover:not(:disabled) {
@@ -1778,19 +1808,19 @@ input[type="number"].pp-qty-input::-webkit-outer-spin-button,
     box-sizing: border-box !important;
   }
   .pp-btn-buy-now {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    line-height: 1 !important;
-    min-width: 0 !important;
-    width: 100% !important;
-    height: 40px !important;
-    padding: 0 6px !important;
-    font-size: 12px !important;
-    white-space: nowrap !important;
-    box-sizing: border-box !important;
-  }
+  display: inline-flex;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 1 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  height: 40px !important;
+  padding: 0 6px !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
   /* Related Items Section - exactly 3 items visible initially on mobile */
   .pp-related-section {
     padding: 20px 14px 24px;

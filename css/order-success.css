@@ -520,22 +520,15 @@
     visibility: hidden !important;
   }
 
-  body.ak-tax-invoice-open .ak-order-view {
+  body.ak-tax-invoice-open .ak-order-view,
+  body.ak-tax-invoice-open #akOrderConfirmationView {
     display: none !important;
     visibility: hidden !important;
   }
 
   body:not(.ak-tax-invoice-open) .ak-order-view {
-    display: block !important;
-    visibility: visible !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    background: #FFFFFF !important;
-    width: 100% !important;
-  }
-
-  body:not(.ak-tax-invoice-open) .ak-order-view * {
-    visibility: visible !important;
+    display: none !important;
+    visibility: hidden !important;
   }
 
   .ak-order-shell {

@@ -327,8 +327,14 @@ export function initOrderSuccess() {
   if (printBtn) {
     printBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      document.body.classList.remove('ak-tax-invoice-open');
-      window.print();
+      if (lastOrderData) {
+        openTaxInvoiceModal(lastOrderData);
+        setTimeout(() => {
+          window.print();
+        }, 120);
+      } else {
+        window.print();
+      }
     });
   }
 }

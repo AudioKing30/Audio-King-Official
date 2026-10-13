@@ -191,8 +191,8 @@ export function generateTaxInvoiceHtml(orderData) {
             <div class="ak-inv-legal-name">VASP ADVISORS PRIVATE LIMITED</div>
             <div class="ak-inv-address">F 505, RNA Regency Park, MG Road Off Link Road, Dhanukar Wadi, Kandivali West, Mumbai Suburban, Maharashtra – 400067</div>
             <div class="ak-inv-gstin"><strong>GSTIN:</strong> 27AAHCV5628B1ZC &nbsp;|&nbsp; <strong>Trade Name / Brand:</strong> AUDIO KING</div>
-            <div class="ak-inv-pan"><strong>PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || ''}</span></div>
-            <div class="ak-inv-tan"><strong>TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || ''}</span></div>
+            <div class="ak-inv-pan"><strong>Company PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || 'AAHCV5628B'}</span></div>
+            <div class="ak-inv-tan"><strong>Company TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || 'MUMV28396E'}</span></div>
           </div>
 
           <div class="ak-inv-title-box">

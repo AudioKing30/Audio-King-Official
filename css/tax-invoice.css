@@ -71,8 +71,8 @@
 }
 
 .ak-inv-logo {
-  height: 57px;
-  max-height: 57px;
+  height: 68px;
+  max-height: 68px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -307,59 +307,95 @@
    Print Styling (Standard A4 Paper Pixel Perfection)
    ========================================================================== */
 @media print {
-  .no-print {
-    display: none !important;
+  /* Force exact background and color reproduction in browser PDF/printer */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
-  /* When tax invoice modal is actively being printed */
-  body.ak-tax-invoice-open * {
-    visibility: hidden;
-  }
-
-  body.ak-tax-invoice-open #akTaxInvoiceModal,
-  body.ak-tax-invoice-open #akTaxInvoiceModal * {
-    visibility: visible !important;
-  }
-
-  body.ak-tax-invoice-open #akTaxInvoiceModal {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    padding: 0;
-    background: #FFFFFF !important;
-    backdrop-filter: none !important;
-    display: block !important;
-    overflow: visible !important;
-    z-index: 99999 !important;
-  }
-
-  /* When NOT printing the tax invoice modal (e.g. standard Order Summary page print) */
-  body:not(.ak-tax-invoice-open) #akTaxInvoiceModal {
+  .no-print,
+  .ak-invoice-controls-bar,
+  .ak-header,
+  .ak-footer,
+  #akMainContent,
+  #catalogPage,
+  #productPage,
+  #akAccountModal,
+  #akAccountSettingsPage,
+  #akContactPage,
+  #akCheckoutPage,
+  #akContactModal,
+  #akAuthModal,
+  .ak-toast-container,
+  .ak-floating-whatsapp,
+  .ak-order-view,
+  #akOrderConfirmationView {
     display: none !important;
     visibility: hidden !important;
   }
 
-  body:not(.ak-tax-invoice-open) #akOrderConfirmationView,
-  body:not(.ak-tax-invoice-open) #akOrderConfirmationView * {
+  html, body {
+    background: #FFFFFF !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* When tax invoice modal is present/open */
+  #akTaxInvoiceModal {
+    position: static !important;
+    display: block !important;
+    visibility: visible !important;
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    inset: auto !important;
+    z-index: 1 !important;
+  }
+
+  #akTaxInvoiceModal * {
     visibility: visible !important;
   }
 
   .ak-tax-invoice-modal-content {
+    position: static !important;
+    display: block !important;
     max-width: 100% !important;
     width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
   }
 
+  .ak-invoice-wrapper {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   .ak-invoice-sheet {
+    display: block !important;
+    visibility: visible !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 10mm 12mm !important;
+    padding: 6mm 8mm !important;
+    margin: 0 auto !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+    background: #FFFFFF !important;
   }
 
   @page {
     size: A4 portrait;
-    margin: 8mm;
+    margin: 6mm 8mm;
   }
 }

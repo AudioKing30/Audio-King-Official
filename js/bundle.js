@@ -27055,8 +27055,8 @@ Weight: 1.24 lbs (0.567 kg`,
             <div class="ak-inv-legal-name">VASP ADVISORS PRIVATE LIMITED</div>
             <div class="ak-inv-address">F 505, RNA Regency Park, MG Road Off Link Road, Dhanukar Wadi, Kandivali West, Mumbai Suburban, Maharashtra \u2013 400067</div>
             <div class="ak-inv-gstin"><strong>GSTIN:</strong> 27AAHCV5628B1ZC &nbsp;|&nbsp; <strong>Trade Name / Brand:</strong> AUDIO KING</div>
-            <div class="ak-inv-pan"><strong>PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || ""}</span></div>
-            <div class="ak-inv-tan"><strong>TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || ""}</span></div>
+            <div class="ak-inv-pan"><strong>Company PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || "AAHCV5628B"}</span></div>
+            <div class="ak-inv-tan"><strong>Company TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || "MUMV28396E"}</span></div>
           </div>
 
           <div class="ak-inv-title-box">
@@ -27537,8 +27537,14 @@ Weight: 1.24 lbs (0.567 kg`,
     if (printBtn) {
       printBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        document.body.classList.remove("ak-tax-invoice-open");
-        window.print();
+        if (lastOrderData) {
+          openTaxInvoiceModal(lastOrderData);
+          setTimeout(() => {
+            window.print();
+          }, 120);
+        } else {
+          window.print();
+        }
       });
     }
   }
@@ -34508,23 +34514,40 @@ Message: ${message}`);
       }
       if (matched) {
         const vOutOfStock = matched.stock === 0 || !matched.isActive;
+        const ppQtyInput = document.getElementById("ppQtyInput");
+        const ppQtyMinus = document.getElementById("ppQtyMinus");
+        const ppQtyPlus = document.getElementById("ppQtyPlus");
+        const ppQtyPicker = document.querySelector(".pp-qty-picker");
         if (ppInStockBadge)
           ppInStockBadge.style.display = !vOutOfStock && !isPreOrder ? "inline-flex" : "none";
         if (ppOutOfStockBadge && !isPreOrder) {
           ppOutOfStockBadge.style.display = vOutOfStock ? "inline-flex" : "none";
           if (vOutOfStock) {
-            const activePhone = window._activeWhatsAppNumber || localStorage.getItem("audioking_active_whatsapp") || AUDIOKING_CONFIG.expertPhone || "+91 88793 93743";
-            const cleanPhone = String(activePhone).replace(/[^0-9]/g, "");
-            const waProdText = encodeURIComponent(`Hi AudioKing, I am inquiring about the out of stock product: ${product.name || "Audio Gear"}`);
-            const waUrl = `https://wa.me/${cleanPhone}?text=${waProdText}`;
             ppOutOfStockBadge.className = "pp-stock-badge outstock";
             ppOutOfStockBadge.style.background = "#FEE2E2";
             ppOutOfStockBadge.style.color = "#DC2626";
             ppOutOfStockBadge.style.borderColor = "#FECACA";
             ppOutOfStockBadge.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <span>Availability: Out of Stock \xB7 Please reach out to us at <a href="${waUrl}" target="_blank" rel="noopener" class="ak-expert-phone-target ak-expert-wa-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+            <span>Out of Stock</span>
           `;
+          }
+        }
+        if (ppQtyInput)
+          ppQtyInput.disabled = Boolean(vOutOfStock && !isPreOrder);
+        if (ppQtyMinus)
+          ppQtyMinus.disabled = Boolean(vOutOfStock && !isPreOrder);
+        if (ppQtyPlus)
+          ppQtyPlus.disabled = Boolean(vOutOfStock && !isPreOrder);
+        if (ppQtyPicker) {
+          if (vOutOfStock && !isPreOrder) {
+            ppQtyPicker.classList.add("disabled");
+            ppQtyPicker.style.opacity = "0.55";
+            ppQtyPicker.style.pointerEvents = "none";
+          } else {
+            ppQtyPicker.classList.remove("disabled");
+            ppQtyPicker.style.opacity = "1";
+            ppQtyPicker.style.pointerEvents = "auto";
           }
         }
         if (ppAddToCartBtn && !isPreOrder) {
@@ -34532,15 +34555,16 @@ Message: ${message}`);
             ppAddToCartBtn.style.display = "inline-flex";
             ppAddToCartBtn.classList.add("disabled", "is-out-of-stock");
             ppAddToCartBtn.disabled = true;
-            ppAddToCartBtn.style.opacity = "0.65";
-            ppAddToCartBtn.style.background = "#FEF2F2";
-            ppAddToCartBtn.style.color = "#DC2626";
-            ppAddToCartBtn.style.borderColor = "#FECACA";
+            ppAddToCartBtn.style.opacity = "0.55";
+            ppAddToCartBtn.style.background = "#F1F5F9";
+            ppAddToCartBtn.style.color = "#94A3B8";
+            ppAddToCartBtn.style.borderColor = "#CBD5E1";
             ppAddToCartBtn.style.cursor = "not-allowed";
+            ppAddToCartBtn.style.pointerEvents = "none";
             const span = ppAddToCartBtn.querySelector("span");
             if (span) {
-              span.textContent = "Out of Stock";
-              span.style.color = "#DC2626";
+              span.textContent = "Add to Cart";
+              span.style.color = "#94A3B8";
             }
           } else {
             ppAddToCartBtn.style.display = "inline-flex";
@@ -34551,6 +34575,7 @@ Message: ${message}`);
             ppAddToCartBtn.style.color = "";
             ppAddToCartBtn.style.borderColor = "";
             ppAddToCartBtn.style.cursor = "pointer";
+            ppAddToCartBtn.style.pointerEvents = "auto";
             const span = ppAddToCartBtn.querySelector("span");
             if (span) {
               span.textContent = "Add to Cart";
@@ -34560,12 +34585,18 @@ Message: ${message}`);
         }
         if (ppBuyNowBtn && !isPreOrder) {
           if (vOutOfStock) {
-            ppBuyNowBtn.style.display = "none";
+            ppBuyNowBtn.style.setProperty("display", "none", "important");
+            ppBuyNowBtn.classList.add("is-hidden");
+            ppBuyNowBtn.disabled = true;
+            ppBuyNowBtn.style.pointerEvents = "none";
           } else {
+            ppBuyNowBtn.style.removeProperty("display");
             ppBuyNowBtn.style.display = "inline-flex";
+            ppBuyNowBtn.classList.remove("is-hidden");
             ppBuyNowBtn.disabled = false;
             ppBuyNowBtn.style.opacity = "1";
             ppBuyNowBtn.style.cursor = "pointer";
+            ppBuyNowBtn.style.pointerEvents = "auto";
             ppBuyNowBtn.textContent = "Buy Now";
             ppBuyNowBtn.style.color = "";
             ppBuyNowBtn.style.background = "";
@@ -34759,10 +34790,6 @@ Message: ${message}`);
       if (isPreOrder) {
         ppOutOfStockBadge.style.display = "none";
       } else if (isOutOfStock) {
-        const activePhone = window._activeWhatsAppNumber || localStorage.getItem("audioking_active_whatsapp") || AUDIOKING_CONFIG.expertPhone || "+91 88793 93743";
-        const cleanPhone = String(activePhone).replace(/[^0-9]/g, "");
-        const waProdText = encodeURIComponent(`Hi AudioKing, I am inquiring about the out of stock product: ${product.name || "Audio Gear"}`);
-        const waUrl = `https://wa.me/${cleanPhone}?text=${waProdText}`;
         ppOutOfStockBadge.style.display = "inline-flex";
         ppOutOfStockBadge.className = "pp-stock-badge outstock";
         ppOutOfStockBadge.style.background = "#FEE2E2";
@@ -34770,7 +34797,7 @@ Message: ${message}`);
         ppOutOfStockBadge.style.borderColor = "#FECACA";
         ppOutOfStockBadge.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span>Availability: Out of Stock \xB7 Please reach out to us at <a href="${waUrl}" target="_blank" rel="noopener" class="ak-expert-phone-target ak-expert-wa-target" style="color:inherit; font-weight:700; text-decoration:underline;">${activePhone}</a></span>
+        <span>Out of Stock</span>
       `;
       } else {
         ppOutOfStockBadge.style.display = "none";
@@ -34780,8 +34807,28 @@ Message: ${message}`);
     if (preOrderNotice) {
       preOrderNotice.style.display = isPreOrder ? "flex" : "none";
     }
-    if (ppQtyInput)
+    const ppQtyMinus = document.getElementById("ppQtyMinus");
+    const ppQtyPlus = document.getElementById("ppQtyPlus");
+    const ppQtyPicker = document.querySelector(".pp-qty-picker");
+    if (ppQtyInput) {
       ppQtyInput.value = "1";
+      ppQtyInput.disabled = Boolean(isOutOfStock && !isPreOrder);
+    }
+    if (ppQtyMinus)
+      ppQtyMinus.disabled = Boolean(isOutOfStock && !isPreOrder);
+    if (ppQtyPlus)
+      ppQtyPlus.disabled = Boolean(isOutOfStock && !isPreOrder);
+    if (ppQtyPicker) {
+      if (isOutOfStock && !isPreOrder) {
+        ppQtyPicker.classList.add("disabled");
+        ppQtyPicker.style.opacity = "0.55";
+        ppQtyPicker.style.pointerEvents = "none";
+      } else {
+        ppQtyPicker.classList.remove("disabled");
+        ppQtyPicker.style.opacity = "1";
+        ppQtyPicker.style.pointerEvents = "auto";
+      }
+    }
     if (ppAddToCartBtn) {
       if (isPreOrder) {
         ppAddToCartBtn.style.display = "inline-flex";
@@ -34793,6 +34840,7 @@ Message: ${message}`);
         ppAddToCartBtn.style.color = "";
         ppAddToCartBtn.style.borderColor = "";
         ppAddToCartBtn.style.cursor = "pointer";
+        ppAddToCartBtn.style.pointerEvents = "auto";
         ppAddToCartBtn.style.fontWeight = "700";
         const span = ppAddToCartBtn.querySelector("span");
         if (span) {
@@ -34805,15 +34853,16 @@ Message: ${message}`);
         ppAddToCartBtn.classList.add("disabled", "is-out-of-stock");
         ppAddToCartBtn.classList.remove("is-preorder");
         ppAddToCartBtn.disabled = true;
-        ppAddToCartBtn.style.opacity = "0.65";
-        ppAddToCartBtn.style.background = "#FEF2F2";
-        ppAddToCartBtn.style.color = "#DC2626";
-        ppAddToCartBtn.style.borderColor = "#FECACA";
+        ppAddToCartBtn.style.opacity = "0.55";
+        ppAddToCartBtn.style.background = "#F1F5F9";
+        ppAddToCartBtn.style.color = "#94A3B8";
+        ppAddToCartBtn.style.borderColor = "#CBD5E1";
         ppAddToCartBtn.style.cursor = "not-allowed";
+        ppAddToCartBtn.style.pointerEvents = "none";
         const span = ppAddToCartBtn.querySelector("span");
         if (span) {
-          span.textContent = "Out of Stock";
-          span.style.color = "#DC2626";
+          span.textContent = "Add to Cart";
+          span.style.color = "#94A3B8";
         }
       } else {
         ppAddToCartBtn.style.display = "inline-flex";
@@ -34824,6 +34873,7 @@ Message: ${message}`);
         ppAddToCartBtn.style.color = "";
         ppAddToCartBtn.style.borderColor = "";
         ppAddToCartBtn.style.cursor = "pointer";
+        ppAddToCartBtn.style.pointerEvents = "auto";
         const span = ppAddToCartBtn.querySelector("span");
         if (span) {
           span.textContent = "Add to Cart";
@@ -34837,18 +34887,25 @@ Message: ${message}`);
         ppBuyNowBtn.disabled = false;
         ppBuyNowBtn.style.opacity = "1";
         ppBuyNowBtn.style.cursor = "pointer";
+        ppBuyNowBtn.style.pointerEvents = "auto";
         ppBuyNowBtn.textContent = "Pre-Order";
         ppBuyNowBtn.style.color = "#000000";
         ppBuyNowBtn.style.background = "#FACC15";
         ppBuyNowBtn.style.borderColor = "#EAB308";
         ppBuyNowBtn.style.fontWeight = "700";
       } else if (isOutOfStock) {
-        ppBuyNowBtn.style.display = "none";
+        ppBuyNowBtn.style.setProperty("display", "none", "important");
+        ppBuyNowBtn.classList.add("is-hidden");
+        ppBuyNowBtn.disabled = true;
+        ppBuyNowBtn.style.pointerEvents = "none";
       } else {
+        ppBuyNowBtn.style.removeProperty("display");
         ppBuyNowBtn.style.display = "inline-flex";
+        ppBuyNowBtn.classList.remove("is-hidden");
         ppBuyNowBtn.disabled = false;
         ppBuyNowBtn.style.opacity = "1";
         ppBuyNowBtn.style.cursor = "pointer";
+        ppBuyNowBtn.style.pointerEvents = "auto";
         ppBuyNowBtn.textContent = "Buy Now";
         ppBuyNowBtn.style.color = "";
         ppBuyNowBtn.style.background = "";
@@ -36317,6 +36374,8 @@ Message: ${message}`);
     const qtyPlus = document.getElementById("ppQtyPlus");
     if (qtyMinus && qtyInput) {
       qtyMinus.addEventListener("click", () => {
+        if (qtyMinus.disabled || qtyInput.disabled)
+          return;
         let val = parseInt(qtyInput.value || 1, 10);
         if (val > 1)
           qtyInput.value = val - 1;
@@ -36324,6 +36383,8 @@ Message: ${message}`);
     }
     if (qtyPlus && qtyInput) {
       qtyPlus.addEventListener("click", () => {
+        if (qtyPlus.disabled || qtyInput.disabled)
+          return;
         let val = parseInt(qtyInput.value || 1, 10);
         if (val < 99)
           qtyInput.value = val + 1;
@@ -36332,6 +36393,8 @@ Message: ${message}`);
     const addBtn = document.getElementById("ppAddToCartBtn");
     if (addBtn) {
       addBtn.addEventListener("click", () => {
+        if (addBtn.disabled)
+          return;
         if (!authService.isAuthenticated()) {
           showToast("Please sign in to add products to your cart", "error");
           openAuthModal("signin", "Please sign in to add items to your cart.");
@@ -36366,6 +36429,8 @@ Message: ${message}`);
     const buyNowBtn = document.getElementById("ppBuyNowBtn");
     if (buyNowBtn) {
       buyNowBtn.addEventListener("click", () => {
+        if (buyNowBtn.disabled)
+          return;
         if (!activeProduct)
           return;
         const isPreOrder = Boolean(activeProduct.isPreOrder || activeProduct.badge && activeProduct.badge.toLowerCase().includes("pre-order") || activeProduct.stockStatus === "preorder");
