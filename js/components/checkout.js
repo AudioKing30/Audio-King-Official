@@ -40,18 +40,32 @@ export function openCheckoutModal(items = []) {
   appliedCoupon = null;
   const key = getSavedAddressKey();
   savedAddress = key ? getStorage(key, null) : null;
+  const currentUser = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
   if (!savedAddress) {
     const def = getDefaultAddress();
     if (def) {
       savedAddress = {
         name: def.name || def.recipient_name,
+        email: currentUser?.email || '',
         phone: def.phone,
         line1: def.street,
         city: def.city,
         state: def.state,
         pin: def.pin
       };
+    } else if (currentUser) {
+      savedAddress = {
+        name: currentUser.fullName || currentUser.displayName || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || currentUser.phoneNumber || '',
+        line1: '',
+        city: 'Mumbai',
+        state: 'Maharashtra',
+        pin: ''
+      };
     }
+  } else if (!savedAddress.email && currentUser?.email) {
+    savedAddress.email = currentUser.email;
   }
   const modal = document.getElementById('akCheckoutModal');
   if (modal) {
@@ -247,11 +261,18 @@ function renderCheckoutStep() {
     if (backBtn) backBtn.style.display = 'none';
     if (submitBtn) submitBtn.textContent = 'Continue to Payment';
 
+    const currentUser = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+    const prefillEmail = savedAddress?.email || currentUser?.email || '';
+
     bodyEl.innerHTML = `
       <form id="akAddressForm" class="ak-form-grid" onsubmit="event.preventDefault();">
         <div class="ak-form-group full">
           <label class="ak-form-label">Full Name *</label>
           <input type="text" id="akAddrName" class="ak-form-input" required placeholder="e.g. Rahul Sharma" value="${savedAddress?.name || ''}">
+        </div>
+        <div class="ak-form-group full">
+          <label class="ak-form-label">Email Address (for Order Updates & History) *</label>
+          <input type="email" id="akAddrEmail" class="ak-form-input" required placeholder="e.g. musician@example.com" value="${prefillEmail}">
         </div>
         <div class="ak-form-group">
           <label class="ak-form-label">Phone Number *</label>
@@ -542,10 +563,11 @@ export function initCheckout() {
   }
 
   if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
+    submitBtn.addEventListener('click', async () => {
       if (currentStep === 1) {
         // Validate Address Form
         const name = document.getElementById('akAddrName')?.value.trim();
+        const email = document.getElementById('akAddrEmail')?.value.trim().toLowerCase();
         const phone = document.getElementById('akAddrPhone')?.value.trim();
         const pin = document.getElementById('akAddrPin')?.value.trim();
         const line1 = document.getElementById('akAddrLine1')?.value.trim();
@@ -554,12 +576,18 @@ export function initCheckout() {
         const state = document.getElementById('akAddrState')?.value.trim();
         const saveCheck = document.getElementById('akSaveAddressCheckbox')?.checked;
 
-        if (!name || !phone || !pin || !line1 || !city || !state) {
-          showToast('Please fill all required address fields');
+        if (!name || !email || !phone || !pin || !line1 || !city || !state) {
+          showToast('Please fill all required address fields including email');
           return;
         }
 
-        savedAddress = { name, phone, pin, line1, line2, city, state };
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          showToast('Please enter a valid email address');
+          return;
+        }
+
+        savedAddress = { name, email, phone, pin, line1, line2, city, state };
         if (saveCheck) {
           const key = getSavedAddressKey();
           if (key) setStorage(key, savedAddress);
@@ -571,6 +599,7 @@ export function initCheckout() {
                 id: 'addr_' + Date.now(),
                 tag: 'Delivery',
                 name,
+                email,
                 phone,
                 street: line1 + (line2 ? `, ${line2}` : ''),
                 city,
@@ -611,9 +640,10 @@ export function initCheckout() {
           : getCartSubtotal();
 
         const currentUser = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
-        const userEmail = (currentUser?.email || '').trim().toLowerCase();
-        const userName = savedAddress?.name || currentUser?.fullName || currentUser?.displayName || 'Demo Customer';
+        const userEmail = (savedAddress?.email || currentUser?.email || '').trim().toLowerCase();
+        const userName = savedAddress?.name || currentUser?.fullName || currentUser?.displayName || 'Valued Customer';
         const userPhone = savedAddress?.phone || currentUser?.phone || currentUser?.phoneNumber || '+91 98765 43210';
+        const userId = currentUser?.id || '';
 
         const customerInfo = {
           ...(savedAddress || {}),
@@ -621,10 +651,21 @@ export function initCheckout() {
           fullName: userName,
           email: userEmail,
           phone: userPhone,
-          userId: currentUser?.id || ''
+          userId: userId
         };
 
+        const finalOrderNumber = (function() {
+          const d = new Date();
+          const pad = n => String(n).padStart(2, '0');
+          const dateStr = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+          const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+          return `AK-${dateStr}-${rand}`;
+        })();
+
         const orderData = {
+          id: finalOrderNumber,
+          orderId: finalOrderNumber,
+          orderNumber: finalOrderNumber,
           items: [...checkoutItems],
           customer: customerInfo,
           shippingAddress: customerInfo,
@@ -635,12 +676,27 @@ export function initCheckout() {
           date: formatDate()
         };
 
-        ordersService.createOrder(orderData).then(saved => {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Securing Order...';
+        }
+
+        try {
+          const saved = await ordersService.createOrder(orderData);
           if (saved && saved.orderNumber) {
             orderData.orderNumber = saved.orderNumber;
             orderData.orderId = saved.orderNumber;
+            if (saved.id) orderData.id = saved.id;
           }
-        }).catch(e => console.warn('[Checkout] Order persistence notice:', e.message));
+        } catch (err) {
+          console.error('[Checkout] Order placement error:', err);
+          showToast(err.message || 'Could not place order. Please try again.', 'error');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Place Order';
+          }
+          return;
+        }
 
         closeCheckoutModal();
         clearCart();

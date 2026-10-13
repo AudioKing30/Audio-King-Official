@@ -3521,20 +3521,32 @@ function initDedicatedCheckoutPage() {
       }
       const finalTotal = Math.max(0, subtotal - discountAmount);
 
-      const selectedPayment = document.querySelector('input[name="akCheckoutPayment"]:checked')?.value || 'UPI';
-      const u = getCurrentUser();
+      const u = getCurrentUser() || authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+      const emailVal = (document.getElementById('akCoEmail')?.value || '').trim().toLowerCase() || (u && u.email ? u.email : '');
+      const finalOrderNumber = (function() {
+        const d = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        const dateStr = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+        const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+        return `AK-${dateStr}-${rand}`;
+      })();
+      const customerInfo = {
+        name: document.getElementById('akCoFullName')?.value || (u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() : '') || 'Valued Customer',
+        phone: document.getElementById('akCoPhone')?.value || (u ? u.phone || u.phone_number || '' : '') || '+91 98765 43210',
+        email: emailVal || 'customer@example.com',
+        userId: u?.id || '',
+        address: document.getElementById('akCoAddress')?.value || 'Flagship Studio',
+        city: document.getElementById('akCoCity')?.value || 'Mumbai',
+        state: document.getElementById('akCoState')?.value || 'Maharashtra',
+        pincode: document.getElementById('akCoPincode')?.value || '400053'
+      };
       const orderData = {
+        id: finalOrderNumber,
+        orderId: finalOrderNumber,
+        orderNumber: finalOrderNumber,
         items: currentCheckoutItems,
-        customer: {
-          name: document.getElementById('akCoFullName')?.value || (u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() : '') || 'Valued Customer',
-          phone: document.getElementById('akCoPhone')?.value || (u ? u.phone || u.phone_number || '' : '') || '+91 98765 43210',
-          email: document.getElementById('akCoEmail')?.value || (u && u.email ? u.email : '') || 'customer@example.com',
-          userId: u?.id || '',
-          address: document.getElementById('akCoAddress')?.value || 'Flagship Studio',
-          city: document.getElementById('akCoCity')?.value || 'Mumbai',
-          state: document.getElementById('akCoState')?.value || 'Maharashtra',
-          pincode: document.getElementById('akCoPincode')?.value || '400053'
-        },
+        customer: customerInfo,
+        shippingAddress: customerInfo,
         paymentMethod: selectedPayment,
         couponCode: appliedDedicatedCoupon ? appliedDedicatedCoupon.code : null,
         discountAmount: discountAmount,

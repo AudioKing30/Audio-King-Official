@@ -26661,7 +26661,7 @@ Weight: 1.24 lbs (0.567 kg`,
   }
 
   // js/utils/storage.js
-  function getStorage(key, defaultValue = null) {
+  function getStorage2(key, defaultValue = null) {
     if (typeof localStorage === "undefined")
       return defaultValue;
     try {
@@ -27556,7 +27556,7 @@ Weight: 1.24 lbs (0.567 kg`,
       this.listeners = /* @__PURE__ */ new Set();
       this.isLoggingIn = false;
       const token = this.getToken();
-      const cachedUser = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
+      const cachedUser = getStorage2(this.localUserKey, null) || getStorage2("audioKingUser", null);
       this.currentUser = token && cachedUser ? cachedUser : null;
       this.status = token ? "loading" : "unauthenticated";
       this._lastPrewarm = 0;
@@ -27601,7 +27601,7 @@ Weight: 1.24 lbs (0.567 kg`,
       });
     }
     getToken() {
-      let token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
+      let token = getStorage2("audioKingSessionToken", null) || getStorage2("audioking_token", null) || getStorage2("audioKingToken", null);
       if (!token && typeof localStorage !== "undefined") {
         token = localStorage.getItem("audioKingSessionToken") || localStorage.getItem("audioking_token") || localStorage.getItem("audioKingToken");
       }
@@ -27807,7 +27807,7 @@ Weight: 1.24 lbs (0.567 kg`,
           setStorage("audioking_admin_token", token);
         }
       } else if (res.networkError || res.status === 502 || res.status === 503 || res.status === 504) {
-        const local = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
+        const local = getStorage2(this.localUserKey, null) || getStorage2("audioKingUser", null);
         if (local && local.email && local.id) {
           this.currentUser = local;
           this.status = "authenticated";
@@ -28245,12 +28245,12 @@ Weight: 1.24 lbs (0.567 kg`,
         setStorage(key, res.data.addresses);
         return res.data.addresses;
       }
-      return getStorage(key, []);
+      return getStorage2(key, []);
     }
     async addAddress(addr) {
       const key = this.getUserAddressKey();
       if (!this.isAuthenticated()) {
-        const list = getStorage(key, []);
+        const list = getStorage2(key, []);
         const newAddr = {
           id: "addr_" + Date.now(),
           ...addr,
@@ -28285,7 +28285,7 @@ Weight: 1.24 lbs (0.567 kg`,
         body: JSON.stringify(addr)
       });
       if (res.ok && res.data?.address) {
-        let list = getStorage(key, []);
+        let list = getStorage2(key, []);
         list = list.map((a) => a.id === id ? { ...a, ...res.data.address } : a);
         setStorage(key, list);
         return res.data.address;
@@ -28296,7 +28296,7 @@ Weight: 1.24 lbs (0.567 kg`,
       const key = this.getUserAddressKey();
       const res = await this.safeFetch(`/api/user/addresses/${id}`, { method: "DELETE" });
       if (res.ok) {
-        let list = getStorage(key, []);
+        let list = getStorage2(key, []);
         list = list.filter((a) => a.id !== id);
         setStorage(key, list);
         return true;
@@ -28307,7 +28307,7 @@ Weight: 1.24 lbs (0.567 kg`,
       const key = this.getUserAddressKey();
       const res = await this.safeFetch(`/api/user/addresses/${id}/default`, { method: "POST" });
       if (res.ok) {
-        let list = getStorage(key, []);
+        let list = getStorage2(key, []);
         list = list.map((a) => ({ ...a, is_default: a.id === id }));
         setStorage(key, list);
         return true;
@@ -29172,7 +29172,7 @@ Weight: 1.24 lbs (0.567 kg`,
     }
     getAuthHeaders() {
       const token = authService.getToken();
-      const user = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+      const user = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
       const headers = {};
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
@@ -29190,7 +29190,7 @@ Weight: 1.24 lbs (0.567 kg`,
      * Fetch all orders belonging to authenticated user
      */
     async getOrders() {
-      const user = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+      const user = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
       const localKey = user && user.id ? `audioking_orders_${user.id}` : user && user.email ? `audioking_orders_${user.email}` : "audioking_guest_orders";
       try {
         const baseUrl = this.getBaseUrl();
@@ -29211,7 +29211,26 @@ Weight: 1.24 lbs (0.567 kg`,
         });
         if (res.ok) {
           const data = await res.json();
-          this.cachedOrders = data.orders || [];
+          const serverOrders = data.orders || [];
+          const localList = (user && user.id ? getStorage2(`audioking_orders_${user.id}`, []) : []).concat(user && user.email ? getStorage2(`audioking_orders_${user.email}`, []) : []).concat(getStorage2("audioking_last_orders", [])).concat(getStorage2(localKey, []));
+          const orderMap = /* @__PURE__ */ new Map();
+          serverOrders.forEach((o) => {
+            if (!o)
+              return;
+            const key = String(o.orderNumber || o.id || "");
+            if (key)
+              orderMap.set(key, o);
+          });
+          localList.forEach((lo) => {
+            if (!lo)
+              return;
+            const key = String(lo.orderNumber || lo.id || "");
+            if (key && !orderMap.has(key)) {
+              orderMap.set(key, lo);
+            }
+          });
+          this.cachedOrders = Array.from(orderMap.values());
+          this.cachedOrders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
           if (user && user.id)
             setStorage(`audioking_orders_${user.id}`, this.cachedOrders);
           if (user && user.email)
@@ -29223,7 +29242,7 @@ Weight: 1.24 lbs (0.567 kg`,
       } catch (err) {
         console.warn("[OrdersService] Server fetch unavailable, loading from local mirror:", err.message);
       }
-      const cached = (user && user.id ? getStorage(`audioking_orders_${user.id}`, null) : null) || (user && user.email ? getStorage(`audioking_orders_${user.email}`, null) : null) || getStorage(localKey, null) || getStorage("audioking_last_orders", []);
+      const cached = (user && user.id ? getStorage2(`audioking_orders_${user.id}`, null) : null) || (user && user.email ? getStorage2(`audioking_orders_${user.email}`, null) : null) || getStorage2(localKey, null) || getStorage2("audioking_last_orders", []);
       this.cachedOrders = cached || [];
       return this.cachedOrders;
     }
@@ -29231,7 +29250,7 @@ Weight: 1.24 lbs (0.567 kg`,
      * Create and persist new order upon checkout completion
      */
     async createOrder(orderData) {
-      const user = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+      const user = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
       const userEmail = (user?.email || orderData.customer?.email || "").trim().toLowerCase();
       const userId = user?.id || orderData.customer?.userId || "";
       const localKey = user && user.id ? `audioking_orders_${user.id}` : userEmail ? `audioking_orders_${userEmail}` : "audioking_guest_orders";
@@ -29275,18 +29294,16 @@ Weight: 1.24 lbs (0.567 kg`,
       if (!serverSavedOrder) {
         throw new Error("Order could not be saved to server database.");
       }
-      const currentList = getStorage(localKey, []);
-      const exists = currentList.some((o) => o.id === serverSavedOrder.id || o.orderNumber === serverSavedOrder.orderNumber);
-      if (!exists) {
-        currentList.unshift(serverSavedOrder);
-        setStorage(localKey, currentList);
-        if (userId)
-          setStorage(`audioking_orders_${userId}`, currentList);
-        if (userEmail)
-          setStorage(`audioking_orders_${userEmail}`, currentList);
-        setStorage("audioking_last_orders", currentList);
-      }
-      this.cachedOrders = currentList;
+      const currentList = getStorage2(localKey, []);
+      const filtered = currentList.filter((o) => o && o.id !== serverSavedOrder.id && o.orderNumber !== serverSavedOrder.orderNumber);
+      filtered.unshift(serverSavedOrder);
+      setStorage(localKey, filtered);
+      if (userId)
+        setStorage(`audioking_orders_${userId}`, filtered);
+      if (userEmail)
+        setStorage(`audioking_orders_${userEmail}`, filtered);
+      setStorage("audioking_last_orders", filtered);
+      this.cachedOrders = filtered;
       return serverSavedOrder;
     }
   };
@@ -29657,6 +29674,23 @@ Weight: 1.24 lbs (0.567 kg`,
         orders = await ordersService.getOrders();
       } catch (_) {
       }
+    }
+    const u = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
+    const localList = (u && u.id ? getStorage2(`audioking_orders_${u.id}`, []) : []).concat(u && u.email ? getStorage2(`audioking_orders_${u.email}`, []) : []).concat(getStorage2("audioking_last_orders", []));
+    if (Array.isArray(localList) && localList.length > 0) {
+      if (!orders)
+        orders = [];
+      const existingKeys = new Set(orders.map((o) => String(o.orderNumber || o.id || "")));
+      for (const lo of localList) {
+        if (!lo)
+          continue;
+        const key = String(lo.orderNumber || lo.id || "");
+        if (key && !existingKeys.has(key)) {
+          existingKeys.add(key);
+          orders.push(lo);
+        }
+      }
+      orders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
     }
     if (!orders || orders.length === 0) {
       container.innerHTML = `
@@ -30190,19 +30224,33 @@ Weight: 1.24 lbs (0.567 kg`,
     currentStep = 1;
     appliedCoupon = null;
     const key = getSavedAddressKey();
-    savedAddress = key ? getStorage(key, null) : null;
+    savedAddress = key ? getStorage2(key, null) : null;
+    const currentUser = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
     if (!savedAddress) {
       const def = getDefaultAddress();
       if (def) {
         savedAddress = {
           name: def.name || def.recipient_name,
+          email: currentUser?.email || "",
           phone: def.phone,
           line1: def.street,
           city: def.city,
           state: def.state,
           pin: def.pin
         };
+      } else if (currentUser) {
+        savedAddress = {
+          name: currentUser.fullName || currentUser.displayName || "",
+          email: currentUser.email || "",
+          phone: currentUser.phone || currentUser.phoneNumber || "",
+          line1: "",
+          city: "Mumbai",
+          state: "Maharashtra",
+          pin: ""
+        };
       }
+    } else if (!savedAddress.email && currentUser?.email) {
+      savedAddress.email = currentUser.email;
     }
     const modal = document.getElementById("akCheckoutModal");
     if (modal) {
@@ -30380,11 +30428,17 @@ Weight: 1.24 lbs (0.567 kg`,
         backBtn.style.display = "none";
       if (submitBtn)
         submitBtn.textContent = "Continue to Payment";
+      const currentUser = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
+      const prefillEmail = savedAddress?.email || currentUser?.email || "";
       bodyEl.innerHTML = `
       <form id="akAddressForm" class="ak-form-grid" onsubmit="event.preventDefault();">
         <div class="ak-form-group full">
           <label class="ak-form-label">Full Name *</label>
           <input type="text" id="akAddrName" class="ak-form-input" required placeholder="e.g. Rahul Sharma" value="${savedAddress?.name || ""}">
+        </div>
+        <div class="ak-form-group full">
+          <label class="ak-form-label">Email Address (for Order Updates & History) *</label>
+          <input type="email" id="akAddrEmail" class="ak-form-input" required placeholder="e.g. musician@example.com" value="${prefillEmail}">
         </div>
         <div class="ak-form-group">
           <label class="ak-form-label">Phone Number *</label>
@@ -30664,9 +30718,10 @@ Weight: 1.24 lbs (0.567 kg`,
       });
     }
     if (submitBtn) {
-      submitBtn.addEventListener("click", () => {
+      submitBtn.addEventListener("click", async () => {
         if (currentStep === 1) {
           const name = document.getElementById("akAddrName")?.value.trim();
+          const email = document.getElementById("akAddrEmail")?.value.trim().toLowerCase();
           const phone = document.getElementById("akAddrPhone")?.value.trim();
           const pin = document.getElementById("akAddrPin")?.value.trim();
           const line1 = document.getElementById("akAddrLine1")?.value.trim();
@@ -30674,11 +30729,16 @@ Weight: 1.24 lbs (0.567 kg`,
           const city = document.getElementById("akAddrCity")?.value.trim();
           const state = document.getElementById("akAddrState")?.value.trim();
           const saveCheck = document.getElementById("akSaveAddressCheckbox")?.checked;
-          if (!name || !phone || !pin || !line1 || !city || !state) {
-            showToast("Please fill all required address fields");
+          if (!name || !email || !phone || !pin || !line1 || !city || !state) {
+            showToast("Please fill all required address fields including email");
             return;
           }
-          savedAddress = { name, phone, pin, line1, line2, city, state };
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            showToast("Please enter a valid email address");
+            return;
+          }
+          savedAddress = { name, email, phone, pin, line1, line2, city, state };
           if (saveCheck) {
             const key = getSavedAddressKey();
             if (key)
@@ -30691,6 +30751,7 @@ Weight: 1.24 lbs (0.567 kg`,
                   id: "addr_" + Date.now(),
                   tag: "Delivery",
                   name,
+                  email,
                   phone,
                   street: line1 + (line2 ? `, ${line2}` : ""),
                   city,
@@ -30724,19 +30785,30 @@ Weight: 1.24 lbs (0.567 kg`,
             paymentMethodLabel = "Prepaid UPI / Online";
           }
           const itemsTotal = checkoutItems && checkoutItems.length > 0 ? checkoutItems.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0) : getCartSubtotal();
-          const currentUser = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
-          const userEmail = (currentUser?.email || "").trim().toLowerCase();
-          const userName = savedAddress?.name || currentUser?.fullName || currentUser?.displayName || "Demo Customer";
+          const currentUser = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
+          const userEmail = (savedAddress?.email || currentUser?.email || "").trim().toLowerCase();
+          const userName = savedAddress?.name || currentUser?.fullName || currentUser?.displayName || "Valued Customer";
           const userPhone = savedAddress?.phone || currentUser?.phone || currentUser?.phoneNumber || "+91 98765 43210";
+          const userId = currentUser?.id || "";
           const customerInfo = {
             ...savedAddress || {},
             name: userName,
             fullName: userName,
             email: userEmail,
             phone: userPhone,
-            userId: currentUser?.id || ""
+            userId
           };
+          const finalOrderNumber = function() {
+            const d = /* @__PURE__ */ new Date();
+            const pad = (n) => String(n).padStart(2, "0");
+            const dateStr = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+            const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+            return `AK-${dateStr}-${rand}`;
+          }();
           const orderData = {
+            id: finalOrderNumber,
+            orderId: finalOrderNumber,
+            orderNumber: finalOrderNumber,
             items: [...checkoutItems],
             customer: customerInfo,
             shippingAddress: customerInfo,
@@ -30746,12 +30818,27 @@ Weight: 1.24 lbs (0.567 kg`,
             total: appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal,
             date: formatDate()
           };
-          ordersService.createOrder(orderData).then((saved) => {
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Securing Order...";
+          }
+          try {
+            const saved = await ordersService.createOrder(orderData);
             if (saved && saved.orderNumber) {
               orderData.orderNumber = saved.orderNumber;
               orderData.orderId = saved.orderNumber;
+              if (saved.id)
+                orderData.id = saved.id;
             }
-          }).catch((e) => console.warn("[Checkout] Order persistence notice:", e.message));
+          } catch (err) {
+            console.error("[Checkout] Order placement error:", err);
+            showToast(err.message || "Could not place order. Please try again.", "error");
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Place Order";
+            }
+            return;
+          }
           closeCheckoutModal();
           clearCart();
           triggerOrderAnimation(orderData);
@@ -30763,7 +30850,7 @@ Weight: 1.24 lbs (0.567 kg`,
   // js/components/cart.js
   var STORAGE_KEY = AUDIOKING_CONFIG.cartStorageKey;
   var cart = [];
-  var loaded = getStorage(STORAGE_KEY, []);
+  var loaded = getStorage2(STORAGE_KEY, []);
   cart = Array.isArray(loaded) && authService.isAuthenticated() ? loaded : [];
   function saveCart(syncWithServer = false) {
     setStorage(STORAGE_KEY, cart);
@@ -36565,20 +36652,32 @@ Message: ${message}`);
           }
         }
         const finalTotal = Math.max(0, subtotal - discountAmount);
-        const selectedPayment = document.querySelector('input[name="akCheckoutPayment"]:checked')?.value || "UPI";
-        const u = getCurrentUser();
+        const u = getCurrentUser() || authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+        const emailVal = (document.getElementById("akCoEmail")?.value || "").trim().toLowerCase() || (u && u.email ? u.email : "");
+        const finalOrderNumber = function() {
+          const d = /* @__PURE__ */ new Date();
+          const pad = (n) => String(n).padStart(2, "0");
+          const dateStr = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+          const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+          return `AK-${dateStr}-${rand}`;
+        }();
+        const customerInfo = {
+          name: document.getElementById("akCoFullName")?.value || (u ? `${u.firstName || ""} ${u.lastName || ""}`.trim() : "") || "Valued Customer",
+          phone: document.getElementById("akCoPhone")?.value || (u ? u.phone || u.phone_number || "" : "") || "+91 98765 43210",
+          email: emailVal || "customer@example.com",
+          userId: u?.id || "",
+          address: document.getElementById("akCoAddress")?.value || "Flagship Studio",
+          city: document.getElementById("akCoCity")?.value || "Mumbai",
+          state: document.getElementById("akCoState")?.value || "Maharashtra",
+          pincode: document.getElementById("akCoPincode")?.value || "400053"
+        };
         const orderData = {
+          id: finalOrderNumber,
+          orderId: finalOrderNumber,
+          orderNumber: finalOrderNumber,
           items: currentCheckoutItems,
-          customer: {
-            name: document.getElementById("akCoFullName")?.value || (u ? `${u.firstName || ""} ${u.lastName || ""}`.trim() : "") || "Valued Customer",
-            phone: document.getElementById("akCoPhone")?.value || (u ? u.phone || u.phone_number || "" : "") || "+91 98765 43210",
-            email: document.getElementById("akCoEmail")?.value || (u && u.email ? u.email : "") || "customer@example.com",
-            userId: u?.id || "",
-            address: document.getElementById("akCoAddress")?.value || "Flagship Studio",
-            city: document.getElementById("akCoCity")?.value || "Mumbai",
-            state: document.getElementById("akCoState")?.value || "Maharashtra",
-            pincode: document.getElementById("akCoPincode")?.value || "400053"
-          },
+          customer: customerInfo,
+          shippingAddress: customerInfo,
           paymentMethod: selectedPayment,
           couponCode: appliedDedicatedCoupon ? appliedDedicatedCoupon.code : null,
           discountAmount,

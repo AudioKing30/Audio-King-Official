@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-13T19:20:32.092Z",
-  "count": 12,
+  "updatedAt": "2026-10-13T21:34:14.381Z",
+  "count": 15,
   "orders": [
     {
       "id": "aad7050d-29ad-4fa7-8478-dd2a4394345a",
@@ -169,6 +169,48 @@
       "coupon_code": null,
       "discount_amount": 0,
       "gst_number": null
+    },
+    {
+      "id": "6accd73d-210f-4eb0-8720-9d118310942f",
+      "user_id": "fbeaef3a-3e6a-423e-88ec-800d238d6f75",
+      "order_number": "AK-20261014-6573B",
+      "total_amount": 450,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Yathaarth Audio\",\"phone\":\"9876543210\",\"pin\":\"560001\",\"line1\":\"123 MG Road, Audio King Tower\",\"line2\":\"\",\"city\":\"Bangalore\",\"state\":\"Karnataka\",\"fullName\":\"Yathaarth Audio\",\"email\":\"testuser@audioking.in\",\"userId\":\"fbeaef3a-3e6a-423e-88ec-800d238d6f75\"}",
+      "payment_method": "UPI - Google Pay",
+      "created_at": "2026-10-13T21:26:26.431Z",
+      "updated_at": "2026-10-13T21:26:26.431Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
+    },
+    {
+      "id": "15743d0e-5e39-4bed-9643-9fb170adcd0e",
+      "user_id": "fbeaef3a-3e6a-423e-88ec-800d238d6f75",
+      "order_number": "AK-20261014-EAUTK",
+      "total_amount": 450,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Yathaarth Audio\",\"email\":\"testuser@audioking.in\",\"phone\":\"9876543210\",\"pin\":\"560001\",\"line1\":\"123 MG Road, Audio King Tower\",\"line2\":\"\",\"city\":\"Bangalore\",\"state\":\"Karnataka\",\"fullName\":\"Yathaarth Audio\",\"userId\":\"fbeaef3a-3e6a-423e-88ec-800d238d6f75\"}",
+      "payment_method": "UPI - Google Pay",
+      "created_at": "2026-10-13T21:32:25.392Z",
+      "updated_at": "2026-10-13T21:32:25.392Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
+    },
+    {
+      "id": "7762c412-e737-4f5c-b4bd-c019c40dbb7e",
+      "user_id": "fbeaef3a-3e6a-423e-88ec-800d238d6f75",
+      "order_number": "AK-20261014-7UJ99",
+      "total_amount": 450,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Yathaarth Audio\",\"email\":\"testuser@audioking.in\",\"phone\":\"9876543210\",\"pin\":\"560001\",\"line1\":\"123 MG Road, Audio King Tower\",\"line2\":\"\",\"city\":\"Bangalore\",\"state\":\"Karnataka\",\"fullName\":\"Yathaarth Audio\",\"userId\":\"fbeaef3a-3e6a-423e-88ec-800d238d6f75\"}",
+      "payment_method": "UPI - Google Pay",
+      "created_at": "2026-10-13T21:34:14.377Z",
+      "updated_at": "2026-10-13T21:34:14.377Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
     }
   ],
   "orderItems": [
@@ -307,6 +349,39 @@
     {
       "id": "1c3a2aed-e710-4b26-81e7-95c19f099821",
       "order_id": "94caa441-57ae-4a84-a3f5-3526e3b0af49",
+      "product_id": "arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix",
+      "product_name": "Arowana Audioglyph 3.5mm to 2 RCA Audio Cable (1.5m / 5ft) – Gold-Plated Connectors, Braided Shielding",
+      "product_image": "uploads/products/1790331647356_5bb927c46351.webp",
+      "quantity": 1,
+      "unit_price": 450,
+      "subtotal": 450,
+      "gst_percent": 18
+    },
+    {
+      "id": "227d9811-dc77-46b0-9d32-e918be9f6705",
+      "order_id": "6accd73d-210f-4eb0-8720-9d118310942f",
+      "product_id": "arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix",
+      "product_name": "Arowana Audioglyph 3.5mm to 2 RCA Audio Cable (1.5m / 5ft) – Gold-Plated Connectors, Braided Shielding",
+      "product_image": "uploads/products/1790331647356_5bb927c46351.webp",
+      "quantity": 1,
+      "unit_price": 450,
+      "subtotal": 450,
+      "gst_percent": 18
+    },
+    {
+      "id": "91e207af-9adc-472d-8e94-dd8da4b23e44",
+      "order_id": "15743d0e-5e39-4bed-9643-9fb170adcd0e",
+      "product_id": "arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix",
+      "product_name": "Arowana Audioglyph 3.5mm to 2 RCA Audio Cable (1.5m / 5ft) – Gold-Plated Connectors, Braided Shielding",
+      "product_image": "uploads/products/1790331647356_5bb927c46351.webp",
+      "quantity": 1,
+      "unit_price": 450,
+      "subtotal": 450,
+      "gst_percent": 18
+    },
+    {
+      "id": "8f0e5b00-2cf9-41b4-a266-fadc98defb81",
+      "order_id": "7762c412-e737-4f5c-b4bd-c019c40dbb7e",
       "product_id": "arowana-audioglyph-3-5mm-to-2-rca-audio-cable-1-5m-5ft-gold-plated-connectors-braided-shielding-mugt97ix",
       "product_name": "Arowana Audioglyph 3.5mm to 2 RCA Audio Cable (1.5m / 5ft) – Gold-Plated Connectors, Braided Shielding",
       "product_image": "uploads/products/1790331647356_5bb927c46351.webp",

@@ -65,7 +65,34 @@ class OrdersService {
 
       if (res.ok) {
         const data = await res.json();
-        this.cachedOrders = data.orders || [];
+        const serverOrders = data.orders || [];
+
+        // Unified merge: Combine server orders with local storage so newly placed orders in this session are never lost
+        const localList = (user && user.id ? getStorage(`audioking_orders_${user.id}`, []) : [])
+          .concat(user && user.email ? getStorage(`audioking_orders_${user.email}`, []) : [])
+          .concat(getStorage('audioking_last_orders', []))
+          .concat(getStorage(localKey, []));
+
+        const orderMap = new Map();
+        // Server orders take first precedence
+        serverOrders.forEach(o => {
+          if (!o) return;
+          const key = String(o.orderNumber || o.id || '');
+          if (key) orderMap.set(key, o);
+        });
+
+        // Add any local orders that aren't yet in server list (e.g. immediate client-side placement)
+        localList.forEach(lo => {
+          if (!lo) return;
+          const key = String(lo.orderNumber || lo.id || '');
+          if (key && !orderMap.has(key)) {
+            orderMap.set(key, lo);
+          }
+        });
+
+        this.cachedOrders = Array.from(orderMap.values());
+        this.cachedOrders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
         if (user && user.id) setStorage(`audioking_orders_${user.id}`, this.cachedOrders);
         if (user && user.email) setStorage(`audioking_orders_${user.email}`, this.cachedOrders);
         setStorage(localKey, this.cachedOrders);
@@ -141,15 +168,13 @@ class OrdersService {
     }
 
     const currentList = getStorage(localKey, []);
-    const exists = currentList.some(o => o.id === serverSavedOrder.id || o.orderNumber === serverSavedOrder.orderNumber);
-    if (!exists) {
-      currentList.unshift(serverSavedOrder);
-      setStorage(localKey, currentList);
-      if (userId) setStorage(`audioking_orders_${userId}`, currentList);
-      if (userEmail) setStorage(`audioking_orders_${userEmail}`, currentList);
-      setStorage('audioking_last_orders', currentList);
-    }
-    this.cachedOrders = currentList;
+    const filtered = currentList.filter(o => o && o.id !== serverSavedOrder.id && o.orderNumber !== serverSavedOrder.orderNumber);
+    filtered.unshift(serverSavedOrder);
+    setStorage(localKey, filtered);
+    if (userId) setStorage(`audioking_orders_${userId}`, filtered);
+    if (userEmail) setStorage(`audioking_orders_${userEmail}`, filtered);
+    setStorage('audioking_last_orders', filtered);
+    this.cachedOrders = filtered;
 
     return serverSavedOrder;
   }

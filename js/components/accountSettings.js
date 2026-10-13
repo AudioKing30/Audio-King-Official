@@ -6,7 +6,7 @@
  */
 
 import { AUDIOKING_CONFIG } from '../config.js';
-import { setStorage } from '../utils/storage.js';
+import { getStorage, setStorage } from '../utils/storage.js';
 import { getCurrentUser, updateHeaderAccountState } from './auth.js';
 import { authService } from '../services/authService.js';
 import { showToast } from './toast.js';
@@ -456,6 +456,26 @@ export async function renderOrdersList() {
     try {
       orders = await ordersService.getOrders();
     } catch (_) {}
+  }
+
+  // Extra safeguard: merge with any recent local mirrors so newly placed orders are immediately visible
+  const u = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+  const localList = (u && u.id ? getStorage(`audioking_orders_${u.id}`, []) : [])
+    .concat(u && u.email ? getStorage(`audioking_orders_${u.email}`, []) : [])
+    .concat(getStorage('audioking_last_orders', []));
+
+  if (Array.isArray(localList) && localList.length > 0) {
+    if (!orders) orders = [];
+    const existingKeys = new Set(orders.map(o => String(o.orderNumber || o.id || '')));
+    for (const lo of localList) {
+      if (!lo) continue;
+      const key = String(lo.orderNumber || lo.id || '');
+      if (key && !existingKeys.has(key)) {
+        existingKeys.add(key);
+        orders.push(lo);
+      }
+    }
+    orders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
   }
 
   if (!orders || orders.length === 0) {

@@ -91,7 +91,7 @@ router.get('/', (req, res) => {
     }
 
     let targetUserId = authUser.id;
-    let targetEmail = (authUser.email || '').trim().toLowerCase();
+    let targetEmail = (authUser.email || req.headers['x-user-email'] || req.query.email || '').trim().toLowerCase();
     let targetPhone = (authUser.phone_number || '').trim();
 
     // Only verified administrators can query orders of another customer email
@@ -106,7 +106,7 @@ router.get('/', (req, res) => {
     }
 
     // Comprehensive order matching:
-    // Matches by user_id OR user email OR shipping_address email OR phone
+    // Matches by user_id OR user email OR shipping_address email OR phone OR specific order_number
     let ordersQuerySql = `
       SELECT DISTINCT 
         o.id, o.user_id, o.order_number, o.total_amount, o.status, 
@@ -127,11 +127,20 @@ router.get('/', (req, res) => {
       queryParams.push(targetEmail, targetEmail, targetEmail);
     }
 
-    if (targetPhone && targetPhone.length >= 7) {
+    const cleanPhone = targetPhone.replace(/\D/g, '').slice(-10);
+    if (cleanPhone && cleanPhone.length === 10) {
       ordersQuerySql += `
         OR (o.shipping_address LIKE '%' || ? || '%')
       `;
-      queryParams.push(targetPhone);
+      queryParams.push(cleanPhone);
+    }
+
+    const requestedOrderNumber = (req.query.orderNumber || req.query.orderId || '').trim();
+    if (requestedOrderNumber) {
+      ordersQuerySql += `
+        OR o.order_number = ?
+      `;
+      queryParams.push(requestedOrderNumber);
     }
 
     ordersQuerySql += ` ORDER BY o.created_at DESC`;
@@ -289,7 +298,7 @@ router.post('/', async (req, res) => {
   const authUser = getAuthUser(req);
   let userId = null;
   let customerName = (shipping.name || shipping.fullName || cust.fullName || cust.name || (authUser && authUser.full_name) || 'Valued Customer').trim();
-  let customerEmail = (shipping.email || cust.email || (authUser && authUser.email) || '').trim().toLowerCase();
+  let customerEmail = (shipping.email || cust.email || (authUser && authUser.email) || req.headers['x-user-email'] || '').trim().toLowerCase();
   let customerPhone = (shipping.phone || shipping.phoneNumber || cust.phone || cust.phoneNumber || (authUser && authUser.phone_number) || '').trim();
 
   const candidateUserId = (shipping.userId || cust.userId || req.headers['x-user-id'] || '').trim();
@@ -468,6 +477,7 @@ router.post('/', async (req, res) => {
     shipping.email = customerEmail;
     shipping.name = customerName;
     shipping.phone = customerPhone;
+    if (userId) shipping.userId = userId;
     const addressJson = JSON.stringify(shipping);
 
     let userGst = '';
