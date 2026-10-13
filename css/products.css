@@ -37,6 +37,29 @@
   gap: 20px;
 }
 
+.ak-featured-view-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ak-orange, #EA580C);
+  text-decoration: none;
+  padding: 6px 16px;
+  background-color: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  border-radius: var(--ak-radius-sm, 6px);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.ak-featured-view-more:hover {
+  background-color: #FFEDD5;
+  color: #C2410C;
+  transform: translateX(3px);
+}
+
 .ak-tab-btn {
   background: none;
   border: none;

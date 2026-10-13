@@ -37010,6 +37010,14 @@ Message: ${message}`);
     setTimeout(updateFeaturedCarouselArrows, 200);
   }
   function initProductTabs() {
+    const viewMoreBtn = document.getElementById("akFeaturedViewMoreBtn");
+    if (viewMoreBtn) {
+      viewMoreBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        showCatalog("All", "all");
+        window.location.hash = "#store";
+      });
+    }
     const tabs = document.querySelectorAll(".ak-tab-btn");
     const grid = document.getElementById("akFeaturedProductsGrid");
     initFeaturedCarousel();
