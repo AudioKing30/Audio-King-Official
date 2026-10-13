@@ -57,41 +57,97 @@ if (typeof window !== 'undefined') {
 
 /**
  * Checks whether a product has an active offer, discount, or markdown price
- * (Stamps and percentage badges removed per design finalization)
  * @param {Object} product
  * @returns {boolean}
  */
 export function hasProductOffer(product) {
-  return false;
+  if (!product) return false;
+  if (product.isPreOrder || product.stockStatus === 'preorder' || (product.badge && /pre-order/i.test(product.badge))) {
+    return false;
+  }
+  return getProductOfferPercent(product) > 0;
 }
 
 /**
- * Gets the offer discount percent for a product.
- * Returns 0 to suppress all on-product discount badges/stamps.
+ * Gets the offer discount percent for a product as a strictly rounded whole number with no decimals.
  * @param {Object} product
  * @returns {number}
  */
 export function getProductOfferPercent(product) {
+  if (!product) return 0;
+  const originalPrice = Number(product.originalPrice ?? product.mrp ?? 0);
+  const price = Number(product.price ?? product.sellingPrice ?? product.sp ?? 0);
+  const calcDiscount = calculateDiscountPercent(originalPrice, price);
+  if (calcDiscount > 0) return calcDiscount;
+
+  const explicit = Number(product.discountPercent ?? product.discount_percent ?? product.offerDiscount ?? product.offer_discount);
+  if (Number.isFinite(explicit) && explicit > 0) {
+    return Math.round(explicit);
+  }
+
+  if (product.badge) {
+    const m = String(product.badge).match(/(\d+(?:\.\d+)?)\s*%\s*off/i);
+    if (m) {
+      return Math.round(parseFloat(m[1]));
+    }
+  }
+
   return 0;
 }
 
 /**
- * Suppressed offer stamp SVG generator.
+ * Generates an ultra-crisp vector SVG rosette offer stamp badge matching the brand reference.
+ * Dynamically renders the exact rounded whole-number discount percentage (e.g. 93% OFF).
+ * No decimals are shown. Precision geometry matches brand guidelines.
+ *
  * @param {number|string} pct
  * @returns {string}
  */
 export function getProductOfferStampSvg(pct) {
-  return '';
+  const cleanPct = Math.round(Number(pct)) || 0;
+  if (cleanPct <= 0) return '';
+  const fontSize = cleanPct >= 100 ? 38 : (cleanPct >= 10 ? 46 : 50);
+  const letterSpacing = cleanPct >= 10 ? '-1px' : '0px';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%" class="ak-offer-stamp-img" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="akStampGrad_${cleanPct}" cx="45%" cy="40%" r="65%">
+        <stop offset="0%" stop-color="#E81822"/>
+        <stop offset="80%" stop-color="#D10C14"/>
+        <stop offset="100%" stop-color="#B5070E"/>
+      </radialGradient>
+    </defs>
+    <path d="M 100.00 2.00 C 107.95 5.27, 115.10 16.07, 121.22 20.79 C 128.89 19.76, 140.47 13.99, 149.00 15.13 C 154.25 21.94, 155.04 34.86, 157.98 42.02 C 165.14 44.96, 178.06 45.75, 184.87 51.00 C 186.01 59.53, 180.24 71.11, 179.21 78.78 C 183.93 84.90, 194.73 92.05, 198.00 100.00 C 194.73 107.95, 183.93 115.10, 179.21 121.22 C 180.24 128.89, 186.01 140.47, 184.87 149.00 C 178.06 154.25, 165.14 155.04, 157.98 157.98 C 155.04 165.14, 154.25 178.06, 149.00 184.87 C 140.47 186.01, 128.89 180.24, 121.22 179.21 C 115.10 183.93, 107.95 194.73, 100.00 198.00 C 92.05 194.73, 84.90 183.93, 78.78 179.21 C 71.11 180.24, 59.53 186.01, 51.00 184.87 C 45.75 178.06, 44.96 165.14, 42.02 157.98 C 34.86 155.04, 21.94 154.25, 15.13 149.00 C 13.99 140.47, 19.76 128.89, 20.79 121.22 C 16.07 115.10, 5.27 107.95, 2.00 100.00 C 5.27 92.05, 16.07 84.90, 20.79 78.78 C 19.76 71.11, 13.99 59.53, 15.13 51.00 C 21.94 45.75, 34.86 44.96, 42.02 42.02 C 44.96 34.86, 45.75 21.94, 51.00 15.13 C 59.53 13.99, 71.11 19.76, 78.78 20.79 C 84.90 16.07, 92.05 5.27, 100.00 2.00 Z" fill="url(#akStampGrad_${cleanPct})"/>
+    <circle cx="100" cy="100" r="74" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.95"/>
+    <line x1="60" y1="48" x2="82" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <polygon points="100.00,39.50 102.23,44.93 108.08,45.37 103.61,49.17 105.00,54.88 100.00,51.80 95.00,54.88 96.39,49.17 91.92,45.37 97.77,44.93" fill="#FFFFFF"/>
+    <line x1="118" y1="48" x2="140" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <text x="100" y="105" text-anchor="middle" fill="#FFFFFF" font-family="'Arial Black', 'Montserrat', Impact, -apple-system, sans-serif" font-weight="900" font-size="${fontSize}" letter-spacing="${letterSpacing}">${cleanPct}%</text>
+    <line x1="58" y1="124" x2="72" y2="124" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    <text x="100" y="131" text-anchor="middle" fill="#FFFFFF" font-family="'Arial Black', 'Montserrat', Impact, -apple-system, sans-serif" font-weight="900" font-size="22" letter-spacing="1.5px">OFF</text>
+    <line x1="128" y1="124" x2="142" y2="124" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    <polygon points="100.00,141.50 102.23,146.93 108.08,147.37 103.61,151.17 105.00,156.88 100.00,153.80 95.00,156.88 96.39,151.17 91.92,147.37 97.77,146.93" fill="#FFFFFF"/>
+  </svg>`;
 }
 
 /**
- * Suppressed offer stamp HTML generator.
+ * Renders the high-visibility red rosette offer stamp HTML.
  * @param {Object} product
  * @param {string} extraClass
  * @returns {string}
  */
 export function getProductOfferStampHtml(product, extraClass = '') {
-  return '';
+  if (!hasProductOffer(product)) return '';
+  const pct = getProductOfferPercent(product);
+  if (!pct || pct <= 0) return '';
+  const offerTitle = `${pct}% OFF Special Offer`;
+  const svg = getProductOfferStampSvg(pct);
+  if (!svg) return '';
+  return `
+    <div class="ak-offer-stamp-badge ${extraClass}" title="${offerTitle}" aria-label="${offerTitle}">
+      ${svg}
+    </div>
+  `;
 }
 
 /**

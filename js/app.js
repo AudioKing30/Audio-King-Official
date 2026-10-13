@@ -7,13 +7,13 @@ import { AUDIOKING_PRODUCTS, FEATURED_PRODUCTS } from './data/products.js';
 import { AUDIOKING_BRANDS } from './data/brands.js';
 import { QUICK_CATEGORIES } from './data/categories.js';
 import { AUDIOKING_CONFIG } from './config.js';
-import { formatINR, calculateDiscountPercent, getProductOfferStampHtml, resolveProductImage } from './utils/formatters.js';
+import { formatINR, calculateDiscountPercent, getProductOfferStampSvg, getProductOfferStampHtml, resolveProductImage } from './utils/formatters.js';
 import { getIcon } from '../assets/icons/icons.js';
 import { initCart, addToCart, openCartDrawer, getCartItems, getCartSubtotal, clearCart, getCartItemQuantity, updateCartItemQty } from './components/cart.js';
 import { initCheckout, openCheckoutModal } from './components/checkout.js';
 import { initOrderSuccess, showOrderConfirmation, triggerOrderAnimation } from './components/orderSuccess.js';
 import { initAuth, getCurrentUser, openAuthModal } from './components/auth.js';
-import { initHeader } from './components/header.js';
+import { initHeader, clearHeaderSearch } from './components/header.js';
 import { initNavigation, setActiveNavItem, renderNavigationBrands, renderNavigationCategories } from './components/navigation.js';
 import { initHeroSlider, loadAndInitHeroSlider } from './components/heroSlider.js';
 import { initTestimonials } from './components/testimonials.js';
@@ -410,10 +410,16 @@ export function applyWhatsAppNumberToStorefront(numberStr, customUrl) {
     el.textContent = numberStr;
   });
 
-  // 4. Contact page phone elements & tel links
-  document.querySelectorAll('#akContactPage a[href^="tel:"], .ak-contact-method-content a.ak-contact-val').forEach(el => {
+  // 4. Contact page phone elements & tel links (strictly tel links only)
+  document.querySelectorAll('#akContactPage a[href^="tel:"], #akContactPage .ak-expert-phone-target').forEach(el => {
     el.textContent = numberStr;
     el.href = `tel:+${cleanDigits}`;
+  });
+
+  // Ensure contact page email support link remains email only
+  document.querySelectorAll('#akContactPage a[href^="mailto:"]').forEach(el => {
+    el.textContent = 'info@audioking.co.in';
+    el.href = 'mailto:info@audioking.co.in';
   });
 
   // 5. Footer sales, expert, and services phone lines
@@ -631,12 +637,16 @@ if (typeof document !== 'undefined') {
       const params = parsed.params;
 
       if (route === 'home') {
+        clearHeaderSearch();
         showHome(false);
       } else if (route === 'orders') {
+        clearHeaderSearch();
         showAccountSettings('orders', false);
       } else if (route === 'addresses') {
+        clearHeaderSearch();
         showAccountSettings('addresses', false);
       } else if (route === 'account' || route === 'profile') {
+        clearHeaderSearch();
         const tab = params.tab || parsed.subRoute || 'account';
         showAccountSettings(tab, false);
       } else if (route === 'catalog' || route === 'store' || route === 'pro-audio' || route === 'musical-instruments') {
@@ -653,37 +663,41 @@ if (typeof document !== 'undefined') {
             page: params.page ? Number(params.page) : 1
           }, false);
           showCatalog(search, 'search', false);
-        } else if (category) {
-          setStoreState({
-            search: '',
-            category: category,
-            brands: brand ? [brand] : [],
-            sort: params.sort || 'featured',
-            page: params.page ? Number(params.page) : 1,
-            inStockOnly: params.inStock === 'true'
-          }, false);
-          showCatalog(category, 'category', false);
-        } else if (brand) {
-          setStoreState({
-            search: '',
-            category: 'All',
-            brands: [brand],
-            sort: params.sort || 'featured',
-            page: params.page ? Number(params.page) : 1,
-            inStockOnly: params.inStock === 'true'
-          }, false);
-          showCatalog(brand, 'brand', false);
         } else {
-          setStoreState({
-            search: '',
-            category: 'All',
-            brands: [],
-            sort: params.sort || 'featured',
-            page: params.page ? Number(params.page) : 1
-          }, false);
-          showCatalog('All', 'all', false);
+          clearHeaderSearch();
+          if (category) {
+            setStoreState({
+              search: '',
+              category: category,
+              brands: brand ? [brand] : [],
+              sort: params.sort || 'featured',
+              page: params.page ? Number(params.page) : 1,
+              inStockOnly: params.inStock === 'true'
+            }, false);
+            showCatalog(category, 'category', false);
+          } else if (brand) {
+            setStoreState({
+              search: '',
+              category: 'All',
+              brands: [brand],
+              sort: params.sort || 'featured',
+              page: params.page ? Number(params.page) : 1,
+              inStockOnly: params.inStock === 'true'
+            }, false);
+            showCatalog(brand, 'brand', false);
+          } else {
+            setStoreState({
+              search: '',
+              category: 'All',
+              brands: [],
+              sort: params.sort || 'featured',
+              page: params.page ? Number(params.page) : 1
+            }, false);
+            showCatalog('All', 'all', false);
+          }
         }
       } else if (route === 'brands') {
+        clearHeaderSearch();
         const brandName = params.name || params.brand || parsed.subRoute;
         if (brandName) {
           setStoreState({ category: 'All', brands: [brandName] }, false);
@@ -693,6 +707,7 @@ if (typeof document !== 'undefined') {
           setActiveNavItem('akNavItemBrands');
         }
       } else if (route === 'product') {
+        clearHeaderSearch();
         const pId = params.id || parsed.subRoute;
         if (pId) {
           showProduct(pId, false);
@@ -700,9 +715,11 @@ if (typeof document !== 'undefined') {
           showCatalog('All', 'all', false);
         }
       } else if (route === 'cart') {
+        clearHeaderSearch();
         showHome(false);
         openCartDrawer();
       } else if (route === 'checkout') {
+        clearHeaderSearch();
         showCheckoutPage(null, false);
       } else if (route === 'order-confirmed' || route === 'order-success') {
         const orderView = document.getElementById('akOrderConfirmationView');
@@ -993,6 +1010,7 @@ function _doShowAdmin(updateHash = true, targetView = null) {
  * Auth-loading-aware: waits for session verification before deciding to show or gate.
  */
 export function showAccountSettings(targetTab, updateHash = true) {
+  clearHeaderSearch();
   const tab = targetTab || 'account';
   const status = authService.getStatus();
 
@@ -1013,6 +1031,7 @@ export function showAccountSettings(targetTab, updateHash = true) {
  * Internal: show account page if authenticated, else open sign-in modal
  */
 function _doShowAccountSettings(targetTab, updateHash = true) {
+  clearHeaderSearch();
   const user = getCurrentUser();
   if (!user) {
     openAuthModal('signin', 'Please sign in to access your profile and account settings');
@@ -1039,6 +1058,7 @@ function _doShowAccountSettings(targetTab, updateHash = true) {
  */
 export function showHome(updateHash = true) {
   if (!checkDirtyBeforeNavigate(() => showHome(updateHash))) return;
+  clearHeaderSearch();
   hideAllViews();
   const main = document.getElementById('akMainContent');
   if (main) main.style.display = 'block';
@@ -1060,6 +1080,9 @@ export function showHome(updateHash = true) {
  */
 export function showCatalog(categoryOrBrand, filterType = 'all', updateHash = true) {
   if (!checkDirtyBeforeNavigate(() => showCatalog(categoryOrBrand, filterType, updateHash))) return;
+  if (filterType !== 'search') {
+    clearHeaderSearch();
+  }
   hideAllViews();
   const catalog = document.getElementById('catalogPage');
   if (catalog) catalog.style.display = 'block';
@@ -1405,6 +1428,7 @@ export function openProductInNewPage(productOrId, event) {
  */
 export async function showProduct(productOrId, updateHash = true) {
   if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash))) return;
+  clearHeaderSearch();
   const productId = (productOrId && typeof productOrId === 'object') ? productOrId.id : productOrId;
   let product = (productOrId && typeof productOrId === 'object') ? productOrId : getProductById(productId);
 
@@ -2721,6 +2745,7 @@ window.switchProductPanel = switchProductPanel;
  */
 export function showContact(updateHash = true) {
   if (!checkDirtyBeforeNavigate(() => showContact(updateHash))) return;
+  clearHeaderSearch();
   hideAllViews();
   const contactPage = document.getElementById('akContactPage');
   if (contactPage) contactPage.style.display = 'block';
@@ -3832,20 +3857,32 @@ export function renderFeaturedProducts(items) {
       const selling = (defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : (defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(p.price) || 0));
       const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : (p.originalPrice ? Number(p.originalPrice) : 0);
       const hasDiscount = mrp > selling && selling > 0;
+      const discountPct = hasDiscount ? calculateDiscountPercent(mrp, selling) : 0;
       displayPriceHtml = `<span>${formatINR(selling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : '';
-      offerStampHtml = '';
+      offerStampHtml = (discountPct > 0 && !isPreOrder) ? `
+        <div class="ak-offer-stamp-badge ak-featured-stamp-badge" title="${discountPct}% OFF" aria-label="${discountPct}% OFF">
+          ${getProductOfferStampSvg(discountPct)}
+        </div>
+      ` : '';
     } else {
       const baseSelling = Number(p.price) || 0;
       const baseMrp = Number(p.originalPrice) || 0;
       const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+      const discountPct = hasDiscount ? calculateDiscountPercent(baseMrp, baseSelling) : 0;
       displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : '';
-      offerStampHtml = '';
+      offerStampHtml = (discountPct > 0 && !isPreOrder) ? `
+        <div class="ak-offer-stamp-badge ak-featured-stamp-badge" title="${discountPct}% OFF" aria-label="${discountPct}% OFF">
+          ${getProductOfferStampSvg(discountPct)}
+        </div>
+      ` : '';
     }
 
+    const hasStamp = Boolean(offerStampHtml);
+
     return `
-      <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
+      <article class="ak-product-card ak-reveal-card is-revealed ${hasStamp ? 'has-offer-stamp' : ''}" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${preOrderBadge || trendingBadge}
         ${offerStampHtml}
         <div class="ak-product-thumb">

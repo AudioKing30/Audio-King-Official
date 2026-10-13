@@ -138,3 +138,23 @@ export function initHeader() {
     });
   }
 }
+
+/**
+ * Clears the global header search input and closes suggestions.
+ * Called whenever the user navigates to any other page/section away from active search results.
+ */
+export function clearHeaderSearch() {
+  const searchInput = document.getElementById('akSearchInput');
+  const suggestionsBox = document.getElementById('akSearchSuggestions');
+  if (searchInput) {
+    searchInput.value = '';
+  }
+  if (suggestionsBox) {
+    suggestionsBox.classList.remove('active');
+    suggestionsBox.innerHTML = '';
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.clearHeaderSearch = clearHeaderSearch;
+}

@@ -26086,14 +26086,75 @@ Weight: 1.24 lbs (0.567 kg`,
     window.getProductOfferStampSvg = getProductOfferStampSvg;
     window.getProductOfferStampHtml = getProductOfferStampHtml;
   }
+  function hasProductOffer(product) {
+    if (!product)
+      return false;
+    if (product.isPreOrder || product.stockStatus === "preorder" || product.badge && /pre-order/i.test(product.badge)) {
+      return false;
+    }
+    return getProductOfferPercent(product) > 0;
+  }
   function getProductOfferPercent(product) {
+    if (!product)
+      return 0;
+    const originalPrice = Number(product.originalPrice ?? product.mrp ?? 0);
+    const price = Number(product.price ?? product.sellingPrice ?? product.sp ?? 0);
+    const calcDiscount = calculateDiscountPercent(originalPrice, price);
+    if (calcDiscount > 0)
+      return calcDiscount;
+    const explicit = Number(product.discountPercent ?? product.discount_percent ?? product.offerDiscount ?? product.offer_discount);
+    if (Number.isFinite(explicit) && explicit > 0) {
+      return Math.round(explicit);
+    }
+    if (product.badge) {
+      const m = String(product.badge).match(/(\d+(?:\.\d+)?)\s*%\s*off/i);
+      if (m) {
+        return Math.round(parseFloat(m[1]));
+      }
+    }
     return 0;
   }
   function getProductOfferStampSvg(pct) {
-    return "";
+    const cleanPct = Math.round(Number(pct)) || 0;
+    if (cleanPct <= 0)
+      return "";
+    const fontSize = cleanPct >= 100 ? 38 : cleanPct >= 10 ? 46 : 50;
+    const letterSpacing = cleanPct >= 10 ? "-1px" : "0px";
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%" class="ak-offer-stamp-img" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="akStampGrad_${cleanPct}" cx="45%" cy="40%" r="65%">
+        <stop offset="0%" stop-color="#E81822"/>
+        <stop offset="80%" stop-color="#D10C14"/>
+        <stop offset="100%" stop-color="#B5070E"/>
+      </radialGradient>
+    </defs>
+    <path d="M 100.00 2.00 C 107.95 5.27, 115.10 16.07, 121.22 20.79 C 128.89 19.76, 140.47 13.99, 149.00 15.13 C 154.25 21.94, 155.04 34.86, 157.98 42.02 C 165.14 44.96, 178.06 45.75, 184.87 51.00 C 186.01 59.53, 180.24 71.11, 179.21 78.78 C 183.93 84.90, 194.73 92.05, 198.00 100.00 C 194.73 107.95, 183.93 115.10, 179.21 121.22 C 180.24 128.89, 186.01 140.47, 184.87 149.00 C 178.06 154.25, 165.14 155.04, 157.98 157.98 C 155.04 165.14, 154.25 178.06, 149.00 184.87 C 140.47 186.01, 128.89 180.24, 121.22 179.21 C 115.10 183.93, 107.95 194.73, 100.00 198.00 C 92.05 194.73, 84.90 183.93, 78.78 179.21 C 71.11 180.24, 59.53 186.01, 51.00 184.87 C 45.75 178.06, 44.96 165.14, 42.02 157.98 C 34.86 155.04, 21.94 154.25, 15.13 149.00 C 13.99 140.47, 19.76 128.89, 20.79 121.22 C 16.07 115.10, 5.27 107.95, 2.00 100.00 C 5.27 92.05, 16.07 84.90, 20.79 78.78 C 19.76 71.11, 13.99 59.53, 15.13 51.00 C 21.94 45.75, 34.86 44.96, 42.02 42.02 C 44.96 34.86, 45.75 21.94, 51.00 15.13 C 59.53 13.99, 71.11 19.76, 78.78 20.79 C 84.90 16.07, 92.05 5.27, 100.00 2.00 Z" fill="url(#akStampGrad_${cleanPct})"/>
+    <circle cx="100" cy="100" r="74" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.95"/>
+    <line x1="60" y1="48" x2="82" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <polygon points="100.00,39.50 102.23,44.93 108.08,45.37 103.61,49.17 105.00,54.88 100.00,51.80 95.00,54.88 96.39,49.17 91.92,45.37 97.77,44.93" fill="#FFFFFF"/>
+    <line x1="118" y1="48" x2="140" y2="48" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/>
+    <text x="100" y="105" text-anchor="middle" fill="#FFFFFF" font-family="'Arial Black', 'Montserrat', Impact, -apple-system, sans-serif" font-weight="900" font-size="${fontSize}" letter-spacing="${letterSpacing}">${cleanPct}%</text>
+    <line x1="58" y1="124" x2="72" y2="124" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    <text x="100" y="131" text-anchor="middle" fill="#FFFFFF" font-family="'Arial Black', 'Montserrat', Impact, -apple-system, sans-serif" font-weight="900" font-size="22" letter-spacing="1.5px">OFF</text>
+    <line x1="128" y1="124" x2="142" y2="124" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
+    <polygon points="100.00,141.50 102.23,146.93 108.08,147.37 103.61,151.17 105.00,156.88 100.00,153.80 95.00,156.88 96.39,151.17 91.92,147.37 97.77,146.93" fill="#FFFFFF"/>
+  </svg>`;
   }
   function getProductOfferStampHtml(product, extraClass = "") {
-    return "";
+    if (!hasProductOffer(product))
+      return "";
+    const pct = getProductOfferPercent(product);
+    if (!pct || pct <= 0)
+      return "";
+    const offerTitle = `${pct}% OFF Special Offer`;
+    const svg = getProductOfferStampSvg(pct);
+    if (!svg)
+      return "";
+    return `
+    <div class="ak-offer-stamp-badge ${extraClass}" title="${offerTitle}" aria-label="${offerTitle}">
+      ${svg}
+    </div>
+  `;
   }
   function resolveProductImage(src) {
     if (!src || src === "assets/images/logo.jpg" || src === "assets/images/placeholder.jpg") {
@@ -30841,6 +30902,20 @@ Weight: 1.24 lbs (0.567 kg`,
       });
     }
   }
+  function clearHeaderSearch() {
+    const searchInput = document.getElementById("akSearchInput");
+    const suggestionsBox = document.getElementById("akSearchSuggestions");
+    if (searchInput) {
+      searchInput.value = "";
+    }
+    if (suggestionsBox) {
+      suggestionsBox.classList.remove("active");
+      suggestionsBox.innerHTML = "";
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.clearHeaderSearch = clearHeaderSearch;
+  }
 
   // js/components/navigation.js
   function setActiveNavItem(targetIdOrElement) {
@@ -32373,6 +32448,7 @@ Message: ${message}`);
     applyFilters(true);
   }
   function openStoreWithCategory(categoryName) {
+    clearHeaderSearch();
     currentSearchQuery = "";
     currentCategoryFilter = resolveCategoryName(categoryName || "All");
     selectedBrand = null;
@@ -32404,6 +32480,7 @@ Message: ${message}`);
     applyFilters(true);
   }
   function openStoreWithBrand(brandName) {
+    clearHeaderSearch();
     currentSearchQuery = "";
     currentCategoryFilter = "All";
     selectedBrand = brandName ? brandName.toLowerCase().trim() : null;
@@ -32551,6 +32628,7 @@ Message: ${message}`);
     const clearBtn = document.getElementById("akStoreClearFilters");
     if (clearBtn) {
       clearBtn.addEventListener("click", () => {
+        clearHeaderSearch();
         currentSearchQuery = "";
         currentCategoryFilter = "All";
         selectedBrand = null;
@@ -32813,22 +32891,24 @@ Message: ${message}`);
       const activeVariants = product.hasVariants && Array.isArray(product.variants) && product.variants.length > 0 ? product.variants.filter((v) => v.isActive !== false).length > 0 ? product.variants.filter((v) => v.isActive !== false) : product.variants : null;
       let displayPriceHtml = "";
       let originalPriceHtml = "";
-      let offerStampHtml = "";
+      let discountHtml = "";
       if (activeVariants) {
         const defaultVariant = activeVariants[0];
         const selling = defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(product.price) || 0;
         const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : product.originalPrice ? Number(product.originalPrice) : 0;
         const hasDiscount = mrp > selling && selling > 0;
+        const discountPct = hasDiscount ? calculateDiscountPercent(mrp, selling) : 0;
         displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : "";
-        offerStampHtml = "";
+        discountHtml = hasDiscount && discountPct > 0 ? `<span class="ak-store-card-discount">${discountPct}% OFF</span>` : "";
       } else {
         const baseSelling = Number(product.price) || 0;
         const baseMrp = Number(product.originalPrice) || 0;
         const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+        const discountPct = hasDiscount ? calculateDiscountPercent(baseMrp, baseSelling) : 0;
         displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : "";
-        offerStampHtml = "";
+        discountHtml = hasDiscount && discountPct > 0 ? `<span class="ak-store-card-discount">${discountPct}% OFF</span>` : "";
       }
       const cartQty = authService.isAuthenticated() ? getCartItemQuantity(product.id) : 0;
       let actionBtnHtml = "";
@@ -32876,7 +32956,7 @@ Message: ${message}`);
       const ratingVal = product.rating || (4.6 + product.id.charCodeAt(0) % 4 * 0.1).toFixed(1);
       const reviewsCount = product.reviewsCount || 18 + product.id.charCodeAt(product.id.length - 1) % 42;
       const stockWarningHtml = !isOutOfStock && product.stock > 0 && product.stock <= 3 ? `<div class="ak-store-card-stock-warning">Only ${product.stock} left in stock.</div>` : !isOutOfStock ? `<div class="ak-store-card-stock-status">Available instantly</div>` : "";
-      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + offerStampHtml + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing">' + displayPriceHtml + originalPriceHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
+      gridHtml += '<article class="ak-store-card' + (isOutOfStock ? " ak-card-out-of-stock" : "") + '" data-product-id="' + product.id + '"><div class="ak-store-card-img-wrap"><img src="' + resolveProductImage(product.image || product.images && product.images[0]) + '" alt="' + product.name + `" loading="lazy" onerror="this.onerror=null;this.src='assets/images/placeholder.svg';">` + stockBadge + '</div><div class="ak-store-card-body"><div class="ak-store-card-brand">' + (product.brand || "Pro Audio") + '</div><h3 class="ak-store-card-title" title="' + product.name + '">' + product.name + '</h3><div class="ak-store-card-author">by <strong class="ak-store-author-brand">' + (product.brand || "Pro Audio") + '</strong></div><div class="ak-store-card-rating"><span class="ak-rating-num">' + ratingVal + '</span><span class="ak-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="ak-rating-count">(' + reviewsCount + ')</span></div><div class="ak-store-card-specs">' + (product.specs ? product.specs.slice(0, 2).map((s) => typeof s === "object" && s !== null ? s.label ? `${s.label}: ${s.value}` : s.value : s).join(" \u2022 ") : product.category || "") + '</div><div class="ak-store-card-pricing">' + displayPriceHtml + originalPriceHtml + discountHtml + '</div><div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' + stockWarningHtml + '<div class="ak-store-card-actions">' + actionBtnHtml + '<button type="button" class="ak-store-btn-view" data-id="' + product.id + '">Details</button></div></div></article>';
     });
     grid.innerHTML = gridHtml;
     function handleStoreCardNavigation(pid, e) {
@@ -33342,9 +33422,13 @@ Message: ${message}`);
     document.querySelectorAll(".ak-mobile-expert-phone").forEach((el) => {
       el.textContent = numberStr;
     });
-    document.querySelectorAll('#akContactPage a[href^="tel:"], .ak-contact-method-content a.ak-contact-val').forEach((el) => {
+    document.querySelectorAll('#akContactPage a[href^="tel:"], #akContactPage .ak-expert-phone-target').forEach((el) => {
       el.textContent = numberStr;
       el.href = `tel:+${cleanDigits}`;
+    });
+    document.querySelectorAll('#akContactPage a[href^="mailto:"]').forEach((el) => {
+      el.textContent = "info@audioking.co.in";
+      el.href = "mailto:info@audioking.co.in";
     });
     document.querySelectorAll('.ak-footer-contact-item a[href^="tel:"], .ak-footer-link-val[href^="tel:"]').forEach((el) => {
       el.textContent = numberStr;
@@ -33512,12 +33596,16 @@ Message: ${message}`);
         const route = parsed.route;
         const params = parsed.params;
         if (route === "home") {
+          clearHeaderSearch();
           showHome(false);
         } else if (route === "orders") {
+          clearHeaderSearch();
           showAccountSettings("orders", false);
         } else if (route === "addresses") {
+          clearHeaderSearch();
           showAccountSettings("addresses", false);
         } else if (route === "account" || route === "profile") {
+          clearHeaderSearch();
           const tab = params.tab || parsed.subRoute || "account";
           showAccountSettings(tab, false);
         } else if (route === "catalog" || route === "store" || route === "pro-audio" || route === "musical-instruments") {
@@ -33533,37 +33621,41 @@ Message: ${message}`);
               page: params.page ? Number(params.page) : 1
             }, false);
             showCatalog(search, "search", false);
-          } else if (category) {
-            setStoreState({
-              search: "",
-              category,
-              brands: brand ? [brand] : [],
-              sort: params.sort || "featured",
-              page: params.page ? Number(params.page) : 1,
-              inStockOnly: params.inStock === "true"
-            }, false);
-            showCatalog(category, "category", false);
-          } else if (brand) {
-            setStoreState({
-              search: "",
-              category: "All",
-              brands: [brand],
-              sort: params.sort || "featured",
-              page: params.page ? Number(params.page) : 1,
-              inStockOnly: params.inStock === "true"
-            }, false);
-            showCatalog(brand, "brand", false);
           } else {
-            setStoreState({
-              search: "",
-              category: "All",
-              brands: [],
-              sort: params.sort || "featured",
-              page: params.page ? Number(params.page) : 1
-            }, false);
-            showCatalog("All", "all", false);
+            clearHeaderSearch();
+            if (category) {
+              setStoreState({
+                search: "",
+                category,
+                brands: brand ? [brand] : [],
+                sort: params.sort || "featured",
+                page: params.page ? Number(params.page) : 1,
+                inStockOnly: params.inStock === "true"
+              }, false);
+              showCatalog(category, "category", false);
+            } else if (brand) {
+              setStoreState({
+                search: "",
+                category: "All",
+                brands: [brand],
+                sort: params.sort || "featured",
+                page: params.page ? Number(params.page) : 1,
+                inStockOnly: params.inStock === "true"
+              }, false);
+              showCatalog(brand, "brand", false);
+            } else {
+              setStoreState({
+                search: "",
+                category: "All",
+                brands: [],
+                sort: params.sort || "featured",
+                page: params.page ? Number(params.page) : 1
+              }, false);
+              showCatalog("All", "all", false);
+            }
           }
         } else if (route === "brands") {
+          clearHeaderSearch();
           const brandName = params.name || params.brand || parsed.subRoute;
           if (brandName) {
             setStoreState({ category: "All", brands: [brandName] }, false);
@@ -33573,6 +33665,7 @@ Message: ${message}`);
             setActiveNavItem("akNavItemBrands");
           }
         } else if (route === "product") {
+          clearHeaderSearch();
           const pId = params.id || parsed.subRoute;
           if (pId) {
             showProduct(pId, false);
@@ -33580,9 +33673,11 @@ Message: ${message}`);
             showCatalog("All", "all", false);
           }
         } else if (route === "cart") {
+          clearHeaderSearch();
           showHome(false);
           openCartDrawer();
         } else if (route === "checkout") {
+          clearHeaderSearch();
           showCheckoutPage(null, false);
         } else if (route === "order-confirmed" || route === "order-success") {
           const orderView = document.getElementById("akOrderConfirmationView");
@@ -33821,6 +33916,7 @@ Message: ${message}`);
     }
   }
   function showAccountSettings(targetTab, updateHash = true) {
+    clearHeaderSearch();
     const tab = targetTab || "account";
     const status = authService.getStatus();
     if (status === "loading") {
@@ -33835,6 +33931,7 @@ Message: ${message}`);
     _doShowAccountSettings(tab, updateHash);
   }
   function _doShowAccountSettings(targetTab, updateHash = true) {
+    clearHeaderSearch();
     const user = getCurrentUser();
     if (!user) {
       openAuthModal("signin", "Please sign in to access your profile and account settings");
@@ -33856,6 +33953,7 @@ Message: ${message}`);
   function showHome(updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showHome(updateHash)))
       return;
+    clearHeaderSearch();
     hideAllViews();
     const main = document.getElementById("akMainContent");
     if (main)
@@ -33873,6 +33971,9 @@ Message: ${message}`);
   function showCatalog(categoryOrBrand, filterType = "all", updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showCatalog(categoryOrBrand, filterType, updateHash)))
       return;
+    if (filterType !== "search") {
+      clearHeaderSearch();
+    }
     hideAllViews();
     const catalog = document.getElementById("catalogPage");
     if (catalog)
@@ -34166,6 +34267,7 @@ Message: ${message}`);
   async function showProduct(productOrId, updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showProduct(productOrId, updateHash)))
       return;
+    clearHeaderSearch();
     const productId = productOrId && typeof productOrId === "object" ? productOrId.id : productOrId;
     let product = productOrId && typeof productOrId === "object" ? productOrId : getProductById(productId);
     if (productId) {
@@ -35347,6 +35449,7 @@ Message: ${message}`);
   function showContact(updateHash = true) {
     if (!checkDirtyBeforeNavigate(() => showContact(updateHash)))
       return;
+    clearHeaderSearch();
     hideAllViews();
     const contactPage = document.getElementById("akContactPage");
     if (contactPage)
@@ -36316,19 +36419,30 @@ Message: ${message}`);
         const selling = defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(p.price) || 0;
         const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : p.originalPrice ? Number(p.originalPrice) : 0;
         const hasDiscount = mrp > selling && selling > 0;
+        const discountPct = hasDiscount ? calculateDiscountPercent(mrp, selling) : 0;
         displayPriceHtml = `<span>${formatINR(selling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(mrp)}</span>` : "";
-        offerStampHtml = "";
+        offerStampHtml = discountPct > 0 && !isPreOrder ? `
+        <div class="ak-offer-stamp-badge ak-featured-stamp-badge" title="${discountPct}% OFF" aria-label="${discountPct}% OFF">
+          ${getProductOfferStampSvg(discountPct)}
+        </div>
+      ` : "";
       } else {
         const baseSelling = Number(p.price) || 0;
         const baseMrp = Number(p.originalPrice) || 0;
         const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+        const discountPct = hasDiscount ? calculateDiscountPercent(baseMrp, baseSelling) : 0;
         displayPriceHtml = `<span>${formatINR(baseSelling)}</span>`;
         originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price" style="font-size:13px; margin-left:4px;">${formatINR(baseMrp)}</span>` : "";
-        offerStampHtml = "";
+        offerStampHtml = discountPct > 0 && !isPreOrder ? `
+        <div class="ak-offer-stamp-badge ak-featured-stamp-badge" title="${discountPct}% OFF" aria-label="${discountPct}% OFF">
+          ${getProductOfferStampSvg(discountPct)}
+        </div>
+      ` : "";
       }
+      const hasStamp = Boolean(offerStampHtml);
       return `
-      <article class="ak-product-card ak-reveal-card is-revealed" data-id="${p.id}" style="cursor:pointer; position:relative;">
+      <article class="ak-product-card ak-reveal-card is-revealed ${hasStamp ? "has-offer-stamp" : ""}" data-id="${p.id}" style="cursor:pointer; position:relative;">
         ${preOrderBadge || trendingBadge}
         ${offerStampHtml}
         <div class="ak-product-thumb">

@@ -555,9 +555,17 @@
 }
 
 .ak-store-card-discount {
-  font-size: 11.5px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
   font-weight: 700;
-  color: #B12704;
+  color: #16A34A;
+  background: #DCFCE7;
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  margin-left: 2px;
+  letter-spacing: 0.3px;
 }
 
 /* Mobile metadata hidden by default on desktop Sweetwater view */
@@ -1087,9 +1095,17 @@
     font-weight: var(--ak-price-weight, 500);
   }
   .ak-store-card-discount {
-    font-size: 11px;
+    display: inline-flex !important;
+    align-items: center;
+    font-size: 10.5px;
     font-weight: 700;
-    color: #B12704;
+    color: #16A34A;
+    background: #DCFCE7;
+    border: 1px solid rgba(22, 163, 74, 0.25);
+    padding: 1px 5px;
+    border-radius: 4px;
+    line-height: 1.2;
+    margin-left: 2px;
   }
 
   /* Delivery & Stock Badges */

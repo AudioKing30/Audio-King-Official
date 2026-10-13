@@ -6,9 +6,10 @@
 
 import { AUDIOKING_PRODUCTS } from '../data/products.js';
 import { AUDIOKING_BRANDS } from '../data/brands.js';
-import { formatINR, calculateDiscountPercent, getProductOfferStampHtml, resolveProductImage } from '../utils/formatters.js';
+import { formatINR, calculateDiscountPercent, resolveProductImage } from '../utils/formatters.js';
 import { addToCart, getCartItemQuantity, updateCartItemQty } from './cart.js';
 import { openAuthModal } from './auth.js';
+import { clearHeaderSearch } from './header.js';
 import { authService } from '../services/authService.js';
 import { showToast } from './toast.js';
 
@@ -236,6 +237,7 @@ export function openStoreWithSearch(query) {
 }
 
 export function openStoreWithCategory(categoryName) {
+  clearHeaderSearch();
   currentSearchQuery = '';
   currentCategoryFilter = resolveCategoryName(categoryName || 'All');
   selectedBrand = null;
@@ -269,6 +271,7 @@ export function openStoreWithCategory(categoryName) {
 }
 
 export function openStoreWithBrand(brandName) {
+  clearHeaderSearch();
   currentSearchQuery = '';
   currentCategoryFilter = 'All';
   selectedBrand = brandName ? brandName.toLowerCase().trim() : null;
@@ -443,6 +446,7 @@ function bindFilterEvents() {
   const clearBtn = document.getElementById('akStoreClearFilters');
   if (clearBtn) {
     clearBtn.addEventListener('click', () => {
+      clearHeaderSearch();
       currentSearchQuery = '';
       currentCategoryFilter = 'All';
       selectedBrand = null;
@@ -745,23 +749,25 @@ function renderStorePage() {
 
     let displayPriceHtml = '';
     let originalPriceHtml = '';
-    let offerStampHtml = '';
+    let discountHtml = '';
 
     if (activeVariants) {
       const defaultVariant = activeVariants[0];
       const selling = (defaultVariant?.sellingPrice != null ? Number(defaultVariant.sellingPrice) : (defaultVariant?.priceOverride != null ? Number(defaultVariant.priceOverride) : Number(product.price) || 0));
       const mrp = defaultVariant?.mrp != null ? Number(defaultVariant.mrp) : (product.originalPrice ? Number(product.originalPrice) : 0);
       const hasDiscount = mrp > selling && selling > 0;
+      const discountPct = hasDiscount ? calculateDiscountPercent(mrp, selling) : 0;
       displayPriceHtml = `<span class="ak-store-card-price">${formatINR(selling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(mrp)}</span>` : '';
-      offerStampHtml = '';
+      discountHtml = (hasDiscount && discountPct > 0) ? `<span class="ak-store-card-discount">${discountPct}% OFF</span>` : '';
     } else {
       const baseSelling = Number(product.price) || 0;
       const baseMrp = Number(product.originalPrice) || 0;
       const hasDiscount = baseMrp > baseSelling && baseSelling > 0;
+      const discountPct = hasDiscount ? calculateDiscountPercent(baseMrp, baseSelling) : 0;
       displayPriceHtml = `<span class="ak-store-card-price">${formatINR(baseSelling)}</span>`;
       originalPriceHtml = hasDiscount ? `<span class="ak-card-original-price">${formatINR(baseMrp)}</span>` : '';
-      offerStampHtml = '';
+      discountHtml = (hasDiscount && discountPct > 0) ? `<span class="ak-store-card-discount">${discountPct}% OFF</span>` : '';
     }
 
     const cartQty = authService.isAuthenticated() ? getCartItemQuantity(product.id) : 0;
@@ -819,7 +825,6 @@ function renderStorePage() {
       '<div class="ak-store-card-img-wrap">' +
       '<img src="' + resolveProductImage(product.image || (product.images && product.images[0])) + '" alt="' + product.name + '" loading="lazy" onerror="this.onerror=null;this.src=\'assets/images/placeholder.svg\';">' +
       stockBadge +
-      offerStampHtml +
       '</div>' +
       '<div class="ak-store-card-body">' +
       '<div class="ak-store-card-brand">' + (product.brand || 'Pro Audio') + '</div>' +
@@ -834,6 +839,7 @@ function renderStorePage() {
       '<div class="ak-store-card-pricing">' +
       displayPriceHtml +
       originalPriceHtml +
+      discountHtml +
       '</div>' +
       '<div class="ak-store-card-delivery"><span class="ak-del-free">FREE Pan-India Delivery</span></div>' +
       stockWarningHtml +
