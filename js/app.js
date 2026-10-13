@@ -2887,6 +2887,16 @@ export async function renderCheckoutAddressBars(forceSelectedId = null) {
     if (barsList) barsList.innerHTML = '';
     if (moreWrap) { moreWrap.innerHTML = ''; moreWrap.style.display = 'none'; }
     if (viewMoreBtn) viewMoreBtn.style.display = 'none';
+
+    const u = getCurrentUser();
+    if (u) {
+      const nameInput = document.getElementById('akCoFullName');
+      const phoneInput = document.getElementById('akCoPhone');
+      const emailInput = document.getElementById('akCoEmail');
+      if (nameInput && !nameInput.value) nameInput.value = (u.fullName || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.name || '');
+      if (phoneInput && !phoneInput.value) phoneInput.value = (u.phone || u.phone_number || '');
+      if (emailInput && (!emailInput.value || emailInput.value === 'customer@example.com')) emailInput.value = (u.email || '');
+    }
     return;
   }
 
@@ -3512,12 +3522,14 @@ function initDedicatedCheckoutPage() {
       const finalTotal = Math.max(0, subtotal - discountAmount);
 
       const selectedPayment = document.querySelector('input[name="akCheckoutPayment"]:checked')?.value || 'UPI';
+      const u = getCurrentUser();
       const orderData = {
         items: currentCheckoutItems,
         customer: {
-          name: document.getElementById('akCoFullName')?.value || 'Valued Customer',
-          phone: document.getElementById('akCoPhone')?.value || '+91 98765 43210',
-          email: document.getElementById('akCoEmail')?.value || 'customer@example.com',
+          name: document.getElementById('akCoFullName')?.value || (u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() : '') || 'Valued Customer',
+          phone: document.getElementById('akCoPhone')?.value || (u ? u.phone || u.phone_number || '' : '') || '+91 98765 43210',
+          email: document.getElementById('akCoEmail')?.value || (u && u.email ? u.email : '') || 'customer@example.com',
+          userId: u?.id || '',
           address: document.getElementById('akCoAddress')?.value || 'Flagship Studio',
           city: document.getElementById('akCoCity')?.value || 'Mumbai',
           state: document.getElementById('akCoState')?.value || 'Maharashtra',
@@ -3535,17 +3547,33 @@ function initDedicatedCheckoutPage() {
         submitBtn.textContent = 'Securing Payment & Dispatch...';
       }
 
-      activePaymentAdapter.processPayment(orderData).then(result => {
+      activePaymentAdapter.processPayment(orderData).then(async result => {
         orderData.transactionId = result?.transactionId || ('TXN_' + Date.now());
-        ordersService.createOrder(orderData).catch(err => console.warn('[Checkout] Order persistence notice:', err.message));
+        try {
+          const savedOrder = await ordersService.createOrder(orderData);
+          if (savedOrder && savedOrder.orderNumber) {
+            orderData.orderNumber = savedOrder.orderNumber;
+            orderData.orderId = savedOrder.orderNumber;
+          }
+        } catch (err) {
+          console.warn('[Checkout] Order persistence notice:', err.message);
+        }
         appliedDedicatedCoupon = null;
         clearCart();
         hideAllViews();
         triggerOrderAnimation(orderData);
-      }).catch((err) => {
+      }).catch(async (err) => {
         console.warn('[Payment Gateway Notice] PG fallback to direct order confirmation:', err);
         orderData.transactionId = 'TXN_' + Date.now();
-        ordersService.createOrder(orderData).catch(e => console.warn('[Checkout] Order persistence notice:', e.message));
+        try {
+          const savedOrder = await ordersService.createOrder(orderData);
+          if (savedOrder && savedOrder.orderNumber) {
+            orderData.orderNumber = savedOrder.orderNumber;
+            orderData.orderId = savedOrder.orderNumber;
+          }
+        } catch (e) {
+          console.warn('[Checkout] Order persistence notice:', e.message);
+        }
         appliedDedicatedCoupon = null;
         clearCart();
         hideAllViews();

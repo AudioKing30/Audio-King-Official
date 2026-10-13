@@ -334,7 +334,7 @@ router.post('/upload/video', videoUpload.single('video'), (req, res) => {
 // -------------------------------------------------------------
 router.get('/dashboard/stats', (req, res) => {
   try {
-    const totalCustomers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE COALESCE(role, 'customer') != 'admin'").get().count;
+    const totalCustomers = db.prepare("SELECT COUNT(*) AS count FROM users WHERE COALESCE(role, 'customer') != 'admin' AND role != 'guest' AND (password_hash IS NOT NULL OR auth_provider = 'google')").get().count;
     const totalOrders = db.prepare('SELECT COUNT(*) AS count FROM orders').get().count;
     const currentOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status IN ('Confirmed', 'Dispatched', 'Pending', 'Shipped')").get().count;
     const completedOrders = db.prepare("SELECT COUNT(*) AS count FROM orders WHERE status = 'Delivered'").get().count;
@@ -1723,8 +1723,10 @@ router.get('/customers', (req, res) => {
         COALESCE(SUM(o.total_amount), 0) AS total_spent
       FROM users u
       LEFT JOIN auth_identities ai ON u.id = ai.user_id
-      LEFT JOIN orders o ON u.id = o.user_id AND o.status NOT IN ('Cancelled', 'Returned')
+      LEFT JOIN orders o ON (o.user_id = u.id OR (u.email IS NOT NULL AND LOWER(TRIM(u.email)) = LOWER(TRIM(COALESCE(json_extract(o.shipping_address, '$.email'), ''))))) AND o.status NOT IN ('Cancelled', 'Returned')
       WHERE COALESCE(u.role, 'customer') != 'admin'
+        AND u.role != 'guest'
+        AND (u.password_hash IS NOT NULL OR u.auth_provider = 'google')
       GROUP BY u.id
       ORDER BY u.created_at DESC
     `).all();

@@ -635,7 +635,12 @@ export function initCheckout() {
           date: formatDate()
         };
 
-        ordersService.createOrder(orderData).catch(e => console.warn('[Checkout] Order persistence notice:', e.message));
+        ordersService.createOrder(orderData).then(saved => {
+          if (saved && saved.orderNumber) {
+            orderData.orderNumber = saved.orderNumber;
+            orderData.orderId = saved.orderNumber;
+          }
+        }).catch(e => console.warn('[Checkout] Order persistence notice:', e.message));
 
         closeCheckoutModal();
         clearCart();

@@ -43,7 +43,16 @@ function getAuthUser(req) {
     } catch (e) {}
   }
 
-  // Fallback: check X-User-Email / query email against users table
+  // Fallback 1: check X-User-Id / query userId against users table
+  const idFallback = (req.headers['x-user-id'] || req.query.userId || '').trim();
+  if (idFallback) {
+    try {
+      const user = db.prepare('SELECT id, full_name, email, phone_number, role FROM users WHERE id = ?').get(idFallback);
+      if (user) return user;
+    } catch (e) {}
+  }
+
+  // Fallback 2: check X-User-Email / query email against users table
   const emailFallback = (req.headers['x-user-email'] || req.query.email || '').trim().toLowerCase();
   if (emailFallback) {
     try {
@@ -276,46 +285,45 @@ router.post('/', async (req, res) => {
   const orderId = crypto.randomUUID();
   const now = new Date().toISOString();
 
-  // 1. Resolve user ID (Authenticated Session vs Auto-Register Permanent Customer)
+  // 1. Resolve user ID (Authenticated Session vs Existing Customer vs Guest)
   const authUser = getAuthUser(req);
   let userId = null;
   let customerName = (shipping.name || shipping.fullName || cust.fullName || cust.name || (authUser && authUser.full_name) || 'Valued Customer').trim();
   let customerEmail = (shipping.email || cust.email || (authUser && authUser.email) || '').trim().toLowerCase();
   let customerPhone = (shipping.phone || shipping.phoneNumber || cust.phone || cust.phoneNumber || (authUser && authUser.phone_number) || '').trim();
 
+  const candidateUserId = (shipping.userId || cust.userId || req.headers['x-user-id'] || '').trim();
+
   if (authUser) {
     userId = authUser.id;
     if (!customerEmail) customerEmail = authUser.email;
     if (!customerPhone) customerPhone = authUser.phone_number || '';
-  } else {
-    if (!customerEmail) {
-      customerEmail = `customer_${Date.now()}@audioking.co.in`;
+  } else if (candidateUserId) {
+    const matchedUser = db.prepare('SELECT id, full_name, email, phone_number FROM users WHERE id = ?').get(candidateUserId);
+    if (matchedUser) {
+      userId = matchedUser.id;
+      if (!customerEmail) customerEmail = matchedUser.email;
+      if (!customerPhone) customerPhone = matchedUser.phone_number || '';
     }
+  }
 
+  if (!userId && customerEmail) {
     const existingUser = db.prepare('SELECT id, full_name, email, phone_number FROM users WHERE email = ? COLLATE NOCASE').get(customerEmail);
     if (existingUser) {
       userId = existingUser.id;
       if (customerPhone && !existingUser.phone_number) {
-        db.prepare('UPDATE users SET phone_number = ? WHERE id = ?').run(customerPhone, userId);
+        try { db.prepare('UPDATE users SET phone_number = ? WHERE id = ?').run(customerPhone, userId); } catch (_) {}
       }
-    } else {
-      userId = crypto.randomUUID();
-      const displayName = customerName.split(' ')[0] || customerName;
-      db.prepare(`
-        INSERT INTO users (
-          id, full_name, display_name, title, email, phone_number,
-          role, auth_provider, email_verified, phone_verified,
-          created_at, updated_at
-        ) VALUES (?, ?, ?, 'Pro Audio Musician', ?, ?, 'customer', 'email', 1, 0, ?, ?)
-      `).run(userId, customerName, displayName, customerEmail, customerPhone, now, now);
-
-      db.prepare(`
-        INSERT OR IGNORE INTO auth_identities (id, user_id, provider, provider_user_id, created_at)
-        VALUES (?, ?, 'email', ?, ?)
-      `).run(crypto.randomUUID(), userId, customerEmail, now);
-
-      console.log(`[ORDER USER REGISTER] Customer permanently registered in SQLite: ${customerEmail} (ID: ${userId})`);
     }
+  }
+
+  // If order was placed by an unauthenticated guest, assign to guest account without polluting registered customer count
+  if (!userId) {
+    db.prepare(`
+      INSERT OR IGNORE INTO users (id, full_name, display_name, title, email, role, auth_provider, email_verified, created_at, updated_at)
+      VALUES ('usr_guest_checkout', 'Guest Customer', 'Guest', 'Customer', 'guest@audioking.co.in', 'guest', 'guest', 0, ?, ?)
+    `).run(now, now);
+    userId = 'usr_guest_checkout';
   }
 
   // 2. Calculate items subtotal with server-side catalog price verification

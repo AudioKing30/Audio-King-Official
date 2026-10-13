@@ -351,7 +351,7 @@ export function generateTaxInvoiceHtml(orderData) {
         <div class="ak-inv-footer">
           <div class="ak-inv-signatory">
             <div style="font-size: 12px; font-weight: 700; color: #1E293B;">For VASP ADVISORS PRIVATE LIMITED (Audio King)</div>
-            <div style="height: 48px; border-bottom: 1px dashed #CBD5E1; margin: 8px 0;"></div>
+            <div class="ak-inv-signature-line" style="height: 48px; border-bottom: 1px dashed #CBD5E1; margin: 8px 0;"></div>
             <div style="font-size: 11px; font-weight: 700; color: #64748B;">Authorized Signatory</div>
           </div>
           <div class="ak-inv-thanks">

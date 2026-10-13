@@ -52,8 +52,12 @@ class OrdersService {
         'Accept': 'application/json',
         ...this.getAuthHeaders()
       };
-      const queryParam = user && user.email ? `?email=${encodeURIComponent(user.email)}` : '';
-      const res = await fetch(`${baseUrl}/api/user/orders${queryParam}`, {
+      const queryParams = [];
+      if (user && user.email) queryParams.push(`email=${encodeURIComponent(user.email)}`);
+      if (user && user.id) queryParams.push(`userId=${encodeURIComponent(user.id)}`);
+      const queryString = queryParams.length ? `?${queryParams.join('&')}` : '';
+
+      const res = await fetch(`${baseUrl}/api/user/orders${queryString}`, {
         method: 'GET',
         credentials: 'include',
         headers
@@ -62,6 +66,8 @@ class OrdersService {
       if (res.ok) {
         const data = await res.json();
         this.cachedOrders = data.orders || [];
+        if (user && user.id) setStorage(`audioking_orders_${user.id}`, this.cachedOrders);
+        if (user && user.email) setStorage(`audioking_orders_${user.email}`, this.cachedOrders);
         setStorage(localKey, this.cachedOrders);
         setStorage('audioking_last_orders', this.cachedOrders);
         return this.cachedOrders;
@@ -71,7 +77,10 @@ class OrdersService {
     }
 
     // Fallback to local storage mirror
-    const cached = getStorage(localKey, null) || getStorage('audioking_last_orders', []);
+    const cached = (user && user.id ? getStorage(`audioking_orders_${user.id}`, null) : null) ||
+                   (user && user.email ? getStorage(`audioking_orders_${user.email}`, null) : null) ||
+                   getStorage(localKey, null) || 
+                   getStorage('audioking_last_orders', []);
     this.cachedOrders = cached || [];
     return this.cachedOrders;
   }
@@ -136,6 +145,8 @@ class OrdersService {
     if (!exists) {
       currentList.unshift(serverSavedOrder);
       setStorage(localKey, currentList);
+      if (userId) setStorage(`audioking_orders_${userId}`, currentList);
+      if (userEmail) setStorage(`audioking_orders_${userEmail}`, currentList);
       setStorage('audioking_last_orders', currentList);
     }
     this.cachedOrders = currentList;
