@@ -187,16 +187,17 @@ export function generateTaxInvoiceHtml(orderData) {
           <div class="ak-inv-supplier">
             <div class="ak-inv-brand-row">
               <img src="assets/images/logo.png" alt="Audio King Logo" class="ak-inv-logo" onerror="this.style.display='none'">
-              <span class="ak-inv-brand-title">AUDIO KING</span>
             </div>
             <div class="ak-inv-legal-name">VASP ADVISORS PRIVATE LIMITED</div>
             <div class="ak-inv-address">F 505, RNA Regency Park, MG Road Off Link Road, Dhanukar Wadi, Kandivali West, Mumbai Suburban, Maharashtra – 400067</div>
             <div class="ak-inv-gstin"><strong>GSTIN:</strong> 27AAHCV5628B1ZC &nbsp;|&nbsp; <strong>Trade Name / Brand:</strong> AUDIO KING</div>
+            <div class="ak-inv-pan"><strong>PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || ''}</span></div>
+            <div class="ak-inv-tan"><strong>TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || ''}</span></div>
           </div>
 
           <div class="ak-inv-title-box">
             <h1 class="ak-inv-heading">TAX INVOICE</h1>
-            <div class="ak-inv-subbrand">AUDIO KING</div>
+            <div class="ak-inv-subbrand">(Original for Recipient)</div>
           </div>
         </div>
 
@@ -381,6 +382,7 @@ export function openTaxInvoiceModal(orderData) {
   `;
 
   modal.style.display = 'flex';
+  document.body.classList.add('ak-tax-invoice-open');
   document.body.style.overflow = 'hidden';
 }
 
@@ -388,6 +390,7 @@ export function closeTaxInvoiceModal() {
   const modal = document.getElementById('akTaxInvoiceModal');
   if (modal) {
     modal.style.display = 'none';
+    document.body.classList.remove('ak-tax-invoice-open');
     document.body.style.overflow = '';
   }
 }

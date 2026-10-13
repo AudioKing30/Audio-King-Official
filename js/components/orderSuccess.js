@@ -315,13 +315,19 @@ export function initOrderSuccess() {
   if (continueBtn) {
     continueBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.dispatchEvent(new CustomEvent('ak:nav-home'));
+      window.dispatchEvent(new CustomEvent('ak:nav-store'));
+      if (typeof window.showCatalog === 'function') {
+        window.showCatalog('All', 'all');
+      } else {
+        window.location.hash = '#store';
+      }
     });
   }
 
   if (printBtn) {
     printBtn.addEventListener('click', (e) => {
       e.preventDefault();
+      document.body.classList.remove('ak-tax-invoice-open');
       window.print();
     });
   }

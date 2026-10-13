@@ -66,40 +66,49 @@
 .ak-inv-brand-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .ak-inv-logo {
-  height: 38px;
+  height: 57px;
+  max-height: 57px;
   width: auto;
   object-fit: contain;
+  display: block;
 }
 
 .ak-inv-brand-title {
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  color: #0F172A;
+  display: none !important;
 }
 
 .ak-inv-legal-name {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 800;
   color: #0F172A;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
+  line-height: 1.3;
 }
 
 .ak-inv-address {
   font-size: 10.5px;
   color: #475569;
-  max-width: 480px;
-  margin-bottom: 3px;
+  max-width: 500px;
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 
-.ak-inv-gstin {
+.ak-inv-gstin,
+.ak-inv-pan,
+.ak-inv-tan {
   font-size: 10.5px;
   color: #0F172A;
+  line-height: 1.45;
+}
+
+.ak-inv-pan,
+.ak-inv-tan {
+  min-height: 16px;
 }
 
 .ak-inv-title-box {
@@ -110,15 +119,16 @@
   font-size: 24px;
   font-weight: 900;
   color: #E4572E;
-  margin: 0 0 2px 0;
+  margin: 0 0 3px 0;
   letter-spacing: 1px;
 }
 
 .ak-inv-subbrand {
-  font-size: 13px;
-  font-weight: 800;
-  color: #0F172A;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
   letter-spacing: 0.5px;
+  font-style: italic;
 }
 
 /* Metadata Table */
@@ -297,20 +307,21 @@
    Print Styling (Standard A4 Paper Pixel Perfection)
    ========================================================================== */
 @media print {
-  body * {
-    visibility: hidden;
-  }
-
   .no-print {
     display: none !important;
   }
 
-  #akTaxInvoiceModal,
-  #akTaxInvoiceModal * {
-    visibility: visible;
+  /* When tax invoice modal is actively being printed */
+  body.ak-tax-invoice-open * {
+    visibility: hidden;
   }
 
-  #akTaxInvoiceModal {
+  body.ak-tax-invoice-open #akTaxInvoiceModal,
+  body.ak-tax-invoice-open #akTaxInvoiceModal * {
+    visibility: visible !important;
+  }
+
+  body.ak-tax-invoice-open #akTaxInvoiceModal {
     position: absolute;
     inset: 0;
     margin: 0;
@@ -319,6 +330,18 @@
     backdrop-filter: none !important;
     display: block !important;
     overflow: visible !important;
+    z-index: 99999 !important;
+  }
+
+  /* When NOT printing the tax invoice modal (e.g. standard Order Summary page print) */
+  body:not(.ak-tax-invoice-open) #akTaxInvoiceModal {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body:not(.ak-tax-invoice-open) #akOrderConfirmationView,
+  body:not(.ak-tax-invoice-open) #akOrderConfirmationView * {
+    visibility: visible !important;
   }
 
   .ak-tax-invoice-modal-content {

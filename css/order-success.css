@@ -511,16 +511,31 @@
   #akAccountModal,
   .ak-toast-container,
   .ak-order-anim-overlay,
-  .ak-order-disclaimer-box {
+  .ak-order-disclaimer-box,
+  .ak-floating-whatsapp,
+  #akContactModal,
+  #akAuthModal,
+  .ak-tax-invoice-modal-overlay:not(.active):not([style*="display: flex"]) {
     display: none !important;
+    visibility: hidden !important;
   }
 
-  .ak-order-view {
+  body.ak-tax-invoice-open .ak-order-view {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body:not(.ak-tax-invoice-open) .ak-order-view {
     display: block !important;
+    visibility: visible !important;
     padding: 0 !important;
     margin: 0 !important;
     background: #FFFFFF !important;
     width: 100% !important;
+  }
+
+  body:not(.ak-tax-invoice-open) .ak-order-view * {
+    visibility: visible !important;
   }
 
   .ak-order-shell {

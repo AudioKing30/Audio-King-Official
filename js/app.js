@@ -3541,6 +3541,10 @@ function setupAppEventListeners() {
   window.addEventListener('ak:nav-home', () => {
     showHome();
   });
+
+  window.addEventListener('ak:nav-store', () => {
+    showCatalog('All', 'all');
+  });
 }
 
 let globalScrollObserver = null;

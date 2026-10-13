@@ -1110,7 +1110,10 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  box-shadow: 0 10px 24px -4px rgba(37, 211, 102, 0.55), 0 2px 5px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+  outline: none !important;
+  border: none !important;
+  -webkit-tap-highlight-color: transparent;
   z-index: 1000;
   cursor: pointer;
   transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.25s ease;
@@ -1144,8 +1147,8 @@
 }
 
 .ak-floating-whatsapp:hover {
-  transform: scale(1.1);
-  box-shadow: 0 14px 30px -4px rgba(37, 211, 102, 0.7), 0 4px 10px rgba(0, 0, 0, 0.12);
+  transform: scale(1.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.26), 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .ak-floating-whatsapp:hover .ak-wa-icon-box svg {
@@ -1159,7 +1162,7 @@
     right: 20px;
     width: 42px;
     height: 42px;
-    box-shadow: 0 6px 18px -3px rgba(37, 211, 102, 0.45), 0 2px 5px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22), 0 2px 5px rgba(0, 0, 0, 0.08);
   }
   .ak-wa-icon-box svg {
     width: 22px;
