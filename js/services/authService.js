@@ -15,8 +15,10 @@ class AuthService {
     this.listeners = new Set();
     this.isLoggingIn = false;
 
-    this.currentUser = null;
-    this.status = this.getToken() ? 'loading' : 'unauthenticated';
+    const token = this.getToken();
+    const cachedUser = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
+    this.currentUser = (token && cachedUser) ? cachedUser : null;
+    this.status = token ? 'loading' : 'unauthenticated';
 
     this._lastPrewarm = 0;
     this._effectiveBaseUrl = null;

@@ -29,6 +29,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -219,6 +220,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -393,6 +395,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -539,6 +542,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -688,6 +692,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -853,6 +858,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -1002,6 +1008,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -1171,6 +1178,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -1339,6 +1347,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1370,6 +1379,7 @@
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1412,6 +1422,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1444,6 +1455,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1474,6 +1486,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1505,6 +1518,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1537,6 +1551,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1569,6 +1584,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1602,6 +1618,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1635,6 +1652,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1668,6 +1686,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1701,6 +1720,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -1740,6 +1760,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keyboard",
@@ -1881,6 +1902,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keyboard",
@@ -2033,6 +2055,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keyboard",
@@ -2178,6 +2201,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2209,6 +2233,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2241,6 +2266,7 @@ The Dual Right-Angle AdvantageThe dual right-angle configuration makes this cabl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "All-purpose professional dynamic vocal microphone designed, assembled, and tested by Audix in the USA",
         "Proprietary VLM\u2122 (Very Low Mass) Type B capsule provides exceptional transient response and natural clarity",
@@ -2376,6 +2402,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Concert-grade professional dynamic vocal microphone designed, assembled, and tested by Audix in the USA",
         "Innovative low-output capsule architecture acts as a natural pad providing unprecedented gain before feedback",
@@ -2539,6 +2566,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2572,6 +2600,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2601,6 +2630,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2630,6 +2660,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2663,6 +2694,12 @@ Country of Origin	China`,
       "videoType": "youtube",
       "videoUrl": "https://www.youtube.com/watch?v=j7dC9aAx_TY",
       "youtubeVideoId": "j7dC9aAx_TY",
+      "youtubeVideos": [
+        {
+          "id": "j7dC9aAx_TY",
+          "url": "https://www.youtube.com/watch?v=j7dC9aAx_TY"
+        }
+      ],
       "specs": [],
       "deepSpecs": []
     },
@@ -2695,6 +2732,12 @@ Country of Origin	China`,
       "videoType": "youtube",
       "videoUrl": "https://www.youtube.com/watch?v=JWg9Tlyxn68",
       "youtubeVideoId": "JWg9Tlyxn68",
+      "youtubeVideos": [
+        {
+          "id": "JWg9Tlyxn68",
+          "url": "https://www.youtube.com/watch?v=JWg9Tlyxn68"
+        }
+      ],
       "specs": [],
       "deepSpecs": []
     },
@@ -2726,6 +2769,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -2859,6 +2903,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2892,6 +2937,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2922,6 +2968,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2954,6 +3001,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -2987,6 +3035,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3020,6 +3069,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3052,6 +3102,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3085,6 +3136,12 @@ Country of Origin	China`,
       "videoType": "youtube",
       "videoUrl": "https://www.youtube.com/watch?v=e6G7G7-4vps",
       "youtubeVideoId": "e6G7G7-4vps",
+      "youtubeVideos": [
+        {
+          "id": "e6G7G7-4vps",
+          "url": "https://www.youtube.com/watch?v=e6G7G7-4vps"
+        }
+      ],
       "specs": [],
       "deepSpecs": []
     },
@@ -3118,6 +3175,12 @@ Country of Origin	China`,
       "videoType": "youtube",
       "videoUrl": "https://www.youtube.com/watch?v=ZTgpPEuwjbs",
       "youtubeVideoId": "ZTgpPEuwjbs",
+      "youtubeVideos": [
+        {
+          "id": "ZTgpPEuwjbs",
+          "url": "https://www.youtube.com/watch?v=ZTgpPEuwjbs"
+        }
+      ],
       "specs": [],
       "deepSpecs": []
     },
@@ -3151,6 +3214,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3184,6 +3248,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3217,6 +3282,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3250,6 +3316,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3283,6 +3350,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3316,6 +3384,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3346,9 +3415,19 @@ Country of Origin	China`,
         "uploads/products/1790358512336_11f8b59b8e40.jpg",
         "uploads/products/1790358512340_79836fdc1984.jpg"
       ],
-      "videoType": null,
-      "videoUrl": null,
-      "youtubeVideoId": null,
+      "videoType": "youtube",
+      "videoUrl": "https://www.youtube.com/watch?v=kYv_3jV8koc",
+      "youtubeVideoId": "kYv_3jV8koc",
+      "youtubeVideos": [
+        {
+          "id": "kYv_3jV8koc",
+          "url": "https://www.youtube.com/watch?v=kYv_3jV8koc"
+        },
+        {
+          "id": "dQw4w9WgXcQ",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        }
+      ],
       "specs": [],
       "deepSpecs": []
     },
@@ -3382,6 +3461,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3415,6 +3495,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3448,6 +3529,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3477,6 +3559,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3508,6 +3591,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -3641,6 +3725,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3672,6 +3757,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -3805,6 +3891,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3837,6 +3924,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3868,6 +3956,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3899,6 +3988,7 @@ Country of Origin	China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3962,6 +4052,7 @@ Built-in headphone amp for silent practice and/or pedalboard monitoring`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -3994,6 +4085,7 @@ Built-in headphone amp for silent practice and/or pedalboard monitoring`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -4026,6 +4118,7 @@ Built-in headphone amp for silent practice and/or pedalboard monitoring`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -4070,6 +4163,7 @@ Built-in headphone amp for silent practice and/or pedalboard monitoring`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Drum Kit Configuration",
@@ -4219,6 +4313,7 @@ Built-in headphone amp for silent practice and/or pedalboard monitoring`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Drum Kit Setup",
@@ -4376,6 +4471,7 @@ Built-in headphone amp for silent practice and/or pedalboard monitoring`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Drum Kit Shells",
@@ -4649,6 +4745,7 @@ EFNOTE Tools App for control remotely`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -4751,6 +4848,7 @@ The setlist feature enables you to configure your kit order with tempos for each
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -4883,6 +4981,7 @@ Input: Analog / Bluetooth / 2-ch USB`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -5000,6 +5099,7 @@ Bluetooth MIDI`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -5090,6 +5190,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -5123,6 +5224,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "1.1\u201D Mylar capsule with gold-coated surface for transparent high-frequency response",
         "Premium German WIMA audiophile capacitors for low-noise, transparent signal path",
@@ -5221,6 +5323,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "24-Bit / 96kHz studio-grade A/D converters for crystal-clear digital sound reproduction",
         "Dual Output Flexibility: USB 2.0 digital connectivity plus standard 3-pin XLR analog output",
@@ -5322,6 +5425,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Compact rugged all-metal cylindrical body engineered for versatile instrument placement",
         "Precision 16 mm condenser capsule delivering accurate linear transient reproduction",
@@ -5415,6 +5519,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Precision 25 mm replaceable condenser capsule in a slim, positionable stick-type format",
         "Switchable -10 dB attenuation pad handles high-SPL percussion and brass without clipping",
@@ -5513,6 +5618,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional moving coil dynamic vocal microphone engineered for live performance and stage delivery",
         "Cardioid directional polar pattern rejects stage feedback and ambient background noise",
@@ -5611,6 +5717,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional moving coil dynamic vocal microphone engineered for live concerts and demanding stage use",
         "Switchless handle profile prevents accidental power toggles or muting during energetic live performances",
@@ -5706,6 +5813,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Classic 1950s satin chrome-plated die-cast casing engineered for vintage stage presence and durability",
         "Large-diaphragm moving coil dynamic capsule reproducing full-bodied vocal warmth and high clarity",
@@ -5802,6 +5910,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional moving coil dynamic vocal microphone engineered for live concerts and stage monitoring",
         "Cardioid directional polar pattern rejects stage feedback and ambient background noise",
@@ -5895,6 +6004,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Dynamic moving coil vocal microphone tailored specifically for stage performance and speech",
         "Uniform cardioid polar pattern isolates the primary sound source and resists acoustic feedback",
@@ -5993,6 +6103,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional moving coil dynamic vocal microphone engineered for concert stages and speech",
         "Extended 50Hz \u2013 17,000Hz frequency response tailored specifically for crisp vocal presence",
@@ -6089,6 +6200,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Complete 3-piece dynamic vocal microphone kit engineered for live stage, speech, and rehearsals",
         "Directional cardioid polar pattern provides optimal gain before feedback and ambient noise isolation",
@@ -6185,6 +6297,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -6338,6 +6451,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -6487,6 +6601,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -6636,6 +6751,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -6785,6 +6901,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional dynamic moving coil vocal microphone engineered for concert touring and studio tracking",
         "Directional super-cardioid polar pattern delivers surgical acoustic isolation and high gain before feedback",
@@ -6881,6 +6998,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Sub-miniature 3.5 mm back-electret permanently polarized condenser capsule",
         "Virtually invisible flesh-tone design ideal for broadcast, theatrical, and live speech applications",
@@ -6978,6 +7096,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Precision 3 mm back-electret cardioid condenser capsule providing high off-axis ambient noise rejection",
         "Ambidextrous reversible boom mount allows effortless mounting to either the left or right ear",
@@ -7077,6 +7196,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "5 mm back-electret condenser capsule delivering crisp, articulate vocal speech reproduction",
         "Ultra-slim lightweight ergonomic wireframe for maximum comfort during extended use",
@@ -7168,6 +7288,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Permanently polarized back-electret condenser capsule delivers pristine vocal intelligibility",
         "Cardioid directional polar pattern isolates the voice while rejecting ambient background noise",
@@ -7263,6 +7384,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "High-sensitivity back-electret condenser capsule delivering natural, articulate speech capture",
         "Omni-directional polar pattern provides consistent pickup and natural sound even as the speaker turns",
@@ -7376,6 +7498,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -7542,6 +7665,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -7700,6 +7824,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -7886,6 +8011,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -8057,6 +8183,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         'Proprietary 40mm Magnesium "M"-profile inverted dome drivers',
         "Open-back circumaural design for expansive, natural soundstage",
@@ -8121,6 +8248,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -8296,6 +8424,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -8475,6 +8604,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -8653,6 +8783,7 @@ The sounds in the EFD-7X are full stereo acoustic drum and cymbal samples record
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -8859,6 +8990,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "10-in / 4-out high-speed Thunderbolt audio interface with precision 24-bit / 192 kHz conversion",
         "Industry-leading 1.67 ms round-trip latency allows real-time monitoring through native DAW plugins",
@@ -9014,6 +9146,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "18-in / 8-out high-performance desktop audio interface with USB and USB Type-C connectivity",
         "Four Clarett microphone preamps with -128 dB EIN ultra-low noise and ultra-linear circuit architecture",
@@ -9185,6 +9318,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Pure-sounding 10-in / 4-out desktop USB-C audio interface with next-generation digital conversion",
         "Two Clarett+ mic preamps featuring All-analogue Air with impedance switching and relay control",
@@ -9356,6 +9490,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "18-in / 8-out studio-grade desktop USB-C audio interface with next-generation 24-bit / 192 kHz conversion",
         "Four Clarett+ mic preamps featuring All-analogue Air with impedance switching and relay control",
@@ -9530,6 +9665,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "18-in / 20-out 1U rackmount USB-C audio interface with next-generation 24-bit / 192 kHz conversion",
         "Eight Clarett+ mic preamps featuring All-analogue Air with impedance switching and relay control",
@@ -9674,6 +9810,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional 8-in / 8-out ADAT microphone preamplifier and 24-bit / 192 kHz digital audio converter",
         "Eight ultra-low noise, high-headroom Clarett+ preamps with fully balanced internal signal routing",
@@ -9797,6 +9934,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -9828,6 +9966,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -9859,6 +9998,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Form Factor",
@@ -10011,6 +10151,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Preamplifier Type",
@@ -10149,6 +10290,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Type",
@@ -10274,6 +10416,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Type",
@@ -10398,6 +10541,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Type",
@@ -10515,6 +10659,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Type",
@@ -10632,6 +10777,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -10665,6 +10811,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -10698,6 +10845,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -10729,6 +10877,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -10760,6 +10909,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -10904,6 +11054,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -11049,6 +11200,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -11196,6 +11348,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11228,6 +11381,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11261,6 +11415,12 @@ Key Highlights:
       "videoType": "youtube",
       "videoUrl": "https://www.youtube.com/watch?v=mlIpHAT5H5c",
       "youtubeVideoId": "mlIpHAT5H5c",
+      "youtubeVideos": [
+        {
+          "id": "mlIpHAT5H5c",
+          "url": "https://www.youtube.com/watch?v=mlIpHAT5H5c"
+        }
+      ],
       "specs": [],
       "deepSpecs": []
     },
@@ -11294,6 +11454,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11327,6 +11488,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11359,6 +11521,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11392,6 +11555,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11425,6 +11589,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11458,6 +11623,7 @@ Key Highlights:
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11566,6 +11732,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11597,6 +11764,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11629,6 +11797,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11662,6 +11831,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11695,6 +11865,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11728,6 +11899,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11761,6 +11933,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11793,6 +11966,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -11825,6 +11999,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Complete 9-piece Lauten Audio Drum Microphone System",
         "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
@@ -11899,6 +12074,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Extra-large 38mm dual-diaphragm capsule hand-tuned in Silicon Valley",
         "Three distinct voicing profiles (Gentle, Neutral, Forward) in a single mic",
@@ -11987,6 +12163,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Custom 35mm dual-diaphragm capsule hand-tuned in Silicon Valley",
         "Vintage FET warmth with modern open top-end air",
@@ -12085,6 +12262,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Complete Lauten Audio Drum & Studio Microphone System",
         "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
@@ -12164,6 +12342,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Complete Lauten Audio Drum & Studio Microphone System with 2x LA-220",
         "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
@@ -12232,7 +12411,19 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       ],
       "videoType": "youtube",
       "videoUrl": "https://www.youtube.com/watch?v=rFjNFWBdXk8",
-      "youtubeVideoId": "rFjNFWBdXk8",
+      "youtubeVideoId": "dQw4w9WgXcQ",
+      "youtubeVideos": [
+        {
+          "id": "dQw4w9WgXcQ",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          "title": "Studio Acoustic Demonstration"
+        },
+        {
+          "id": "j7dC9aAx_TY",
+          "url": "https://www.youtube.com/watch?v=j7dC9aAx_TY",
+          "title": "Live Performance Tracking"
+        }
+      ],
       "specs": [
         "Complete 7-piece Lauten Audio Drum Microphone System",
         "1x Kick Mic LS-608 (Reimagined bass drum capture with air turbulence management)",
@@ -12306,6 +12497,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "31.25mm dual large diaphragm pressure gradient transducer capsule",
         "Aged EF806s vacuum tube circuit with custom-wound US output transformer",
@@ -12406,6 +12598,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Dedicated bass drum FET condenser microphone with KC608 capsule",
         "Retains tight directional cardioid polar pattern down to 50Hz",
@@ -12495,6 +12688,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Matched pair of transformerless small diaphragm FET condenser microphones",
         "Interchangeable hand-tuned 17mm capsules: 2x Cardioid and 2x Omnidirectional",
@@ -12596,6 +12790,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Drum Kit Configuration",
@@ -12743,6 +12938,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -12777,6 +12973,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -12810,6 +13007,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -12842,6 +13040,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -12873,6 +13072,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Kit Configuration",
@@ -13025,6 +13225,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Kit Configuration",
@@ -13168,6 +13369,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Bass Drum",
@@ -13315,6 +13517,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -13348,6 +13551,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -13381,6 +13585,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -13413,6 +13618,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -13446,6 +13652,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -13477,6 +13684,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Type",
@@ -13604,6 +13812,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Type",
@@ -13730,6 +13939,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Type",
@@ -13870,6 +14080,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Tuning Type",
@@ -13993,6 +14204,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Type",
@@ -14131,6 +14343,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effects Sections",
@@ -14263,6 +14476,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Preamp Modeling",
@@ -14390,6 +14604,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Type",
@@ -14507,6 +14722,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -14539,6 +14755,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Connectivity",
@@ -14665,6 +14882,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -14697,6 +14915,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -14729,6 +14948,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -14762,6 +14982,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -14794,6 +15015,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -14826,6 +15048,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -14981,6 +15204,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -15136,6 +15360,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -15301,6 +15526,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Channels & Software",
@@ -15453,6 +15679,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -15605,6 +15832,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -15753,6 +15981,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -15901,6 +16130,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -15931,6 +16161,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -15961,6 +16192,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -15993,6 +16225,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16024,6 +16257,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed Mechanism",
@@ -16177,6 +16411,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16207,6 +16442,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16250,6 +16486,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed Architecture",
@@ -16419,6 +16656,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed Architecture",
@@ -16577,6 +16815,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16609,6 +16848,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16641,6 +16881,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16673,6 +16914,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16705,6 +16947,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16737,6 +16980,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Keybed",
@@ -16895,6 +17139,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16927,6 +17172,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16959,6 +17205,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -16991,6 +17238,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17023,6 +17271,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17055,6 +17304,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17087,6 +17337,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17119,6 +17370,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17151,6 +17403,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17184,6 +17437,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17217,6 +17471,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17250,6 +17505,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -17282,6 +17538,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Mixer Architecture",
@@ -17452,6 +17709,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Amplifier Power",
@@ -17638,6 +17896,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Amplifier Power",
@@ -17819,6 +18078,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Amplifier Power",
@@ -17992,6 +18252,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Amplifier Power",
@@ -18167,6 +18428,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Amplifier Power",
@@ -18336,6 +18598,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -18368,6 +18631,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -18411,6 +18675,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Mixer Configuration",
@@ -18560,6 +18825,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Mixer Configuration",
@@ -18725,6 +18991,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Mixer Architecture",
@@ -18910,6 +19177,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Mixer Architecture",
@@ -19064,6 +19332,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Mixer Architecture",
@@ -19218,6 +19487,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -19250,6 +19520,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -19283,6 +19554,7 @@ Most preamp pedals give you one way to get sound out. Tidal Wave gives you three
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -19317,6 +19589,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -19351,6 +19624,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -19384,6 +19658,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -19416,6 +19691,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -19537,6 +19813,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -19674,6 +19951,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -19812,6 +20090,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -19946,6 +20225,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -20067,6 +20347,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -20211,6 +20492,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -20347,6 +20629,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -20474,6 +20757,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -20505,6 +20789,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -20537,6 +20822,7 @@ Country of Origin: China`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -20736,6 +21022,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -20769,6 +21056,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -20801,6 +21089,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -20947,6 +21236,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Classic end-address dynamic cardioid microphone custom-tailored for close-miked vocals and broadcast",
         "Hemisphere mic modeling plugin delivers authentic emulations of legendary dynamic studio microphones",
@@ -21055,6 +21345,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Compact dynamic cardioid instrument microphone optimized for snare, toms, percussion, and guitar cabs",
         "Hemisphere mic modeling technology emulates 5 legendary dynamic microphones (DN-57, DN-545, DN-604, DN-409U, DN-4)",
@@ -21150,6 +21441,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Value 3-pack bundle including 3\xD7 Universal Audio SD-3 dynamic modeling instrument microphones",
         "Engineered specifically for multi-mic snare, rack tom, floor tom, and stereo guitar cabinet setups",
@@ -21246,6 +21538,7 @@ Manufacturer Part Number:TNREVOLTG-US`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Specialized dynamic microphone tailored for kick drums, bass guitar cabinets, and low-end acoustic instruments",
         "Hemisphere modeling technology provides 5 iconic kick mic emulations (DN-12A, DN-112, DN-6, DN-52, DN-SUB)",
@@ -21364,6 +21657,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Professional hypercardioid dynamic instrument microphone tailored for toms, guitar cabs, brass & percussion",
         "Hemisphere mic modeling technology emulates 5 legendary dynamic and ribbon microphones (DN-421B, DN-421S, RB-160, DN-409N, DN-441)",
@@ -21463,6 +21757,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Emulation Type",
@@ -21600,6 +21895,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -21731,6 +22027,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Type",
@@ -21869,6 +22166,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Emulation Type",
@@ -21993,6 +22291,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Effect Architecture",
@@ -22120,6 +22419,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -22246,6 +22546,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -22380,6 +22681,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -22540,6 +22842,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -22667,6 +22970,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -22794,6 +23098,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "System Type",
@@ -22925,6 +23230,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -22957,6 +23263,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -22990,6 +23297,7 @@ Featuring rugged all-metal construction, a cool retro finish, an integrated angl
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Preamplifier Type",
@@ -23162,6 +23470,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -23194,6 +23503,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Preamplifier Type",
@@ -23360,6 +23670,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Channel Strip Architecture",
@@ -23567,6 +23878,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Connectivity",
@@ -23709,6 +24021,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Connectivity",
@@ -23891,6 +24204,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Connectivity",
@@ -24075,6 +24389,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Connectivity",
@@ -24210,6 +24525,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Generation",
@@ -24363,6 +24679,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Generation",
@@ -24522,6 +24839,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Connectivity",
@@ -24665,6 +24983,7 @@ The LA-610 Mk II\u2019s T4 tube compressor provides the same ultra-warm limiting
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         {
           "label": "Generation",
@@ -24848,6 +25167,7 @@ Handwired using premium components \u2014 including a dual-symmetrical K67 capsu
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Handmade at the UA Custom Shop in Santa Cruz, California by David Bock",
         "Dual-symmetrical K67 large-diaphragm capsule with Lundahl transformer",
@@ -24963,6 +25283,7 @@ Vintage U87 mics are known for their presence, but can get strident when pushed.
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Handmade at the UA Custom Shop in Santa Cruz, California by David Bock",
         '1" (25.4mm) dual-symmetrical backplate K67-type large diaphragm capsule',
@@ -25077,6 +25398,7 @@ Vintage U87 mics are known for their presence, but can get strident when pushed.
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Lovingly handmade at the UA Custom Shop in Santa Cruz, California by David Bock",
         "Recreation of the legendary ELA M 251 'golden unit' tube microphone",
@@ -25197,6 +25519,7 @@ Universal Audio\u2019s Teletronix LA-2A Classic Leveling Amplifier reissue provi
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -25230,6 +25553,7 @@ Universal Audio\u2019s Teletronix LA-2A Classic Leveling Amplifier reissue provi
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Large-diaphragm studio condenser microphone with ultra-linear circuit",
         "Includes Hemisphere mic modeling software for classic Neumann, AKG & Sony tones",
@@ -25349,6 +25673,7 @@ The UA SP-1 Microphone Pair includes everything you need for instant pro sound, 
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "Factory-matched small-diaphragm condenser pair for precision stereo recording",
         "Includes free Hemisphere mic modeling plug-in for classic AKG & Neumann emulations",
@@ -25445,6 +25770,7 @@ The UA SP-1 Microphone Pair includes everything you need for instant pro sound, 
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "38 legendary mic models including Neumann, Telefunken, AKG, Sony ribbon, condenser & dynamic emulations",
         'Dual gold-sputtered 1" diaphragm capsule with industry-leading 7 dBA self-noise',
@@ -25541,6 +25867,7 @@ The UA SP-1 Microphone Pair includes everything you need for instant pro sound, 
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [
         "20 legendary mic models including Neumann, Telefunken, AKG, Sony ribbon, condenser & dynamic emulations",
         "Dual gold-sputtered diaphragms with lowest noise floor in its class",
@@ -25639,6 +25966,7 @@ The UA SP-1 Microphone Pair includes everything you need for instant pro sound, 
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -25709,6 +26037,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -25738,6 +26067,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     },
@@ -25770,6 +26100,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "videoType": null,
       "videoUrl": null,
       "youtubeVideoId": null,
+      "youtubeVideos": [],
       "specs": [],
       "deepSpecs": []
     }
@@ -27218,8 +27549,10 @@ Weight: 1.24 lbs (0.567 kg`,
       this.localUserKey = AUDIOKING_CONFIG.userStorageKey || "audioking_user";
       this.listeners = /* @__PURE__ */ new Set();
       this.isLoggingIn = false;
-      this.currentUser = null;
-      this.status = this.getToken() ? "loading" : "unauthenticated";
+      const token = this.getToken();
+      const cachedUser = getStorage(this.localUserKey, null) || getStorage("audioKingUser", null);
+      this.currentUser = token && cachedUser ? cachedUser : null;
+      this.status = token ? "loading" : "unauthenticated";
       this._lastPrewarm = 0;
       this._effectiveBaseUrl = null;
       if (typeof window !== "undefined") {
@@ -28832,48 +29165,71 @@ Weight: 1.24 lbs (0.567 kg`,
       return getApiBaseUrl();
     }
     getAuthHeaders() {
-      const token = getStorage("audioKingSessionToken", null) || getStorage("audioking_token", null) || getStorage("audioKingToken", null);
-      return token ? { "Authorization": `Bearer ${token}` } : {};
+      const token = authService.getToken();
+      const user = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+      const headers = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+        headers["X-Session-Token"] = token;
+      }
+      if (user && user.email) {
+        headers["X-User-Email"] = user.email;
+      }
+      if (user && user.id) {
+        headers["X-User-Id"] = user.id;
+      }
+      return headers;
     }
     /**
      * Fetch all orders belonging to authenticated user
      */
     async getOrders() {
-      const user = authService.getUser();
-      const localKey = user ? `audioking_orders_${user.id}` : "audioking_guest_orders";
+      const user = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+      const localKey = user && user.id ? `audioking_orders_${user.id}` : user && user.email ? `audioking_orders_${user.email}` : "audioking_guest_orders";
       try {
         const baseUrl = this.getBaseUrl();
-        const res = await fetch(`${baseUrl}/api/user/orders`, {
+        const headers = {
+          "Accept": "application/json",
+          ...this.getAuthHeaders()
+        };
+        const queryParam = user && user.email ? `?email=${encodeURIComponent(user.email)}` : "";
+        const res = await fetch(`${baseUrl}/api/user/orders${queryParam}`, {
           method: "GET",
           credentials: "include",
-          headers: {
-            "Accept": "application/json",
-            ...this.getAuthHeaders()
-          }
+          headers
         });
         if (res.ok) {
           const data = await res.json();
           this.cachedOrders = data.orders || [];
           setStorage(localKey, this.cachedOrders);
+          setStorage("audioking_last_orders", this.cachedOrders);
           return this.cachedOrders;
         }
       } catch (err) {
         console.warn("[OrdersService] Server fetch unavailable, loading from local mirror:", err.message);
       }
-      this.cachedOrders = getStorage(localKey, []);
+      const cached = getStorage(localKey, null) || getStorage("audioking_last_orders", []);
+      this.cachedOrders = cached || [];
       return this.cachedOrders;
     }
     /**
      * Create and persist new order upon checkout completion
      */
     async createOrder(orderData) {
-      const user = authService.getUser();
-      const localKey = user ? `audioking_orders_${user.id}` : "audioking_guest_orders";
+      const user = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+      const userEmail = (user?.email || orderData.customer?.email || "").trim().toLowerCase();
+      const userId = user?.id || orderData.customer?.userId || "";
+      const localKey = user && user.id ? `audioking_orders_${user.id}` : userEmail ? `audioking_orders_${userEmail}` : "audioking_guest_orders";
+      const customerObj = {
+        ...orderData.customer || {},
+        email: userEmail,
+        userId
+      };
       const payload = {
-        orderNumber: orderData.orderId,
+        orderNumber: orderData.orderId || orderData.orderNumber,
         items: orderData.items || [],
-        customer: orderData.customer || {},
-        shippingAddress: orderData.customer || {},
+        customer: customerObj,
+        shippingAddress: customerObj,
         paymentMethod: orderData.paymentMethod || "Prepaid Online (UPI)",
         couponCode: orderData.couponCode || null
       };
@@ -28905,10 +29261,11 @@ Weight: 1.24 lbs (0.567 kg`,
         throw new Error("Order could not be saved to server database.");
       }
       const currentList = getStorage(localKey, []);
-      const exists = currentList.some((o) => o.id === serverSavedOrder.id);
+      const exists = currentList.some((o) => o.id === serverSavedOrder.id || o.orderNumber === serverSavedOrder.orderNumber);
       if (!exists) {
         currentList.unshift(serverSavedOrder);
         setStorage(localKey, currentList);
+        setStorage("audioking_last_orders", currentList);
       }
       this.cachedOrders = currentList;
       return serverSavedOrder;
@@ -29266,6 +29623,21 @@ Weight: 1.24 lbs (0.567 kg`,
       orders = await ordersService.getOrders();
     } catch (e) {
       orders = [];
+    }
+    if ((!orders || orders.length === 0) && authService.getStatus() === "loading") {
+      await new Promise((resolve) => {
+        const unsub = authService.subscribe((_u, st) => {
+          if (st !== "loading") {
+            unsub();
+            resolve();
+          }
+        });
+        setTimeout(resolve, 3e3);
+      });
+      try {
+        orders = await ordersService.getOrders();
+      } catch (_) {
+      }
     }
     if (!orders || orders.length === 0) {
       container.innerHTML = `
@@ -30333,16 +30705,22 @@ Weight: 1.24 lbs (0.567 kg`,
             paymentMethodLabel = "Prepaid UPI / Online";
           }
           const itemsTotal = checkoutItems && checkoutItems.length > 0 ? checkoutItems.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0) : getCartSubtotal();
+          const currentUser = authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
+          const userEmail = (currentUser?.email || "").trim().toLowerCase();
+          const userName = savedAddress?.name || currentUser?.fullName || currentUser?.displayName || "Demo Customer";
+          const userPhone = savedAddress?.phone || currentUser?.phone || currentUser?.phoneNumber || "+91 98765 43210";
+          const customerInfo = {
+            ...savedAddress || {},
+            name: userName,
+            fullName: userName,
+            email: userEmail,
+            phone: userPhone,
+            userId: currentUser?.id || ""
+          };
           const orderData = {
             items: [...checkoutItems],
-            customer: savedAddress || {
-              name: "Demo Customer",
-              phone: "+91 98765 43210",
-              line1: "123 Audio King Demo Address",
-              city: "Mumbai",
-              state: "Maharashtra",
-              pin: "400001"
-            },
+            customer: customerInfo,
+            shippingAddress: customerInfo,
             paymentMethod: paymentMethodLabel,
             couponCode: appliedCoupon ? appliedCoupon.code : null,
             discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0,

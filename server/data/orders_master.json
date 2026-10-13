@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-11T17:07:32.113Z",
-  "count": 9,
+  "updatedAt": "2026-10-13T02:01:08.985Z",
+  "count": 10,
   "orders": [
     {
       "id": "aad7050d-29ad-4fa7-8478-dd2a4394345a",
@@ -127,6 +127,20 @@
       "coupon_code": null,
       "discount_amount": 0,
       "gst_number": null
+    },
+    {
+      "id": "fab22d2e-2c9c-4efd-9ea4-2842766ec19d",
+      "user_id": "fbeaef3a-3e6a-423e-88ec-800d238d6f75",
+      "order_number": "AK-VERIFY-1791856868959",
+      "total_amount": 24500,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Yathaarth Audio\",\"email\":\"testuser@audioking.in\",\"phone\":\"9876543210\",\"line1\":\"123 MG Road, Audio King Tower\",\"city\":\"Bangalore\",\"state\":\"Karnataka\",\"pin\":\"560001\"}",
+      "payment_method": "Prepaid UPI / Online",
+      "created_at": "2026-10-13T02:01:08.963Z",
+      "updated_at": "2026-10-13T02:01:08.963Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
     }
   ],
   "orderItems": [
@@ -238,6 +252,17 @@
       "quantity": 1,
       "unit_price": 118075,
       "subtotal": 118075,
+      "gst_percent": 18
+    },
+    {
+      "id": "922d8636-e54a-46f8-b869-7a68b2fbf1c3",
+      "order_id": "fab22d2e-2c9c-4efd-9ea4-2842766ec19d",
+      "product_id": "donner-ded-70-electric-drum-set-quiet-electronic-drum-kit-for-beginner-with-mesh-pad-portable-drum-set-support-portable-charger-supply-drum-throne-sticks-headphone-muh98uzq",
+      "product_name": "Donner DED-70 Electric Drum Set, Quiet Electronic Drum Kit for Beginner with Mesh Pad, Portable Drum Set Support Portable Charger Supply, Drum Throne, Sticks Headphone",
+      "product_image": "uploads/products/1790358512322_a3d908ae349d.jpg",
+      "quantity": 1,
+      "unit_price": 24500,
+      "subtotal": 24500,
       "gst_percent": 18
     }
   ]

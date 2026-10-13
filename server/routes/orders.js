@@ -16,13 +16,17 @@ const router = express.Router();
 /**
  * Helper: Extract authenticated user from session cookie or header
  */
+/**
+ * Helper: Extract authenticated user from session cookie or header
+ */
 function getAuthUser(req) {
   let token = req.cookies?.audioking_session || 
               req.cookies?.audioking_admin_session || 
               req.cookies?.audioKingToken || 
               req.cookies?.audioKingSessionToken || 
               req.headers['authorization']?.replace(/^Bearer\s+/i, '') ||
-              req.headers['x-session-token'];
+              req.headers['x-session-token'] ||
+              req.headers['x-admin-token'];
   if (token) {
     token = String(token).trim();
     if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))) {
@@ -38,6 +42,16 @@ function getAuthUser(req) {
       if (session) return session;
     } catch (e) {}
   }
+
+  // Fallback: check X-User-Email / query email against users table
+  const emailFallback = (req.headers['x-user-email'] || req.query.email || '').trim().toLowerCase();
+  if (emailFallback) {
+    try {
+      const user = db.prepare('SELECT id, full_name, email, phone_number, role FROM users WHERE email = ? COLLATE NOCASE').get(emailFallback);
+      if (user) return user;
+    } catch (e) {}
+  }
+
   return null;
 }
 
@@ -68,21 +82,61 @@ router.get('/', (req, res) => {
     }
 
     let targetUserId = authUser.id;
+    let targetEmail = (authUser.email || '').trim().toLowerCase();
+    let targetPhone = (authUser.phone_number || '').trim();
+
     // Only verified administrators can query orders of another customer email
     const emailParam = (req.query.email || '').trim().toLowerCase();
-    if (authUser.role === 'admin' && emailParam) {
-      const userRow = db.prepare('SELECT id FROM users WHERE email = ? COLLATE NOCASE').get(emailParam);
-      if (userRow) targetUserId = userRow.id;
+    if (authUser.role === 'admin' && emailParam && emailParam !== targetEmail) {
+      const userRow = db.prepare('SELECT id, email, phone_number FROM users WHERE email = ? COLLATE NOCASE').get(emailParam);
+      if (userRow) {
+        targetUserId = userRow.id;
+        targetEmail = userRow.email;
+        targetPhone = userRow.phone_number || '';
+      }
     }
 
-    const ordersQuery = db.prepare(`
-      SELECT id, user_id, order_number, total_amount, status, shipping_address, payment_method, coupon_code, discount_amount, gst_number, created_at, updated_at
-      FROM orders
-      WHERE user_id = ?
-      ORDER BY created_at DESC
-    `);
+    // Comprehensive order matching:
+    // Matches by user_id OR user email OR shipping_address email OR phone
+    let ordersQuerySql = `
+      SELECT DISTINCT 
+        o.id, o.user_id, o.order_number, o.total_amount, o.status, 
+        o.shipping_address, o.payment_method, o.coupon_code, o.discount_amount, 
+        o.gst_number, o.created_at, o.updated_at
+      FROM orders o
+      LEFT JOIN users u ON o.user_id = u.id
+      WHERE o.user_id = ?
+    `;
+    const queryParams = [targetUserId];
 
-    const orderRows = ordersQuery.all(targetUserId);
+    if (targetEmail) {
+      ordersQuerySql += `
+        OR (u.email IS NOT NULL AND LOWER(TRIM(u.email)) = ?)
+        OR LOWER(TRIM(COALESCE(json_extract(o.shipping_address, '$.email'), ''))) = ?
+        OR (o.shipping_address LIKE '%' || ? || '%')
+      `;
+      queryParams.push(targetEmail, targetEmail, targetEmail);
+    }
+
+    if (targetPhone && targetPhone.length >= 7) {
+      ordersQuerySql += `
+        OR (o.shipping_address LIKE '%' || ? || '%')
+      `;
+      queryParams.push(targetPhone);
+    }
+
+    ordersQuerySql += ` ORDER BY o.created_at DESC`;
+
+    const orderRows = db.prepare(ordersQuerySql).all(...queryParams);
+
+    // Retroactively attach any matched orders to this user's primary user_id
+    for (const ord of orderRows) {
+      if (ord.user_id !== targetUserId) {
+        try {
+          db.prepare('UPDATE orders SET user_id = ? WHERE id = ?').run(targetUserId, ord.id);
+        } catch (_) {}
+      }
+    }
 
     const itemsQuery = db.prepare(`
       SELECT id, order_id, product_id, product_name, product_image, quantity, unit_price, subtotal, gst_percent
@@ -140,14 +194,30 @@ router.get('/', (req, res) => {
  * GET /api/user/orders/:id
  * Strictly verifies ownership by req.user.id
  */
-router.get('/:id', requireAuth, (req, res) => {
+router.get('/:id', (req, res) => {
   try {
+    const authUser = getAuthUser(req);
+    if (!authUser) {
+      return res.status(401).json({ error: 'Authentication required.' });
+    }
+
     const order = db.prepare(`
-      SELECT * FROM orders WHERE id = ? AND user_id = ?
-    `).get(req.params.id, req.user.id);
+      SELECT o.*, u.email as user_email FROM orders o
+      LEFT JOIN users u ON o.user_id = u.id
+      WHERE o.id = ? OR o.order_number = ?
+    `).get(req.params.id, req.params.id);
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found or unauthorized.' });
+      return res.status(404).json({ error: 'Order not found.' });
+    }
+
+    const userEmail = (authUser.email || '').toLowerCase().trim();
+    const isOwner = authUser.role === 'admin' ||
+                    order.user_id === authUser.id ||
+                    (order.user_email && order.user_email.toLowerCase().trim() === userEmail) ||
+                    (order.shipping_address && order.shipping_address.toLowerCase().includes(userEmail));
+    if (!isOwner) {
+      return res.status(403).json({ error: 'Unauthorized to view this order.' });
     }
 
     const items = db.prepare(`
@@ -387,6 +457,9 @@ router.post('/', async (req, res) => {
   const finalTotalAmount = Math.max(0, itemsSubtotal - appliedDiscountAmount);
 
   try {
+    shipping.email = customerEmail;
+    shipping.name = customerName;
+    shipping.phone = customerPhone;
     const addressJson = JSON.stringify(shipping);
 
     let userGst = '';

@@ -117,55 +117,36 @@ async function seedAdminAndCatalog() {
   if (prodCount < products.length) {
     console.log(`[SEED] Products count in DB (${prodCount}) is less than master catalog (${products.length}). Upserting all products...`);
     try {
-      const upsertProd = db.prepare(`
-        INSERT INTO products (
+      const insertProd = db.prepare(`
+        INSERT OR IGNORE INTO products (
           id, name, short_name, brand, category, subcategory,
           price, original_price, stock, in_stock, rating, review_count,
           badge, sku, description, image, images_json,
-          video_type, video_url, youtube_video_id,
+          video_type, video_url, youtube_video_id, youtube_videos_json,
           specs_json, deep_specs_json, is_featured,
           created_at, updated_at
         ) VALUES (
           ?, ?, ?, ?, ?, ?,
           ?, ?, ?, ?, ?, ?,
           ?, ?, ?, ?, ?,
-          ?, ?, ?,
+          ?, ?, ?, ?,
           ?, ?, ?,
           ?, ?
         )
-        ON CONFLICT(id) DO UPDATE SET
-          name = excluded.name,
-          short_name = excluded.short_name,
-          brand = excluded.brand,
-          category = excluded.category,
-          subcategory = excluded.subcategory,
-          price = excluded.price,
-          original_price = excluded.original_price,
-          stock = excluded.stock,
-          in_stock = excluded.in_stock,
-          rating = excluded.rating,
-          review_count = excluded.review_count,
-          badge = excluded.badge,
-          sku = excluded.sku,
-          description = excluded.description,
-          image = excluded.image,
-          images_json = excluded.images_json,
-          video_type = excluded.video_type,
-          video_url = excluded.video_url,
-          youtube_video_id = excluded.youtube_video_id,
-          specs_json = excluded.specs_json,
-          deep_specs_json = excluded.deep_specs_json,
-          is_featured = excluded.is_featured,
-          updated_at = excluded.updated_at
       `);
 
       for (const p of products) {
         const images = Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : []);
         const mainImage = p.image || (images[0] || 'assets/images/logo.jpg');
-        const videoType = p.youtubeVideoId ? 'youtube' : (p.videoFile ? 'upload' : null);
-        const videoUrl = p.youtubeVideoId ? `https://www.youtube.com/watch?v=${p.youtubeVideoId}` : (p.videoFile || null);
+        let ytVideos = Array.isArray(p.youtubeVideos) ? p.youtubeVideos : [];
+        if (!ytVideos.length && p.youtubeVideoId) {
+          ytVideos = [{ id: p.youtubeVideoId, url: `https://www.youtube.com/watch?v=${p.youtubeVideoId}` }];
+        }
+        const ytVideoId = p.youtubeVideoId || (ytVideos[0]?.id || null);
+        const videoType = (ytVideoId || ytVideos.length > 0) ? 'youtube' : (p.videoFile ? 'upload' : null);
+        const videoUrl = ytVideoId ? `https://www.youtube.com/watch?v=${ytVideoId}` : (p.videoFile || null);
 
-        upsertProd.run(
+        insertProd.run(
           p.id,
           p.name,
           p.shortName || p.name,
@@ -185,7 +166,8 @@ async function seedAdminAndCatalog() {
           JSON.stringify(images),
           videoType,
           videoUrl,
-          p.youtubeVideoId || null,
+          ytVideoId,
+          JSON.stringify(ytVideos),
           JSON.stringify(p.specs || []),
           JSON.stringify(p.deepSpecs || []),
           p.isFeatured ? 1 : 0,

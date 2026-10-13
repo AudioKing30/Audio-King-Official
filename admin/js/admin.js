@@ -1984,11 +1984,21 @@ async function handleSaveProduct(e) {
     if (v0.sellingPrice != null && v0.sellingPrice > 0) finalSellingPrice = Number(v0.sellingPrice);
   }
 
-  const validYouTubeVideos = (state.formYouTubeVideos || [])
+  // Gather YouTube videos directly from DOM inputs to ensure latest typed values are captured
+  const domYtInputs = Array.from(document.querySelectorAll('#productYouTubeInputsList input.form-input'))
+    .map(inp => inp.value ? inp.value.trim() : '')
+    .filter(Boolean);
+  const stateYtInputs = (state.formYouTubeVideos || [])
     .map(v => typeof v === 'string' ? v.trim() : '')
     .filter(Boolean);
+  const validYouTubeVideos = domYtInputs.length > 0 ? domYtInputs : stateYtInputs;
 
-  const videoInput = state.formVideoChoice === 'youtube'
+  let finalVideoChoice = state.formVideoChoice;
+  if (validYouTubeVideos.length > 0 && finalVideoChoice !== 'upload') {
+    finalVideoChoice = 'youtube';
+  }
+
+  const videoInput = finalVideoChoice === 'youtube'
     ? (validYouTubeVideos[0] || '')
     : rawVideoInput;
 
@@ -2006,7 +2016,7 @@ async function handleSaveProduct(e) {
     description,
     gstPercent: parseFloat(document.getElementById('productGstPercent')?.value) || 18.0,
     images: state.formImages.length > 0 ? state.formImages : ['assets/images/placeholder.svg'],
-    videoChoice: state.formVideoChoice,
+    videoChoice: finalVideoChoice,
     videoInput,
     youtubeVideos: validYouTubeVideos
   };

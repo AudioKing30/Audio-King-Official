@@ -64,7 +64,14 @@ function syncMasterFiles(oldBrandName, newBrandName) {
         videoUrl: p.video_url || null,
         youtubeVideoId: p.youtube_video_id || null,
         youtubeVideos: (() => {
-          try { return JSON.parse(p.youtube_videos_json || '[]'); } catch (e) { return []; }
+          try {
+            const list = JSON.parse(p.youtube_videos_json || '[]');
+            if (Array.isArray(list) && list.length > 0) return list;
+            if (p.youtube_video_id) return [{ id: p.youtube_video_id, url: p.video_url || `https://www.youtube.com/watch?v=${p.youtube_video_id}` }];
+            return [];
+          } catch (e) {
+            return p.youtube_video_id ? [{ id: p.youtube_video_id, url: p.video_url || `https://www.youtube.com/watch?v=${p.youtube_video_id}` }] : [];
+          }
         })(),
         specs: specs,
         deepSpecs: deepSpecs
@@ -1078,8 +1085,9 @@ router.put('/products/:id', (req, res) => {
     let youtubeVideoId = existing.youtube_video_id;
     let youtubeVideosJson = existing.youtube_videos_json || '[]';
 
+    let parsedList = [];
     if (body.youtubeVideos !== undefined && Array.isArray(body.youtubeVideos)) {
-      const parsedList = body.youtubeVideos
+      parsedList = body.youtubeVideos
         .map(v => typeof v === 'string' ? v.trim() : (v?.url || ''))
         .filter(Boolean)
         .map(url => {
@@ -1095,20 +1103,29 @@ router.put('/products/:id', (req, res) => {
       }
     }
 
-    if (body.videoChoice !== undefined) {
-      if (body.videoChoice === 'youtube') {
-        videoType = 'youtube';
-        youtubeVideoId = parseYouTubeId(body.videoInput || '');
-        videoUrl = `https://www.youtube.com/watch?v=${youtubeVideoId || body.videoInput}`;
-      } else if (body.videoChoice === 'upload') {
-        videoType = 'upload';
-        videoUrl = body.videoInput || null;
-        youtubeVideoId = null;
-      } else if (body.videoChoice === 'none') {
-        videoType = null;
-        videoUrl = null;
-        youtubeVideoId = null;
-        youtubeVideosJson = '[]';
+    if (body.videoChoice === 'upload') {
+      videoType = 'upload';
+      videoUrl = body.videoInput || null;
+      youtubeVideoId = null;
+      youtubeVideosJson = '[]';
+    } else if (body.videoChoice === 'none' && parsedList.length === 0) {
+      videoType = null;
+      videoUrl = null;
+      youtubeVideoId = null;
+      youtubeVideosJson = '[]';
+    } else if (body.videoChoice === 'youtube' || parsedList.length > 0) {
+      videoType = 'youtube';
+      const parsedFromInput = parseYouTubeId(body.videoInput || '');
+      if (parsedFromInput) {
+        youtubeVideoId = parsedFromInput;
+        videoUrl = `https://www.youtube.com/watch?v=${parsedFromInput}`;
+        if (!parsedList.some(v => v.id === parsedFromInput)) {
+          parsedList.unshift({ id: parsedFromInput, url: videoUrl });
+          youtubeVideosJson = JSON.stringify(parsedList);
+        }
+      } else if (parsedList.length > 0) {
+        youtubeVideoId = parsedList[0].id;
+        videoUrl = parsedList[0].url;
       }
     }
 

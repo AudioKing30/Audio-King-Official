@@ -442,6 +442,22 @@ export async function renderOrdersList() {
     orders = [];
   }
 
+  // If initial load returned empty but auth session is still resolving, wait and re-fetch
+  if ((!orders || orders.length === 0) && authService.getStatus() === 'loading') {
+    await new Promise(resolve => {
+      const unsub = authService.subscribe((_u, st) => {
+        if (st !== 'loading') {
+          unsub();
+          resolve();
+        }
+      });
+      setTimeout(resolve, 3000);
+    });
+    try {
+      orders = await ordersService.getOrders();
+    } catch (_) {}
+  }
+
   if (!orders || orders.length === 0) {
     container.innerHTML = `
       <div class="ak-orders-empty-state">

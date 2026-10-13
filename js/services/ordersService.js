@@ -23,34 +23,47 @@ class OrdersService {
   }
 
   getAuthHeaders() {
-    const token = getStorage('audioKingSessionToken', null) || 
-                  getStorage('audioking_token', null) || 
-                  getStorage('audioKingToken', null);
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
+    const token = authService.getToken();
+    const user = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+    const headers = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+      headers['X-Session-Token'] = token;
+    }
+    if (user && user.email) {
+      headers['X-User-Email'] = user.email;
+    }
+    if (user && user.id) {
+      headers['X-User-Id'] = user.id;
+    }
+    return headers;
   }
 
   /**
    * Fetch all orders belonging to authenticated user
    */
   async getOrders() {
-    const user = authService.getUser();
-    const localKey = user ? `audioking_orders_${user.id}` : 'audioking_guest_orders';
+    const user = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+    const localKey = user && user.id ? `audioking_orders_${user.id}` : (user && user.email ? `audioking_orders_${user.email}` : 'audioking_guest_orders');
 
     try {
       const baseUrl = this.getBaseUrl();
-      const res = await fetch(`${baseUrl}/api/user/orders`, {
+      const headers = {
+        'Accept': 'application/json',
+        ...this.getAuthHeaders()
+      };
+      const queryParam = user && user.email ? `?email=${encodeURIComponent(user.email)}` : '';
+      const res = await fetch(`${baseUrl}/api/user/orders${queryParam}`, {
         method: 'GET',
         credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          ...this.getAuthHeaders()
-        }
+        headers
       });
 
       if (res.ok) {
         const data = await res.json();
         this.cachedOrders = data.orders || [];
         setStorage(localKey, this.cachedOrders);
+        setStorage('audioking_last_orders', this.cachedOrders);
         return this.cachedOrders;
       }
     } catch (err) {
@@ -58,7 +71,8 @@ class OrdersService {
     }
 
     // Fallback to local storage mirror
-    this.cachedOrders = getStorage(localKey, []);
+    const cached = getStorage(localKey, null) || getStorage('audioking_last_orders', []);
+    this.cachedOrders = cached || [];
     return this.cachedOrders;
   }
 
@@ -66,14 +80,22 @@ class OrdersService {
    * Create and persist new order upon checkout completion
    */
   async createOrder(orderData) {
-    const user = authService.getUser();
-    const localKey = user ? `audioking_orders_${user.id}` : 'audioking_guest_orders';
+    const user = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+    const userEmail = (user?.email || orderData.customer?.email || '').trim().toLowerCase();
+    const userId = user?.id || orderData.customer?.userId || '';
+    const localKey = user && user.id ? `audioking_orders_${user.id}` : (userEmail ? `audioking_orders_${userEmail}` : 'audioking_guest_orders');
+
+    const customerObj = {
+      ...(orderData.customer || {}),
+      email: userEmail,
+      userId: userId
+    };
 
     const payload = {
-      orderNumber: orderData.orderId,
+      orderNumber: orderData.orderId || orderData.orderNumber,
       items: orderData.items || [],
-      customer: orderData.customer || {},
-      shippingAddress: orderData.customer || {},
+      customer: customerObj,
+      shippingAddress: customerObj,
       paymentMethod: orderData.paymentMethod || 'Prepaid Online (UPI)',
       couponCode: orderData.couponCode || null
     };
@@ -110,10 +132,11 @@ class OrdersService {
     }
 
     const currentList = getStorage(localKey, []);
-    const exists = currentList.some(o => o.id === serverSavedOrder.id);
+    const exists = currentList.some(o => o.id === serverSavedOrder.id || o.orderNumber === serverSavedOrder.orderNumber);
     if (!exists) {
       currentList.unshift(serverSavedOrder);
       setStorage(localKey, currentList);
+      setStorage('audioking_last_orders', currentList);
     }
     this.cachedOrders = currentList;
 

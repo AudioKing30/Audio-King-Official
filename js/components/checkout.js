@@ -610,16 +610,24 @@ export function initCheckout() {
           ? checkoutItems.reduce((sum, it) => sum + ((Number(it.price) || 0) * (it.quantity || it.qty || 1)), 0)
           : getCartSubtotal();
 
+        const currentUser = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
+        const userEmail = (currentUser?.email || '').trim().toLowerCase();
+        const userName = savedAddress?.name || currentUser?.fullName || currentUser?.displayName || 'Demo Customer';
+        const userPhone = savedAddress?.phone || currentUser?.phone || currentUser?.phoneNumber || '+91 98765 43210';
+
+        const customerInfo = {
+          ...(savedAddress || {}),
+          name: userName,
+          fullName: userName,
+          email: userEmail,
+          phone: userPhone,
+          userId: currentUser?.id || ''
+        };
+
         const orderData = {
           items: [...checkoutItems],
-          customer: savedAddress || {
-            name: 'Demo Customer',
-            phone: '+91 98765 43210',
-            line1: '123 Audio King Demo Address',
-            city: 'Mumbai',
-            state: 'Maharashtra',
-            pin: '400001'
-          },
+          customer: customerInfo,
+          shippingAddress: customerInfo,
           paymentMethod: paymentMethodLabel,
           couponCode: appliedCoupon ? appliedCoupon.code : null,
           discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0,
