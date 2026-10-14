@@ -1,106 +1,106 @@
 {
-  "updatedAt": "2026-10-14T09:00:00.000Z",
+  "updatedAt": "2026-10-14T12:10:31.823Z",
   "count": 10,
   "categories": [
     {
       "id": "pop-cat-1",
       "category_name": "Audio Interfaces",
-      "display_name": "Audio Interfaces",
       "image_url": "assets/images/categories/cat-audio-interfaces-nobg.png",
-      "size_class": "ak-cat-img-lg ak-cat-boost-16",
       "sort_order": 1,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.014Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Audio Interfaces",
+      "size_class": "ak-cat-img-lg ak-cat-boost-16"
     },
     {
       "id": "pop-cat-2",
       "category_name": "Condenser Microphones",
-      "display_name": "Condenser Microphones",
       "image_url": "assets/images/categories/cat-condenser-mics-nobg.png",
-      "size_class": "",
       "sort_order": 2,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Condenser Microphones",
+      "size_class": null
     },
     {
       "id": "pop-cat-3",
       "category_name": "DJ Consoles",
-      "display_name": "DJ Consoles",
       "image_url": "assets/images/categories/cat-dj-consoles-nobg.png",
-      "size_class": "ak-cat-img-lg",
       "sort_order": 3,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "DJ Consoles",
+      "size_class": "ak-cat-img-lg"
     },
     {
       "id": "pop-cat-4",
       "category_name": "Electronic Drums",
-      "display_name": "Electronic Drums",
       "image_url": "assets/images/categories/cat-electronic-drums-nobg.png",
-      "size_class": "",
       "sort_order": 4,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Electronic Drums",
+      "size_class": null
     },
     {
       "id": "pop-cat-5",
       "category_name": "Headphones",
-      "display_name": "Headphones",
       "image_url": "assets/images/categories/cat-headphones-nobg.png",
-      "size_class": "",
       "sort_order": 5,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Headphones",
+      "size_class": null
     },
     {
       "id": "pop-cat-6",
       "category_name": "MIDI Controllers",
-      "display_name": "MIDI Controllers",
       "image_url": "assets/images/categories/cat-midi-controllers-nobg.png",
-      "size_class": "ak-cat-img-lg ak-cat-boost-16",
       "sort_order": 6,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "MIDI Controllers",
+      "size_class": "ak-cat-img-lg ak-cat-boost-16"
     },
     {
       "id": "pop-cat-7",
       "category_name": "Audio Mixers",
-      "display_name": "Audio Mixers",
       "image_url": "assets/images/categories/cat-audio-mixers-nobg.png",
-      "size_class": "",
       "sort_order": 7,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Audio Mixers",
+      "size_class": null
     },
     {
       "id": "pop-cat-8",
       "category_name": "Studio Monitors",
-      "display_name": "Monitor Speakers",
       "image_url": "assets/images/categories/cat-monitor-speakers-nobg.png",
-      "size_class": "",
       "sort_order": 8,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Monitor Speakers",
+      "size_class": null
     },
     {
       "id": "pop-cat-9",
       "category_name": "Preamps & Channel Strips",
-      "display_name": "Pre Amps",
       "image_url": "assets/images/categories/cat-pre-amps-nobg.png",
-      "size_class": "ak-cat-img-lg ak-cat-boost-16",
       "sort_order": 9,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Pre Amps",
+      "size_class": "ak-cat-img-lg ak-cat-boost-16"
     },
     {
       "id": "pop-cat-10",
       "category_name": "Keyboards",
-      "display_name": "Synthesizers",
       "image_url": "assets/images/categories/cat-synthesizers-nobg.png",
-      "size_class": "ak-cat-img-lg ak-cat-boost-16",
       "sort_order": 10,
-      "created_at": "2026-10-14T09:00:00.000Z",
-      "updated_at": "2026-10-14T09:00:00.000Z"
+      "created_at": "2026-10-10T18:35:28.021Z",
+      "updated_at": "2026-10-14T09:00:00.000Z",
+      "display_name": "Synthesizers",
+      "size_class": "ak-cat-img-lg ak-cat-boost-16"
     }
   ]
 }

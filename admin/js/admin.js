@@ -4840,6 +4840,19 @@ function populatePopularCategoryDropdowns() {
   }
 }
 
+const FALLBACK_10_POPULAR_CATEGORIES = [
+  { id: 'pop-cat-1', category_name: 'Audio Interfaces', display_name: 'Audio Interfaces', image_url: 'assets/images/categories/cat-audio-interfaces-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 1 },
+  { id: 'pop-cat-2', category_name: 'Condenser Microphones', display_name: 'Condenser Microphones', image_url: 'assets/images/categories/cat-condenser-mics-nobg.png', size_class: '', sort_order: 2 },
+  { id: 'pop-cat-3', category_name: 'DJ Consoles', display_name: 'DJ Consoles', image_url: 'assets/images/categories/cat-dj-consoles-nobg.png', size_class: 'ak-cat-img-lg', sort_order: 3 },
+  { id: 'pop-cat-4', category_name: 'Electronic Drums', display_name: 'Electronic Drums', image_url: 'assets/images/categories/cat-electronic-drums-nobg.png', size_class: '', sort_order: 4 },
+  { id: 'pop-cat-5', category_name: 'Headphones', display_name: 'Headphones', image_url: 'assets/images/categories/cat-headphones-nobg.png', size_class: '', sort_order: 5 },
+  { id: 'pop-cat-6', category_name: 'MIDI Controllers', display_name: 'MIDI Controllers', image_url: 'assets/images/categories/cat-midi-controllers-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 6 },
+  { id: 'pop-cat-7', category_name: 'Audio Mixers', display_name: 'Audio Mixers', image_url: 'assets/images/categories/cat-audio-mixers-nobg.png', size_class: '', sort_order: 7 },
+  { id: 'pop-cat-8', category_name: 'Studio Monitors', display_name: 'Monitor Speakers', image_url: 'assets/images/categories/cat-monitor-speakers-nobg.png', size_class: '', sort_order: 8 },
+  { id: 'pop-cat-9', category_name: 'Preamps & Channel Strips', display_name: 'Pre Amps', image_url: 'assets/images/categories/cat-pre-amps-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 9 },
+  { id: 'pop-cat-10', category_name: 'Keyboards', display_name: 'Synthesizers', image_url: 'assets/images/categories/cat-synthesizers-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 10 }
+];
+
 async function loadPopularCategoriesManager() {
   populatePopularCategoryDropdowns();
 
@@ -4847,10 +4860,23 @@ async function loadPopularCategoriesManager() {
     const res = await adminFetch('/api/admin/popular-categories');
     if (res.ok) {
       const data = await res.json();
-      state.popularCategories = data.popularCategories || [];
+      let list = data.popularCategories || [];
+      if (!list.length) {
+        list = [...FALLBACK_10_POPULAR_CATEGORIES];
+      } else if (list.length < 10) {
+        for (let i = list.length; i < 10; i++) {
+          list.push(FALLBACK_10_POPULAR_CATEGORIES[i]);
+        }
+      }
+      state.popularCategories = list.slice(0, 10);
+    } else {
+      state.popularCategories = [...FALLBACK_10_POPULAR_CATEGORIES];
     }
   } catch (e) {
     console.warn('Could not load popular categories:', e);
+    if (!state.popularCategories || !state.popularCategories.length) {
+      state.popularCategories = [...FALLBACK_10_POPULAR_CATEGORIES];
+    }
   }
 
   renderPopularCategoriesAdmin();
@@ -4885,11 +4911,12 @@ function renderPopularCategoriesAdmin() {
   const countBadge = document.getElementById('popularCategoriesCountBadge');
   if (!container) return;
 
-  const cats = state.popularCategories || [];
-  if (countBadge) countBadge.textContent = `${cats.length} Categories`;
+  // Enforce exactly 10 slots
+  let cats = (state.popularCategories || []).slice(0, 10);
+  if (countBadge) countBadge.textContent = `${cats.length} Slots (Fixed Grid)`;
 
   if (!cats.length) {
-    container.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--ak-text-muted);">No popular categories configured. Select an available catalog category above to add.</div>';
+    container.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--ak-text-muted);">Loading 10 popular categories...</div>';
     return;
   }
 
@@ -4903,39 +4930,29 @@ function renderPopularCategoriesAdmin() {
         const targetCategory = cat.category_name;
         const sizeClass = cat.size_class || '';
 
-        let scaleBadgeText = '100% Scale';
-        let scaleBadgeBg = '#F1F5F9';
-        let scaleBadgeColor = '#475569';
-        if (sizeClass.includes('boost')) {
-          scaleBadgeText = '160% Boosted';
-          scaleBadgeBg = '#FEF3C7';
-          scaleBadgeColor = '#B45309';
-        } else if (sizeClass.includes('lg')) {
-          scaleBadgeText = '115% Large';
-          scaleBadgeBg = '#E0F2FE';
-          scaleBadgeColor = '#0369A1';
-        }
-
         return `
           <div class="locked-product-item" style="background: #FFFFFF; border: 1px solid var(--ak-border); padding: 12px 14px; border-radius: var(--ak-radius); display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
             <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
+              <!-- Slot Sequence Controls -->
               <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0;">
-                <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1.2;" ${isFirst ? 'disabled' : ''} onclick="movePopularCategory(${idx}, -1)" title="Move up">▲</button>
+                <button type="button" class="btn-secondary" style="padding: 2px 7px; font-size: 11px; line-height: 1.2; font-weight: 800;" ${isFirst ? 'disabled' : ''} onclick="movePopularCategory(${idx}, -1)" title="Move up to slot #${idx}">▲</button>
                 <div style="display: flex; align-items: center; gap: 2px;">
-                  <span style="font-size: 11px; font-weight: 700; color: #475569;">#</span>
-                  <input type="number" min="1" max="${cats.length}" value="${idx + 1}" onchange="setPopularCategoryPosition(${idx}, this.value)" style="width: 38px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;">
+                  <span style="font-size: 11px; font-weight: 800; color: #1E40AF;">#</span>
+                  <input type="number" min="1" max="10" value="${idx + 1}" onchange="setPopularCategoryPosition(${idx}, this.value)" style="width: 38px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;" title="Jump to slot position (1-10)">
                 </div>
-                <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1.2;" ${isLast ? 'disabled' : ''} onclick="movePopularCategory(${idx}, 1)" title="Move down">▼</button>
+                <button type="button" class="btn-secondary" style="padding: 2px 7px; font-size: 11px; line-height: 1.2; font-weight: 800;" ${isLast ? 'disabled' : ''} onclick="movePopularCategory(${idx}, 1)" title="Move down to slot #${idx + 2}">▼</button>
               </div>
 
-              <div style="width: 54px; height: 54px; border-radius: 8px; border: 1px solid var(--ak-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+              <!-- Thumbnail Preview -->
+              <div style="width: 54px; height: 54px; border-radius: 8px; border: 1px solid var(--ak-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; padding: 4px;">
                 <img src="${thumb}" alt="${escapeHtml(displayName)}" style="max-width: 46px; max-height: 46px; object-fit: contain;" onerror="this.src='assets/images/placeholder.svg'">
               </div>
 
+              <!-- Category Details & Redirect Target -->
               <div class="locked-product-info" style="flex: 1; min-width: 180px;">
                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px;">
+                  <span style="font-size: 11px; font-weight: 800; background: #EEF2F6; color: #1E293B; padding: 2px 7px; border-radius: 4px; border: 1px solid #CBD5E1;">Slot #${idx + 1}</span>
                   <h4 style="font-size: 14.5px; font-weight: 700; color: #0F172A; margin: 0;">${escapeHtml(displayName)}</h4>
-                  <span style="font-size: 11px; font-weight: 700; background: ${scaleBadgeBg}; color: ${scaleBadgeColor}; padding: 1px 7px; border-radius: 4px;">${scaleBadgeText}</span>
                 </div>
                 <div style="font-size: 12px; color: #475569; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                   <span>Redirects to: <strong style="color: var(--ak-orange, #EA580C); font-weight: 700;">${escapeHtml(targetCategory)}</strong></span>
@@ -4945,12 +4962,10 @@ function renderPopularCategoriesAdmin() {
               </div>
             </div>
 
+            <!-- Action: Edit Only (Delete disabled to protect UI grid) -->
             <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-              <button type="button" class="btn-secondary" style="padding: 6px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px;" onclick="openEditPopularCategoryModal(${idx})">
+              <button type="button" class="btn-primary" style="padding: 7px 16px; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; background: #2563EB;" onclick="openEditPopularCategoryModal(${idx})">
                 <span>✏️ Edit</span>
-              </button>
-              <button type="button" class="btn-danger" style="padding: 6px 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px;" onclick="deletePopularCategory(${idx})">
-                <span>🗑️ Remove</span>
               </button>
             </div>
           </div>
@@ -4976,12 +4991,12 @@ function openEditPopularCategoryModal(idx) {
   const titleElem = document.getElementById('popCatModalTitle');
 
   if (indexInput) indexInput.value = idx;
-  if (idInput) idInput.value = cat.id || '';
+  if (idInput) idInput.value = cat.id || `pop-cat-${idx + 1}`;
   if (catSelect) catSelect.value = cat.category_name;
   if (nameInput) nameInput.value = cat.display_name || cat.displayName || cat.category_name;
   if (imgInput) imgInput.value = cat.image_url || '';
   if (sizeSelect) sizeSelect.value = cat.size_class || '';
-  if (titleElem) titleElem.textContent = `Edit Popular Category: ${cat.display_name || cat.category_name}`;
+  if (titleElem) titleElem.textContent = `Edit Popular Category (Slot #${idx + 1}): ${cat.display_name || cat.category_name}`;
 
   updatePopCatModalImagePreview();
 
@@ -4994,26 +5009,59 @@ function closePopularCategoryModal() {
 }
 window.closePopularCategoryModal = closePopularCategoryModal;
 
+// Known transparent category images lookup
+const DEFAULT_CATEGORY_IMAGES_MAP = {
+  'audio interfaces': 'assets/images/categories/cat-audio-interfaces-nobg.png',
+  'condenser microphones': 'assets/images/categories/cat-condenser-mics-nobg.png',
+  'dj consoles': 'assets/images/categories/cat-dj-consoles-nobg.png',
+  'electronic drums': 'assets/images/categories/cat-electronic-drums-nobg.png',
+  'headphones': 'assets/images/categories/cat-headphones-nobg.png',
+  'midi controllers': 'assets/images/categories/cat-midi-controllers-nobg.png',
+  'audio mixers': 'assets/images/categories/cat-audio-mixers-nobg.png',
+  'studio monitors': 'assets/images/categories/cat-monitor-speakers-nobg.png',
+  'monitor speakers': 'assets/images/categories/cat-monitor-speakers-nobg.png',
+  'preamps & channel strips': 'assets/images/categories/cat-pre-amps-nobg.png',
+  'pre amps': 'assets/images/categories/cat-pre-amps-nobg.png',
+  'keyboards': 'assets/images/categories/cat-synthesizers-nobg.png',
+  'synthesizers': 'assets/images/categories/cat-synthesizers-nobg.png'
+};
+
 function handlePopCatModalCategoryChange() {
   const catSelect = document.getElementById('popCatModalCategory');
   const nameInput = document.getElementById('popCatModalDisplayName');
+  const imgInput = document.getElementById('popCatModalImageUrl');
   const sizeSelect = document.getElementById('popCatModalSizeClass');
+  const titleElem = document.getElementById('popCatModalTitle');
+  const indexInput = document.getElementById('popCatModalIndex');
   if (!catSelect) return;
 
   const chosenCat = (catSelect.value || '').trim();
-  if (chosenCat && nameInput && !nameInput.value.trim()) {
-    nameInput.value = chosenCat;
+  if (!chosenCat) return;
+
+  if (nameInput) nameInput.value = chosenCat;
+  const idx = parseInt(indexInput?.value ?? '0', 10);
+  if (titleElem) titleElem.textContent = `Edit Popular Category (Slot #${idx + 1}): ${chosenCat}`;
+
+  // If current image is empty or a placeholder, auto-populate with matching transparent image if known
+  const norm = chosenCat.toLowerCase();
+  if (imgInput && (!imgInput.value || imgInput.value.includes('placeholder.svg'))) {
+    if (DEFAULT_CATEGORY_IMAGES_MAP[norm]) {
+      imgInput.value = DEFAULT_CATEGORY_IMAGES_MAP[norm];
+    }
   }
 
-  // Auto-suggest scale boost if default
-  if (chosenCat && sizeSelect && !sizeSelect.value) {
-    const norm = chosenCat.toLowerCase();
+  // Auto-set size class
+  if (sizeSelect) {
     if (norm.includes('interface') || norm.includes('midi') || norm.includes('pre amp') || norm.includes('preamp') || norm.includes('synth') || norm.includes('keyboard')) {
       sizeSelect.value = 'ak-cat-img-lg ak-cat-boost-16';
     } else if (norm.includes('dj')) {
       sizeSelect.value = 'ak-cat-img-lg';
+    } else {
+      sizeSelect.value = '';
     }
   }
+
+  updatePopCatModalImagePreview();
 }
 window.handlePopCatModalCategoryChange = handlePopCatModalCategoryChange;
 
@@ -5068,11 +5116,21 @@ async function handlePopularCategoryModalSubmit(e) {
   const catName = (catSelect?.value || '').trim();
   const displayName = (nameInput?.value || '').trim() || catName;
   const imageUrl = (imgInput?.value || '').trim() || 'assets/images/placeholder.svg';
-  const sizeClass = (sizeSelect?.value || '').trim();
+  let sizeClass = (sizeSelect?.value || '').trim();
 
   if (!catName) {
-    alert('Please choose an available catalog category from the dropdown.');
+    alert('Please choose a catalog category from the dropdown.');
     return;
+  }
+
+  // Defensively auto-compute sizeClass if not set
+  if (!sizeClass) {
+    const norm = catName.toLowerCase();
+    if (norm.includes('interface') || norm.includes('midi') || norm.includes('pre amp') || norm.includes('preamp') || norm.includes('synth') || norm.includes('keyboard')) {
+      sizeClass = 'ak-cat-img-lg ak-cat-boost-16';
+    } else if (norm.includes('dj')) {
+      sizeClass = 'ak-cat-img-lg';
+    }
   }
 
   if (saveBtn) saveBtn.disabled = true;
@@ -5088,20 +5146,10 @@ async function handlePopularCategoryModalSubmit(e) {
         size_class: sizeClass,
         updated_at: new Date().toISOString()
       };
-    } else {
-      list.push({
-        id: `pop-cat-${Date.now()}`,
-        category_name: catName,
-        display_name: displayName,
-        image_url: imageUrl,
-        size_class: sizeClass,
-        sort_order: list.length + 1,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      });
     }
 
-    state.popularCategories = list;
+    state.popularCategories = list.slice(0, 10);
+    renderPopularCategoriesAdmin();
     await savePopularCategoriesToServer();
     closePopularCategoryModal();
   } catch (err) {
@@ -5112,80 +5160,14 @@ async function handlePopularCategoryModalSubmit(e) {
 }
 window.handlePopularCategoryModalSubmit = handlePopularCategoryModalSubmit;
 
-async function handleAddPopularCategory() {
-  const select = document.getElementById('adminPopularCategorySelect');
-  const nameInput = document.getElementById('adminPopularCategoryDisplayName');
-  const imgInput = document.getElementById('adminPopularCategoryImage');
-  const sizeSelect = document.getElementById('adminPopularCategorySizeClass');
-
-  const catName = (select?.value || '').trim();
-  const displayName = (nameInput?.value || '').trim() || catName;
-  const imgUrl = (imgInput?.value || '').trim() || 'assets/images/placeholder.svg';
-  const sizeCls = (sizeSelect?.value || '').trim();
-
-  if (!catName) {
-    alert('Please select an available catalog category from the dropdown.');
-    return;
-  }
-
-  const existing = (state.popularCategories || []).find(c => (c.category_name || '').toLowerCase() === catName.toLowerCase());
-  if (existing) {
-    alert(`Category "${catName}" is already in the popular categories list. Click "Edit" on its card to modify it.`);
-    return;
-  }
-
-  state.popularCategories = state.popularCategories || [];
-  state.popularCategories.push({
-    id: `pop-cat-${Date.now()}`,
-    category_name: catName,
-    display_name: displayName,
-    image_url: imgUrl,
-    size_class: sizeCls,
-    sort_order: state.popularCategories.length + 1
-  });
-
-  if (imgInput) imgInput.value = '';
-  if (nameInput) nameInput.value = '';
-  if (select) select.value = '';
-  if (sizeSelect) sizeSelect.value = '';
-
-  await savePopularCategoriesToServer();
-}
-window.handleAddPopularCategory = handleAddPopularCategory;
-
-async function handlePopularCategoryImageUpload(e) {
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append('image', file);
-
-  try {
-    const res = await adminFetch('/api/admin/upload-image', {
-      method: 'POST',
-      body: formData
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.url) {
-        document.getElementById('adminPopularCategoryImage').value = data.url;
-      }
-    } else {
-      alert('Failed to upload category image.');
-    }
-  } catch (err) {
-    alert('Network error while uploading category image.');
-  }
-}
-window.handlePopularCategoryImageUpload = handlePopularCategoryImageUpload;
-
 async function movePopularCategory(idx, delta) {
   const list = [...(state.popularCategories || [])];
   const target = idx + delta;
   if (target < 0 || target >= list.length) return;
   [list[idx], list[target]] = [list[target], list[idx]];
   list.forEach((c, i) => c.sort_order = i + 1);
-  state.popularCategories = list;
+  state.popularCategories = list.slice(0, 10);
+  renderPopularCategoriesAdmin();
   await savePopularCategoriesToServer();
 }
 window.movePopularCategory = movePopularCategory;
@@ -5201,30 +5183,19 @@ async function setPopularCategoryPosition(idx, newPos) {
   const [item] = list.splice(idx, 1);
   list.splice(target, 0, item);
   list.forEach((c, i) => c.sort_order = i + 1);
-  state.popularCategories = list;
+  state.popularCategories = list.slice(0, 10);
+  renderPopularCategoriesAdmin();
   await savePopularCategoriesToServer();
 }
 window.setPopularCategoryPosition = setPopularCategoryPosition;
 
-async function deletePopularCategory(idx) {
-  const cat = state.popularCategories && state.popularCategories[idx];
-  if (!cat) return;
-  const label = cat.display_name || cat.category_name;
-  if (!confirm(`Remove "${label}" from popular categories?`)) return;
-  state.popularCategories.splice(idx, 1);
-  (state.popularCategories || []).forEach((c, i) => c.sort_order = i + 1);
-  await savePopularCategoriesToServer();
+function deletePopularCategory() {
+  alert("Popular categories cannot be deleted to protect the 10-slot homepage grid layout. You can edit any slot or re-sequence them instead.");
 }
 window.deletePopularCategory = deletePopularCategory;
 
 async function promptChangePopularCategoryImage(idx) {
-  const cat = state.popularCategories && state.popularCategories[idx];
-  if (!cat) return;
-  const newImg = prompt(`Enter new image URL for "${cat.display_name || cat.category_name}":`, cat.image_url || '');
-  if (newImg !== null && newImg.trim()) {
-    cat.image_url = newImg.trim();
-    await savePopularCategoriesToServer();
-  }
+  openEditPopularCategoryModal(idx);
 }
 window.promptChangePopularCategoryImage = promptChangePopularCategoryImage;
 
@@ -5236,11 +5207,11 @@ async function savePopularCategoriesToServer() {
     const res = await adminFetch('/api/admin/popular-categories', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ popularCategories: state.popularCategories || [] })
+      body: JSON.stringify({ popularCategories: (state.popularCategories || []).slice(0, 10) })
     });
     if (res.ok) {
       const data = await res.json();
-      state.popularCategories = data.popularCategories || [];
+      state.popularCategories = (data.popularCategories || []).slice(0, 10);
       renderPopularCategoriesAdmin();
       try {
         window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
@@ -5248,10 +5219,10 @@ async function savePopularCategoriesToServer() {
       } catch (_) {}
     } else {
       const err = await res.json().catch(() => ({}));
-      alert(err.error || 'Failed to save popular categories.');
+      alert('Failed to save popular categories: ' + (err.error || 'Server error'));
     }
-  } catch (e) {
-    alert('Network error while saving popular categories: ' + e.message);
+  } catch (err) {
+    alert('Network error while saving popular categories.');
   } finally {
     if (btn) btn.disabled = false;
   }

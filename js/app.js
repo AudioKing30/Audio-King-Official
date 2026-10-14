@@ -514,15 +514,17 @@ if (typeof document !== 'undefined') {
       }
     });
 
-    // Re-synchronize live catalog whenever admin panel makes changes
+    // Re-synchronize live catalog & popular categories whenever admin panel makes changes
     window.addEventListener('ak:catalog-sync', () => {
       loadLiveCatalog();
+      loadAndRenderPopularCategories();
     });
 
-    // Cross-tab sync: admin panel in another tab renamed a brand/category
+    // Cross-tab sync: admin panel in another tab renamed a brand/category or updated popular categories
     window.addEventListener('storage', (e) => {
-      if (e && e.key === 'audioking_catalog_sync') {
+      if (e && (e.key === 'audioking_catalog_sync' || e.key === 'audioking_popular_sync')) {
         loadLiveCatalog();
+        loadAndRenderPopularCategories();
       }
     });
 
@@ -4415,7 +4417,8 @@ export async function loadAndRenderPopularCategories() {
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.popularCategories) && data.popularCategories.length > 0) {
-        container.innerHTML = data.popularCategories.map(cat => {
+        const list10 = data.popularCategories.slice(0, 10);
+        container.innerHTML = list10.map(cat => {
           const catTarget = cat.category_name || cat.name;
           const displayLabel = cat.display_name || cat.displayName || catTarget;
           const imgSrc = resolveProductImage(cat.image_url || cat.image);

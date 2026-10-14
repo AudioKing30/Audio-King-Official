@@ -2248,10 +2248,20 @@ router.put('/popular-categories', (req, res) => {
     // Available categories validation
     const catRows = db.prepare('SELECT name FROM categories').all();
     const prodCatRows = db.prepare('SELECT DISTINCT category FROM products').all();
+    const standardCats = [
+      'Audio Interfaces', 'Condenser Microphones', 'DJ Consoles', 'Electronic Drums',
+      'Headphones', 'MIDI Controllers', 'Audio Mixers', 'Studio Monitors',
+      'Preamps & Channel Strips', 'Keyboards', 'Dynamic Microphones', 'Monitor Speakers',
+      'Pre Amps', 'Synthesizers'
+    ];
     const availableSet = new Set([
       ...catRows.map(c => (c.name || '').trim().toLowerCase()),
-      ...prodCatRows.map(p => (p.category || '').trim().toLowerCase())
+      ...prodCatRows.map(p => (p.category || '').trim().toLowerCase()),
+      ...standardCats.map(c => c.toLowerCase())
     ]);
+
+    // Enforce exactly 10 slots maximum for homepage grid
+    const targetCategories = popularCategories.slice(0, 10);
 
     const nowIso = new Date().toISOString();
     const insertStmt = db.prepare(`
@@ -2261,17 +2271,17 @@ router.put('/popular-categories', (req, res) => {
 
     db.transaction(() => {
       db.prepare('DELETE FROM popular_categories').run();
-      popularCategories.forEach((item, idx) => {
+      targetCategories.forEach((item, idx) => {
         const catName = String(item.category_name || item.name || '').trim();
         if (!catName) return;
         if (!availableSet.has(catName.toLowerCase())) {
           throw new Error(`Category "${catName}" is not an available catalog category.`);
         }
-        const id = item.id || `pop-cat-${Date.now()}-${idx}`;
+        const id = item.id || `pop-cat-${idx + 1}`;
         const displayName = String(item.display_name || item.displayName || catName).trim();
         const imageUrl = String(item.image_url || item.image || 'assets/images/placeholder.svg').trim();
         const sizeClass = item.size_class !== undefined ? String(item.size_class).trim() : null;
-        const sortOrder = item.sort_order !== undefined ? Number(item.sort_order) : (idx + 1);
+        const sortOrder = idx + 1;
         insertStmt.run(id, catName, displayName, imageUrl, sizeClass, sortOrder, nowIso, nowIso);
       });
     })();

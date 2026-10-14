@@ -260,12 +260,33 @@ function hydrateDatabaseFromMaster(db) {
       }
     }
 
-    // 4. Hydrate Popular Categories
+    // 4. Hydrate Popular Categories from master file
     const popData = safeReadJson(POPULAR_CATEGORIES_MASTER_PATH, null);
     if (popData && Array.isArray(popData.categories) && popData.categories.length > 0) {
+      const upsertPopCat = db.prepare(`
+        INSERT INTO popular_categories (id, category_name, display_name, image_url, size_class, sort_order, created_at, updated_at)
+        VALUES (@id, @category_name, @display_name, @image_url, @size_class, @sort_order, @created_at, @updated_at)
+        ON CONFLICT(id) DO UPDATE SET
+          category_name = excluded.category_name,
+          display_name = excluded.display_name,
+          image_url = excluded.image_url,
+          size_class = excluded.size_class,
+          sort_order = excluded.sort_order,
+          updated_at = excluded.updated_at
+      `);
       for (const pc of popData.categories) {
-        dynamicInsertOrIgnore(db, 'popular_categories', pc);
+        upsertPopCat.run({
+          id: pc.id,
+          category_name: pc.category_name,
+          display_name: pc.display_name || pc.category_name,
+          image_url: pc.image_url,
+          size_class: pc.size_class || null,
+          sort_order: pc.sort_order,
+          created_at: pc.created_at || new Date().toISOString(),
+          updated_at: pc.updated_at || new Date().toISOString()
+        });
       }
+      console.log(`[HYDRATION] Hydrated ${popData.categories.length} popular categories from popular_categories_master.json`);
     }
 
     // 5. Hydrate Legal Policies

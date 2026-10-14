@@ -646,19 +646,6 @@ function initDatabase() {
           const nowIsoStr = new Date().toISOString();
           insertPopCat.run(pc.id, pc.category_name, pc.display_name, pc.image_url, pc.size_class, pc.sort_order, nowIsoStr, nowIsoStr);
         }
-      } else {
-        // Ensure existing rows have display_name and size_class populated
-        const updateExistingPopCat = db.prepare(`
-          UPDATE popular_categories
-          SET display_name = COALESCE(NULLIF(display_name, ''), ?),
-              size_class = COALESCE(NULLIF(size_class, ''), ?)
-          WHERE id = ? OR category_name = ?
-        `);
-        for (const pc of defaultPopularCategories) {
-          try {
-            updateExistingPopCat.run(pc.display_name, pc.size_class, pc.id, pc.category_name);
-          } catch (_) {}
-        }
       }
     } catch (e) {
       console.warn('[SEED POPULAR CATEGORIES WARN]', e.message);

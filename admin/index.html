@@ -907,9 +907,9 @@
               <div>
                 <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
                   <span>🏷️ Popular Categories Manager</span>
-                  <span id="popularCategoriesCountBadge" class="badge-active" style="font-size: 11.5px; padding: 2px 8px;">10 Categories</span>
+                  <span id="popularCategoriesCountBadge" class="badge-active" style="font-size: 11.5px; padding: 2px 8px;">10 Slots (Fixed Grid)</span>
                 </h2>
-                <p class="card-desc">Manage the popular category boxes shown on the homepage. Add, delete, and sequence categories (restricted to available catalog categories) with custom thumbnail images.</p>
+                <p class="card-desc">Edit the 10 popular category slots displayed on the homepage. Change target categories, update thumbnail icons, and adjust display sequence. Deletion is disabled to protect homepage grid structure.</p>
               </div>
               <div>
                 <button type="button" class="btn-primary" id="savePopularCategoriesBtn" onclick="savePopularCategoriesToServer()" style="display: flex; align-items: center; gap: 6px; padding: 8px 18px; font-weight: 700; background: #16A34A;">
@@ -918,51 +918,13 @@
               </div>
             </div>
 
-            <!-- Add Popular Category Form -->
-            <div style="background: #F8FAFC; border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; margin-bottom: 20px;">
-              <h3 style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 12px;">➕ Add Category to Popular Grid</h3>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: flex-end;">
-                <div>
-                  <label class="form-label" style="font-size: 12px; font-weight: 700;">Catalog Category (Redirect Target) *</label>
-                  <select id="adminPopularCategorySelect" class="form-select" style="width: 100%;" onchange="handleAdminPopularCategorySelectChange()">
-                    <option value="">-- Choose an available category --</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="form-label" style="font-size: 12px; font-weight: 700;">Display Name (Homepage Label) *</label>
-                  <input type="text" id="adminPopularCategoryDisplayName" class="form-input" placeholder="e.g. Monitor Speakers" style="width: 100%;">
-                </div>
-                <div>
-                  <label class="form-label" style="font-size: 12px; font-weight: 700;">Category Image (URL or Upload) *</label>
-                  <div style="display: flex; gap: 6px;">
-                    <input type="text" id="adminPopularCategoryImage" class="form-input" placeholder="e.g. assets/images/categories/..." style="flex: 1;">
-                    <button type="button" class="btn-secondary" onclick="document.getElementById('adminPopCatImageFile').click()" style="padding: 7px 12px; font-size: 12px; white-space: nowrap;">📁 Upload</button>
-                    <input type="file" id="adminPopCatImageFile" accept="image/*" style="display: none;" onchange="handlePopularCategoryImageUpload(event)">
-                  </div>
-                </div>
-                <div>
-                  <label class="form-label" style="font-size: 12px; font-weight: 700;">Icon Scale</label>
-                  <select id="adminPopularCategorySizeClass" class="form-select" style="width: 100%;">
-                    <option value="">Default (100% scale)</option>
-                    <option value="ak-cat-img-lg">Large (115% scale - e.g. DJ Consoles)</option>
-                    <option value="ak-cat-img-lg ak-cat-boost-16">Boosted (160% scale - e.g. Audio Interfaces, Synthesizers, MIDI)</option>
-                  </select>
-                </div>
-                <div>
-                  <button type="button" class="btn-primary" onclick="handleAddPopularCategory()" style="padding: 9px 18px; font-weight: 700; width: 100%; justify-content: center;">
-                    + Add to Popular Grid
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- List of Popular Categories Container -->
+            <!-- List of Popular Categories Container (Fixed 10 Slots) -->
             <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="font-size: 14px; font-weight: 700; color: #0F172A;">
-                  <span>📋 Active Homepage Popular Categories (In Display Sequence)</span>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                  <span>📋 Active Homepage Popular Categories (10 Slots in Display Sequence)</span>
                 </h3>
-                <span style="font-size: 12px; color: var(--ak-text-muted);">Reorder with ▲/▼ or slot position, or remove</span>
+                <span style="font-size: 12px; color: var(--ak-text-muted);">Sequence slots with ▲/▼ or slot position #, and click "Edit" to modify category or image</span>
               </div>
               <div id="popularCategoriesListContainer">
                 <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">Loading popular categories...</div>
@@ -1771,64 +1733,56 @@
     </div>
   </div>
 
-  <!-- Popular Category Add / Edit Modal -->
+  <!-- Popular Category Edit Modal (Fixed 10 Slots) -->
   <div id="popularCategoryModal" class="modal-overlay">
-    <div class="modal-box" style="max-width: 540px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <h3 style="font-size: 18px; font-weight: 800;" id="popCatModalTitle">Edit Popular Category</h3>
-        <button type="button" class="modal-close" onclick="closePopularCategoryModal()">&times;</button>
+    <div class="modal-box" style="max-width: 520px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--ak-border, #E2E8F0); padding-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <span>🏷️</span>
+          <span id="popCatModalTitle">Edit Popular Category</span>
+        </h3>
+        <button type="button" class="modal-close" onclick="closePopularCategoryModal()" style="font-size: 22px; cursor: pointer; border: none; background: transparent; color: #64748B;">&times;</button>
       </div>
       <form id="popularCategoryModalForm" onsubmit="handlePopularCategoryModalSubmit(event)">
         <input type="hidden" id="popCatModalIndex" value="-1">
         <input type="hidden" id="popCatModalId" value="">
+        <input type="hidden" id="popCatModalDisplayName" value="">
+        <input type="hidden" id="popCatModalSizeClass" value="">
 
         <!-- 1. Catalog Category Dropdown -->
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label" for="popCatModalCategory">1. Catalog Category Target * (Store Filter)</label>
-          <select id="popCatModalCategory" class="form-select" required onchange="handlePopCatModalCategoryChange()">
-            <option value="">-- Select Catalog Category --</option>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" for="popCatModalCategory" style="font-weight: 700; font-size: 13px; color: #0F172A; display: block; margin-bottom: 6px;">
+            Select Category *
+          </label>
+          <select id="popCatModalCategory" class="form-select" required onchange="handlePopCatModalCategoryChange()" style="width: 100%; font-size: 14px; padding: 9px 12px; border-radius: 6px; border: 1.5px solid #CBD5E1;">
+            <option value="">-- Choose Category from Dropdown --</option>
           </select>
-          <small style="display: block; margin-top: 4px; font-size: 11.5px; color: var(--ak-text-muted);">
-            Clicking this icon on the storefront will redirect customers to this catalog category.
+          <small style="display: block; margin-top: 5px; font-size: 12px; color: #64748B;">
+            Selecting a category updates the target and redirects homepage shoppers to this catalog category.
           </small>
         </div>
 
-        <!-- 2. Display Name -->
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label" for="popCatModalDisplayName">2. Display Name (Storefront Label) *</label>
-          <input type="text" id="popCatModalDisplayName" class="form-input" placeholder="e.g. Monitor Speakers, Pre Amps..." required>
-          <small style="display: block; margin-top: 4px; font-size: 11.5px; color: var(--ak-text-muted);">
-            Label shown directly below the icon on the storefront homepage.
-          </small>
-        </div>
-
-        <!-- 3. Category Image -->
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label class="form-label">3. Category Image * (Transparent PNG recommended)</label>
-          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <input type="text" id="popCatModalImageUrl" class="form-input" placeholder="assets/images/categories/..." required style="flex: 1;" oninput="updatePopCatModalImagePreview()">
-            <button type="button" class="btn-secondary" onclick="document.getElementById('popCatModalImageFile').click()" style="white-space: nowrap;">📁 Browse</button>
+        <!-- 2. Category Image -->
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label class="form-label" style="font-weight: 700; font-size: 13px; color: #0F172A; display: block; margin-bottom: 6px;">
+            Category Image *
+          </label>
+          <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+            <input type="text" id="popCatModalImageUrl" class="form-input" placeholder="e.g. assets/images/categories/... or image URL" required style="flex: 1; font-size: 13px; padding: 8px 12px; border-radius: 6px; border: 1.5px solid #CBD5E1;" oninput="updatePopCatModalImagePreview()">
+            <button type="button" class="btn-secondary" onclick="document.getElementById('popCatModalImageFile').click()" style="white-space: nowrap; font-weight: 700; padding: 8px 14px; display: flex; align-items: center; gap: 6px;">
+              📁 Browse / Upload
+            </button>
           </div>
           <input type="file" id="popCatModalImageFile" accept="image/*" style="display: none;" onchange="handlePopCatModalFileUpload(event)">
           <!-- Preview Box -->
-          <div id="popCatModalImagePreviewBox" style="height: 100px; border-radius: 8px; border: 1px dashed var(--ak-border); background-color: #F8FAFC; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px;">
-            <img id="popCatModalImagePreviewImg" src="assets/images/placeholder.svg" alt="Preview" style="max-height: 80px; max-width: 90%; object-fit: contain;">
+          <div id="popCatModalImagePreviewBox" style="height: 110px; border-radius: 8px; border: 1.5px dashed #CBD5E1; background-color: #F8FAFC; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
+            <img id="popCatModalImagePreviewImg" src="assets/images/placeholder.svg" alt="Preview" style="max-height: 90px; max-width: 90%; object-fit: contain;">
           </div>
         </div>
 
-        <!-- 4. Icon Size Scale -->
-        <div class="form-group" style="margin-bottom: 16px;">
-          <label class="form-label" for="popCatModalSizeClass">4. Icon Size Scale</label>
-          <select id="popCatModalSizeClass" class="form-select">
-            <option value="">Default (100% scale)</option>
-            <option value="ak-cat-img-lg">Large (115% scale - e.g. DJ Consoles)</option>
-            <option value="ak-cat-img-lg ak-cat-boost-16">Boosted (160% scale - e.g. Audio Interfaces, Synthesizers, MIDI)</option>
-          </select>
-        </div>
-
-        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
-          <button type="button" class="btn-secondary" onclick="closePopularCategoryModal()">Cancel</button>
-          <button type="submit" class="btn-primary" id="popCatModalSaveBtn" style="font-weight: 700;">Save Category</button>
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; border-top: 1px solid var(--ak-border, #E2E8F0); padding-top: 14px;">
+          <button type="button" class="btn-secondary" onclick="closePopularCategoryModal()" style="padding: 9px 18px; font-weight: 600; border-radius: 6px;">Cancel</button>
+          <button type="submit" class="btn-primary" id="popCatModalSaveBtn" style="padding: 9px 22px; font-weight: 700; border-radius: 6px; background: #2563EB;">💾 Save Category</button>
         </div>
       </form>
     </div>
@@ -1916,6 +1870,6 @@
     window.openTaxInvoiceModal = openTaxInvoiceModal;
     window.closeTaxInvoiceModal = closeTaxInvoiceModal;
   </script>
-  <script src="js/admin.js?v=20261013_v5"></script>
+  <script src="js/admin.js?v=20261014_pop1"></script>
 </body>
 </html>

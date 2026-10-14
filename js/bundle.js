@@ -34098,10 +34098,12 @@ Message: ${message}`);
       });
       window.addEventListener("ak:catalog-sync", () => {
         loadLiveCatalog();
+        loadAndRenderPopularCategories();
       });
       window.addEventListener("storage", (e) => {
-        if (e && e.key === "audioking_catalog_sync") {
+        if (e && (e.key === "audioking_catalog_sync" || e.key === "audioking_popular_sync")) {
           loadLiveCatalog();
+          loadAndRenderPopularCategories();
         }
       });
       window.addEventListener("ak:featured-sync", (e) => {
@@ -37489,7 +37491,8 @@ Message: ${message}`);
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.popularCategories) && data.popularCategories.length > 0) {
-          container.innerHTML = data.popularCategories.map((cat) => {
+          const list10 = data.popularCategories.slice(0, 10);
+          container.innerHTML = list10.map((cat) => {
             const catTarget = cat.category_name || cat.name;
             const displayLabel = cat.display_name || cat.displayName || catTarget;
             const imgSrc = resolveProductImage(cat.image_url || cat.image);

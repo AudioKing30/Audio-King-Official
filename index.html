@@ -3461,6 +3461,37 @@
 
           </div>
 
+          <!-- SECTION C: POPULAR CATEGORIES MANAGER (EXACTLY 10 HOMEPAGE SLOTS) -->
+          <div class="admin-card">
+            <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h2 class="card-heading" style="font-size: 18px; display: flex; align-items: center; gap: 8px;">
+                  <span>🏷️ Popular Categories Manager</span>
+                  <span id="popularCategoriesCountBadge" class="badge-active" style="font-size: 11.5px; padding: 2px 8px;">10 Slots (Fixed Grid)</span>
+                </h2>
+                <p class="card-desc">Edit the 10 popular category slots displayed on the homepage. Change target categories, update thumbnail icons, and adjust display sequence. Deletion is disabled to protect homepage grid structure.</p>
+              </div>
+              <div>
+                <button type="button" class="btn-primary" id="savePopularCategoriesBtn" onclick="savePopularCategoriesToServer()" style="display: flex; align-items: center; gap: 6px; padding: 8px 18px; font-weight: 700; background: #16A34A;">
+                  <span>💾 Save Popular Categories</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- List of Popular Categories Container (Fixed 10 Slots) -->
+            <div style="border: 1px solid var(--ak-border); border-radius: var(--ak-radius); padding: 16px; background: #FFFFFF;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px;">
+                  <span>📋 Active Homepage Popular Categories (10 Slots in Display Sequence)</span>
+                </h3>
+                <span style="font-size: 12px; color: var(--ak-text-muted);">Sequence slots with ▲/▼ or slot position #, and click "Edit" to modify category or image</span>
+              </div>
+              <div id="popularCategoriesListContainer">
+                <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px;">Loading popular categories...</div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -4460,6 +4491,61 @@
     </div>
   </div>
 
+  <!-- Popular Category Edit Modal (Fixed 10 Slots) -->
+  <div id="popularCategoryModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 520px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--ak-border, #E2E8F0); padding-bottom: 12px;">
+        <h3 style="font-size: 18px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <span>🏷️</span>
+          <span id="popCatModalTitle">Edit Popular Category</span>
+        </h3>
+        <button type="button" class="modal-close" onclick="closePopularCategoryModal()" style="font-size: 22px; cursor: pointer; border: none; background: transparent; color: #64748B;">&times;</button>
+      </div>
+      <form id="popularCategoryModalForm" onsubmit="handlePopularCategoryModalSubmit(event)">
+        <input type="hidden" id="popCatModalIndex" value="-1">
+        <input type="hidden" id="popCatModalId" value="">
+        <input type="hidden" id="popCatModalDisplayName" value="">
+        <input type="hidden" id="popCatModalSizeClass" value="">
+
+        <!-- 1. Catalog Category Dropdown -->
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" for="popCatModalCategory" style="font-weight: 700; font-size: 13px; color: #0F172A; display: block; margin-bottom: 6px;">
+            Select Category *
+          </label>
+          <select id="popCatModalCategory" class="form-select" required onchange="handlePopCatModalCategoryChange()" style="width: 100%; font-size: 14px; padding: 9px 12px; border-radius: 6px; border: 1.5px solid #CBD5E1;">
+            <option value="">-- Choose Category from Dropdown --</option>
+          </select>
+          <small style="display: block; margin-top: 5px; font-size: 12px; color: #64748B;">
+            Selecting a category updates the target and redirects homepage shoppers to this catalog category.
+          </small>
+        </div>
+
+        <!-- 2. Category Image -->
+        <div class="form-group" style="margin-bottom: 18px;">
+          <label class="form-label" style="font-weight: 700; font-size: 13px; color: #0F172A; display: block; margin-bottom: 6px;">
+            Category Image *
+          </label>
+          <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+            <input type="text" id="popCatModalImageUrl" class="form-input" placeholder="e.g. assets/images/categories/... or image URL" required style="flex: 1; font-size: 13px; padding: 8px 12px; border-radius: 6px; border: 1.5px solid #CBD5E1;" oninput="updatePopCatModalImagePreview()">
+            <button type="button" class="btn-secondary" onclick="document.getElementById('popCatModalImageFile').click()" style="white-space: nowrap; font-weight: 700; padding: 8px 14px; display: flex; align-items: center; gap: 6px;">
+              📁 Browse / Upload
+            </button>
+          </div>
+          <input type="file" id="popCatModalImageFile" accept="image/*" style="display: none;" onchange="handlePopCatModalFileUpload(event)">
+          <!-- Preview Box -->
+          <div id="popCatModalImagePreviewBox" style="height: 110px; border-radius: 8px; border: 1.5px dashed #CBD5E1; background-color: #F8FAFC; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
+            <img id="popCatModalImagePreviewImg" src="assets/images/placeholder.svg" alt="Preview" style="max-height: 90px; max-width: 90%; object-fit: contain;">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; border-top: 1px solid var(--ak-border, #E2E8F0); padding-top: 14px;">
+          <button type="button" class="btn-secondary" onclick="closePopularCategoryModal()" style="padding: 9px 18px; font-weight: 600; border-radius: 6px;">Cancel</button>
+          <button type="submit" class="btn-primary" id="popCatModalSaveBtn" style="padding: 9px 22px; font-weight: 700; border-radius: 6px; background: #2563EB;">💾 Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Testimonial Add / Edit Modal -->
   <div id="testimonialModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 540px;">
@@ -4701,7 +4787,7 @@
   </a>
 
   <!-- ==================== APPLICATION SCRIPTS ==================== -->
-  <script src="js/bundle.js?v=20261013_v8"></script>
-  <script src="admin/js/admin.js?v=20261013_v6"></script>
+  <script src="js/bundle.js?v=20261014_pop1"></script>
+  <script src="admin/js/admin.js?v=20261014_pop1"></script>
 </body>
 </html>
