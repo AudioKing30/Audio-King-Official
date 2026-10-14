@@ -29309,7 +29309,7 @@ Weight: 1.24 lbs (0.567 kg`,
         couponCode: orderData.couponCode || null
       };
       let serverSavedOrder = null;
-      const fetchWithTimeout = async (url, opts, timeoutMs = 8e3) => {
+      const fetchWithTimeout = async (url, opts, timeoutMs = 5e3) => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
         try {
@@ -29335,11 +29335,11 @@ Weight: 1.24 lbs (0.567 kg`,
         };
         let res = null;
         try {
-          res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 8e3);
+          res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 5e3);
         } catch (firstErr) {
           console.warn("[OrdersService] Initial order post attempt failed, retrying once...", firstErr.message);
-          await new Promise((r) => setTimeout(r, 1200));
-          res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 9e3);
+          await new Promise((r) => setTimeout(r, 600));
+          res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 5e3);
         }
         if (res && res.ok) {
           const data = await res.json();
@@ -30524,8 +30524,10 @@ Weight: 1.24 lbs (0.567 kg`,
         titleEl.textContent = "Step 1: Shipping Address";
       if (backBtn)
         backBtn.style.display = "none";
-      if (submitBtn)
+      if (submitBtn) {
         submitBtn.textContent = "Continue to Payment";
+        submitBtn.disabled = false;
+      }
       const currentUser = authService.getUser() || getStorage2("audioking_user", null) || getStorage2("audioKingUser", null);
       const prefillEmail = savedAddress?.email || currentUser?.email || "";
       bodyEl.innerHTML = `
@@ -30579,8 +30581,10 @@ Weight: 1.24 lbs (0.567 kg`,
         titleEl.textContent = "Step 2: Payment Method";
       if (backBtn)
         backBtn.style.display = "block";
-      if (submitBtn)
+      if (submitBtn) {
         submitBtn.textContent = "Place Order";
+        submitBtn.disabled = false;
+      }
       const subtotal = getCartSubtotal();
       let weightedGstRateSum = 0;
       checkoutItems.forEach((it) => {
@@ -30827,12 +30831,45 @@ Weight: 1.24 lbs (0.567 kg`,
           const city = document.getElementById("akAddrCity")?.value.trim();
           const state = document.getElementById("akAddrState")?.value.trim();
           const saveCheck = document.getElementById("akSaveAddressCheckbox")?.checked;
-          if (!name || !email || !phone || !pin || !line1 || !city || !state) {
-            showToast("Please fill all required address fields including email");
+          const requiredInputs = [
+            { el: document.getElementById("akAddrName"), val: name },
+            { el: document.getElementById("akAddrEmail"), val: email },
+            { el: document.getElementById("akAddrPhone"), val: phone },
+            { el: document.getElementById("akAddrPin"), val: pin },
+            { el: document.getElementById("akAddrLine1"), val: line1 },
+            { el: document.getElementById("akAddrCity"), val: city },
+            { el: document.getElementById("akAddrState"), val: state }
+          ];
+          let missingCount = 0;
+          let firstMissingEl = null;
+          requiredInputs.forEach((item) => {
+            if (!item.val) {
+              missingCount++;
+              if (!firstMissingEl)
+                firstMissingEl = item.el;
+              if (item.el) {
+                item.el.style.borderColor = "#DC2626";
+                item.el.style.backgroundColor = "#FEF2F2";
+              }
+            } else if (item.el) {
+              item.el.style.borderColor = "";
+              item.el.style.backgroundColor = "";
+            }
+          });
+          if (missingCount > 0) {
+            if (firstMissingEl)
+              firstMissingEl.focus();
+            showToast("Please fill all required address fields highlighted in red");
             return;
           }
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(email)) {
+            const emailInput = document.getElementById("akAddrEmail");
+            if (emailInput) {
+              emailInput.style.borderColor = "#DC2626";
+              emailInput.style.backgroundColor = "#FEF2F2";
+              emailInput.focus();
+            }
             showToast("Please enter a valid email address");
             return;
           }
@@ -30931,6 +30968,11 @@ Weight: 1.24 lbs (0.567 kg`,
           } catch (err) {
             console.warn("[Checkout] Order persistence notice:", err);
             orderData.orderNumber = orderData.orderNumber || orderData.orderId || finalOrderNumber;
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = "Place Order";
+            }
           }
           closeCheckoutModal();
           clearCart();
@@ -36766,14 +36808,24 @@ Message: ${message}`);
           state: document.getElementById("akCoState")?.value || "Maharashtra",
           pincode: document.getElementById("akCoPincode")?.value || "400053"
         };
+        const paymentChoiceEl = document.querySelector('input[name="akCheckoutPayment"]:checked');
+        const paymentChoiceVal = paymentChoiceEl ? paymentChoiceEl.value : "UPI";
+        let selectedPaymentMethod = "Prepaid UPI / Online";
+        if (paymentChoiceVal === "Cards" || paymentChoiceVal === "Card") {
+          selectedPaymentMethod = "Credit / Debit Cards";
+        } else if (paymentChoiceVal === "NetBanking" || paymentChoiceVal === "Net Banking") {
+          selectedPaymentMethod = "Net Banking";
+        } else {
+          selectedPaymentMethod = "Prepaid UPI / Online";
+        }
         const orderData = {
           id: finalOrderNumber,
           orderId: finalOrderNumber,
           orderNumber: finalOrderNumber,
-          items: currentCheckoutItems,
+          items: [...currentCheckoutItems],
           customer: customerInfo,
           shippingAddress: customerInfo,
-          paymentMethod: selectedPayment,
+          paymentMethod: selectedPaymentMethod,
           couponCode: appliedDedicatedCoupon ? appliedDedicatedCoupon.code : null,
           discountAmount,
           total: finalTotal,
@@ -36781,40 +36833,25 @@ Message: ${message}`);
         };
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.textContent = "Securing Payment & Dispatch...";
+          submitBtn.textContent = "Securing Order...";
         }
-        activePaymentAdapter.processPayment(orderData).then(async (result) => {
-          orderData.transactionId = result?.transactionId || "TXN_" + Date.now();
+        (async () => {
           try {
             const savedOrder = await ordersService.createOrder(orderData);
             if (savedOrder && savedOrder.orderNumber) {
               orderData.orderNumber = savedOrder.orderNumber;
               orderData.orderId = savedOrder.orderNumber;
+              if (savedOrder.id)
+                orderData.id = savedOrder.id;
             }
           } catch (err) {
             console.warn("[Checkout] Order persistence notice:", err.message);
+            orderData.orderNumber = orderData.orderNumber || orderData.orderId || finalOrderNumber;
           }
           appliedDedicatedCoupon = null;
           clearCart();
-          hideAllViews();
           triggerOrderAnimation(orderData);
-        }).catch(async (err) => {
-          console.warn("[Payment Gateway Notice] PG fallback to direct order confirmation:", err);
-          orderData.transactionId = "TXN_" + Date.now();
-          try {
-            const savedOrder = await ordersService.createOrder(orderData);
-            if (savedOrder && savedOrder.orderNumber) {
-              orderData.orderNumber = savedOrder.orderNumber;
-              orderData.orderId = savedOrder.orderNumber;
-            }
-          } catch (e2) {
-            console.warn("[Checkout] Order persistence notice:", e2.message);
-          }
-          appliedDedicatedCoupon = null;
-          clearCart();
-          hideAllViews();
-          triggerOrderAnimation(orderData);
-        }).finally(() => {
+        })().finally(() => {
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = "Confirm & Place Order \u2192";

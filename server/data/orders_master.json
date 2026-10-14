@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-10-14T09:39:57.592Z",
-  "count": 16,
+  "updatedAt": "2026-10-14T12:53:55.527Z",
+  "count": 19,
   "orders": [
     {
       "id": "aad7050d-29ad-4fa7-8478-dd2a4394345a",
@@ -225,6 +225,48 @@
       "coupon_code": null,
       "discount_amount": 0,
       "gst_number": null
+    },
+    {
+      "id": "ae9179b7-54a7-4479-8e8b-f0e0003c3b06",
+      "user_id": "usr_test_customer",
+      "order_number": "AK-20261014-YG77V",
+      "total_amount": 107190,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Customer Test\",\"email\":\"customer@audioking.co.in\",\"phone\":\"9876543210\",\"pin\":\"400053\",\"line1\":\"123 Studio Street, Andheri West\",\"line2\":\"\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"fullName\":\"Customer Test\",\"userId\":\"usr_test_customer\"}",
+      "payment_method": "UPI - Google Pay",
+      "created_at": "2026-10-14T12:39:59.644Z",
+      "updated_at": "2026-10-14T12:39:59.644Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
+    },
+    {
+      "id": "031e13af-04ba-447c-ab11-618dd5b17c55",
+      "user_id": "usr_test_customer",
+      "order_number": "AK-20261014-AVK7K",
+      "total_amount": 107190,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Customer Test\",\"email\":\"customer@audioking.co.in\",\"phone\":\"9876543210\",\"pin\":\"400053\",\"line1\":\"123 Studio Street, Andheri West\",\"line2\":\"\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"fullName\":\"Customer Test\",\"userId\":\"usr_test_customer\"}",
+      "payment_method": "UPI - Google Pay",
+      "created_at": "2026-10-14T12:53:46.886Z",
+      "updated_at": "2026-10-14T12:53:46.886Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
+    },
+    {
+      "id": "73a82db9-c30d-47a6-8318-e8e5f1d413de",
+      "user_id": "usr_test_customer",
+      "order_number": "AK-20261014-0PUVD",
+      "total_amount": 76355,
+      "status": "Confirmed",
+      "shipping_address": "{\"name\":\"Customer Test\",\"phone\":\"9876543210\",\"email\":\"customer@audioking.co.in\",\"userId\":\"usr_test_customer\",\"address\":\"456 Penthouse Studio\",\"city\":\"Mumbai\",\"state\":\"Maharashtra\",\"pincode\":\"400053\",\"fullName\":\"Customer Test\"}",
+      "payment_method": "Prepaid UPI / Online",
+      "created_at": "2026-10-14T12:53:55.526Z",
+      "updated_at": "2026-10-14T12:53:55.526Z",
+      "coupon_code": null,
+      "discount_amount": 0,
+      "gst_number": null
     }
   ],
   "orderItems": [
@@ -413,6 +455,39 @@
       "quantity": 1,
       "unit_price": 30455,
       "subtotal": 30455,
+      "gst_percent": 18
+    },
+    {
+      "id": "1350f193-0acd-40f7-82b9-a4573f7d52e0",
+      "order_id": "ae9179b7-54a7-4479-8e8b-f0e0003c3b06",
+      "product_id": "adam-audio-a44h-single",
+      "product_name": "ADAM Audio A44H (Single)",
+      "product_image": "assets/images/products/adam-audio-a44h-single-angle.png",
+      "quantity": 1,
+      "unit_price": 107190,
+      "subtotal": 107190,
+      "gst_percent": 18
+    },
+    {
+      "id": "7fe2782d-a84c-407e-8cf4-b19d083c60d1",
+      "order_id": "031e13af-04ba-447c-ab11-618dd5b17c55",
+      "product_id": "adam-audio-a44h-single",
+      "product_name": "ADAM Audio A44H (Single)",
+      "product_image": "assets/images/products/adam-audio-a44h-single-angle.png",
+      "quantity": 1,
+      "unit_price": 107190,
+      "subtotal": 107190,
+      "gst_percent": 18
+    },
+    {
+      "id": "22ba72d5-6742-44e0-92de-45e53f006cea",
+      "order_id": "73a82db9-c30d-47a6-8318-e8e5f1d413de",
+      "product_id": "adam-audio-a4v-single",
+      "product_name": "ADAM Audio A4V (Single)",
+      "product_image": "assets/images/products/adam-audio-a4v-single-angle.jpg",
+      "quantity": 1,
+      "unit_price": 76355,
+      "subtotal": 76355,
       "gst_percent": 18
     }
   ]

@@ -259,7 +259,10 @@ function renderCheckoutStep() {
     if (pill2) pill2.classList.remove('active');
     if (titleEl) titleEl.textContent = 'Step 1: Shipping Address';
     if (backBtn) backBtn.style.display = 'none';
-    if (submitBtn) submitBtn.textContent = 'Continue to Payment';
+    if (submitBtn) {
+      submitBtn.textContent = 'Continue to Payment';
+      submitBtn.disabled = false;
+    }
 
     const currentUser = authService.getUser() || getStorage('audioking_user', null) || getStorage('audioKingUser', null);
     const prefillEmail = savedAddress?.email || currentUser?.email || '';
@@ -311,7 +314,10 @@ function renderCheckoutStep() {
     if (pill2) pill2.classList.add('active');
     if (titleEl) titleEl.textContent = 'Step 2: Payment Method';
     if (backBtn) backBtn.style.display = 'block';
-    if (submitBtn) submitBtn.textContent = 'Place Order';
+    if (submitBtn) {
+      submitBtn.textContent = 'Place Order';
+      submitBtn.disabled = false;
+    }
 
     const subtotal = getCartSubtotal();
     let weightedGstRateSum = 0;
@@ -576,13 +582,46 @@ export function initCheckout() {
         const state = document.getElementById('akAddrState')?.value.trim();
         const saveCheck = document.getElementById('akSaveAddressCheckbox')?.checked;
 
-        if (!name || !email || !phone || !pin || !line1 || !city || !state) {
-          showToast('Please fill all required address fields including email');
+        const requiredInputs = [
+          { el: document.getElementById('akAddrName'), val: name },
+          { el: document.getElementById('akAddrEmail'), val: email },
+          { el: document.getElementById('akAddrPhone'), val: phone },
+          { el: document.getElementById('akAddrPin'), val: pin },
+          { el: document.getElementById('akAddrLine1'), val: line1 },
+          { el: document.getElementById('akAddrCity'), val: city },
+          { el: document.getElementById('akAddrState'), val: state }
+        ];
+
+        let missingCount = 0;
+        let firstMissingEl = null;
+        requiredInputs.forEach(item => {
+          if (!item.val) {
+            missingCount++;
+            if (!firstMissingEl) firstMissingEl = item.el;
+            if (item.el) {
+              item.el.style.borderColor = '#DC2626';
+              item.el.style.backgroundColor = '#FEF2F2';
+            }
+          } else if (item.el) {
+            item.el.style.borderColor = '';
+            item.el.style.backgroundColor = '';
+          }
+        });
+
+        if (missingCount > 0) {
+          if (firstMissingEl) firstMissingEl.focus();
+          showToast('Please fill all required address fields highlighted in red');
           return;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
+          const emailInput = document.getElementById('akAddrEmail');
+          if (emailInput) {
+            emailInput.style.borderColor = '#DC2626';
+            emailInput.style.backgroundColor = '#FEF2F2';
+            emailInput.focus();
+          }
           showToast('Please enter a valid email address');
           return;
         }
@@ -692,6 +731,11 @@ export function initCheckout() {
           console.warn('[Checkout] Order persistence notice:', err);
           // Defensive fallback: ensure order proceeds with assigned order number
           orderData.orderNumber = orderData.orderNumber || orderData.orderId || finalOrderNumber;
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Place Order';
+          }
         }
 
         closeCheckoutModal();

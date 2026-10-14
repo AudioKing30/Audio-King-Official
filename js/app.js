@@ -3542,14 +3542,26 @@ function initDedicatedCheckoutPage() {
         state: document.getElementById('akCoState')?.value || 'Maharashtra',
         pincode: document.getElementById('akCoPincode')?.value || '400053'
       };
+      // Resolve selected payment method from radio choices
+      const paymentChoiceEl = document.querySelector('input[name="akCheckoutPayment"]:checked');
+      const paymentChoiceVal = paymentChoiceEl ? paymentChoiceEl.value : 'UPI';
+      let selectedPaymentMethod = 'Prepaid UPI / Online';
+      if (paymentChoiceVal === 'Cards' || paymentChoiceVal === 'Card') {
+        selectedPaymentMethod = 'Credit / Debit Cards';
+      } else if (paymentChoiceVal === 'NetBanking' || paymentChoiceVal === 'Net Banking') {
+        selectedPaymentMethod = 'Net Banking';
+      } else {
+        selectedPaymentMethod = 'Prepaid UPI / Online';
+      }
+
       const orderData = {
         id: finalOrderNumber,
         orderId: finalOrderNumber,
         orderNumber: finalOrderNumber,
-        items: currentCheckoutItems,
+        items: [...currentCheckoutItems],
         customer: customerInfo,
         shippingAddress: customerInfo,
-        paymentMethod: selectedPayment,
+        paymentMethod: selectedPaymentMethod,
         couponCode: appliedDedicatedCoupon ? appliedDedicatedCoupon.code : null,
         discountAmount: discountAmount,
         total: finalTotal,
@@ -3558,41 +3570,26 @@ function initDedicatedCheckoutPage() {
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Securing Payment & Dispatch...';
+        submitBtn.textContent = 'Securing Order...';
       }
 
-      activePaymentAdapter.processPayment(orderData).then(async result => {
-        orderData.transactionId = result?.transactionId || ('TXN_' + Date.now());
+      (async () => {
         try {
           const savedOrder = await ordersService.createOrder(orderData);
           if (savedOrder && savedOrder.orderNumber) {
             orderData.orderNumber = savedOrder.orderNumber;
             orderData.orderId = savedOrder.orderNumber;
+            if (savedOrder.id) orderData.id = savedOrder.id;
           }
         } catch (err) {
           console.warn('[Checkout] Order persistence notice:', err.message);
+          orderData.orderNumber = orderData.orderNumber || orderData.orderId || finalOrderNumber;
         }
+
         appliedDedicatedCoupon = null;
         clearCart();
-        hideAllViews();
         triggerOrderAnimation(orderData);
-      }).catch(async (err) => {
-        console.warn('[Payment Gateway Notice] PG fallback to direct order confirmation:', err);
-        orderData.transactionId = 'TXN_' + Date.now();
-        try {
-          const savedOrder = await ordersService.createOrder(orderData);
-          if (savedOrder && savedOrder.orderNumber) {
-            orderData.orderNumber = savedOrder.orderNumber;
-            orderData.orderId = savedOrder.orderNumber;
-          }
-        } catch (e) {
-          console.warn('[Checkout] Order persistence notice:', e.message);
-        }
-        appliedDedicatedCoupon = null;
-        clearCart();
-        hideAllViews();
-        triggerOrderAnimation(orderData);
-      }).finally(() => {
+      })().finally(() => {
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = 'Confirm & Place Order →';

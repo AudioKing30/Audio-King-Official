@@ -181,8 +181,8 @@ class OrdersService {
 
     let serverSavedOrder = null;
 
-    // Helper for fetch with timeout
-    const fetchWithTimeout = async (url, opts, timeoutMs = 8000) => {
+    // Helper for fetch with timeout (snappy 5s timeout to guarantee UI never freezes)
+    const fetchWithTimeout = async (url, opts, timeoutMs = 5000) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
       try {
@@ -210,11 +210,11 @@ class OrdersService {
 
       let res = null;
       try {
-        res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 8000);
+        res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 5000);
       } catch (firstErr) {
         console.warn('[OrdersService] Initial order post attempt failed, retrying once...', firstErr.message);
-        await new Promise(r => setTimeout(r, 1200));
-        res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 9000);
+        await new Promise(r => setTimeout(r, 600));
+        res = await fetchWithTimeout(`${baseUrl}/api/user/orders`, fetchOpts, 5000);
       }
 
       if (res && res.ok) {
