@@ -2269,7 +2269,8 @@ router.put('/popular-categories', (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
-    db.transaction(() => {
+    db.exec('BEGIN TRANSACTION;');
+    try {
       db.prepare('DELETE FROM popular_categories').run();
       targetCategories.forEach((item, idx) => {
         const catName = String(item.category_name || item.name || '').trim();
@@ -2284,7 +2285,11 @@ router.put('/popular-categories', (req, res) => {
         const sortOrder = idx + 1;
         insertStmt.run(id, catName, displayName, imageUrl, sizeClass, sortOrder, nowIso, nowIso);
       });
-    })();
+      db.exec('COMMIT;');
+    } catch (txErr) {
+      try { db.exec('ROLLBACK;'); } catch (_) {}
+      throw txErr;
+    }
 
     try { syncPopularCategoriesMaster(db); } catch (_) {}
 

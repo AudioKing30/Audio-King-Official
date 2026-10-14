@@ -26,6 +26,21 @@ try {
   db.exec('PRAGMA temp_store = MEMORY;');
 } catch (_) {}
 
+// Transaction helper for node:sqlite DatabaseSync instance
+db.transaction = function (fn) {
+  return function (...args) {
+    db.exec('BEGIN TRANSACTION;');
+    try {
+      const result = fn(...args);
+      db.exec('COMMIT;');
+      return result;
+    } catch (err) {
+      try { db.exec('ROLLBACK;'); } catch (_) {}
+      throw err;
+    }
+  };
+};
+
 /**
  * Initialize Database Tables
  */
