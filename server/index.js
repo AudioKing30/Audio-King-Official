@@ -315,10 +315,14 @@ app.get('/api/system/email-status', async (req, res) => {
     let verify465 = 'not_configured';
     let verify587 = 'not_configured';
 
+    const verifyWithTimeout = (transporter) => Promise.race([
+      transporter.verify().then(() => 'connected'),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Connection timed out (port may be blocked by host)')), 3500))
+    ]);
+
     if (t465) {
       try {
-        await t465.verify();
-        verify465 = 'connected';
+        verify465 = await verifyWithTimeout(t465);
       } catch (e) {
         verify465 = 'failed: ' + e.message;
       }
@@ -326,8 +330,7 @@ app.get('/api/system/email-status', async (req, res) => {
 
     if (t587) {
       try {
-        await t587.verify();
-        verify587 = 'connected';
+        verify587 = await verifyWithTimeout(t587);
       } catch (e) {
         verify587 = 'failed: ' + e.message;
       }
@@ -347,6 +350,7 @@ app.get('/api/system/email-status', async (req, res) => {
         hasGmailUser: !!process.env.GMAIL_USER,
         hasGmailAppPassword: !!process.env.GMAIL_APP_PASSWORD,
         hasSmtpHost: !!process.env.SMTP_HOST,
+        hasResendApiKey: !!(process.env.RESEND_API_KEY && process.env.RESEND_API_KEY.startsWith('re_')),
         emailFrom: process.env.EMAIL_FROM || 'AudioKing <info@audioking.co.in>',
         emailReplyTo: process.env.EMAIL_REPLY_TO || 'info@audioking.co.in'
       },

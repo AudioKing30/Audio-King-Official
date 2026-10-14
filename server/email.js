@@ -107,12 +107,41 @@ async function sendEmail({ to, subject, html, text }) {
   console.log(`[EMAIL] Preparing to dispatch "${subject}" to ${to}...`);
   const activeUser = SMTP_USER || GMAIL_USER;
 
-  // 1. Primary: SMTP Port 465 SSL
+  // 1. Primary when RESEND_API_KEY is configured: Fast HTTPS delivery (Port 443, immune to cloud SMTP blocking)
+  if (RESEND_API_KEY && RESEND_API_KEY.startsWith('re_') && !RESEND_API_KEY.includes('your_resend_api_key')) {
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: EMAIL_FROM,
+          to: [to],
+          subject: subject,
+          html: html,
+          text: text
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log(`[EMAIL SUCCESS] Sent email via Resend API (ID: ${data.id}) to ${to}`);
+        return { success: true, messageId: data.id, provider: 'resend' };
+      }
+      console.error('[EMAIL ERROR] Resend API error response:', data);
+    } catch (err) {
+      console.error('[EMAIL ERROR] Exception during Resend dispatch:', err.message);
+    }
+  }
+
+  // 2. SMTP Transporters (Port 465 SSL or Port 587 STARTTLS)
   const primaryTransporter = createSmtpTransporter(465, true);
   if (primaryTransporter) {
     try {
       const info = await new Promise((resolve, reject) => {
-        const timer = setTimeout(() => reject(new Error('SMTP port 465 connection timeout')), 12000);
+        const timer = setTimeout(() => reject(new Error('SMTP port 465 connection timeout')), 8000);
         primaryTransporter.sendMail({
           from: EMAIL_FROM,
           replyTo: EMAIL_REPLY_TO,
@@ -141,7 +170,7 @@ async function sendEmail({ to, subject, html, text }) {
       if (fallbackTransporter) {
         try {
           const fbInfo = await new Promise((resolve, reject) => {
-            const timer = setTimeout(() => reject(new Error('SMTP port 587 connection timeout')), 12000);
+            const timer = setTimeout(() => reject(new Error('SMTP port 587 connection timeout')), 8000);
             fallbackTransporter.sendMail({
               from: EMAIL_FROM,
               replyTo: EMAIL_REPLY_TO,
@@ -166,35 +195,6 @@ async function sendEmail({ to, subject, html, text }) {
           console.warn(`[EMAIL SMTP NOTICE] Port 587 also failed: ${fbErr.message}`);
         }
       }
-    }
-  }
-
-  // 2. Secondary: Resend API if configured
-  if (RESEND_API_KEY && RESEND_API_KEY.startsWith('re_') && !RESEND_API_KEY.includes('your_resend_api_key')) {
-    try {
-      const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: EMAIL_FROM,
-          to: [to],
-          subject: subject,
-          html: html,
-          text: text
-        })
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        console.log(`[EMAIL SUCCESS] Sent email via Resend ID: ${data.id} to ${to}`);
-        return { success: true, messageId: data.id, provider: 'resend' };
-      }
-      console.error('[EMAIL ERROR] Resend API error response:', data);
-    } catch (err) {
-      console.error('[EMAIL ERROR] Exception during Resend dispatch:', err.message);
     }
   }
 
