@@ -49,6 +49,8 @@ app.use((req, res, next) => {
 // Explicit CORS: reflect origin for localhost, GitHub Pages, or configured ALLOWED_ORIGIN
 const localhostPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 const githubPagesPattern = /^https:\/\/[a-zA-Z0-9-]+\.github\.io$/;
+const renderPattern = /^https:\/\/[a-zA-Z0-9-]+\.onrender\.com$/;
+const audiokingDomainPattern = /^https?:\/\/(.+\.)?audioking\.(co\.in|com|in)$/;
 
 const customOrigins = (process.env.ALLOWED_ORIGIN || process.env.ALLOWED_ORIGINS || '')
   .split(',')
@@ -61,8 +63,8 @@ const corsOptions = {
     if (!origin || origin === 'null') {
       return callback(null, true);
     }
-    // Allow localhost or GitHub Pages domains
-    if (localhostPattern.test(origin) || githubPagesPattern.test(origin)) {
+    // Allow localhost, GitHub Pages, Render apps, or Audio King domains
+    if (localhostPattern.test(origin) || githubPagesPattern.test(origin) || renderPattern.test(origin) || audiokingDomainPattern.test(origin)) {
       return callback(null, true);
     }
     // Allow configured custom origins
@@ -73,7 +75,18 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Session-Token', 'X-Admin-Token', 'Accept'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Session-Token',
+    'X-Admin-Token',
+    'X-User-Email',
+    'X-User-Id',
+    'X-Requested-With',
+    'Accept',
+    'Cache-Control',
+    'Pragma'
+  ],
   exposedHeaders: ['Set-Cookie']
 };
 const corsMiddleware = cors(corsOptions);
@@ -177,6 +190,9 @@ app.get('/api/featured-settings', (req, res) => {
 
 app.get('/api/popular-categories', (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     const rows = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
     res.json({ success: true, popularCategories: rows });
   } catch (e) {

@@ -3772,9 +3772,10 @@ async function loadHomepageManager() {
     }
   }
 
-  // Render both sections
+  // Render all three sections
   renderHeroSlidesAdmin();
   loadFeaturedManager();
+  loadPopularCategoriesManager();
 }
 
 function renderHeroSlidesAdmin() {
@@ -4797,25 +4798,50 @@ document.addEventListener('DOMContentLoaded', () => {
 // -------------------------------------------------------------
 // POPULAR CATEGORIES MANAGER CONTROLLER
 // -------------------------------------------------------------
-async function loadPopularCategoriesManager() {
-  const select = document.getElementById('adminPopularCategorySelect');
+// -------------------------------------------------------------
+// POPULAR CATEGORIES MANAGER CONTROLLER
+// -------------------------------------------------------------
+function getAvailableCatalogCategories() {
+  const catSet = new Set();
+  (state.products || []).forEach(p => {
+    const c = (p.category || '').trim();
+    if (c) catSet.add(c);
+  });
+  (state.categories || []).forEach(c => {
+    const name = (c.name || '').trim();
+    if (name) catSet.add(name);
+  });
+  // Known default categories safeguard
+  [
+    'Audio Interfaces', 'Condenser Microphones', 'DJ Consoles', 'Electronic Drums',
+    'Headphones', 'MIDI Controllers', 'Audio Mixers', 'Studio Monitors',
+    'Preamps & Channel Strips', 'Keyboards', 'Dynamic Microphones', 'Monitor Speakers',
+    'Pre Amps', 'Synthesizers'
+  ].forEach(c => catSet.add(c));
+  return Array.from(catSet).sort((a, b) => a.localeCompare(b));
+}
 
-  // Populate dropdown with available categories from products catalog
-  if (select) {
-    const allProds = state.products || [];
-    const catSet = new Set();
-    allProds.forEach(p => {
-      const c = (p.category || '').trim();
-      if (c) catSet.add(c);
-    });
-    (state.categories || []).forEach(c => {
-      const name = (c.name || '').trim();
-      if (name) catSet.add(name);
-    });
-    const availableCategories = Array.from(catSet).sort();
-    select.innerHTML = '<option value="">-- Choose an available category --</option>' +
-      availableCategories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+function populatePopularCategoryDropdowns() {
+  const availableCategories = getAvailableCatalogCategories();
+  const optionsHtml = availableCategories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+
+  const addSelect = document.getElementById('adminPopularCategorySelect');
+  if (addSelect) {
+    const curVal = addSelect.value;
+    addSelect.innerHTML = '<option value="">-- Choose an available category --</option>' + optionsHtml;
+    if (curVal && availableCategories.includes(curVal)) addSelect.value = curVal;
   }
+
+  const modalSelect = document.getElementById('popCatModalCategory');
+  if (modalSelect) {
+    const curVal = modalSelect.value;
+    modalSelect.innerHTML = '<option value="">-- Select Catalog Category --</option>' + optionsHtml;
+    if (curVal && availableCategories.includes(curVal)) modalSelect.value = curVal;
+  }
+}
+
+async function loadPopularCategoriesManager() {
+  populatePopularCategoryDropdowns();
 
   try {
     const res = await adminFetch('/api/admin/popular-categories');
@@ -4831,6 +4857,29 @@ async function loadPopularCategoriesManager() {
 }
 window.loadPopularCategoriesManager = loadPopularCategoriesManager;
 
+function handleAdminPopularCategorySelectChange() {
+  const select = document.getElementById('adminPopularCategorySelect');
+  const nameInput = document.getElementById('adminPopularCategoryDisplayName');
+  const sizeSelect = document.getElementById('adminPopularCategorySizeClass');
+  if (!select) return;
+
+  const chosenCat = (select.value || '').trim();
+  if (chosenCat && nameInput && !nameInput.value.trim()) {
+    nameInput.value = chosenCat;
+  }
+
+  // Auto-suggest scale boost for known large categories if not set
+  if (chosenCat && sizeSelect && !sizeSelect.value) {
+    const norm = chosenCat.toLowerCase();
+    if (norm.includes('interface') || norm.includes('midi') || norm.includes('pre amp') || norm.includes('preamp') || norm.includes('synth') || norm.includes('keyboard')) {
+      sizeSelect.value = 'ak-cat-img-lg ak-cat-boost-16';
+    } else if (norm.includes('dj')) {
+      sizeSelect.value = 'ak-cat-img-lg';
+    }
+  }
+}
+window.handleAdminPopularCategorySelectChange = handleAdminPopularCategorySelectChange;
+
 function renderPopularCategoriesAdmin() {
   const container = document.getElementById('popularCategoriesListContainer');
   const countBadge = document.getElementById('popularCategoriesCountBadge');
@@ -4840,43 +4889,68 @@ function renderPopularCategoriesAdmin() {
   if (countBadge) countBadge.textContent = `${cats.length} Categories`;
 
   if (!cats.length) {
-    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--ak-text-muted);">No popular categories configured. Select an available category above to add.</div>';
+    container.innerHTML = '<div style="text-align: center; padding: 24px; color: var(--ak-text-muted);">No popular categories configured. Select an available catalog category above to add.</div>';
     return;
   }
 
   container.innerHTML = `
-    <div style="display: flex; flex-direction: column; gap: 8px;">
+    <div style="display: flex; flex-direction: column; gap: 10px;">
       ${cats.map((cat, idx) => {
         const thumb = resolveAdminThumb(cat.image_url || cat.image);
         const isFirst = idx === 0;
         const isLast = idx === cats.length - 1;
+        const displayName = cat.display_name || cat.displayName || cat.category_name;
+        const targetCategory = cat.category_name;
+        const sizeClass = cat.size_class || '';
+
+        let scaleBadgeText = '100% Scale';
+        let scaleBadgeBg = '#F1F5F9';
+        let scaleBadgeColor = '#475569';
+        if (sizeClass.includes('boost')) {
+          scaleBadgeText = '160% Boosted';
+          scaleBadgeBg = '#FEF3C7';
+          scaleBadgeColor = '#B45309';
+        } else if (sizeClass.includes('lg')) {
+          scaleBadgeText = '115% Large';
+          scaleBadgeBg = '#E0F2FE';
+          scaleBadgeColor = '#0369A1';
+        }
+
         return `
-          <div class="locked-product-item" style="background: #FFFFFF; border: 1px solid var(--ak-border);">
-            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-              <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${isFirst ? 'disabled' : ''} onclick="movePopularCategory(${idx}, -1)" title="Move up">▲</button>
+          <div class="locked-product-item" style="background: #FFFFFF; border: 1px solid var(--ak-border); padding: 12px 14px; border-radius: var(--ak-radius); display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0;">
+                <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1.2;" ${isFirst ? 'disabled' : ''} onclick="movePopularCategory(${idx}, -1)" title="Move up">▲</button>
                 <div style="display: flex; align-items: center; gap: 2px;">
                   <span style="font-size: 11px; font-weight: 700; color: #475569;">#</span>
                   <input type="number" min="1" max="${cats.length}" value="${idx + 1}" onchange="setPopularCategoryPosition(${idx}, this.value)" style="width: 38px; text-align: center; font-weight: 800; font-size: 12px; border: 1.5px solid #CBD5E1; border-radius: 4px; padding: 2px 0; color: #1E40AF; background: #EFF6FF;">
                 </div>
-                <button type="button" class="btn-secondary" style="padding: 1px 6px; font-size: 10px; line-height: 1.2;" ${isLast ? 'disabled' : ''} onclick="movePopularCategory(${idx}, 1)" title="Move down">▼</button>
+                <button type="button" class="btn-secondary" style="padding: 2px 6px; font-size: 10px; line-height: 1.2;" ${isLast ? 'disabled' : ''} onclick="movePopularCategory(${idx}, 1)" title="Move down">▼</button>
               </div>
-              <img src="${thumb}" alt="${escapeHtml(cat.category_name)}" class="locked-product-thumb" onerror="this.src='assets/images/placeholder.svg'" style="background: #F8FAFC; object-fit: contain;">
+
+              <div style="width: 54px; height: 54px; border-radius: 8px; border: 1px solid var(--ak-border); background: #F8FAFC; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                <img src="${thumb}" alt="${escapeHtml(displayName)}" style="max-width: 46px; max-height: 46px; object-fit: contain;" onerror="this.src='assets/images/placeholder.svg'">
+              </div>
+
+              <div class="locked-product-info" style="flex: 1; min-width: 180px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px;">
+                  <h4 style="font-size: 14.5px; font-weight: 700; color: #0F172A; margin: 0;">${escapeHtml(displayName)}</h4>
+                  <span style="font-size: 11px; font-weight: 700; background: ${scaleBadgeBg}; color: ${scaleBadgeColor}; padding: 1px 7px; border-radius: 4px;">${scaleBadgeText}</span>
+                </div>
+                <div style="font-size: 12px; color: #475569; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span>Redirects to: <strong style="color: var(--ak-orange, #EA580C); font-weight: 700;">${escapeHtml(targetCategory)}</strong></span>
+                  <span style="color: #94A3B8;">•</span>
+                  <span style="font-size: 11px; color: var(--ak-text-muted);">Path: <code style="background: #F1F5F9; padding: 1px 5px; border-radius: 3px;">#store?category=${encodeURIComponent(targetCategory)}</code></span>
+                </div>
+              </div>
             </div>
 
-            <div class="locked-product-info">
-              <div class="locked-product-title" style="font-size: 14px; font-weight: 700; color: #0F172A; margin-bottom: 4px;">
-                ${escapeHtml(cat.category_name)}
-              </div>
-              <div style="font-size: 11.5px; color: var(--ak-text-muted); display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                <span>Image: <code style="font-size: 10.5px; background: #F1F5F9; padding: 2px 6px; border-radius: 3px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align: middle;">${escapeHtml(cat.image_url || '')}</code></span>
-                <button type="button" class="btn-secondary" style="padding: 2px 8px; font-size: 10.5px;" onclick="promptChangePopularCategoryImage(${idx})">Change Image</button>
-              </div>
-            </div>
-
-            <div>
-              <button type="button" class="btn-danger" style="padding: 6px 12px; font-size: 12px; font-weight: 700;" onclick="deletePopularCategory(${idx})">
-                🗑️ Remove
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <button type="button" class="btn-secondary" style="padding: 6px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px;" onclick="openEditPopularCategoryModal(${idx})">
+                <span>✏️ Edit</span>
+              </button>
+              <button type="button" class="btn-danger" style="padding: 6px 12px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px;" onclick="deletePopularCategory(${idx})">
+                <span>🗑️ Remove</span>
               </button>
             </div>
           </div>
@@ -4887,20 +4961,176 @@ function renderPopularCategoriesAdmin() {
 }
 window.renderPopularCategoriesAdmin = renderPopularCategoriesAdmin;
 
-async function handleAddPopularCategory() {
-  const select = document.getElementById('adminPopularCategorySelect');
-  const imgInput = document.getElementById('adminPopularCategoryImage');
-  const catName = (select?.value || '').trim();
-  const imgUrl = (imgInput?.value || '').trim() || 'assets/images/placeholder.svg';
+function openEditPopularCategoryModal(idx) {
+  populatePopularCategoryDropdowns();
+  const cat = state.popularCategories && state.popularCategories[idx];
+  if (!cat) return;
+
+  const modal = document.getElementById('popularCategoryModal');
+  const indexInput = document.getElementById('popCatModalIndex');
+  const idInput = document.getElementById('popCatModalId');
+  const catSelect = document.getElementById('popCatModalCategory');
+  const nameInput = document.getElementById('popCatModalDisplayName');
+  const imgInput = document.getElementById('popCatModalImageUrl');
+  const sizeSelect = document.getElementById('popCatModalSizeClass');
+  const titleElem = document.getElementById('popCatModalTitle');
+
+  if (indexInput) indexInput.value = idx;
+  if (idInput) idInput.value = cat.id || '';
+  if (catSelect) catSelect.value = cat.category_name;
+  if (nameInput) nameInput.value = cat.display_name || cat.displayName || cat.category_name;
+  if (imgInput) imgInput.value = cat.image_url || '';
+  if (sizeSelect) sizeSelect.value = cat.size_class || '';
+  if (titleElem) titleElem.textContent = `Edit Popular Category: ${cat.display_name || cat.category_name}`;
+
+  updatePopCatModalImagePreview();
+
+  openModal('popularCategoryModal');
+}
+window.openEditPopularCategoryModal = openEditPopularCategoryModal;
+
+function closePopularCategoryModal() {
+  closeModal('popularCategoryModal');
+}
+window.closePopularCategoryModal = closePopularCategoryModal;
+
+function handlePopCatModalCategoryChange() {
+  const catSelect = document.getElementById('popCatModalCategory');
+  const nameInput = document.getElementById('popCatModalDisplayName');
+  const sizeSelect = document.getElementById('popCatModalSizeClass');
+  if (!catSelect) return;
+
+  const chosenCat = (catSelect.value || '').trim();
+  if (chosenCat && nameInput && !nameInput.value.trim()) {
+    nameInput.value = chosenCat;
+  }
+
+  // Auto-suggest scale boost if default
+  if (chosenCat && sizeSelect && !sizeSelect.value) {
+    const norm = chosenCat.toLowerCase();
+    if (norm.includes('interface') || norm.includes('midi') || norm.includes('pre amp') || norm.includes('preamp') || norm.includes('synth') || norm.includes('keyboard')) {
+      sizeSelect.value = 'ak-cat-img-lg ak-cat-boost-16';
+    } else if (norm.includes('dj')) {
+      sizeSelect.value = 'ak-cat-img-lg';
+    }
+  }
+}
+window.handlePopCatModalCategoryChange = handlePopCatModalCategoryChange;
+
+function updatePopCatModalImagePreview() {
+  const imgInput = document.getElementById('popCatModalImageUrl');
+  const previewImg = document.getElementById('popCatModalImagePreviewImg');
+  if (imgInput && previewImg) {
+    const url = imgInput.value.trim() || 'assets/images/placeholder.svg';
+    previewImg.src = resolveAdminThumb(url);
+  }
+}
+window.updatePopCatModalImagePreview = updatePopCatModalImagePreview;
+
+async function handlePopCatModalFileUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const res = await adminFetch('/api/admin/upload-image', {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.url) {
+        const imgInput = document.getElementById('popCatModalImageUrl');
+        if (imgInput) imgInput.value = data.url;
+        updatePopCatModalImagePreview();
+      }
+    } else {
+      alert('Failed to upload category image.');
+    }
+  } catch (err) {
+    alert('Network error while uploading category image.');
+  }
+}
+window.handlePopCatModalFileUpload = handlePopCatModalFileUpload;
+
+async function handlePopularCategoryModalSubmit(e) {
+  e.preventDefault();
+  const indexInput = document.getElementById('popCatModalIndex');
+  const catSelect = document.getElementById('popCatModalCategory');
+  const nameInput = document.getElementById('popCatModalDisplayName');
+  const imgInput = document.getElementById('popCatModalImageUrl');
+  const sizeSelect = document.getElementById('popCatModalSizeClass');
+  const saveBtn = document.getElementById('popCatModalSaveBtn');
+
+  const idx = parseInt(indexInput?.value ?? '-1', 10);
+  const catName = (catSelect?.value || '').trim();
+  const displayName = (nameInput?.value || '').trim() || catName;
+  const imageUrl = (imgInput?.value || '').trim() || 'assets/images/placeholder.svg';
+  const sizeClass = (sizeSelect?.value || '').trim();
 
   if (!catName) {
-    alert('Please select an available category from the dropdown.');
+    alert('Please choose an available catalog category from the dropdown.');
+    return;
+  }
+
+  if (saveBtn) saveBtn.disabled = true;
+
+  try {
+    const list = [...(state.popularCategories || [])];
+    if (idx >= 0 && idx < list.length) {
+      list[idx] = {
+        ...list[idx],
+        category_name: catName,
+        display_name: displayName,
+        image_url: imageUrl,
+        size_class: sizeClass,
+        updated_at: new Date().toISOString()
+      };
+    } else {
+      list.push({
+        id: `pop-cat-${Date.now()}`,
+        category_name: catName,
+        display_name: displayName,
+        image_url: imageUrl,
+        size_class: sizeClass,
+        sort_order: list.length + 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
+    }
+
+    state.popularCategories = list;
+    await savePopularCategoriesToServer();
+    closePopularCategoryModal();
+  } catch (err) {
+    alert('Failed to save category changes: ' + err.message);
+  } finally {
+    if (saveBtn) saveBtn.disabled = false;
+  }
+}
+window.handlePopularCategoryModalSubmit = handlePopularCategoryModalSubmit;
+
+async function handleAddPopularCategory() {
+  const select = document.getElementById('adminPopularCategorySelect');
+  const nameInput = document.getElementById('adminPopularCategoryDisplayName');
+  const imgInput = document.getElementById('adminPopularCategoryImage');
+  const sizeSelect = document.getElementById('adminPopularCategorySizeClass');
+
+  const catName = (select?.value || '').trim();
+  const displayName = (nameInput?.value || '').trim() || catName;
+  const imgUrl = (imgInput?.value || '').trim() || 'assets/images/placeholder.svg';
+  const sizeCls = (sizeSelect?.value || '').trim();
+
+  if (!catName) {
+    alert('Please select an available catalog category from the dropdown.');
     return;
   }
 
   const existing = (state.popularCategories || []).find(c => (c.category_name || '').toLowerCase() === catName.toLowerCase());
   if (existing) {
-    alert(`Category "${catName}" is already in the popular categories list.`);
+    alert(`Category "${catName}" is already in the popular categories list. Click "Edit" on its card to modify it.`);
     return;
   }
 
@@ -4908,12 +5138,16 @@ async function handleAddPopularCategory() {
   state.popularCategories.push({
     id: `pop-cat-${Date.now()}`,
     category_name: catName,
+    display_name: displayName,
     image_url: imgUrl,
+    size_class: sizeCls,
     sort_order: state.popularCategories.length + 1
   });
 
   if (imgInput) imgInput.value = '';
+  if (nameInput) nameInput.value = '';
   if (select) select.value = '';
+  if (sizeSelect) sizeSelect.value = '';
 
   await savePopularCategoriesToServer();
 }
@@ -4975,7 +5209,8 @@ window.setPopularCategoryPosition = setPopularCategoryPosition;
 async function deletePopularCategory(idx) {
   const cat = state.popularCategories && state.popularCategories[idx];
   if (!cat) return;
-  if (!confirm(`Remove "${cat.category_name}" from popular categories?`)) return;
+  const label = cat.display_name || cat.category_name;
+  if (!confirm(`Remove "${label}" from popular categories?`)) return;
   state.popularCategories.splice(idx, 1);
   (state.popularCategories || []).forEach((c, i) => c.sort_order = i + 1);
   await savePopularCategoriesToServer();
@@ -4985,7 +5220,7 @@ window.deletePopularCategory = deletePopularCategory;
 async function promptChangePopularCategoryImage(idx) {
   const cat = state.popularCategories && state.popularCategories[idx];
   if (!cat) return;
-  const newImg = prompt(`Enter new image URL for "${cat.category_name}":`, cat.image_url || '');
+  const newImg = prompt(`Enter new image URL for "${cat.display_name || cat.category_name}":`, cat.image_url || '');
   if (newImg !== null && newImg.trim()) {
     cat.image_url = newImg.trim();
     await savePopularCategoriesToServer();
@@ -5007,6 +5242,10 @@ async function savePopularCategoriesToServer() {
       const data = await res.json();
       state.popularCategories = data.popularCategories || [];
       renderPopularCategoriesAdmin();
+      try {
+        window.dispatchEvent(new CustomEvent('ak:catalog-sync'));
+        window.dispatchEvent(new CustomEvent('ak:hero-sync'));
+      } catch (_) {}
     } else {
       const err = await res.json().catch(() => ({}));
       alert(err.error || 'Failed to save popular categories.');

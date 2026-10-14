@@ -362,7 +362,9 @@ function initDatabase() {
     CREATE TABLE IF NOT EXISTS popular_categories (
       id TEXT PRIMARY KEY,
       category_name TEXT NOT NULL,
+      display_name TEXT,
       image_url TEXT NOT NULL,
+      size_class TEXT,
       sort_order INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
@@ -611,28 +613,51 @@ function initDatabase() {
       }
     }
 
-    // Seed default popular categories if empty
+    // Seed or update default popular categories
     try {
+      const popCols = db.prepare('PRAGMA table_info(popular_categories)').all().map(c => c.name);
+      if (!popCols.includes('display_name')) {
+        db.prepare('ALTER TABLE popular_categories ADD COLUMN display_name TEXT').run();
+      }
+      if (!popCols.includes('size_class')) {
+        db.prepare('ALTER TABLE popular_categories ADD COLUMN size_class TEXT').run();
+      }
+
+      const defaultPopularCategories = [
+        { id: 'pop-cat-1', category_name: 'Audio Interfaces', display_name: 'Audio Interfaces', image_url: 'assets/images/categories/cat-audio-interfaces-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 1 },
+        { id: 'pop-cat-2', category_name: 'Condenser Microphones', display_name: 'Condenser Microphones', image_url: 'assets/images/categories/cat-condenser-mics-nobg.png', size_class: '', sort_order: 2 },
+        { id: 'pop-cat-3', category_name: 'DJ Consoles', display_name: 'DJ Consoles', image_url: 'assets/images/categories/cat-dj-consoles-nobg.png', size_class: 'ak-cat-img-lg', sort_order: 3 },
+        { id: 'pop-cat-4', category_name: 'Electronic Drums', display_name: 'Electronic Drums', image_url: 'assets/images/categories/cat-electronic-drums-nobg.png', size_class: '', sort_order: 4 },
+        { id: 'pop-cat-5', category_name: 'Headphones', display_name: 'Headphones', image_url: 'assets/images/categories/cat-headphones-nobg.png', size_class: '', sort_order: 5 },
+        { id: 'pop-cat-6', category_name: 'MIDI Controllers', display_name: 'MIDI Controllers', image_url: 'assets/images/categories/cat-midi-controllers-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 6 },
+        { id: 'pop-cat-7', category_name: 'Audio Mixers', display_name: 'Audio Mixers', image_url: 'assets/images/categories/cat-audio-mixers-nobg.png', size_class: '', sort_order: 7 },
+        { id: 'pop-cat-8', category_name: 'Studio Monitors', display_name: 'Monitor Speakers', image_url: 'assets/images/categories/cat-monitor-speakers-nobg.png', size_class: '', sort_order: 8 },
+        { id: 'pop-cat-9', category_name: 'Preamps & Channel Strips', display_name: 'Pre Amps', image_url: 'assets/images/categories/cat-pre-amps-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 9 },
+        { id: 'pop-cat-10', category_name: 'Keyboards', display_name: 'Synthesizers', image_url: 'assets/images/categories/cat-synthesizers-nobg.png', size_class: 'ak-cat-img-lg ak-cat-boost-16', sort_order: 10 }
+      ];
+
       const popCatCount = db.prepare("SELECT COUNT(*) AS count FROM popular_categories").get();
       if (!popCatCount || popCatCount.count === 0) {
         const insertPopCat = db.prepare(`
-          INSERT INTO popular_categories (id, category_name, image_url, sort_order, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, ?)
+          INSERT INTO popular_categories (id, category_name, display_name, image_url, size_class, sort_order, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `);
-        const defaultPopularCategories = [
-          { id: 'pop-cat-1', category_name: 'Audio Interfaces', image_url: 'assets/images/categories/cat-audio-interfaces-nobg.png', sort_order: 1 },
-          { id: 'pop-cat-2', category_name: 'Condenser Microphones', image_url: 'assets/images/categories/cat-condenser-mics-nobg.png', sort_order: 2 },
-          { id: 'pop-cat-3', category_name: 'DJ Consoles', image_url: 'assets/images/categories/cat-dj-consoles-nobg.png', sort_order: 3 },
-          { id: 'pop-cat-4', category_name: 'Electronic Drums', image_url: 'assets/images/categories/cat-electronic-drums-nobg.png', sort_order: 4 },
-          { id: 'pop-cat-5', category_name: 'Headphones', image_url: 'assets/images/categories/cat-headphones-nobg.png', sort_order: 5 },
-          { id: 'pop-cat-6', category_name: 'MIDI Controllers', image_url: 'assets/images/categories/cat-midi-controllers-nobg.png', sort_order: 6 },
-          { id: 'pop-cat-7', category_name: 'Audio Mixers', image_url: 'assets/images/categories/cat-audio-mixers-nobg.png', sort_order: 7 },
-          { id: 'pop-cat-8', category_name: 'Studio Monitors', image_url: 'assets/images/categories/cat-monitor-speakers-nobg.png', sort_order: 8 },
-          { id: 'pop-cat-9', category_name: 'Preamps & Channel Strips', image_url: 'assets/images/categories/cat-pre-amps-nobg.png', sort_order: 9 },
-          { id: 'pop-cat-10', category_name: 'Keyboards', image_url: 'assets/images/categories/cat-synthesizers-nobg.png', sort_order: 10 }
-        ];
         for (const pc of defaultPopularCategories) {
-          const nowIsoStr = new Date().toISOString(); insertPopCat.run(pc.id, pc.category_name, pc.image_url, pc.sort_order, nowIsoStr, nowIsoStr);
+          const nowIsoStr = new Date().toISOString();
+          insertPopCat.run(pc.id, pc.category_name, pc.display_name, pc.image_url, pc.size_class, pc.sort_order, nowIsoStr, nowIsoStr);
+        }
+      } else {
+        // Ensure existing rows have display_name and size_class populated
+        const updateExistingPopCat = db.prepare(`
+          UPDATE popular_categories
+          SET display_name = COALESCE(NULLIF(display_name, ''), ?),
+              size_class = COALESCE(NULLIF(size_class, ''), ?)
+          WHERE id = ? OR category_name = ?
+        `);
+        for (const pc of defaultPopularCategories) {
+          try {
+            updateExistingPopCat.run(pc.display_name, pc.size_class, pc.id, pc.category_name);
+          } catch (_) {}
         }
       }
     } catch (e) {
@@ -786,6 +811,17 @@ function initDatabase() {
         `).run(newPrice, newOriginalPrice, newBadge, product_id);
       }
     }
+
+    // Migration: ensure popular_categories has display_name and size_class
+    try {
+      const popCols = db.prepare('PRAGMA table_info(popular_categories)').all().map(c => c.name);
+      if (!popCols.includes('display_name')) {
+        db.prepare('ALTER TABLE popular_categories ADD COLUMN display_name TEXT').run();
+      }
+      if (!popCols.includes('size_class')) {
+        db.prepare('ALTER TABLE popular_categories ADD COLUMN size_class TEXT').run();
+      }
+    } catch (_) {}
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);
   }

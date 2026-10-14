@@ -19,7 +19,7 @@ const { exec } = require('child_process');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
 const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
-const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, syncStoreTop6Master, exportAllMasterData } = require('../dataSync');
+const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, syncPopularCategoriesMaster, syncStoreTop6Master, exportAllMasterData } = require('../dataSync');
 
 const router = express.Router();
 
@@ -2255,8 +2255,8 @@ router.put('/popular-categories', (req, res) => {
 
     const nowIso = new Date().toISOString();
     const insertStmt = db.prepare(`
-      INSERT INTO popular_categories (id, category_name, image_url, sort_order, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO popular_categories (id, category_name, display_name, image_url, size_class, sort_order, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     db.transaction(() => {
@@ -2268,9 +2268,11 @@ router.put('/popular-categories', (req, res) => {
           throw new Error(`Category "${catName}" is not an available catalog category.`);
         }
         const id = item.id || `pop-cat-${Date.now()}-${idx}`;
+        const displayName = String(item.display_name || item.displayName || catName).trim();
         const imageUrl = String(item.image_url || item.image || 'assets/images/placeholder.svg').trim();
+        const sizeClass = item.size_class !== undefined ? String(item.size_class).trim() : null;
         const sortOrder = item.sort_order !== undefined ? Number(item.sort_order) : (idx + 1);
-        insertStmt.run(id, catName, imageUrl, sortOrder, nowIso, nowIso);
+        insertStmt.run(id, catName, displayName, imageUrl, sizeClass, sortOrder, nowIso, nowIso);
       });
     })();
 
@@ -2281,6 +2283,97 @@ router.put('/popular-categories', (req, res) => {
   } catch (err) {
     console.error('[ADMIN SAVE POPULAR CATEGORIES ERROR]', err);
     return res.status(400).json({ error: err.message || 'Failed to save popular categories.' });
+  }
+});
+
+// Add single popular category
+router.post('/popular-categories', (req, res) => {
+  try {
+    const { category_name, display_name, image_url, size_class } = req.body || {};
+    const catName = String(category_name || '').trim();
+    if (!catName) {
+      return res.status(400).json({ error: 'category_name is required.' });
+    }
+    const catRows = db.prepare('SELECT name FROM categories').all();
+    const prodCatRows = db.prepare('SELECT DISTINCT category FROM products').all();
+    const availableSet = new Set([
+      ...catRows.map(c => (c.name || '').trim().toLowerCase()),
+      ...prodCatRows.map(p => (p.category || '').trim().toLowerCase())
+    ]);
+    if (!availableSet.has(catName.toLowerCase())) {
+      return res.status(400).json({ error: `Category "${catName}" is not in available catalog categories.` });
+    }
+
+    const currentCount = db.prepare('SELECT COUNT(*) AS count FROM popular_categories').get().count;
+    const id = `pop-cat-${Date.now()}`;
+    const displayName = String(display_name || catName).trim();
+    const imageUrl = String(image_url || 'assets/images/placeholder.svg').trim();
+    const sizeCls = size_class !== undefined ? String(size_class).trim() : null;
+    const nowIso = new Date().toISOString();
+
+    db.prepare(`
+      INSERT INTO popular_categories (id, category_name, display_name, image_url, size_class, sort_order, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, catName, displayName, imageUrl, sizeCls, currentCount + 1, nowIso, nowIso);
+
+    try { syncPopularCategoriesMaster(db); } catch (_) {}
+    const updated = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    return res.json({ success: true, popularCategories: updated });
+  } catch (err) {
+    console.error('[ADMIN ADD POPULAR CATEGORY ERROR]', err);
+    return res.status(500).json({ error: err.message || 'Failed to add popular category.' });
+  }
+});
+
+// Update single popular category
+router.put('/popular-categories/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { category_name, display_name, image_url, size_class, sort_order } = req.body || {};
+    const existing = db.prepare('SELECT * FROM popular_categories WHERE id = ?').get(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'Popular category not found.' });
+    }
+
+    const catName = category_name !== undefined ? String(category_name).trim() : existing.category_name;
+    const displayName = display_name !== undefined ? String(display_name).trim() : existing.display_name;
+    const imageUrl = image_url !== undefined ? String(image_url).trim() : existing.image_url;
+    const sizeCls = size_class !== undefined ? String(size_class).trim() : existing.size_class;
+    const sortOrder = sort_order !== undefined ? Number(sort_order) : existing.sort_order;
+    const nowIso = new Date().toISOString();
+
+    db.prepare(`
+      UPDATE popular_categories
+      SET category_name = ?, display_name = ?, image_url = ?, size_class = ?, sort_order = ?, updated_at = ?
+      WHERE id = ?
+    `).run(catName, displayName, imageUrl, sizeCls, sortOrder, nowIso, id);
+
+    try { syncPopularCategoriesMaster(db); } catch (_) {}
+    const updated = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    return res.json({ success: true, popularCategories: updated });
+  } catch (err) {
+    console.error('[ADMIN UPDATE POPULAR CATEGORY ERROR]', err);
+    return res.status(500).json({ error: err.message || 'Failed to update popular category.' });
+  }
+});
+
+// Delete single popular category
+router.delete('/popular-categories/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    db.prepare('DELETE FROM popular_categories WHERE id = ?').run(id);
+    const remaining = db.prepare('SELECT id FROM popular_categories ORDER BY sort_order ASC').all();
+    const updateOrderStmt = db.prepare('UPDATE popular_categories SET sort_order = ? WHERE id = ?');
+    remaining.forEach((row, idx) => {
+      updateOrderStmt.run(idx + 1, row.id);
+    });
+
+    try { syncPopularCategoriesMaster(db); } catch (_) {}
+    const updated = db.prepare('SELECT * FROM popular_categories ORDER BY sort_order ASC').all();
+    return res.json({ success: true, popularCategories: updated });
+  } catch (err) {
+    console.error('[ADMIN DELETE POPULAR CATEGORY ERROR]', err);
+    return res.status(500).json({ error: err.message || 'Failed to delete popular category.' });
   }
 });
 

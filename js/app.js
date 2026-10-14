@@ -4374,6 +4374,36 @@ if (typeof window !== 'undefined') {
 
 
 /**
+ * Resolves the precise CSS size class for popular categories icons so that
+ * sizes are 100% consistent and never shift or jump on refresh.
+ * Pre Amps, Synthesizers, Audio Interfaces, MIDI Controllers: ak-cat-img-lg ak-cat-boost-16 (scale 1.60)
+ * DJ Consoles: ak-cat-img-lg (scale 1.15)
+ * Others: ak-cat-box-img (scale 1.00)
+ */
+export function getCategorySizeClass(categoryName, displayName, customSizeClass) {
+  if (customSizeClass !== undefined && customSizeClass !== null && String(customSizeClass).trim() !== '') {
+    const val = String(customSizeClass).trim();
+    return val.startsWith('ak-cat-box-img') ? val : `ak-cat-box-img ${val}`;
+  }
+  const norm = `${categoryName || ''} ${displayName || ''}`.toLowerCase();
+  if (
+    norm.includes('interface') ||
+    norm.includes('midi') ||
+    norm.includes('pre amp') ||
+    norm.includes('preamp') ||
+    norm.includes('synth') ||
+    norm.includes('keyboard')
+  ) {
+    return 'ak-cat-box-img ak-cat-img-lg ak-cat-boost-16';
+  }
+  if (norm.includes('dj console') || norm.includes('dj')) {
+    return 'ak-cat-box-img ak-cat-img-lg';
+  }
+  return 'ak-cat-box-img';
+}
+window.getCategorySizeClass = getCategorySizeClass;
+
+/**
  * Loads dynamic popular categories configured by admin and renders them
  */
 export async function loadAndRenderPopularCategories() {
@@ -4386,14 +4416,16 @@ export async function loadAndRenderPopularCategories() {
       const data = await res.json();
       if (data && Array.isArray(data.popularCategories) && data.popularCategories.length > 0) {
         container.innerHTML = data.popularCategories.map(cat => {
-          const catName = cat.category_name || cat.name;
+          const catTarget = cat.category_name || cat.name;
+          const displayLabel = cat.display_name || cat.displayName || catTarget;
           const imgSrc = resolveProductImage(cat.image_url || cat.image);
+          const sizeCls = getCategorySizeClass(catTarget, displayLabel, cat.size_class);
           return `
-            <a href="#store?category=${encodeURIComponent(catName)}" class="ak-cat-box-card" data-filter="${escapeHtml(catName)}">
+            <a href="#store?category=${encodeURIComponent(catTarget)}" class="ak-cat-box-card" data-filter="${escapeHtml(catTarget)}">
               <div class="ak-cat-box">
-                <img src="${imgSrc}" alt="${escapeHtml(catName)}" class="ak-cat-box-img ak-cat-img-lg" loading="lazy" onerror="this.src='assets/images/placeholder.svg'">
+                <img src="${imgSrc}" alt="${escapeHtml(displayLabel)}" class="${sizeCls}" loading="lazy" onerror="this.src='assets/images/placeholder.svg'">
               </div>
-              <span class="ak-cat-box-label">${escapeHtml(catName)}</span>
+              <span class="ak-cat-box-label">${escapeHtml(displayLabel)}</span>
             </a>
           `;
         }).join('');
