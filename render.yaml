@@ -19,6 +19,8 @@ services:
         generateValue: true
       - key: ALLOWED_ORIGIN
         value: https://audioking.co.in,https://www.audioking.co.in,https://audioking30.github.io
+      - key: APP_URL
+        value: https://audioking-api.onrender.com
       - key: ADMIN_NAME
         value: AudioKing Administrator
       - key: ADMIN_EMAIL

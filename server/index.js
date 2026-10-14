@@ -434,6 +434,31 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`  📦 Environment : ${process.env.NODE_ENV || 'development'}`);
     console.log(`  🗄️  Database    : ${path.resolve(process.env.DATABASE_PATH || './server/data/audioking.db')}`);
     console.log(`===========================================================\n`);
+
+    // Automated Production Keep-Alive Ping (Runs periodically to prevent 15-minute idle spin-down)
+    const externalKeepAliveUrl = process.env.RENDER_EXTERNAL_URL || process.env.APP_URL || process.env.PUBLIC_URL;
+    if (externalKeepAliveUrl && process.env.NODE_ENV === 'production') {
+      const PING_INTERVAL_MS = 9 * 60 * 1000; // 9 minutes (Render spins down at 15 minutes)
+      const healthUrl = `${externalKeepAliveUrl.replace(/\/+$/, '')}/api/health`;
+      console.log(`[KEEP-ALIVE] Auto-ping active for ${healthUrl} (every 9 min)`);
+
+      const sendKeepAlivePing = () => {
+        try {
+          const client = healthUrl.startsWith('https') ? require('https') : require('http');
+          client.get(healthUrl, (res) => {
+            res.resume(); // Consume data to free memory
+          }).on('error', (err) => {
+            console.warn('[KEEP-ALIVE NOTICE]', err.message);
+          });
+        } catch (e) {
+          console.warn('[KEEP-ALIVE EXCEPTION]', e.message);
+        }
+      };
+
+      // Initial ping after 1 minute, recurring every 9 minutes
+      setTimeout(sendKeepAlivePing, 60 * 1000).unref();
+      setInterval(sendKeepAlivePing, PING_INTERVAL_MS).unref();
+    }
   });
 
   server.on('error', (err) => {
