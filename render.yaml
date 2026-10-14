@@ -18,7 +18,7 @@ services:
       - key: SESSION_SECRET
         generateValue: true
       - key: ALLOWED_ORIGIN
-        value: https://audioking30.github.io
+        value: https://audioking.co.in,https://www.audioking.co.in,https://audioking30.github.io
       - key: ADMIN_NAME
         value: AudioKing Administrator
       - key: ADMIN_EMAIL
