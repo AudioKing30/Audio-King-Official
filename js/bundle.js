@@ -27347,11 +27347,15 @@ Weight: 1.24 lbs (0.567 kg`,
       const isCancelled = /cancel/i.test(rawStatus);
       const isDispatched = /dispatch|shipped/i.test(rawStatus);
       const isDelivered = /deliver/i.test(rawStatus);
-      const iconWrap = orderView.querySelector(".ak-bill-icon-wrap");
+      const iconWrap = orderView.querySelector(".ak-bill-check-circle, .ak-bill-icon-wrap");
       if (iconWrap) {
         if (isCancelled) {
+          iconWrap.classList.add("is-cancelled");
+          iconWrap.style.backgroundColor = "#FEF2F2";
           iconWrap.style.background = "#FEF2F2";
           iconWrap.style.borderColor = "rgba(220, 38, 38, 0.3)";
+          iconWrap.style.border = "1.5px solid rgba(220, 38, 38, 0.3)";
+          iconWrap.style.color = "#DC2626";
           iconWrap.innerHTML = `
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -27359,8 +27363,12 @@ Weight: 1.24 lbs (0.567 kg`,
           </svg>
         `;
         } else {
-          iconWrap.style.background = "";
+          iconWrap.classList.remove("is-cancelled");
+          iconWrap.style.backgroundColor = "#E6F7ED";
+          iconWrap.style.background = "#E6F7ED";
           iconWrap.style.borderColor = "";
+          iconWrap.style.border = "none";
+          iconWrap.style.color = "#10B981";
           iconWrap.innerHTML = `
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>

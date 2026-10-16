@@ -122,6 +122,14 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 14px;
+  transition: all 0.2s ease;
+}
+
+.ak-bill-check-circle.is-cancelled,
+.ak-bill-icon-wrap.is-cancelled {
+  background-color: #FEF2F2 !important;
+  color: #DC2626 !important;
+  border: 1.5px solid rgba(220, 38, 38, 0.3) !important;
 }
 
 .ak-bill-title {
