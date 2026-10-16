@@ -18,6 +18,7 @@ const SMTP_PASS = (process.env.SMTP_PASS || '').trim().replace(/\s+/g, '');
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
 const EMAIL_FROM = process.env.EMAIL_FROM || 'AudioKing <info@audioking.co.in>';
 const EMAIL_REPLY_TO = process.env.EMAIL_REPLY_TO || 'info@audioking.co.in';
+const SITE_URL = (process.env.SITE_URL || 'https://audioking.co.in').trim().replace(/\/+$/, '');
 const EMAIL_LOG_PATH = path.join(__dirname, 'data', 'email_log.json');
 
 /**
@@ -332,7 +333,7 @@ async function sendPasswordChangedEmail(email, fullName = 'Musician') {
  */
 async function sendCommunityWelcomeEmail({ email, fullName = 'Creator' }) {
   const subject = 'You have officially joined the AudioKing community — Welcome to the community! 🎧';
-  const text = `Hello ${fullName},\n\nYou have officially joined the AudioKing community! Welcome to the community.\n\nThank you for joining India's dedicated network of pro audio producers, sound engineers, recording artists, and gear enthusiasts.\n\nUse code AUDIOKING10 at checkout for 10% off your next studio gear purchase.\n\nExplore gear: http://localhost:3000/#catalog\nDirect Specialist Support: info@audioking.co.in | WhatsApp: +91 88793 93743\n\nAudioKing Pro Audio India`;
+  const text = `Hello ${fullName},\n\nYou have officially joined the AudioKing community! Welcome to the community.\n\nThank you for joining India's dedicated network of pro audio producers, sound engineers, recording artists, and gear enthusiasts.\n\nUse code AUDIOKING10 at checkout for 10% off your next studio gear purchase.\n\nExplore gear: ${SITE_URL}/#catalog\nDirect Specialist Support: info@audioking.co.in | WhatsApp: +91 88793 93743\n\nAudioKing Pro Audio India`;
 
   const html = wrapEmailTemplate('Welcome to the AudioKing Community', `
     <h2 class="headline" style="color: #0F172A;">Welcome to the AudioKing Community! 🎶</h2>
@@ -366,7 +367,7 @@ async function sendCommunityWelcomeEmail({ email, fullName = 'Creator' }) {
     </div>
 
     <div style="text-align: center; margin: 24px 0;">
-      <a href="http://localhost:3000/#catalog" class="cta-btn">Explore Studio Catalog &rarr;</a>
+      <a href="${SITE_URL}/#catalog" class="cta-btn">Explore Studio Catalog &rarr;</a>
     </div>
 
     <p class="paragraph" style="font-size:13px; color:#64748B;">
@@ -572,7 +573,7 @@ async function sendOrderDispatchedEmail({ email, fullName = 'Valued Customer', o
 async function sendOrderDeliveredEmail({ email, fullName = 'Valued Customer', orderNumber, totalAmount = 0, items = [] }) {
   if (!email || !email.includes('@')) return;
   const subject = `Your AudioKing Order #${orderNumber} Has Been Delivered! 🎵`;
-  const text = `Hello ${fullName},\n\nThank you for shopping with AudioKing! Your order #${orderNumber} has been delivered. We hope you enjoy your new gear. Shop more from Audio King!\n\nExplore gear: http://localhost:3000/#store\n\nAudioKing Pro Audio India`;
+  const text = `Hello ${fullName},\n\nThank you for shopping with AudioKing! Your order #${orderNumber} has been delivered. We hope you enjoy your new gear. Shop more from Audio King!\n\nExplore gear: ${SITE_URL}/#store\n\nAudioKing Pro Audio India`;
 
   const itemsHtml = (items || []).map(i => `
     <tr style="border-bottom: 1px solid #E2E8F0;">
@@ -613,7 +614,7 @@ async function sendOrderDeliveredEmail({ email, fullName = 'Valued Customer', or
     ` : ''}
 
     <div style="text-align: center; margin: 28px 0 16px 0;">
-      <a href="http://localhost:3000/#store" class="cta-btn" style="background: #EA580C; font-size: 15px; padding: 13px 28px;">
+      <a href="${SITE_URL}/#store" class="cta-btn" style="background: #EA580C; font-size: 15px; padding: 13px 28px;">
         Shop More from Audio King &rarr;
       </a>
     </div>
@@ -632,7 +633,7 @@ async function sendOrderDeliveredEmail({ email, fullName = 'Valued Customer', or
 async function sendOrderCancelledEmail({ email, fullName = 'Valued Customer', orderNumber }) {
   if (!email || !email.includes('@')) return;
   const subject = `Your AudioKing Order #${orderNumber} Has Been Cancelled`;
-  const text = `Hello ${fullName},\n\nYour order #${orderNumber} was canceled due to some issues. Inconvenience is regretted while you can browse on more products from our website: http://localhost:3000/#store\n\nThank you for choosing AudioKing,\nAudioKing Pro Audio India`;
+  const text = `Hello ${fullName},\n\nYour order #${orderNumber} was canceled due to some issues. Inconvenience is regretted while you can browse on more products from our website: ${SITE_URL}/#store\n\nThank you for choosing AudioKing,\nAudioKing Pro Audio India`;
 
   const html = wrapEmailTemplate('Order Cancelled', `
     <h2 class="headline" style="color: #DC2626;">Order Cancelled</h2>
@@ -642,7 +643,7 @@ async function sendOrderCancelledEmail({ email, fullName = 'Valued Customer', or
     </p>
 
     <div style="text-align: center; margin: 28px 0;">
-      <a href="http://localhost:3000/#store" class="cta-btn" style="background: #EA580C; color: #FFFFFF; font-size: 15px; padding: 13px 28px; text-decoration: none; border-radius: 6px; font-weight: 700; display: inline-block;">
+      <a href="${SITE_URL}/#store" class="cta-btn" style="background: #EA580C; color: #FFFFFF; font-size: 15px; padding: 13px 28px; text-decoration: none; border-radius: 6px; font-weight: 700; display: inline-block;">
         Browse More Products &rarr;
       </a>
     </div>
