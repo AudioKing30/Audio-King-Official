@@ -14,6 +14,7 @@ const crypto = require('crypto');
 const { requireAuth } = require('../middleware/authMiddleware');
 
 const router = express.Router();
+const SITE_URL = (process.env.SITE_URL || 'https://audioking.co.in').trim().replace(/\/+$/, '');
 
 function getCashfreeEndpoint(path) {
   const mode = (process.env.CASHFREE_MODE || 'sandbox').trim().toLowerCase();
@@ -80,7 +81,7 @@ router.post('/create-order', requireAuth, async (req, res) => {
           customer_phone: customerPhone.length === 10 ? customerPhone : '9876543210'
         },
         order_meta: {
-          return_url: `https://audioking30.github.io/Audio-King-Official/?order_id={order_id}&order_token={order_token}`,
+          return_url: `${SITE_URL}/?order_id={order_id}&order_token={order_token}`,
           notify_url: process.env.CASHFREE_WEBHOOK_URL || undefined
         },
         order_note: `AudioKing Pro Audio Equipment Order ${orderId}`
