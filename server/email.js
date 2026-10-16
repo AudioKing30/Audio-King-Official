@@ -378,6 +378,41 @@ async function sendCommunityWelcomeEmail({ email, fullName = 'Creator' }) {
 }
 
 /**
+ * 4b. Send Admin Notification when a user subscribes to the Community
+ */
+async function sendCommunityAdminNotificationEmail({ subscriberEmail, subscriberName = 'Community Member', subscribedAt = null }) {
+  const adminTargetEmail = process.env.ADMIN_NOTIFY_EMAIL || process.env.ADMIN_EMAIL || 'info@audioking.co.in';
+  const timestampStr = subscribedAt ? new Date(subscribedAt).toLocaleString('en-IN') : new Date().toLocaleString('en-IN');
+  const subject = `🔔 New Community Subscriber: ${subscriberEmail}`;
+  const text = `Hello AudioKing Admin,\n\nA new user has subscribed to the AudioKing Community updates!\n\nSubscriber Email: ${subscriberEmail}\nJoined On: ${timestampStr}\n\nAudioKing System Notifications`;
+
+  const html = wrapEmailTemplate('New Community Member Alert', `
+    <h2 class="headline" style="color: #0F172A; font-size: 20px;">🔔 New Community Subscriber Alert</h2>
+    <p class="paragraph">
+      A customer has just opted in for AudioKing community updates and received their welcome perk & voucher!
+    </p>
+
+    <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-left: 4px solid #2563EB; border-radius: 8px; padding: 18px 20px; margin: 20px 0;">
+      <div style="font-size: 14px; color: #334155; margin-bottom: 8px;">
+        <strong>Subscriber Email:</strong> <span style="font-family: monospace; font-size: 14.5px; color: #0F172A; font-weight: 700;">${subscriberEmail}</span>
+      </div>
+      <div style="font-size: 13.5px; color: #475569; margin-bottom: 8px;">
+        <strong>Timestamp:</strong> ${timestampStr}
+      </div>
+      <div style="font-size: 13px; color: #16A34A; font-weight: 600;">
+        ✓ Welcome email and AUDIOKING10 voucher dispatched to customer
+      </div>
+    </div>
+
+    <div style="text-align: center; margin: 24px 0;">
+      <a href="https://audioking.co.in/#admin" class="cta-btn" style="background: #0F172A;">Open Admin Dashboard &rarr;</a>
+    </div>
+  `);
+
+  return sendEmail({ to: adminTargetEmail, subject, html, text });
+}
+
+/**
  * 5. Send Order Confirmed Notification Email
  */
 async function sendOrderConfirmedEmail({ email, fullName = 'Valued Customer', orderNumber, totalAmount = 0, items = [], shippingAddress = {} }) {
@@ -628,6 +663,7 @@ module.exports = {
   sendChangePasswordOtpEmail,
   sendPasswordChangedEmail,
   sendCommunityWelcomeEmail,
+  sendCommunityAdminNotificationEmail,
   sendOrderConfirmedEmail,
   sendOrderDispatchedEmail,
   sendOrderDeliveredEmail,

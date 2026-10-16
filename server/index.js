@@ -26,7 +26,7 @@ const adminApiRoutes = require('./routes/adminApi');
 const analyticsRoutes = require('./routes/analytics');
 const { requireAdminWeb, getAdminUserFromRequest } = require('./middleware/adminMiddleware');
 const { generalApiRateLimiter } = require('./middleware/rateLimiter');
-const { sendCommunityWelcomeEmail } = require('./email');
+const { sendCommunityWelcomeEmail, sendCommunityAdminNotificationEmail } = require('./email');
 
 // Seed admin account and SQLite catalog
 seedAdminAndCatalog().catch(err => console.error('[STARTUP SEED ERROR]', err));
@@ -287,11 +287,14 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
       console.warn('[NEWSLETTER DB NOTICE]', dbErr.message);
     }
 
-    // Dispatch branded welcome email in background so the UI response is instantaneous
-    sendCommunityWelcomeEmail({ email: cleanEmail }).then(emailResult => {
-      console.log(`[NEWSLETTER] Welcome email sent to ${cleanEmail}:`, emailResult?.messageId || 'ok');
+    // Dispatch branded welcome email to subscriber AND notification email to admin in parallel
+    Promise.allSettled([
+      sendCommunityWelcomeEmail({ email: cleanEmail }),
+      sendCommunityAdminNotificationEmail({ subscriberEmail: cleanEmail, subscribedAt: new Date().toISOString() })
+    ]).then(results => {
+      console.log(`[NEWSLETTER] Dispatched community emails for ${cleanEmail} -> Customer: ${results[0]?.status}, Admin: ${results[1]?.status}`);
     }).catch(emailErr => {
-      console.error('[NEWSLETTER] Error dispatching welcome email:', emailErr.message);
+      console.error('[NEWSLETTER] Error dispatching community emails:', emailErr.message);
     });
 
     return res.json({
