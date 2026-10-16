@@ -120,6 +120,31 @@
           "body": "<p>AudioKing supports 100% secure payment methods:</p><ul><li>Online through Instant UPI (Google Pay, PhonePe, Paytm, BHIM)</li><li>Internet banking across all major Indian commercial and private banks</li><li>Credit & Debit cards (Visa, MasterCard, American Express, Maestro, RuPay)</li><li>IMPS & Bank Wire Transfer</li><li>Cash on Delivery (COD) on eligible pin codes</li></ul>"
         }
       ]
+    },
+    "about": {
+      "id": "about",
+      "title": "About AudioKing",
+      "subtitle": "Official Mumbai Pro Audio & Instruments Destination",
+      "badge": "Certified Audio Specialists",
+      "updated_at": "2026-10-16T18:30:00+05:30",
+      "intro": "<div class=\"ak-legal-statutory-card\" style=\"background: #F8FAFC; border: 1.5px solid #CBD5E1; border-left: 4px solid #EA580C; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;\"><ol style=\"margin: 0; padding-left: 20px; font-size: 13.5px; color: #1E293B; line-height: 1.8; font-weight: 500;\"><li>The Corporate Identity Number of the company is <strong style=\"font-family: monospace; font-size: 14px; color: #0F172A; letter-spacing: 0.5px;\">U29100MH2020PTC344745</strong></li><li><strong>GSTIN</strong> - <strong style=\"font-family: monospace; font-size: 14px; color: #0F172A; letter-spacing: 0.5px;\">27AAHCV5628B1ZC</strong></li><li><strong>LEGAL NAME</strong> - <strong style=\"color: #0F172A;\">VASP ADVISORS PVT LTD</strong></li><li><strong>TRADE NAME</strong> - <strong style=\"color: #0F172A;\">VASP ADVISORS PVT LTD</strong></li></ol></div><p>AudioKing is India's premier pro audio retailer and studio equipment specialist. Based in Mumbai, Maharashtra, we provide music producers, sound engineers, broadcasting studios, and touring musicians with 100% genuine gear backed by official manufacturer warranties and expert sound engineering consultancy.</p>",
+      "sections": [
+        {
+          "number": 1,
+          "heading": "Mumbai Experience Centre & Showroom",
+          "body": "<p>Located at D-101, Bonanza Industrial Estate, Ashok Chakravarty Road, Kandivali East, Mumbai - 400101, our experience centre offers hands-on listening sessions for studio monitors, vocal booth testing for world-class microphones, and dedicated stages for synthesizers and digital pianos.</p>"
+        },
+        {
+          "number": 2,
+          "heading": "Authorized Brand Distribution",
+          "body": "<p>We are authorized dealers for leading international audio brands including ADAM Audio, Focusrite, Nord, Lauten Audio, Universal Audio, Focal Professional, BluGuitar, Audix, Novation, Eikon, Proel, Native Instruments, and more.</p>"
+        },
+        {
+          "number": 3,
+          "heading": "Direct Specialist Helpline",
+          "body": "<p>Need acoustic guidance or help building your studio chain? Our audio engineers are available Monday to Saturday, 10:00 AM to 07:00 PM at +91 8928207822 or via email at info@audioking.co.in.</p>"
+        }
+      ]
     }
   }
 }

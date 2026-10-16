@@ -213,6 +213,12 @@ function validateMagicBytes(filePath, expectedType) {
       const riff = buffer.toString('ascii', 0, 4);
       const webp = buffer.toString('ascii', 8, 12);
       if (riff === 'RIFF' && webp === 'WEBP') return true;
+      // GIF: GIF87a or GIF89a
+      const gif = buffer.toString('ascii', 0, 6);
+      if (gif === 'GIF87a' || gif === 'GIF89a') return true;
+      // SVG: check if text contains '<svg' or '<?xml'
+      const sample = buffer.toString('utf8', 0, 16).trim();
+      if (sample.startsWith('<?xml') || sample.startsWith('<svg') || filePath.toLowerCase().endsWith('.svg')) return true;
       return false;
     }
 
@@ -253,16 +259,16 @@ const videoStorage = multer.diskStorage({
 
 const imageUpload = multer({
   storage: imageStorage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
   fileFilter: (req, file, cb) => {
-    const allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
-    const allowedExt = ['.jpg', '.jpeg', '.png', '.webp'];
+    const allowedMime = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif'];
+    const allowedExt = ['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif'];
     const ext = path.extname(file.originalname).toLowerCase();
 
-    if (allowedMime.includes(file.mimetype) && allowedExt.includes(ext)) {
+    if (allowedMime.includes(file.mimetype) || allowedExt.includes(ext)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid image format. Only JPG, PNG, and WebP images up to 5MB are allowed.'));
+      cb(new Error('Invalid image format. Only JPG, PNG, WebP, SVG, and GIF images up to 10MB are allowed.'));
     }
   }
 });
@@ -283,24 +289,64 @@ const videoUpload = multer({
   }
 });
 
-// Upload Handlers with Magic Byte Verification
-router.post('/upload/images', imageUpload.array('images', 10), (req, res) => {
+// Single image upload endpoint (used by Popular Categories, Hero Slides, Brand Logos, etc.)
+router.post(['/upload-image', '/upload/image'], imageUpload.fields([{ name: 'image', maxCount: 1 }, { name: 'images', maxCount: 10 }]), (req, res) => {
   try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ error: 'No image files uploaded.' });
+    let files = [];
+    if (req.files) {
+      if (Array.isArray(req.files.image)) files.push(...req.files.image);
+      if (Array.isArray(req.files.images)) files.push(...req.files.images);
+    } else if (req.file) {
+      files.push(req.file);
+    }
+
+    if (files.length === 0) {
+      return res.status(400).json({ error: 'No image file uploaded.' });
     }
 
     const savedPaths = [];
-    for (const file of req.files) {
+    for (const file of files) {
       const isValid = validateMagicBytes(file.path, 'image');
       if (!isValid) {
-        fs.unlinkSync(file.path);
-        return res.status(400).json({ error: `Security check failed: File "${file.originalname}" is not a valid JPEG, PNG, or WebP image.` });
+        try { fs.unlinkSync(file.path); } catch (_) {}
+        return res.status(400).json({ error: `Security check failed: File "${file.originalname}" is not a valid JPEG, PNG, WebP, GIF, or SVG image.` });
       }
       savedPaths.push(`uploads/products/${file.filename}`);
     }
 
-    return res.json({ success: true, urls: savedPaths });
+    return res.json({ success: true, url: savedPaths[0], urls: savedPaths });
+  } catch (err) {
+    console.error('[IMAGE UPLOAD ERROR]', err);
+    return res.status(500).json({ error: err.message || 'Image upload failed.' });
+  }
+});
+
+// Upload Handlers with Magic Byte Verification (Multiple / Bulk)
+router.post('/upload/images', imageUpload.fields([{ name: 'images', maxCount: 10 }, { name: 'image', maxCount: 10 }]), (req, res) => {
+  try {
+    let files = [];
+    if (req.files) {
+      if (Array.isArray(req.files.images)) files.push(...req.files.images);
+      if (Array.isArray(req.files.image)) files.push(...req.files.image);
+    } else if (req.file) {
+      files.push(req.file);
+    }
+
+    if (files.length === 0) {
+      return res.status(400).json({ error: 'No image files uploaded.' });
+    }
+
+    const savedPaths = [];
+    for (const file of files) {
+      const isValid = validateMagicBytes(file.path, 'image');
+      if (!isValid) {
+        try { fs.unlinkSync(file.path); } catch (_) {}
+        return res.status(400).json({ error: `Security check failed: File "${file.originalname}" is not a valid JPEG, PNG, WebP, GIF, or SVG image.` });
+      }
+      savedPaths.push(`uploads/products/${file.filename}`);
+    }
+
+    return res.json({ success: true, url: savedPaths[0], urls: savedPaths });
   } catch (err) {
     console.error('[IMAGE UPLOAD ERROR]', err);
     return res.status(500).json({ error: err.message || 'Image upload failed.' });

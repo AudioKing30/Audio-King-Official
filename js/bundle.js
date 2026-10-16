@@ -32615,8 +32615,16 @@ Weight: 1.24 lbs (0.567 kg`,
     title: "About AudioKing",
     subtitle: "Official Mumbai Pro Audio & Instruments Destination",
     badge: "Certified Audio Specialists",
-    updated_at: "2026-10-11T01:15:00+05:30",
+    updated_at: "2026-10-16T18:30:00+05:30",
     intro: `
+    <div class="ak-legal-statutory-card" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-left: 4px solid var(--ak-orange, #EA580C); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;">
+      <ol style="margin: 0; padding-left: 20px; font-size: 13.5px; color: #1E293B; line-height: 1.8; font-weight: 500;">
+        <li>The Corporate Identity Number of the company is <strong style="font-family: monospace; font-size: 14px; color: #0F172A; letter-spacing: 0.5px;">U29100MH2020PTC344745</strong></li>
+        <li><strong>GSTIN</strong> - <strong style="font-family: monospace; font-size: 14px; color: #0F172A; letter-spacing: 0.5px;">27AAHCV5628B1ZC</strong></li>
+        <li><strong>LEGAL NAME</strong> - <strong style="color: #0F172A;">VASP ADVISORS PVT LTD</strong></li>
+        <li><strong>TRADE NAME</strong> - <strong style="color: #0F172A;">VASP ADVISORS PVT LTD</strong></li>
+      </ol>
+    </div>
     <p>AudioKing is India's premier pro audio retailer and studio equipment specialist. Based in Mumbai, Maharashtra, we provide music producers, sound engineers, broadcasting studios, and touring musicians with 100% genuine gear backed by official manufacturer warranties and expert sound engineering consultancy.</p>
   `,
     sections: [

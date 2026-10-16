@@ -5079,8 +5079,16 @@ async function handlePopCatModalFileUpload(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
 
+  const btn = document.querySelector('button[onclick*="popCatModalImageFile"]');
+  const originalBtnText = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Uploading...';
+  }
+
   const formData = new FormData();
   formData.append('image', file);
+  formData.append('images', file);
 
   try {
     const res = await adminFetch('/api/admin/upload-image', {
@@ -5089,16 +5097,29 @@ async function handlePopCatModalFileUpload(e) {
     });
     if (res.ok) {
       const data = await res.json();
-      if (data.url) {
+      const uploadedUrl = data.url || (data.urls && data.urls[0]);
+      if (uploadedUrl) {
         const imgInput = document.getElementById('popCatModalImageUrl');
-        if (imgInput) imgInput.value = data.url;
+        if (imgInput) imgInput.value = uploadedUrl;
         updatePopCatModalImagePreview();
+        if (typeof showToast === 'function') {
+          showToast('Category image uploaded successfully!', 'success');
+        }
+      } else {
+        alert('Upload succeeded but no image URL was returned.');
       }
     } else {
-      alert('Failed to upload category image.');
+      const errData = await res.json().catch(() => ({}));
+      alert('Failed to upload category image: ' + (errData.error || 'Server error ' + res.status));
     }
   } catch (err) {
-    alert('Network error while uploading category image.');
+    alert('Network error while uploading category image: ' + err.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnText;
+    }
+    e.target.value = '';
   }
 }
 window.handlePopCatModalFileUpload = handlePopCatModalFileUpload;
