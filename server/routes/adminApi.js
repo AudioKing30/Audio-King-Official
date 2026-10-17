@@ -20,7 +20,7 @@ const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
 const { contentSecurityGuard } = require('../middleware/contentFilter');
 const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
-const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, syncPopularCategoriesMaster, syncStoreTop6Master, exportAllMasterData } = require('../dataSync');
+const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, syncPopularCategoriesMaster, syncStoreTop6Master, syncSettingsMaster, exportAllMasterData } = require('../dataSync');
 
 const router = express.Router();
 
@@ -2532,6 +2532,7 @@ router.put('/settings/whatsapp', (req, res) => {
       VALUES ('whatsapp_number', ?, datetime('now'))
       ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
     `).run(clean);
+    syncSettingsMaster(db);
     return res.json({
       success: true,
       message: 'WhatsApp support hotline updated successfully!',
@@ -2542,6 +2543,167 @@ router.put('/settings/whatsapp', (req, res) => {
     });
   } catch (e) {
     return res.status(500).json({ error: e.message });
+  }
+});
+
+// -------------------------------------------------------------
+// 9a. CASHFREE PAYMENT GATEWAY SETTINGS & CONNECTION TEST
+// -------------------------------------------------------------
+router.get('/settings/cashfree', (req, res) => {
+  try {
+    const { getCashfreeCredentials } = require('./cashfree');
+    const { appId, secretKey, mode, source } = getCashfreeCredentials();
+    const isConfigured = Boolean(appId && secretKey && !appId.includes('placeholder'));
+    const maskedAppId = appId ? (appId.length > 8 ? appId.slice(0, 4) + '••••' + appId.slice(-4) : '••••••••') : '';
+
+    return res.json({
+      success: true,
+      configured: isConfigured,
+      mode,
+      source,
+      maskedAppId,
+      hasSecret: Boolean(secretKey)
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+router.put('/settings/cashfree', async (req, res) => {
+  try {
+    const { appId, secretKey, mode } = req.body || {};
+    if (!appId || !String(appId).trim()) {
+      return res.status(400).json({ error: 'Cashfree App ID / Client ID is required.' });
+    }
+    if (!secretKey || !String(secretKey).trim()) {
+      return res.status(400).json({ error: 'Cashfree Secret Key / Client Secret is required.' });
+    }
+
+    const cleanAppId = String(appId).trim().replace(/^["']|["']$/g, '');
+    const cleanSecret = String(secretKey).trim().replace(/^["']|["']$/g, '');
+    const cleanMode = (mode === 'sandbox' || mode === 'test') ? 'sandbox' : 'production';
+    const now = new Date().toISOString();
+
+    db.prepare(`
+      INSERT INTO site_settings (key, value, updated_at)
+      VALUES ('cashfree_app_id', ?, ?)
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+    `).run(cleanAppId, now);
+
+    db.prepare(`
+      INSERT INTO site_settings (key, value, updated_at)
+      VALUES ('cashfree_secret_key', ?, ?)
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+    `).run(cleanSecret, now);
+
+    db.prepare(`
+      INSERT INTO site_settings (key, value, updated_at)
+      VALUES ('cashfree_mode', ?, ?)
+      ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+    `).run(cleanMode, now);
+
+    syncSettingsMaster(db);
+
+    // Test connection with Cashfree endpoint
+    const { getCashfreeEndpoint } = require('./cashfree');
+    const endpoint = getCashfreeEndpoint('/orders');
+    let testSuccess = false;
+    let testMessage = 'Keys saved successfully!';
+
+    try {
+      const testRes = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'x-client-id': cleanAppId,
+          'x-client-secret': cleanSecret,
+          'x-api-version': '2023-08-01',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          order_amount: 1,
+          order_currency: 'INR',
+          customer_details: {
+            customer_id: 'test_probe_verify',
+            customer_phone: '9876543210'
+          }
+        })
+      });
+
+      const testData = await testRes.json().catch(() => ({}));
+      if (testRes.ok || (testRes.status === 400 && testData.type !== 'authentication_error')) {
+        testSuccess = true;
+        testMessage = `Cashfree credentials verified successfully! Active in ${cleanMode.toUpperCase()} mode.`;
+      } else {
+        testMessage = `Keys saved, but Cashfree returned HTTP ${testRes.status}: ${testData.message || 'Authentication failed. Please verify credentials in Cashfree dashboard.'}`;
+      }
+    } catch (testErr) {
+      testMessage = `Keys saved. Connection test note: ${testErr.message}`;
+    }
+
+    return res.json({
+      success: true,
+      message: testMessage,
+      testSuccess,
+      mode: cleanMode
+    });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+router.post('/settings/cashfree/test', async (req, res) => {
+  try {
+    const { getCashfreeCredentials, getCashfreeEndpoint } = require('./cashfree');
+    const { appId, secretKey, mode } = getCashfreeCredentials();
+
+    if (!appId || !secretKey || appId.includes('placeholder')) {
+      return res.status(400).json({
+        success: false,
+        error: 'No Cashfree credentials found. Please configure them in Render environment variables or enter them below.'
+      });
+    }
+
+    const endpoint = getCashfreeEndpoint('/orders');
+    const testRes = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'x-client-id': appId,
+        'x-client-secret': secretKey,
+        'x-api-version': '2023-08-01',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        order_amount: 1,
+        order_currency: 'INR',
+        customer_details: {
+          customer_id: 'cf_live_ping_' + Date.now(),
+          customer_phone: '9876543210'
+        }
+      })
+    });
+
+    const testData = await testRes.json().catch(() => ({}));
+    if (testRes.ok) {
+      return res.json({
+        success: true,
+        mode,
+        message: `Connection successful! Cashfree ${mode.toUpperCase()} gateway is active and live.`
+      });
+    } else if (testData.type !== 'authentication_error') {
+      return res.json({
+        success: true,
+        mode,
+        message: `Authenticated with Cashfree! Account is active (${mode.toUpperCase()}).`
+      });
+    } else {
+      return res.status(401).json({
+        success: false,
+        mode,
+        error: `Cashfree authentication rejected (HTTP ${testRes.status}): ${testData.message || 'Invalid Client ID or Secret Key.'}`
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({ success: false, error: 'Connection test failed: ' + err.message });
   }
 });
 

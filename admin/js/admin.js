@@ -243,6 +243,7 @@ function switchView(viewName) {
   if (viewName === 'policies') loadPoliciesAdmin();
   if (viewName === 'testimonials') loadAdminTestimonials();
   if (viewName === 'analytics') loadAnalytics();
+  if (viewName === 'settings') loadAdminCashfreeSettings();
 }
 window.switchView = switchView;
 
@@ -3064,6 +3065,161 @@ async function handleChangePassword(e) {
     alertEl.style.display = 'block';
   }
 }
+
+// -------------------------------------------------------------
+// 8B. CASHFREE PAYMENT GATEWAY SETTINGS
+// -------------------------------------------------------------
+async function loadAdminCashfreeSettings() {
+  try {
+    const res = await adminFetch('/api/admin/settings/cashfree');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data || !data.success) return;
+
+    const setVal = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val !== undefined && val !== null) el.value = val;
+    };
+
+    setVal('cashfreeAppId', data.appId || '');
+    setVal('cashfreeAppIdIndex', data.appId || '');
+    setVal('cashfreeMode', data.mode || 'production');
+    setVal('cashfreeModeIndex', data.mode || 'production');
+
+    const secEl1 = document.getElementById('cashfreeSecretKey');
+    const secEl2 = document.getElementById('cashfreeSecretKeyIndex');
+    if (data.hasSecret) {
+      if (secEl1) secEl1.placeholder = '•••••••••••••••• (Secret Key is saved)';
+      if (secEl2) secEl2.placeholder = '•••••••••••••••• (Secret Key is saved)';
+    }
+
+    const updateBadge = (id) => {
+      const b = document.getElementById(id);
+      if (!b) return;
+      if (data.connected) {
+        if (data.mode === 'production') {
+          b.textContent = 'CONNECTED (LIVE PRODUCTION)';
+          b.style.background = '#DCFCE7';
+          b.style.color = '#166534';
+        } else {
+          b.textContent = 'CONNECTED (SANDBOX TEST)';
+          b.style.background = '#FEF3C7';
+          b.style.color = '#92400E';
+        }
+      } else {
+        b.textContent = 'NOT CONFIGURED';
+        b.style.background = '#F1F5F9';
+        b.style.color = '#64748B';
+      }
+    };
+
+    updateBadge('cashfreeStatusBadge');
+    updateBadge('cashfreeStatusBadgeIndex');
+  } catch (err) {
+    console.warn('[Admin Cashfree Settings Load Error]', err);
+  }
+}
+
+async function handleSaveCashfreeSettings(e) {
+  if (e && e.preventDefault) e.preventDefault();
+
+  const appId = (document.getElementById('cashfreeAppId')?.value || document.getElementById('cashfreeAppIdIndex')?.value || '').trim();
+  const secretKey = (document.getElementById('cashfreeSecretKey')?.value || document.getElementById('cashfreeSecretKeyIndex')?.value || '').trim();
+  const mode = document.getElementById('cashfreeMode')?.value || document.getElementById('cashfreeModeIndex')?.value || 'production';
+
+  const showAlert = (msg, isSuccess) => {
+    ['cashfreeSettingsAlert', 'cashfreeSettingsAlertIndex'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = msg;
+        el.style.display = 'block';
+        el.style.background = isSuccess ? '#DCFCE7' : '#FEE2E2';
+        el.style.color = isSuccess ? '#166534' : '#991B1B';
+        el.style.border = `1px solid ${isSuccess ? '#BBF7D0' : '#FECACA'}`;
+      }
+    });
+  };
+
+  const saveBtns = [document.getElementById('cashfreeSaveBtn'), document.getElementById('cashfreeSaveBtnIndex')];
+  saveBtns.forEach(btn => { if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; } });
+
+  try {
+    const res = await adminFetch('/api/admin/settings/cashfree', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ appId, secretKey, mode })
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      showAlert(`✓ ${data.message || 'Cashfree settings updated successfully!'}`, true);
+      await loadAdminCashfreeSettings();
+      const sec1 = document.getElementById('cashfreeSecretKey');
+      const sec2 = document.getElementById('cashfreeSecretKeyIndex');
+      if (sec1) sec1.value = '';
+      if (sec2) sec2.value = '';
+    } else {
+      showAlert(`✕ ${data.error || 'Failed to update Cashfree settings.'}`, false);
+    }
+  } catch (err) {
+    showAlert('✕ Network error while updating Cashfree settings.', false);
+  } finally {
+    saveBtns.forEach(btn => { if (btn) { btn.disabled = false; btn.textContent = 'Save & Activate Gateway'; } });
+  }
+}
+
+async function handleTestCashfreeConnection() {
+  const appId = (document.getElementById('cashfreeAppId')?.value || document.getElementById('cashfreeAppIdIndex')?.value || '').trim();
+  const secretKey = (document.getElementById('cashfreeSecretKey')?.value || document.getElementById('cashfreeSecretKeyIndex')?.value || '').trim();
+  const mode = document.getElementById('cashfreeMode')?.value || document.getElementById('cashfreeModeIndex')?.value || 'production';
+
+  const showAlert = (msg, isSuccess) => {
+    ['cashfreeSettingsAlert', 'cashfreeSettingsAlertIndex'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.textContent = msg;
+        el.style.display = 'block';
+        el.style.background = isSuccess ? '#DCFCE7' : '#FEE2E2';
+        el.style.color = isSuccess ? '#166534' : '#991B1B';
+        el.style.border = `1px solid ${isSuccess ? '#BBF7D0' : '#FECACA'}`;
+      }
+    });
+  };
+
+  const testBtns = [document.getElementById('cashfreeTestBtn'), document.getElementById('cashfreeTestBtnIndex')];
+  testBtns.forEach(btn => { if (btn) { btn.disabled = true; btn.textContent = 'Testing...'; } });
+
+  try {
+    const res = await adminFetch('/api/admin/settings/cashfree/test', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ appId, secretKey, mode })
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      showAlert(`✓ ${data.message} Status: ${data.details?.status || 'Active'}. Environment: ${data.mode.toUpperCase()}`, true);
+      ['cashfreeStatusBadge', 'cashfreeStatusBadgeIndex'].forEach(id => {
+        const b = document.getElementById(id);
+        if (b) {
+          b.textContent = `CONNECTED (${data.mode.toUpperCase()})`;
+          b.style.background = '#DCFCE7';
+          b.style.color = '#166534';
+        }
+      });
+    } else {
+      showAlert(`✕ Connection test failed: ${data.error || 'Unable to authenticate with Cashfree.'}`, false);
+    }
+  } catch (err) {
+    showAlert('✕ Network error while testing Cashfree connection.', false);
+  } finally {
+    testBtns.forEach(btn => { if (btn) { btn.disabled = false; btn.textContent = 'Test Connection'; } });
+  }
+}
+
+window.loadAdminCashfreeSettings = loadAdminCashfreeSettings;
+window.handleSaveCashfreeSettings = handleSaveCashfreeSettings;
+window.handleTestCashfreeConnection = handleTestCashfreeConnection;
 
 // -------------------------------------------------------------
 // MODALS & CONFIRM DIALOGS

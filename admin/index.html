@@ -1447,6 +1447,58 @@
           </div>
           <div id="backupStatusMsg" style="margin-top: 12px; font-size: 13px; display: none;"></div>
         </div>
+
+        <!-- CASHFREE PAYMENT GATEWAY CONFIGURATION -->
+        <div class="admin-card" style="max-width: 600px; margin: 24px auto 0 auto;">
+          <div class="card-header-bar">
+            <div>
+              <h2 class="card-heading">Cashfree Payment Gateway</h2>
+              <p class="card-desc">Accept UPI (GPay/PhonePe/Paytm), Cards &amp; Net Banking settled directly to your bank account</p>
+            </div>
+            <span id="cashfreeStatusBadge" class="status-badge" style="font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: 700; background: #FEF3C7; color: #92400E;">Checking...</span>
+          </div>
+
+          <div id="cashfreeSettingsAlert" style="display: none; padding: 12px; border-radius: var(--ak-radius); margin-bottom: 16px; font-size: 13px;"></div>
+
+          <form id="cashfreeSettingsForm" onsubmit="handleSaveCashfreeSettings(event)">
+            <div class="form-group">
+              <label class="form-label" for="cashfreeAppId">Cashfree App ID (Client ID) *</label>
+              <input type="text" id="cashfreeAppId" class="form-input" required placeholder="e.g. 1004847... or CF_APP_...">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cashfreeSecretKey">Cashfree Secret Key (Client Secret) *</label>
+              <div class="ak-password-wrapper">
+                <input type="password" id="cashfreeSecretKey" class="form-input" placeholder="Enter Cashfree Secret Key (leave blank to keep current)">
+                <button type="button" class="ak-password-toggle-btn" onclick="togglePasswordVisibility(this, 'cashfreeSecretKey')" data-target="cashfreeSecretKey" aria-label="Show Secret Key" title="Show Secret Key">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cashfreeMode">Gateway Mode</label>
+              <select id="cashfreeMode" class="form-select">
+                <option value="production">Live Production (Real Customer Money Settles to Bank)</option>
+                <option value="sandbox">Sandbox / Test Mode</option>
+              </select>
+            </div>
+
+            <div style="background: var(--ak-card-sub); padding: 12px 14px; border-radius: var(--ak-radius); border: 1px solid var(--ak-border); margin-bottom: 16px; font-size: 12px; color: var(--ak-text-secondary); line-height: 1.5;">
+              <strong style="color: var(--ak-text-primary);">Settlement Note:</strong> Customer payments collected via UPI, Cards, and Net Banking are deposited directly into your verified bank account linked inside your <a href="https://merchant.cashfree.com/merchants/login" target="_blank" rel="noopener" style="color: var(--ak-orange); text-decoration: underline;">Cashfree Merchant Dashboard</a> according to your T+1 / instant settlement schedule.
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" class="btn-secondary" id="cashfreeTestBtn" onclick="handleTestCashfreeConnection()" style="flex: 1; min-width: 140px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>Test Connection</span>
+              </button>
+              <button type="submit" class="btn-primary" id="cashfreeSaveBtn" style="flex: 1.5; min-width: 180px;">
+                <span>Save &amp; Activate Gateway</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
 
     </div>
@@ -1871,6 +1923,6 @@
     window.openTaxInvoiceModal = openTaxInvoiceModal;
     window.closeTaxInvoiceModal = closeTaxInvoiceModal;
   </script>
-  <script src="js/admin.js?v=20261017_cfreal1"></script>
+  <script src="js/admin.js?v=20261017_cfreal2"></script>
 </body>
 </html>

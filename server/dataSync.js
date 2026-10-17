@@ -17,6 +17,7 @@ const POLICIES_MASTER_PATH = path.join(DATA_DIR, 'policies_master.json');
 const STORE_TOP6_MASTER_PATH = path.join(DATA_DIR, 'store_top6_master.json');
 const SESSIONS_MASTER_PATH = path.join(DATA_DIR, 'sessions_master.json');
 const PRODUCTS_MASTER_PATH = path.join(DATA_DIR, 'products_master.json');
+const SETTINGS_MASTER_PATH = path.join(DATA_DIR, 'settings_master.json');
 
 /**
  * Safely writes JSON data with atomic temporary file swapping
@@ -253,6 +254,22 @@ function syncProductsMaster(db) {
   }
 }
 
+function syncSettingsMaster(db) {
+  try {
+    if (!db) return;
+    const rows = db.prepare('SELECT key, value, updated_at FROM site_settings').all();
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      count: rows.length,
+      settings: rows || []
+    };
+    safeWriteJson(SETTINGS_MASTER_PATH, payload);
+    console.log(`[DATA SYNC] Mirrored ${rows.length} site settings to settings_master.json`);
+  } catch (err) {
+    console.error('[DATA SYNC ERROR] syncSettingsMaster:', err.message);
+  }
+}
+
 function exportAllMasterData(db) {
   syncCustomersMaster(db);
   syncOrdersMaster(db);
@@ -260,6 +277,7 @@ function exportAllMasterData(db) {
   syncPopularCategoriesMaster(db);
   syncProductsMaster(db);
   syncSessionsMaster(db);
+  syncSettingsMaster(db);
 }
 
 /**
@@ -477,8 +495,31 @@ function hydrateDatabaseFromMaster(db) {
         console.log(`[HYDRATION] Successfully restored ${restoredSess} active sessions from sessions_master.json!`);
       }
     }
+
+    // 9. Hydrate Site Settings from settings_master.json
+    hydrateSettingsFromMaster(db);
   } catch (err) {
     console.error('[HYDRATION ERROR] Failed to hydrate database:', err);
+  }
+}
+
+function hydrateSettingsFromMaster(db) {
+  try {
+    if (!db) return;
+    const data = safeReadJson(SETTINGS_MASTER_PATH, null);
+    if (data && Array.isArray(data.settings) && data.settings.length > 0) {
+      for (const s of data.settings) {
+        if (!s.key) continue;
+        db.prepare(`
+          INSERT INTO site_settings (key, value, updated_at)
+          VALUES (?, ?, ?)
+          ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at
+        `).run(s.key, s.value, s.updated_at || new Date().toISOString());
+      }
+      console.log(`[HYDRATION] Hydrated ${data.settings.length} site settings from settings_master.json`);
+    }
+  } catch (err) {
+    console.error('[HYDRATION ERROR] hydrateSettingsFromMaster:', err.message);
   }
 }
 
@@ -620,6 +661,8 @@ module.exports = {
   syncStoreTop6Master,
   syncSessionsMaster,
   syncProductsMaster,
+  syncSettingsMaster,
+  hydrateSettingsFromMaster,
   exportAllMasterData,
   hydrateDatabaseFromMaster
 };

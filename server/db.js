@@ -824,6 +824,17 @@ function initDatabase() {
         db.prepare('ALTER TABLE popular_categories ADD COLUMN size_class TEXT').run();
       }
     } catch (_) {}
+
+    // Migration: ensure orders table has payment_status and payment_id
+    try {
+      const orderCols = db.prepare('PRAGMA table_info(orders)').all().map(c => c.name);
+      if (!orderCols.includes('payment_status')) {
+        db.prepare("ALTER TABLE orders ADD COLUMN payment_status TEXT DEFAULT 'PAID'").run();
+      }
+      if (!orderCols.includes('payment_id')) {
+        db.prepare('ALTER TABLE orders ADD COLUMN payment_id TEXT').run();
+      }
+    } catch (_) {}
   } catch (e) {
     console.warn('[DB Migration Warning]', e.message);
   }

@@ -85,10 +85,26 @@ export class CashfreePaymentAdapter {
       0
     );
 
+    // Store pending order in sessionStorage so redirect payment flows can complete seamlessly
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('audioking_pending_cf_order', JSON.stringify({
+          ...orderData,
+          savedAt: Date.now()
+        }));
+      }
+    } catch (e) {
+      console.warn('[CashfreeAdapter] Could not store pending order in sessionStorage:', e);
+    }
+
     // 1. Create Cashfree payment session on backend
     let createRes = null;
     try {
       const cleanPhone = (orderData.customer?.phone || currentUser?.phone_number || '').replace(/[^0-9]/g, '');
+      const dynamicReturnUrl = (typeof window !== 'undefined' && window.location)
+        ? `${window.location.origin}${window.location.pathname}?cf_order_id=${encodeURIComponent(orderData.orderId)}&order_id=${encodeURIComponent(orderData.orderId)}`
+        : undefined;
+
       const resp = await fetch(`${baseUrl}/api/payment/cashfree/create-order`, {
         method: 'POST',
         credentials: 'include',
@@ -101,6 +117,8 @@ export class CashfreePaymentAdapter {
           amount: totalAmount,
           currency: 'INR',
           orderId: orderData.orderId || `ak_order_${Date.now()}`,
+          paymentMethod: orderData.paymentMethod || 'UPI',
+          returnUrl: dynamicReturnUrl,
           customer: {
             name: orderData.customer?.name || orderData.customer?.fullName || currentUser?.full_name || 'Valued Customer',
             email: orderData.customer?.email || currentUser?.email || 'customer@audioking.co.in',
@@ -135,11 +153,12 @@ export class CashfreePaymentAdapter {
             redirectTarget: '_modal'
           }).then(async (result) => {
             if (result.error) {
-              return reject(new Error(result.error.message || 'Payment cancelled or failed.'));
+              return reject(new Error(result.error.message || 'Payment cancelled or declined.'));
             }
 
             if (result.redirect) {
-              console.log('[CashfreeAdapter] Payment will complete via redirect.');
+              console.log('[CashfreeAdapter] Payment will complete via bank/app redirect. Browser redirecting...');
+              // Return will be captured by handleCashfreeReturnRedirect() on the return_url
               return;
             }
 
@@ -161,11 +180,18 @@ export class CashfreePaymentAdapter {
 
               const vData = await verifyRes.json();
               if (vData.success && vData.verified) {
+                try {
+                  if (typeof sessionStorage !== 'undefined') {
+                    sessionStorage.removeItem('audioking_pending_cf_order');
+                  }
+                } catch (_) {}
+
                 resolve({
                   success: true,
                   transactionId: vData.paymentId || `cf_pay_${createRes.orderId}`,
                   gatewayOrderId: createRes.orderId,
-                  paymentMethod: orderData.paymentMethod || 'Cashfree PG',
+                  paymentMethod: vData.paymentMethod || orderData.paymentMethod || 'Cashfree PG',
+                  bankReference: vData.bankReference || '',
                   timestamp: new Date().toISOString(),
                   message: 'Cashfree payment completed successfully.'
                 });

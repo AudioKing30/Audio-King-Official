@@ -335,15 +335,18 @@ function renderCheckoutStep() {
         <label class="ak-payment-option selected" data-method="UPI">
           <input type="radio" name="akPayment" value="UPI" checked class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">UPI (Google Pay, PhonePe, Paytm, BHIM)</div>
-            <div class="ak-payment-desc">Instant payment via any UPI application or UPI ID</div>
-            <div class="ak-method-details" id="akUpiDetails" style="display: block; margin-top: 10px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
-              <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+            <div class="ak-payment-title">UPI (Google Pay, PhonePe, Paytm, BHIM &amp; QR)</div>
+            <div class="ak-payment-desc">Instant zero-fee payment via any UPI app or QR scan</div>
+            <div class="ak-method-details" id="akUpiDetails" style="display: block; margin-top: 10px; background: #F8FAFC; padding: 10px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                 <button type="button" class="ak-upi-chip selected" data-upi="Google Pay" style="padding: 5px 12px; font-size: 12px; font-weight: 700; border: 1.5px solid var(--ak-orange); background: #FFF7ED; color: var(--ak-orange); border-radius: 4px; cursor: pointer;">Google Pay</button>
                 <button type="button" class="ak-upi-chip" data-upi="PhonePe" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">PhonePe</button>
                 <button type="button" class="ak-upi-chip" data-upi="Paytm" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">Paytm</button>
+                <button type="button" class="ak-upi-chip" data-upi="BHIM / QR" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid #CBD5E1; background: #FFF; color: #334155; border-radius: 4px; cursor: pointer;">BHIM / QR</button>
               </div>
-              <input type="text" id="akUpiIdInput" class="ak-form-input" placeholder="e.g. mobile@upi or username@okhdfcbank" value="musician@okhdfcbank" style="background:#FFF;">
+              <div style="margin-top: 8px; font-size: 11.5px; color: #64748B;">
+                ✓ Scan dynamic QR code or launch your installed UPI app inside Cashfree
+              </div>
             </div>
           </div>
         </label>
@@ -352,26 +355,17 @@ function renderCheckoutStep() {
         <label class="ak-payment-option" data-method="Card">
           <input type="radio" name="akPayment" value="Card" class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">Credit / Debit Cards</div>
+            <div class="ak-payment-title">Credit &amp; Debit Cards</div>
             <div class="ak-payment-desc">Visa, Mastercard, RuPay, Maestro &amp; Amex</div>
-            <div class="ak-method-details" id="akCardDetails" style="display: none; margin-top: 12px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
-              <div style="margin-bottom: 8px;">
-                <label style="font-size: 11px; font-weight: 700; color: #64748B; display: block; margin-bottom: 3px;">Card Number</label>
-                <input type="text" id="akCardNumber" class="ak-form-input" placeholder="4242 •••• •••• 4242" maxlength="19" value="4242 4242 4242 4242" style="background:#FFF;">
+            <div class="ak-method-details" id="akCardDetails" style="display: none; margin-top: 10px; background: #F8FAFC; padding: 10px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 6px;">
+                <span style="font-size: 11.5px; font-weight: 700; color: #1E293B; background: #FFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px;">VISA</span>
+                <span style="font-size: 11.5px; font-weight: 700; color: #1E293B; background: #FFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px;">Mastercard</span>
+                <span style="font-size: 11.5px; font-weight: 700; color: #1E293B; background: #FFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px;">RuPay</span>
+                <span style="font-size: 11.5px; font-weight: 700; color: #1E293B; background: #FFF; border: 1px solid #CBD5E1; padding: 3px 8px; border-radius: 4px;">Amex</span>
               </div>
-              <div style="margin-bottom: 8px;">
-                <label style="font-size: 11px; font-weight: 700; color: #64748B; display: block; margin-bottom: 3px;">Cardholder Name</label>
-                <input type="text" id="akCardName" class="ak-form-input" placeholder="Name on Card" value="${savedAddress?.name || 'Rahul Sharma'}" style="background:#FFF;">
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div>
-                  <label style="font-size: 11px; font-weight: 700; color: #64748B; display: block; margin-bottom: 3px;">Expiry (MM/YY)</label>
-                  <input type="text" id="akCardExpiry" class="ak-form-input" placeholder="12/28" maxlength="5" value="12/28" style="background:#FFF;">
-                </div>
-                <div>
-                  <label style="font-size: 11px; font-weight: 700; color: #64748B; display: block; margin-bottom: 3px;">CVV</label>
-                  <input type="password" id="akCardCvv" class="ak-form-input" placeholder="•••" maxlength="4" value="123" style="background:#FFF;">
-                </div>
+              <div style="font-size: 11.5px; color: #64748B;">
+                ✓ 256-bit SSL encrypted &amp; verified via 3D Secure bank OTP inside Cashfree
               </div>
             </div>
           </div>
@@ -381,16 +375,12 @@ function renderCheckoutStep() {
         <label class="ak-payment-option" data-method="Net Banking">
           <input type="radio" name="akPayment" value="Net Banking" class="ak-payment-radio">
           <div class="ak-payment-info" style="width: 100%;">
-            <div class="ak-payment-title">Net Banking</div>
-            <div class="ak-payment-desc">All Indian banks supported (HDFC, ICICI, SBI, Axis, Kotak)</div>
-            <div class="ak-method-details" id="akNbDetails" style="display: none; margin-top: 10px; background: #F8FAFC; padding: 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
-              <select id="akBankSelect" class="ak-form-input" style="background:#FFF;">
-                <option value="HDFC Bank" selected>HDFC Bank</option>
-                <option value="ICICI Bank">ICICI Bank</option>
-                <option value="State Bank of India">State Bank of India</option>
-                <option value="Axis Bank">Axis Bank</option>
-                <option value="Kotak Mahindra Bank">Kotak Mahindra Bank</option>
-              </select>
+            <div class="ak-payment-title">Net Banking &amp; Other Payment Methods</div>
+            <div class="ak-payment-desc">All Indian banks supported (HDFC, ICICI, SBI, Axis, Kotak &amp; 50+ more)</div>
+            <div class="ak-method-details" id="akNbDetails" style="display: none; margin-top: 10px; background: #F8FAFC; padding: 10px 12px; border-radius: 6px; border: 1px solid #E2E8F0;">
+              <div style="font-size: 11.5px; color: #64748B;">
+                ✓ Choose your bank or wallet inside Cashfree gateway for instant settlement
+              </div>
             </div>
           </div>
         </label>
@@ -672,18 +662,14 @@ export function initCheckout() {
         let paymentMethodLabel = 'Prepaid UPI / Online';
 
         if (methodVal === 'Card') {
-          const cardNum = document.getElementById('akCardNumber')?.value.trim() || '4242 4242 4242 4242';
-          const cardName = document.getElementById('akCardName')?.value.trim();
-          const last4 = cardNum.replace(/\s/g, '').slice(-4) || '4242';
-          paymentMethodLabel = `Card ending ${last4}`;
+          paymentMethodLabel = 'Credit/Debit Card';
         } else if (methodVal === 'UPI') {
-          const selectedChip = document.querySelector('.ak-upi-chip.selected')?.dataset.upi || 'Google Pay';
+          const selectedChip = document.querySelector('.ak-upi-chip.selected')?.dataset.upi || 'UPI';
           paymentMethodLabel = `UPI (${selectedChip})`;
         } else if (methodVal === 'Net Banking') {
-          const selectedBank = document.getElementById('akBankSelect')?.value || 'HDFC Bank';
-          paymentMethodLabel = `Net Banking (${selectedBank})`;
+          paymentMethodLabel = 'Net Banking';
         } else {
-          paymentMethodLabel = 'Prepaid UPI / Online';
+          paymentMethodLabel = 'Cashfree PG';
         }
 
         const itemsTotal = (checkoutItems && checkoutItems.length > 0)

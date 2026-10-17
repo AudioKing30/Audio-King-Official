@@ -834,6 +834,34 @@ async function handleCashfreeReturnRedirect() {
     if (data.success && data.verified) {
       clearCart();
       showToast('✓ Payment completed successfully! Your order is confirmed.', 'success');
+
+      // 1. Check if we have the pending order in sessionStorage
+      let pendingOrder = null;
+      try {
+        const raw = sessionStorage.getItem('audioking_pending_cf_order');
+        if (raw) pendingOrder = JSON.parse(raw);
+      } catch (_) {}
+
+      if (pendingOrder) {
+        pendingOrder.paymentId = data.paymentId || `cf_pay_${orderId}`;
+        pendingOrder.paymentMethod = data.paymentMethod || pendingOrder.paymentMethod || 'Cashfree PG';
+        pendingOrder.paymentStatus = 'PAID';
+        pendingOrder.bankReference = data.bankReference || '';
+
+        try {
+          const saved = await ordersService.createOrder(pendingOrder);
+          sessionStorage.removeItem('audioking_pending_cf_order');
+          triggerOrderAnimation(saved || pendingOrder);
+          return;
+        } catch (saveErr) {
+          console.warn('[Cashfree Return] Order creation notice:', saveErr);
+          sessionStorage.removeItem('audioking_pending_cf_order');
+          triggerOrderAnimation(pendingOrder);
+          return;
+        }
+      }
+
+      // 2. Fallback: check if order is already in the database
       try {
         const orderRes = await fetch(`${baseUrl}/api/user/orders/${encodeURIComponent(orderId)}`);
         const orderData = await orderRes.json();
@@ -842,6 +870,7 @@ async function handleCashfreeReturnRedirect() {
           return;
         }
       } catch (_) {}
+
       window.location.hash = '#account/orders';
     } else {
       showToast(data.error || 'Payment was not verified or was cancelled.', 'error');
