@@ -24,6 +24,14 @@ async function seedAdminAndCatalog() {
 
   const defaultAdminAccounts = [
     {
+      id: 'usr_admin_info',
+      name: 'AudioKing Pro Audio Owner',
+      displayName: 'AudioKing Info',
+      title: 'Store Owner & Pro Audio Specialist',
+      email: 'info@audioking.co.in',
+      password: resolvedAdminPassword
+    },
+    {
       id: 'usr_admin_initial',
       name: process.env.ADMIN_NAME || 'AudioKing Administrator',
       displayName: 'Admin',
@@ -55,9 +63,17 @@ async function seedAdminAndCatalog() {
       `).run(acc.id, acc.name, acc.displayName, acc.title, acc.email, passwordHash, now, now);
       console.log(`[SEED] Admin account seeded: ${acc.email}`);
     } else {
-      // Ensure existing admin email has admin role & updated fast hash
-      db.prepare("UPDATE users SET role = 'admin', email_verified = 1, password_hash = ? WHERE email = ?").run(passwordHash, acc.email);
-      console.log(`[SEED] Admin account verified & ensured role=admin: ${acc.email}`);
+      // Only overwrite password if explicitly set via ADMIN_PASSWORD environment variable, or if password_hash is missing
+      if (process.env.ADMIN_PASSWORD) {
+        db.prepare("UPDATE users SET role = 'admin', email_verified = 1, password_hash = ?, updated_at = ? WHERE email = ?").run(passwordHash, now, acc.email);
+        console.log(`[SEED] Admin password synced from ADMIN_PASSWORD env: ${acc.email}`);
+      } else if (!existing.password_hash) {
+        db.prepare("UPDATE users SET role = 'admin', email_verified = 1, password_hash = ?, updated_at = ? WHERE email = ?").run(passwordHash, now, acc.email);
+        console.log(`[SEED] Admin password initialized: ${acc.email}`);
+      } else {
+        db.prepare("UPDATE users SET role = 'admin', email_verified = 1 WHERE email = ?").run(acc.email);
+        console.log(`[SEED] Admin account verified & active (existing secure password preserved): ${acc.email}`);
+      }
     }
   }
 

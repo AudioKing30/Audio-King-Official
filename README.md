@@ -68,10 +68,10 @@ NODE_ENV=development
 DATABASE_PATH=./server/data/audioking.db
 SESSION_SECRET=audioking_dev_session_secret_123456789_abcdef
 
-# Live Gmail SMTP (For registration & password reset OTP emails)
-GMAIL_USER=audioking30@gmail.com
-GMAIL_APP_PASSWORD=shojvtbwiaagjben
-EMAIL_FROM="AudioKing <audioking30@gmail.com>"
+# Live Gmail / SMTP Settings (For registration & OTP emails)
+GMAIL_USER=info@audioking.co.in
+GMAIL_APP_PASSWORD=your_app_password_here
+EMAIL_FROM="AudioKing <info@audioking.co.in>"
 EMAIL_FROM_NAME="AudioKing"
 
 # Google Cloud OAuth 2.0
@@ -91,12 +91,12 @@ http://localhost:3000
 
 ---
 
-## 🔑 Default Administrator Credentials
+## 🔐 Administrator Access & Security
 
-On initial startup, `server/seedAdmin.js` automatically seeds the master administrator account:
-- **Email**: `audioking30@gmail.com`
-- **Password**: `Musix@Admin2026!`
+Administrator accounts and access are strictly secured:
+- **Environment Variables**: Configure `ADMIN_EMAIL` and `ADMIN_PASSWORD` securely in your private hosting environment (e.g. Render Dashboard or local `.env`).
 - **Admin Portal URL**: `http://localhost:3000/#admin` (or `http://localhost:3000/admin`)
+- For security compliance, no default passwords or live credentials are ever committed to repository code or documentation.
 
 ---
 

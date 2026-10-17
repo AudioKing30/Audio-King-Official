@@ -9,12 +9,12 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const GMAIL_USER = (process.env.GMAIL_USER || 'audioking30@gmail.com').trim();
-const GMAIL_APP_PASSWORD = (process.env.GMAIL_APP_PASSWORD || 'shojvtbwiaagjben').trim().replace(/\s+/g, '');
+const GMAIL_USER = (process.env.GMAIL_USER || process.env.SMTP_USER || '').trim();
+const GMAIL_APP_PASSWORD = (process.env.GMAIL_APP_PASSWORD || process.env.SMTP_PASS || '').trim().replace(/\s+/g, '');
 const SMTP_HOST = (process.env.SMTP_HOST || '').trim();
 const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
-const SMTP_USER = (process.env.SMTP_USER || '').trim();
-const SMTP_PASS = (process.env.SMTP_PASS || '').trim().replace(/\s+/g, '');
+const SMTP_USER = (process.env.SMTP_USER || GMAIL_USER).trim();
+const SMTP_PASS = (process.env.SMTP_PASS || GMAIL_APP_PASSWORD).trim().replace(/\s+/g, '');
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
 const EMAIL_FROM = process.env.EMAIL_FROM || 'AudioKing <info@audioking.co.in>';
 const EMAIL_REPLY_TO = process.env.EMAIL_REPLY_TO || 'info@audioking.co.in';
@@ -653,7 +653,45 @@ async function sendOrderCancelledEmail({ email, fullName = 'Valued Customer', or
     </p>
   `);
 
-  return sendEmail({ to: email, subject, html, text });
+/**
+ * 9. Send Security Alert Email to Administrator
+ */
+async function sendSecurityAlertEmail({ eventType, ipAddress, userAgent, details, timestamp }) {
+  const adminEmail = (process.env.ADMIN_ALERT_EMAIL || process.env.ADMIN_EMAIL || 'info@audioking.co.in').trim();
+  const timeStr = timestamp || new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST';
+  const subject = `[SECURITY ALERT] AudioKing: ${eventType} (IP: ${ipAddress})`;
+
+  const text = `SECURITY ALERT\n\nEvent: ${eventType}\nTarget/Details: ${details || 'N/A'}\nIP Address: ${ipAddress}\nTime: ${timeStr}\nUser Agent: ${userAgent || 'Unknown'}\n\nAutomated Security Action: If failed attempts reached 5, the IP is automatically locked out for 15 minutes.\n\nAudioKing Security Sentinel`;
+
+  const html = wrapEmailTemplate('Security Alert', `
+    <h2 class="headline" style="color: #DC2626;">🚨 Security Incident Detected</h2>
+    <p class="paragraph" style="color: #0F172A; font-weight: 600;">
+      An unauthorized access attempt or suspicious activity was detected on your AudioKing platform.
+    </p>
+
+    <div style="background: #FEF2F2; border: 1.5px solid #F87171; border-radius: 8px; padding: 18px; margin: 20px 0;">
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #991B1B;"><strong>Event:</strong> ${eventType}</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #991B1B;"><strong>Details:</strong> ${details || 'N/A'}</p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #991B1B;"><strong>Source IP:</strong> <code style="background: #FEE2E2; padding: 2px 6px; border-radius: 4px; font-weight: bold;">${ipAddress}</code></p>
+      <p style="margin: 0 0 8px 0; font-size: 14px; color: #991B1B;"><strong>Timestamp:</strong> ${timeStr}</p>
+      <p style="margin: 0; font-size: 13px; color: #7F1D1D; word-break: break-all;"><strong>User Agent:</strong> ${userAgent || 'Unknown'}</p>
+    </div>
+
+    <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px 18px; margin: 18px 0; font-size: 13px; color: #475569;">
+      <strong>Automated Defense Status:</strong>
+      <p style="margin: 4px 0 0 0;">
+        • Strict IP Rate-Limiter is active.<br>
+        • Intruders exceeding 5 failed attempts are locked out for 15 minutes.<br>
+        • All active sessions can be revoked anytime from Admin &rarr; Security.
+      </p>
+    </div>
+  `);
+
+  try {
+    return await sendEmail({ to: adminEmail, subject, html, text });
+  } catch (err) {
+    console.error('[SECURITY EMAIL ERROR] Failed to send alert email:', err.message);
+  }
 }
 
 module.exports = {
@@ -668,5 +706,6 @@ module.exports = {
   sendOrderConfirmedEmail,
   sendOrderDispatchedEmail,
   sendOrderDeliveredEmail,
-  sendOrderCancelledEmail
+  sendOrderCancelledEmail,
+  sendSecurityAlertEmail
 };

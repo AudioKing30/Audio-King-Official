@@ -9,6 +9,8 @@ const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 
 function getClientIp(req) {
+  const cf = req.headers['cf-connecting-ip'];
+  if (cf) return String(cf).trim();
   const forwarded = req.headers['x-forwarded-for'];
   if (forwarded) {
     return forwarded.split(',')[0].trim();
@@ -51,6 +53,19 @@ function recordFailedLogin(req) {
   if (record.count >= MAX_ATTEMPTS) {
     record.blockedUntil = now + WINDOW_MS;
     console.warn(`[RATE LIMIT] IP ${ip} exceeded ${MAX_ATTEMPTS} failed admin login attempts. Blocked for 15 minutes.`);
+    
+    // Send automated security email alert to admin
+    try {
+      const { sendSecurityAlertEmail } = require('../email');
+      if (typeof sendSecurityAlertEmail === 'function') {
+        sendSecurityAlertEmail({
+          eventType: 'Brute-Force Lockout (5 Failed Admin Logins)',
+          ipAddress: ip,
+          userAgent: req.headers['user-agent'] || 'Unknown',
+          details: `IP exceeded ${MAX_ATTEMPTS} failed admin authentication attempts. IP temporarily banned for 15 minutes.`
+        }).catch(e => console.error('[SECURITY ALERT DISPATCH ERROR]', e.message));
+      }
+    } catch (e) {}
   }
 
   loginAttempts.set(ip, record);

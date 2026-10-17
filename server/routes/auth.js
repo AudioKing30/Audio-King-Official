@@ -744,9 +744,10 @@ router.get('/google/callback', async (req, res) => {
         `).run(crypto.randomUUID(), user.id, String(googleId), now);
       } catch (e) {}
 
-      // If email matches admin email, ensure role is 'admin'
-      const isAdminEmail = cleanEmail === 'admin@audioking.in' || cleanEmail === 'audioking30@gmail.com';
-      const effectiveRole = isAdminEmail ? 'admin' : (user.role || 'customer');
+      // Preserve existing role (or admin if explicitly configured via ADMIN_EMAIL env)
+      const configuredAdminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+      const isAdminEmail = Boolean(configuredAdminEmail && cleanEmail === configuredAdminEmail);
+      const effectiveRole = (user.role === 'admin' || isAdminEmail) ? 'admin' : (user.role || 'customer');
 
       // Preserve customer-saved full_name and custom avatar as source of truth
       const hasCustomAvatar = Boolean(user.custom_profile_image && user.custom_profile_image.trim());
@@ -769,8 +770,8 @@ router.get('/google/callback', async (req, res) => {
       // Brand new user registration via Google OAuth
       const userId = crypto.randomUUID();
       const displayName = fullName.split(' ')[0] + Math.floor(Math.random() * 90 + 10);
-      const isAdminEmail = cleanEmail === 'admin@audioking.in' || cleanEmail === 'audioking30@gmail.com';
-      const userRole = isAdminEmail ? 'admin' : 'customer';
+      const configuredAdminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+      const userRole = (configuredAdminEmail && cleanEmail === configuredAdminEmail) ? 'admin' : 'customer';
 
       db.prepare(`
         INSERT INTO users (id, full_name, display_name, title, email, role, phone_number, profile_image, provider_profile_image, custom_profile_image, auth_provider, email_verified, created_at, updated_at, last_login_at)

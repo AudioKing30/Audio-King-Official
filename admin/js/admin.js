@@ -94,61 +94,6 @@ function getAdminApiBase() {
   return '';
 }
 
-let _autoLoginPromise = null;
-async function tryAutoAdminLogin() {
-  if (_autoLoginPromise) return _autoLoginPromise;
-  _autoLoginPromise = (async () => {
-    try {
-      const base = getAdminApiBase();
-      const loginUrl = `${base}/api/admin/auth/login`;
-      for (let attempt = 1; attempt <= 2; attempt++) {
-        try {
-          const res = await fetch(loginUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-              email: 'audioking30@gmail.com',
-              password: 'Lovemytele@321'
-            })
-          });
-          if (res.ok) {
-            const data = await res.json();
-            const token = data.token || (data.user && data.user.token) || data.sessionId;
-            if (token) {
-              localStorage.setItem('audioking_admin_token', token);
-              localStorage.setItem('audioKingSessionToken', token);
-              localStorage.setItem('audioking_token', token);
-              localStorage.setItem('audioKingToken', token);
-              if (data.user) {
-                localStorage.setItem('audioking_user', JSON.stringify(data.user));
-                localStorage.setItem('audioKingUser', JSON.stringify(data.user));
-              }
-              return token;
-            }
-          }
-          if ((res.status === 502 || res.status === 503 || res.status === 504) && attempt < 2) {
-            await new Promise(r => setTimeout(r, 2200));
-            continue;
-          }
-          break;
-        } catch (fetchErr) {
-          if (attempt < 2) {
-            await new Promise(r => setTimeout(r, 2200));
-            continue;
-          }
-        }
-      }
-    } catch (e) {
-      console.warn('[ADMIN] Auto-login attempt failed:', e);
-    } finally {
-      _autoLoginPromise = null;
-    }
-    return null;
-  })();
-  return _autoLoginPromise;
-}
-
 // Central Authenticated Admin Fetch (uses cookie + token header + live API base URL)
 async function adminFetch(url, options = {}) {
   const base = getAdminApiBase();
@@ -175,14 +120,17 @@ async function adminFetch(url, options = {}) {
   
   let res = await fetch(fullUrl, { ...options, credentials: 'include', headers });
   
-  // If 401 or 403, try auto-login once and retry the request
+  // If unauthorized (401) or forbidden (403), purge any invalid tokens
   if ((res.status === 401 || res.status === 403) && !url.includes('/api/admin/auth/login')) {
-    const newToken = await tryAutoAdminLogin();
-    if (newToken) {
-      const retryHeaders = { ...(options.headers || {}) };
-      retryHeaders['Authorization'] = `Bearer ${String(newToken).trim()}`;
-      retryHeaders['x-admin-token'] = String(newToken).trim();
-      res = await fetch(fullUrl, { ...options, credentials: 'include', headers: retryHeaders });
+    localStorage.removeItem('audioking_admin_token');
+    localStorage.removeItem('audioKingSessionToken');
+    localStorage.removeItem('audioking_token');
+    localStorage.removeItem('audioKingToken');
+    
+    // Redirect to login if on admin page and not already on login.html
+    if (window.location.pathname.includes('/admin') && !window.location.pathname.includes('login.html')) {
+      const currentUrl = encodeURIComponent(window.location.href);
+      window.location.href = `login.html?returnUrl=${currentUrl}`;
     }
   }
   return res;
