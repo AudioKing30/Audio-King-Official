@@ -228,8 +228,12 @@ router.post('/create-order', async (req, res) => {
 
       if (!cfRes.ok) {
         console.error(`[CASHFREE CREATE ORDER ERROR] HTTP ${cfRes.status} (${mode} mode):`, cfData);
+        let userMessage = cfData.message || 'Failed to initiate Cashfree payment session.';
+        if (cfData.message && cfData.message.toLowerCase().includes('maximum order amount')) {
+          userMessage = `Order total (₹${Number(amount).toLocaleString('en-IN')}) exceeds the default ₹1,00,000 single-transaction limit set on your Cashfree merchant account. To accept high-ticket orders above ₹1,00,000, please request a limit increase on merchant.cashfree.com or reach out to care@cashfree.com.`;
+        }
         return res.status(cfRes.status).json({
-          error: cfData.message || 'Failed to initiate Cashfree payment session.',
+          error: userMessage,
           details: cfData
         });
       }
