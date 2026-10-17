@@ -2484,6 +2484,44 @@ router.put('/settings/whatsapp', (req, res) => {
 });
 
 // -------------------------------------------------------------
+// 9b. SECURITY AUDIT & INTRUSION DETECTION ENDPOINTS
+// -------------------------------------------------------------
+router.get('/security/audit-sessions', (req, res) => {
+  try {
+    const sessions = db.prepare(`
+      SELECT 
+        s.id, s.user_id, s.created_at, s.last_active_at, s.user_agent, s.ip_address,
+        u.email, u.full_name, u.role
+      FROM sessions s
+      LEFT JOIN users u ON s.user_id = u.id
+      ORDER BY s.created_at DESC
+      LIMIT 100
+    `).all();
+
+    const recentUsers = db.prepare(`
+      SELECT id, email, full_name, role, auth_provider, email_verified, created_at, updated_at, last_login_at
+      FROM users
+      ORDER BY created_at DESC
+      LIMIT 50
+    `).all();
+
+    return res.json({ success: true, sessions, recentUsers });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+router.post('/security/invalidate-sessions', (req, res) => {
+  try {
+    const currentSessionId = req.admin?.sessionId;
+    const info = db.prepare('DELETE FROM sessions WHERE id != ?').run(currentSessionId || '');
+    return res.json({ success: true, invalidatedSessions: info.changes });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
+
+// -------------------------------------------------------------
 // 10. DATABASE PERSISTENCE & DATA SNAPSHOT BACKUP / RESTORE
 // -------------------------------------------------------------
 router.get('/backup/export', (req, res) => {
