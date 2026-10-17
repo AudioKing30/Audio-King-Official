@@ -9,6 +9,7 @@
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const { db } = require('./db');
 
 async function seedAdminAndCatalog() {
@@ -16,6 +17,11 @@ async function seedAdminAndCatalog() {
   const now = new Date().toISOString();
 
   // 1. Seed Initial Admin Accounts (admin@audioking.in & audioking30@gmail.com)
+  const resolvedAdminPassword = (process.env.ADMIN_PASSWORD || '').trim() || crypto.randomBytes(16).toString('hex');
+  if (!process.env.ADMIN_PASSWORD) {
+    console.warn('[SECURITY NOTICE] ADMIN_PASSWORD environment variable not set. Generated dynamic admin secret.');
+  }
+
   const defaultAdminAccounts = [
     {
       id: 'usr_admin_initial',
@@ -23,7 +29,7 @@ async function seedAdminAndCatalog() {
       displayName: 'Admin',
       title: 'Store Owner & Audio Specialist',
       email: (process.env.ADMIN_EMAIL || 'admin@audioking.in').toLowerCase().trim(),
-      password: process.env.ADMIN_PASSWORD || 'Lovemytele@321'
+      password: resolvedAdminPassword
     },
     {
       id: 'usr_admin_audioking30',
@@ -31,7 +37,7 @@ async function seedAdminAndCatalog() {
       displayName: 'AudioKing30',
       title: 'Founder & Pro Audio Specialist',
       email: 'audioking30@gmail.com',
-      password: process.env.ADMIN_PASSWORD || 'Lovemytele@321'
+      password: resolvedAdminPassword
     }
   ];
 

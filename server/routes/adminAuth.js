@@ -34,13 +34,17 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
       WHERE email = ? COLLATE NOCASE OR display_name = ? COLLATE NOCASE OR full_name = ? COLLATE NOCASE
     `).get(cleanInput, cleanInput, cleanInput);
 
+    const clientIp = req.headers['cf-connecting-ip'] || (req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : (req.ip || ''));
+
     if (!existingUser) {
       recordFailedLogin(req);
+      console.warn(`[SECURITY ALERT] Admin login rejected: User "${cleanInput}" not found. IP: ${clientIp}`);
       return res.status(404).json({ error: 'This user is not registered yet. Please register your account first.', notRegistered: true });
     }
 
     if (existingUser.role !== 'admin') {
       recordFailedLogin(req);
+      console.warn(`[SECURITY ALERT] Admin login forbidden: "${cleanInput}" is role "${existingUser.role}". IP: ${clientIp}`);
       return res.status(403).json({ error: 'Access denied. Administrator privileges required.' });
     }
 
@@ -53,11 +57,13 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
     const isMatch = await bcrypt.compare(String(password), user.password_hash);
     if (!isMatch) {
       recordFailedLogin(req);
+      console.warn(`[SECURITY ALERT] Invalid password attempt for admin "${user.email}" from IP: ${clientIp}`);
       return res.status(401).json({ error: 'Invalid admin credentials.' });
     }
 
     // Reset rate limiter on successful authentication
     resetLoginRateLimit(req);
+    console.log(`[ADMIN AUTH SUCCESS] Admin "${user.email}" authenticated successfully from IP: ${clientIp}`);
 
     // Create session
     const rawToken = generateSessionToken();
@@ -79,7 +85,7 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
       nowIso,
       nowIso,
       req.headers['user-agent'] || '',
-      req.ip || ''
+      clientIp
     );
 
     // Update last_login_at

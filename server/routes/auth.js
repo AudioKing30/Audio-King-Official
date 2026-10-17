@@ -23,6 +23,7 @@ const {
   sendPasswordChangedEmail
 } = require('../email');
 const { requireAuth } = require('../middleware/authMiddleware');
+const { contentSecurityGuard } = require('../middleware/contentFilter');
 const { syncCustomersMaster } = require('../dataSync');
 
 const router = express.Router();
@@ -117,7 +118,7 @@ function createSessionForUser(res, userId, req) {
 // =========================================================================
 // 1. SIGNUP (Initiate Registration with Email OTP)
 // =========================================================================
-router.post('/signup', async (req, res) => {
+router.post('/signup', contentSecurityGuard(), async (req, res) => {
   const { fullName, email, password, confirmPassword, phone, gstNumber } = req.body;
   const cleanGst = (gstNumber || '').trim().toUpperCase();
 
@@ -1297,7 +1298,7 @@ router.post('/change-password', requireAuth, async (req, res) => {
 // =========================================================================
 // 10. UPDATE PROFILE (Authenticated)
 // =========================================================================
-router.patch('/profile', requireAuth, (req, res) => {
+router.patch('/profile', requireAuth, contentSecurityGuard(), (req, res) => {
   const {
     firstName, lastName,
     fullName: reqFullName, full_name,

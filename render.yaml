@@ -26,7 +26,7 @@ services:
       - key: ADMIN_EMAIL
         value: admin@audioking.in
       - key: ADMIN_PASSWORD
-        value: Lovemytele@321
+        sync: false
       - key: GMAIL_USER
         sync: false
       - key: GMAIL_APP_PASSWORD

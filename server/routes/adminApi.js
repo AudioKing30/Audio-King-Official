@@ -18,13 +18,17 @@ const crypto = require('crypto');
 const { exec } = require('child_process');
 const { db } = require('../db');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
+const { contentSecurityGuard } = require('../middleware/contentFilter');
 const { sendOrderConfirmedEmail, sendOrderDispatchedEmail, sendOrderDeliveredEmail, sendOrderCancelledEmail } = require('../email');
 const { syncCouponsMaster, syncOrdersMaster, syncCustomersMaster, syncPopularCategoriesMaster, syncStoreTop6Master, exportAllMasterData } = require('../dataSync');
 
 const router = express.Router();
 
-// Protect all routes in this router with requireAdminApi
+// 1. Strictly enforce admin authentication
 router.use(requireAdminApi);
+
+// 2. Strictly enforce profanity and script injection filtering on all admin input
+router.use(contentSecurityGuard());
 
 /**
  * Synchronize SQLite products table with products_master.json and js/data/products.js
