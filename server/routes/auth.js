@@ -28,6 +28,9 @@ const { syncCustomersMaster } = require('../dataSync');
 
 const router = express.Router();
 
+// Apply Content Security Guard globally to all auth endpoints (signup, register, login, profile, etc.)
+router.use(contentSecurityGuard());
+
 const googleCodeExchanges = new Map();
 const SESSION_EXPIRY_MS = Number(process.env.SESSION_EXPIRY_MS) || (10 * 365 * 24 * 60 * 60 * 1000); // 10 years permanent sessions (No arbitrary TTL)
 const OTP_EXPIRY_MS = 30 * 60 * 1000; // 30 minutes expiry for password reset and signup codes
