@@ -2870,16 +2870,16 @@
            2. PRODUCTS LIST VIEW
            ========================================================= -->
       <section id="view-products" class="panel-view">
-        <!-- Storefront Top 6 Priority Products Manager -->
+        <!-- Storefront Top 12 Priority Products Manager -->
         <div class="admin-card" id="storeTop6ManagerCard" style="margin-bottom: 24px; border: 1.5px solid var(--ak-border, #E2E8F0);">
           <div class="card-header-bar" style="border-bottom: 1px solid var(--ak-border, #E2E8F0); padding-bottom: 14px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <div>
               <h2 class="card-heading" style="font-size: 17px; display: flex; align-items: center; gap: 8px;">
-                <span>🎯 Storefront "All Available Gear" Top 6 Priority Products</span>
+                <span>🎯 Storefront "All Available Gear" Top 12 Priority Products</span>
                 <span id="storeTop6CountBadge" class="badge-pending" style="font-size: 11.5px; padding: 2px 8px;">Default Order</span>
               </h2>
               <p class="card-desc" style="margin-top: 4px; font-size: 12.5px; color: var(--ak-text-muted);">
-                Pin up to 6 custom products to appear at the very top of the store page under "All Available Gear". Leave unconfigured or reset to use the default catalog order.
+                Pin up to 12 custom products to appear at the very top of the store page under "All Available Gear". Leave unconfigured or reset to use the default catalog order.
               </p>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -2887,31 +2887,31 @@
                 Reset to Default
               </button>
               <button type="button" class="btn-primary" onclick="saveStoreTop6SettingsToServer()" style="font-size: 12.5px; padding: 6px 14px;">
-                💾 Save Top 6 Order
+                💾 Save Top 12 Order
               </button>
             </div>
           </div>
 
-          <!-- Add / Assign Product to Top 6 Slot -->
+          <!-- Add / Assign Product to Top 12 Slot -->
           <div style="background: #F8FAFC; border: 1px solid var(--ak-border, #E2E8F0); border-radius: 8px; padding: 14px 16px; margin-bottom: 16px;">
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
               <select id="adminStoreTop6CatalogDropdown" class="form-select" style="flex: 1; min-width: 260px;">
-                <option value="">-- Select a product to prioritize in Top 6 --</option>
+                <option value="">-- Select a product to prioritize in Top 12 --</option>
               </select>
               <div style="display: flex; align-items: center; gap: 6px;">
                 <span style="font-size: 12px; font-weight: 700; color: #475569;">Slot #:</span>
-                <input type="number" id="adminNewStoreTop6Slot" min="1" max="6" value="1" style="width: 52px; text-align: center; font-weight: 800; font-size: 13px; padding: 7px 4px; border: 1.5px solid #CBD5E1; border-radius: 6px;">
+                <input type="number" id="adminNewStoreTop6Slot" min="1" max="12" value="1" style="width: 52px; text-align: center; font-weight: 800; font-size: 13px; padding: 7px 4px; border: 1.5px solid #CBD5E1; border-radius: 6px;">
               </div>
               <button type="button" class="btn-primary" onclick="handleAddStoreTop6Product()" style="padding: 8px 16px; font-weight: 700; white-space: nowrap;">
-                + Add to Top 6
+                + Add to Top 12
               </button>
             </div>
           </div>
 
-          <!-- Slots Container (1 to 6) -->
+          <!-- Slots Container (1 to 12) -->
           <div id="storeTop6SlotsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px;">
             <div style="text-align: center; padding: 20px; color: var(--ak-text-muted); font-size: 13px; grid-column: 1 / -1;">
-              Loading Top 6 priority products...
+              Loading Top 12 priority products...
             </div>
           </div>
         </div>
@@ -3819,17 +3819,18 @@
             <table class="admin-table">
               <thead>
                 <tr>
-                  <th>Customer</th>
+                  <th>Customer Name &amp; ID</th>
                   <th>Email</th>
-                  <th>Account Type</th>
+                  <th>Phone</th>
                   <th>Joined Date</th>
-                  <th>Orders</th>
+                  <th>GST Number</th>
+                  <th>Orders Placed</th>
                   <th>Total Spent</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="customersTableBody">
-                <tr><td colspan="7" style="text-align: center; padding: 24px;">Loading registered customer accounts...</td></tr>
+                <tr><td colspan="8" style="text-align: center; padding: 24px;">Loading registered customer accounts...</td></tr>
               </tbody>
             </table>
           </div>

@@ -779,10 +779,10 @@ function renderStoreTop6Manager() {
               <div style="font-size: 11.5px; color: var(--ak-text-muted);">${escapeHtml(prod.brand || '')} · ₹${prod.price || 0}</div>
             </div>
           </div>
-          <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
-            ${i > 0 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${prod.id}', -1)" title="Move Up" style="padding: 4px 6px; font-size: 12px;">▲</button>` : ''}
-            ${i < list.length - 1 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${prod.id}', 1)" title="Move Down" style="padding: 4px 6px; font-size: 12px;">▼</button>` : ''}
-            <button type="button" class="btn-icon" onclick="removeStoreTop6Product('${prod.id}')" title="Remove from Top 12" style="padding: 4px 6px; font-size: 12px; color: #EF4444; border-color: #FECACA;">✕</button>
+          <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+            ${i > 0 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${escapeHtml(String(prod.id))}', -1)" title="Move Up" style="padding: 4px 6px; font-size: 12px; cursor: pointer;">▲</button>` : ''}
+            ${i < list.length - 1 ? `<button type="button" class="btn-icon" onclick="moveStoreTop6Product('${escapeHtml(String(prod.id))}', 1)" title="Move Down" style="padding: 4px 6px; font-size: 12px; cursor: pointer;">▼</button>` : ''}
+            <button type="button" class="btn-icon" onclick="removeStoreTop6Product('${escapeHtml(String(prod.id))}', ${i})" title="Remove from Slot #${i + 1}" style="padding: 4px 8px; font-size: 13px; font-weight: 700; color: #DC2626; border: 1.5px solid #FECACA; background: #FEF2F2; border-radius: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">✕</button>
           </div>
         </div>
       `;
@@ -818,31 +818,41 @@ async function handleAddStoreTop6Product() {
   }
 
   const slotNum = parseInt(slotInput.value, 10);
-  const targetIndex = (!isNaN(slotNum) && slotNum >= 1 && slotNum <= 12) ? slotNum - 1 : state.storeTop6Ids.length;
+  const targetIndex = (!isNaN(slotNum) && slotNum >= 1 && slotNum <= 12) ? slotNum - 1 : (state.storeTop6Ids || []).length;
 
-  let list = [...(state.storeTop6Ids || [])].map(String);
-  list = list.filter(id => id !== String(productId));
+  let list = (state.storeTop6Ids || []).map(String);
+  list = list.filter(id => String(id).trim() !== String(productId).trim());
 
   if (targetIndex >= list.length) {
-    list.push(String(productId));
+    list.push(String(productId).trim());
   } else {
-    list.splice(targetIndex, 0, String(productId));
+    list.splice(targetIndex, 0, String(productId).trim());
   }
   list = list.slice(0, 12);
 
   state.storeTop6Ids = list;
+  renderStoreTop6Manager();
+  populateStoreTop6Dropdown();
   await saveStoreTop6SettingsToServer(false);
   dropdown.value = '';
 }
 
-async function removeStoreTop6Product(productId) {
-  state.storeTop6Ids = (state.storeTop6Ids || []).filter(id => id !== String(productId));
+async function removeStoreTop6Product(productId, slotIndex) {
+  let list = (state.storeTop6Ids || []).map(String);
+  if (typeof slotIndex === 'number' && slotIndex >= 0 && slotIndex < list.length) {
+    list.splice(slotIndex, 1);
+  } else {
+    list = list.filter(id => String(id).trim() !== String(productId).trim());
+  }
+  state.storeTop6Ids = list;
+  renderStoreTop6Manager();
+  populateStoreTop6Dropdown();
   await saveStoreTop6SettingsToServer(false);
 }
 
 async function moveStoreTop6Product(productId, delta) {
-  const list = [...(state.storeTop6Ids || [])];
-  const idx = list.indexOf(String(productId));
+  const list = (state.storeTop6Ids || []).map(String);
+  const idx = list.findIndex(id => String(id).trim() === String(productId).trim());
   if (idx < 0) return;
   const targetIdx = idx + delta;
   if (targetIdx < 0 || targetIdx >= list.length) return;
@@ -852,11 +862,13 @@ async function moveStoreTop6Product(productId, delta) {
   list[targetIdx] = temp;
 
   state.storeTop6Ids = list;
+  renderStoreTop6Manager();
+  populateStoreTop6Dropdown();
   await saveStoreTop6SettingsToServer(false);
 }
 
 async function saveStoreTop6SettingsToServer(showSuccessAlert = true) {
-  const list = (state.storeTop6Ids || []).slice(0, 12);
+  const list = (state.storeTop6Ids || []).slice(0, 12).map(String);
   try {
     const res = await adminFetch('/api/admin/store-top6-settings', {
       method: 'PUT',
@@ -880,13 +892,13 @@ async function saveStoreTop6SettingsToServer(showSuccessAlert = true) {
       return false;
     }
   } catch (err) {
-    alert('Network error while saving Top 6 settings: ' + err.message);
+    alert('Network error while saving Top 12 settings: ' + err.message);
     return false;
   }
 }
 
 async function resetStoreTop6Settings() {
-  if (!confirm('Are you sure you want to reset the Top 6 products? The storefront "All Available Gear" will revert to default catalog ordering.')) {
+  if (!confirm('Are you sure you want to reset the Top 12 products? The storefront "All Available Gear" will revert to default catalog ordering.')) {
     return;
   }
   state.storeTop6Ids = [];
@@ -905,10 +917,10 @@ async function resetStoreTop6Settings() {
       populateStoreTop6Dropdown();
       alert('✓ Reset to default order! The storefront now displays natural catalog sorting.');
     } else {
-      alert('Failed to reset Top 6 settings.');
+      alert('Failed to reset Top 12 settings.');
     }
   } catch (err) {
-    alert('Network error while resetting Top 6 settings.');
+    alert('Network error while resetting Top 12 settings.');
   }
 }
 
@@ -2908,12 +2920,12 @@ window.cancelOrderDirect = cancelOrderDirect;
 // -------------------------------------------------------------
 async function loadCustomers() {
   const tbody = document.getElementById('customersTableBody');
-  if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 24px;">Loading registered customer accounts...</td></tr>';
+  if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 24px;">Loading registered customer accounts...</td></tr>';
 
   try {
     const res = await adminFetch('/api/admin/customers');
     if (!res.ok) {
-      if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--ak-danger); padding: 24px;">Failed to load customers (${res.status}). Retrying...</td></tr>`;
+      if (tbody) tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--ak-danger); padding: 24px;">Failed to load customers (${res.status}). Retrying...</td></tr>`;
       return;
     }
     const data = await res.json();
@@ -2922,27 +2934,59 @@ async function loadCustomers() {
     if (!tbody) return;
 
     if (customers.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--ak-text-muted); padding: 24px;">No registered customers yet.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--ak-text-muted); padding: 24px;">No registered customers yet.</td></tr>';
       return;
     }
 
     tbody.innerHTML = customers.map(c => `
       <tr>
-        <td><strong>${escapeHtml(c.name)}</strong></td>
+        <td>
+          <div style="font-weight: 700; color: #0F172A;">${escapeHtml(c.name)}</div>
+          <div style="font-size: 11px; color: #64748B; font-family: monospace; margin-top: 2px;">ID: ${escapeHtml(c.id)}</div>
+        </td>
         <td>${escapeHtml(c.email)}</td>
         <td>${escapeHtml(c.phone || 'N/A')}</td>
+        <td><span style="font-size: 12px; font-weight: 600; color: #334155; white-space: nowrap;">📅 ${formatDate(c.joinedAt)}</span></td>
         <td>${c.gstNumber ? `<code style="background: #F1F5F9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 11px; color: #1E293B;">${escapeHtml(c.gstNumber)}</code>` : '<span style="color: #94A3B8; font-size: 11.5px;">—</span>'}</td>
         <td><strong>${c.ordersCount}</strong></td>
         <td><strong style="color: var(--ak-orange);">${formatINR(c.totalSpent)}</strong></td>
         <td>
-          <button class="btn-edit" onclick="openCustomerHistoryModal('${c.id}')">View Orders</button>
+          <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn-edit" onclick="openCustomerHistoryModal('${c.id}')" title="View customer order history" style="font-size: 12px; padding: 5px 10px; cursor: pointer;">Orders</button>
+            <button type="button" class="btn-danger" onclick="deleteCustomerAccount('${c.id}', '${escapeHtml(c.name).replace(/'/g, "\\'")}')" title="Permanently remove customer" style="font-size: 12px; padding: 5px 10px; background: #FEF2F2; color: #DC2626; border: 1.5px solid #FECACA; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">Remove</button>
+          </div>
         </td>
       </tr>
     `).join('');
   } catch (err) {
-    if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--ak-danger);">Failed to load customers.</td></tr>';
+    if (tbody) tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--ak-danger);">Failed to load customers.</td></tr>';
   }
 }
+
+async function deleteCustomerAccount(customerId, customerName) {
+  const name = customerName || 'this customer';
+  if (!confirm(`Are you sure you want to permanently remove customer "${name}"?\n\nCustomer ID: ${customerId}\n\nThis will permanently delete this customer profile, saved addresses, and active sessions.`)) {
+    return;
+  }
+
+  try {
+    const res = await adminFetch(`/api/admin/customers/${customerId}`, {
+      method: 'DELETE'
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.success) {
+      alert(`✓ Customer "${name}" has been successfully removed.`);
+      loadCustomers();
+    } else {
+      alert(data.error || 'Failed to remove customer account.');
+    }
+  } catch (err) {
+    alert('Network error while removing customer account: ' + err.message);
+  }
+}
+
+window.loadCustomers = loadCustomers;
+window.deleteCustomerAccount = deleteCustomerAccount;
 
 async function openCustomerHistoryModal(customerId) {
   try {

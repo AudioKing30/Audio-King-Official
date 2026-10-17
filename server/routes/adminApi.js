@@ -1767,7 +1767,7 @@ router.get('/customers', (req, res) => {
   try {
     const customers = db.prepare(`
       SELECT 
-        u.id, u.full_name, u.email, u.phone_number, u.created_at,
+        u.id, u.full_name, u.email, u.phone_number, u.gst_number, u.created_at,
         ai.provider AS auth_provider,
         COUNT(o.id) AS orders_count,
         COALESCE(SUM(o.total_amount), 0) AS total_spent
@@ -1786,6 +1786,7 @@ router.get('/customers', (req, res) => {
       name: c.full_name,
       email: c.email,
       phone: c.phone_number || 'N/A',
+      gstNumber: c.gst_number || null,
       provider: c.auth_provider === 'google' ? 'Google Account' : 'Email Account',
       ordersCount: Number(c.orders_count || 0),
       totalSpent: Math.round(Number(c.total_spent || 0)),
@@ -1830,6 +1831,59 @@ router.get('/customers/:id/orders', (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({ error: 'Failed to fetch customer orders.' });
+  }
+});
+
+/**
+ * DELETE /customers/:id — Remove a customer account and sync master files
+ */
+router.delete('/customers/:id', (req, res) => {
+  try {
+    const customerId = String(req.params.id).trim();
+    if (!customerId) {
+      return res.status(400).json({ error: 'Customer ID is required.' });
+    }
+
+    const customer = db.prepare('SELECT id, full_name, email, role FROM users WHERE id = ?').get(customerId);
+    if (!customer) {
+      return res.status(404).json({ error: 'Customer account not found.' });
+    }
+
+    if (customer.role === 'admin') {
+      return res.status(403).json({ error: 'Administrator accounts cannot be removed.' });
+    }
+
+    // Clean up all related records
+    db.prepare('DELETE FROM sessions WHERE user_id = ?').run(customerId);
+    db.prepare('DELETE FROM addresses WHERE user_id = ?').run(customerId);
+    db.prepare('DELETE FROM auth_identities WHERE user_id = ?').run(customerId);
+    db.prepare('DELETE FROM verification_codes WHERE user_id = ?').run(customerId);
+    db.prepare('DELETE FROM cart_items WHERE user_id = ?').run(customerId);
+    db.prepare('DELETE FROM wishlist_items WHERE user_id = ?').run(customerId);
+    db.prepare('DELETE FROM coupon_usages WHERE user_id = ?').run(customerId);
+
+    // Clean up orders and order line items
+    const orders = db.prepare('SELECT id FROM orders WHERE user_id = ?').all(customerId);
+    for (const o of orders) {
+      db.prepare('DELETE FROM order_items WHERE order_id = ?').run(o.id);
+    }
+    db.prepare('DELETE FROM orders WHERE user_id = ?').run(customerId);
+
+    // Delete customer
+    db.prepare('DELETE FROM users WHERE id = ?').run(customerId);
+
+    // Sync master JSON persistent files
+    syncCustomersMaster(db);
+    syncOrdersMaster(db);
+
+    console.log(`[ADMIN] Customer account removed successfully: ${customer.email} (${customerId})`);
+    return res.json({
+      success: true,
+      message: `Customer account "${customer.full_name || customer.email}" has been removed.`
+    });
+  } catch (err) {
+    console.error('[ADMIN DELETE CUSTOMER ERROR]', err);
+    return res.status(500).json({ error: 'Failed to delete customer account.' });
   }
 });
 // -------------------------------------------------------------
