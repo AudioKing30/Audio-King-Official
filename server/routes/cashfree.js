@@ -16,8 +16,27 @@ const { requireAuth } = require('../middleware/authMiddleware');
 const router = express.Router();
 const SITE_URL = (process.env.SITE_URL || 'https://audioking.co.in').trim().replace(/\/+$/, '');
 
+function getCashfreeCredentials() {
+  const appId = (process.env.CASHFREE_APP_ID || process.env.CASHFREE_CLIENT_ID || process.env.CF_APP_ID || process.env.CF_CLIENT_ID || '').trim();
+  const secretKey = (process.env.CASHFREE_SECRET_KEY || process.env.CASHFREE_CLIENT_SECRET || process.env.CF_SECRET_KEY || process.env.CF_CLIENT_SECRET || '').trim();
+  const rawMode = (process.env.CASHFREE_MODE || process.env.CASHFREE_ENVIRONMENT || process.env.CF_MODE || '').trim().toLowerCase();
+
+  let mode = 'sandbox';
+  if (['production', 'prod', 'live'].includes(rawMode)) {
+    mode = 'production';
+  } else if (['sandbox', 'test', 'stage'].includes(rawMode)) {
+    mode = 'sandbox';
+  } else if (appId && !appId.startsWith('TEST') && !appId.toLowerCase().includes('sandbox') && !appId.toLowerCase().includes('test') && !appId.includes('placeholder')) {
+    // Production keys usually don't have TEST prefix; auto-detect production
+    mode = 'production';
+  }
+
+  const apiVersion = process.env.CASHFREE_API_VERSION || '2023-08-01';
+  return { appId, secretKey, mode, apiVersion };
+}
+
 function getCashfreeEndpoint(path) {
-  const mode = (process.env.CASHFREE_MODE || 'sandbox').trim().toLowerCase();
+  const { mode } = getCashfreeCredentials();
   const baseUrl = mode === 'production' 
     ? 'https://api.cashfree.com/pg' 
     : 'https://sandbox.cashfree.com/pg';
@@ -29,14 +48,13 @@ function getCashfreeEndpoint(path) {
  * Returns public configuration for client SDK initialization.
  */
 router.get('/config', (req, res) => {
-  const appId = (process.env.CASHFREE_APP_ID || '').trim();
-  const mode = (process.env.CASHFREE_MODE || 'sandbox').trim().toLowerCase();
+  const { appId, mode } = getCashfreeCredentials();
   const isLive = Boolean(appId && !appId.includes('placeholder') && mode === 'production');
 
   return res.json({
     success: true,
     appId: appId || 'test_app_placeholder',
-    mode: mode === 'production' ? 'production' : 'sandbox',
+    mode,
     isLive,
     currency: 'INR',
     companyName: 'AudioKing India',
@@ -56,14 +74,12 @@ router.post('/create-order', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Valid payment amount in INR is required.' });
     }
 
-    const appId = (process.env.CASHFREE_APP_ID || '').trim();
-    const secretKey = (process.env.CASHFREE_SECRET_KEY || '').trim();
-    const apiVersion = process.env.CASHFREE_API_VERSION || '2023-08-01';
-    const mode = (process.env.CASHFREE_MODE || 'sandbox').trim().toLowerCase();
+    const { appId, secretKey, mode, apiVersion } = getCashfreeCredentials();
 
     const orderId = clientOrderId || ('ak_order_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
     const customerId = req.user?.id ? req.user.id.replace(/[^a-zA-Z0-9_-]/g, '_') : ('cust_' + Date.now());
-    const customerPhone = (customer?.phone || req.user?.phone_number || '9876543210').replace(/[^0-9]/g, '').slice(-10);
+    const rawPhone = (customer?.phone || req.user?.phone_number || '').replace(/[^0-9]/g, '');
+    const customerPhone = rawPhone.length >= 10 ? rawPhone.slice(-10) : '9876543210';
     const customerEmail = customer?.email || req.user?.email || 'customer@audioking.co.in';
     const customerName = customer?.name || req.user?.fullName || req.user?.display_name || 'Audio Creator';
 
@@ -78,14 +94,16 @@ router.post('/create-order', requireAuth, async (req, res) => {
           customer_id: customerId,
           customer_name: customerName,
           customer_email: customerEmail,
-          customer_phone: customerPhone.length === 10 ? customerPhone : '9876543210'
+          customer_phone: customerPhone
         },
         order_meta: {
           return_url: `${SITE_URL}/?order_id={order_id}&order_token={order_token}`,
           notify_url: process.env.CASHFREE_WEBHOOK_URL || undefined
         },
-        order_note: `AudioKing Pro Audio Equipment Order ${orderId}`
+        order_note: `AudioKing Pro Audio Order ${orderId}`
       };
+
+      console.log(`[CASHFREE] Creating order on Cashfree (${mode.toUpperCase()} mode): ${orderId} for ₹${amount}`);
 
       const cfRes = await fetch(endpoint, {
         method: 'POST',
@@ -101,12 +119,14 @@ router.post('/create-order', requireAuth, async (req, res) => {
       const cfData = await cfRes.json();
 
       if (!cfRes.ok) {
-        console.error('[CASHFREE CREATE ORDER ERROR]', cfData);
+        console.error(`[CASHFREE CREATE ORDER ERROR] HTTP ${cfRes.status} (${mode} mode):`, cfData);
         return res.status(cfRes.status).json({
-          error: cfData.message || 'Failed to initiate Cashfree payment session.'
+          error: cfData.message || 'Failed to initiate Cashfree payment session.',
+          details: cfData
         });
       }
 
+      console.log(`[CASHFREE] Order created successfully: ${cfData.order_id}, session: ${cfData.payment_session_id?.substring(0, 16)}...`);
       return res.json({
         success: true,
         orderId: cfData.order_id,
@@ -120,6 +140,7 @@ router.post('/create-order', requireAuth, async (req, res) => {
 
     // --- Sandbox Simulation Mode ---
     // When merchant keys are pending, return synthetic payment session for seamless checkout flow
+    console.warn('[CASHFREE] No production keys configured. Falling back to sandbox simulation.');
     const mockSessionId = 'session_' + crypto.randomUUID().replace(/-/g, '').substring(0, 24);
 
     return res.json({
@@ -150,9 +171,7 @@ router.post('/verify', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'orderId is required for payment verification.' });
     }
 
-    const appId = (process.env.CASHFREE_APP_ID || '').trim();
-    const secretKey = (process.env.CASHFREE_SECRET_KEY || '').trim();
-    const apiVersion = process.env.CASHFREE_API_VERSION || '2023-08-01';
+    const { appId, secretKey, apiVersion } = getCashfreeCredentials();
 
     if (appId && secretKey && !appId.includes('placeholder') && !isMock) {
       const endpoint = getCashfreeEndpoint(`/orders/${encodeURIComponent(orderId)}`);

@@ -653,6 +653,9 @@ async function sendOrderCancelledEmail({ email, fullName = 'Valued Customer', or
     </p>
   `);
 
+  return sendEmail({ to: email, subject, html, text });
+}
+
 /**
  * 9. Send Security Alert Email to Administrator
  */

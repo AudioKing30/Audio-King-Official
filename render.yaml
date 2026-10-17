@@ -56,6 +56,6 @@ services:
       - key: CASHFREE_SECRET_KEY
         sync: false
       - key: CASHFREE_MODE
-        value: sandbox
+        sync: false
       - key: CASHFREE_API_VERSION
         value: 2023-08-01
