@@ -18,7 +18,7 @@ class AuthService {
     const token = this.getToken();
     const cachedUser = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
     this.currentUser = (token && cachedUser) ? cachedUser : null;
-    this.status = token ? 'loading' : 'unauthenticated';
+    this.status = (token && cachedUser) ? 'authenticated' : (token ? 'loading' : 'unauthenticated');
 
     this._lastPrewarm = 0;
     this._effectiveBaseUrl = null;
@@ -68,11 +68,13 @@ class AuthService {
   getToken() {
     let token = getStorage('audioKingSessionToken', null) || 
                 getStorage('audioking_token', null) || 
-                getStorage('audioKingToken', null);
+                getStorage('audioKingToken', null) ||
+                getStorage('audioking_admin_token', null);
     if (!token && typeof localStorage !== 'undefined') {
       token = localStorage.getItem('audioKingSessionToken') || 
               localStorage.getItem('audioking_token') || 
-              localStorage.getItem('audioKingToken');
+              localStorage.getItem('audioKingToken') ||
+              localStorage.getItem('audioking_admin_token');
     }
     if (token && typeof token === 'string') {
       token = token.trim();
@@ -136,15 +138,22 @@ class AuthService {
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
       const token = this.getToken();
-      const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
+      const authHeaders = token ? { 
+        'Authorization': `Bearer ${token}`,
+        'x-session-token': token,
+        'x-admin-token': token
+      } : {};
 
       try {
         const res = await fetch(url, {
           ...options,
           signal: controller.signal,
           credentials: 'include',
+          cache: options.cache || 'no-store',
           headers: {
             'Accept': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
             ...authHeaders,
             ...(options.headers || {})
           }
@@ -293,16 +302,16 @@ class AuthService {
     }
 
     // 1. Verify session with the backend database
-    let res = await this.safeFetch('/api/auth/me', { method: 'GET' });
+    let res = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
 
     // 2. If network error on first try, wait 1.5s and retry once (handles Render cold-start)
-    if (res.networkError) {
+    if (res.networkError || res.status >= 500) {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      res = await this.safeFetch('/api/auth/me', { method: 'GET' });
+      res = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
     }
 
     // Guard against race condition: user logged in while /api/auth/me was in-flight
-    if (this.isLoggingIn || (this.status === 'authenticated' && this.currentUser)) {
+    if (this.isLoggingIn) {
       return this.currentUser;
     }
 
@@ -326,15 +335,43 @@ class AuthService {
         this.currentUser = null;
         this.status = 'unauthenticated';
       }
-    } else {
-      // Server explicitly rejected with 401 or user not found — purge session completely
-      this.currentUser = null;
-      this.status = 'unauthenticated';
-      removeStorage(this.localUserKey);
-      removeStorage('audioKingUser');
-      removeStorage('audioKingSessionToken');
-      removeStorage('audioking_token');
-      removeStorage('audioKingToken');
+    } else if (res.status === 401 || res.status === 403) {
+      let verifiedAdmin = false;
+      const cached = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
+      if (cached?.role === 'admin' || getStorage('audioking_admin_token', null)) {
+        try {
+          const adminRes = await this.safeFetch(`/api/admin/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
+          if (adminRes.ok && adminRes.data?.user) {
+            this.currentUser = adminRes.data.user;
+            this.status = 'authenticated';
+            setStorage(this.localUserKey, this.currentUser);
+            setStorage('audioKingUser', this.currentUser);
+            verifiedAdmin = true;
+          }
+        } catch (e) {}
+      }
+
+      if (!verifiedAdmin) {
+        // Retry once after 800ms before purging to protect against cold-start race conditions
+        await new Promise(resolve => setTimeout(resolve, 800));
+        const retryRes = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
+        if (retryRes.ok && retryRes.data?.user) {
+          this.currentUser = retryRes.data.user;
+          this.status = 'authenticated';
+          setStorage(this.localUserKey, this.currentUser);
+          setStorage('audioKingUser', this.currentUser);
+        } else {
+          // Server explicitly rejected session
+          this.currentUser = null;
+          this.status = 'unauthenticated';
+          removeStorage(this.localUserKey);
+          removeStorage('audioKingUser');
+          removeStorage('audioKingSessionToken');
+          removeStorage('audioking_token');
+          removeStorage('audioKingToken');
+          removeStorage('audioking_admin_token');
+        }
+      }
     }
 
     this.notify();
@@ -356,23 +393,49 @@ class AuthService {
     }
 
     try {
-      const res = await this.safeFetch('/api/auth/me', { method: 'GET' });
+      const res = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
       if (res.ok && res.data?.user) {
         this.currentUser = res.data.user;
         this.status = 'authenticated';
         setStorage(this.localUserKey, this.currentUser);
         setStorage('audioKingUser', this.currentUser);
         this.notify();
-      } else if (res.status === 401) {
-        // Server confirmed session expired or logged out
-        this.currentUser = null;
-        this.status = 'unauthenticated';
-        removeStorage(this.localUserKey);
-        removeStorage('audioKingUser');
-        removeStorage('audioKingSessionToken');
-        removeStorage('audioking_token');
-        removeStorage('audioKingToken');
-        this.notify();
+      } else if (res.status === 401 || res.status === 403) {
+        let verifiedAdmin = false;
+        const cached = getStorage(this.localUserKey, null) || getStorage('audioKingUser', null);
+        if (cached?.role === 'admin' || getStorage('audioking_admin_token', null)) {
+          const adminRes = await this.safeFetch(`/api/admin/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
+          if (adminRes.ok && adminRes.data?.user) {
+            this.currentUser = adminRes.data.user;
+            this.status = 'authenticated';
+            setStorage(this.localUserKey, this.currentUser);
+            setStorage('audioKingUser', this.currentUser);
+            this.notify();
+            verifiedAdmin = true;
+          }
+        }
+        if (!verifiedAdmin) {
+          await new Promise(resolve => setTimeout(resolve, 800));
+          const retryRes = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: 'GET', cache: 'no-store' });
+          if (retryRes.ok && retryRes.data?.user) {
+            this.currentUser = retryRes.data.user;
+            this.status = 'authenticated';
+            setStorage(this.localUserKey, this.currentUser);
+            setStorage('audioKingUser', this.currentUser);
+            this.notify();
+          } else {
+            // Server confirmed session expired or logged out
+            this.currentUser = null;
+            this.status = 'unauthenticated';
+            removeStorage(this.localUserKey);
+            removeStorage('audioKingUser');
+            removeStorage('audioKingSessionToken');
+            removeStorage('audioking_token');
+            removeStorage('audioKingToken');
+            removeStorage('audioking_admin_token');
+            this.notify();
+          }
+        }
       }
     } catch (e) {}
   }

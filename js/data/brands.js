@@ -14,7 +14,7 @@ export const AUDIOKING_BRANDS = [
     "id": "brand-adam-audio",
     "name": "ADAM Audio",
     "slug": "adam-audio",
-    "productCount": 8
+    "productCount": 10
   },
   {
     "id": "brand-artesia",

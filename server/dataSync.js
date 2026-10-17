@@ -15,6 +15,8 @@ const COUPONS_MASTER_PATH = path.join(DATA_DIR, 'coupons_master.json');
 const POPULAR_CATEGORIES_MASTER_PATH = path.join(DATA_DIR, 'popular_categories_master.json');
 const POLICIES_MASTER_PATH = path.join(DATA_DIR, 'policies_master.json');
 const STORE_TOP6_MASTER_PATH = path.join(DATA_DIR, 'store_top6_master.json');
+const SESSIONS_MASTER_PATH = path.join(DATA_DIR, 'sessions_master.json');
+const PRODUCTS_MASTER_PATH = path.join(DATA_DIR, 'products_master.json');
 
 /**
  * Safely writes JSON data with atomic temporary file swapping
@@ -180,11 +182,84 @@ function syncPopularCategoriesMaster(db) {
   }
 }
 
+/**
+ * Mirrors all valid unexpired sessions to sessions_master.json
+ */
+function syncSessionsMaster(db) {
+  try {
+    if (!db) return;
+    const now = Date.now();
+    // Persist all active sessions (both admin and customer)
+    const sessions = db.prepare('SELECT * FROM sessions WHERE expires_at > ?').all(now);
+    const payload = {
+      updatedAt: new Date().toISOString(),
+      count: sessions.length,
+      sessions
+    };
+    safeWriteJson(SESSIONS_MASTER_PATH, payload);
+  } catch (err) {
+    console.error('[DATA SYNC ERROR] syncSessionsMaster:', err.message);
+  }
+}
+
+/**
+ * Mirrors all catalog products to products_master.json
+ */
+function syncProductsMaster(db) {
+  try {
+    if (!db) return;
+    const products = db.prepare('SELECT * FROM products ORDER BY id ASC').all();
+    const formatted = products.map(p => {
+      let images = [];
+      try { images = JSON.parse(p.images_json || '[]'); } catch (e) { images = []; }
+      let specs = [];
+      try { specs = JSON.parse(p.specs_json || '[]'); } catch (e) { specs = []; }
+      let deepSpecs = [];
+      try { deepSpecs = JSON.parse(p.deep_specs_json || '[]'); } catch (e) { deepSpecs = []; }
+      let ytVideos = [];
+      try { ytVideos = JSON.parse(p.youtube_videos_json || '[]'); } catch (e) { ytVideos = []; }
+      return {
+        id: p.id,
+        name: p.name,
+        shortName: p.short_name || p.name,
+        brand: p.brand,
+        category: p.category,
+        section: p.section || 'pro-audio',
+        subcategory: p.subcategory || '',
+        price: p.price,
+        originalPrice: p.original_price,
+        stock: p.stock,
+        inStock: Boolean(p.in_stock === 1 && p.stock > 0),
+        isPreOrder: Boolean(p.in_stock === 2 || p.stock_status === 'preorder' || (p.badge && p.badge.toLowerCase().includes('pre-order'))),
+        stockStatus: (p.in_stock === 2 || p.stock_status === 'preorder' || (p.badge && p.badge.toLowerCase().includes('pre-order'))) ? 'preorder' : ((p.in_stock === 0 || p.stock === 0) ? 'outofstock' : 'instock'),
+        rating: p.rating || 5.0,
+        reviewCount: p.review_count || 0,
+        badge: (p.in_stock === 2 || p.stock_status === 'preorder') ? 'Pre-Order' : (p.badge || ''),
+        sku: p.sku || '',
+        description: p.description || '',
+        image: p.image || (images[0] || 'assets/images/placeholder.svg'),
+        images: images.length ? images : (p.image ? [p.image] : ['assets/images/placeholder.svg']),
+        videoType: p.video_type || null,
+        videoUrl: p.video_url || null,
+        youtubeVideoId: p.youtube_video_id || null,
+        youtubeVideos: ytVideos,
+        specs: specs,
+        deepSpecs: deepSpecs
+      };
+    });
+    safeWriteJson(PRODUCTS_MASTER_PATH, formatted);
+  } catch (err) {
+    console.error('[DATA SYNC ERROR] syncProductsMaster:', err.message);
+  }
+}
+
 function exportAllMasterData(db) {
   syncCustomersMaster(db);
   syncOrdersMaster(db);
   syncCouponsMaster(db);
   syncPopularCategoriesMaster(db);
+  syncProductsMaster(db);
+  syncSessionsMaster(db);
 }
 
 /**
@@ -318,6 +393,89 @@ function hydrateDatabaseFromMaster(db) {
         ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at
       `).run(JSON.stringify(top6Data.top6ProductIds));
       console.log(`[HYDRATION] Hydrated ${top6Data.top6ProductIds.length} store top 6 products from store_top6_master.json`);
+    }
+
+    // 7. Hydrate Catalog Products from products_master.json
+    const prodData = safeReadJson(PRODUCTS_MASTER_PATH, null);
+    if (prodData && Array.isArray(prodData) && prodData.length > 0) {
+      const existingIds = new Set(db.prepare('SELECT id FROM products').all().map(r => r.id));
+      let restoredProds = 0;
+      const insertProd = db.prepare(`
+        INSERT OR IGNORE INTO products (
+          id, name, short_name, brand, category, subcategory, section,
+          price, original_price, stock, in_stock, stock_status, rating, review_count,
+          badge, sku, description, image, images_json,
+          video_type, video_url, youtube_video_id, youtube_videos_json,
+          specs_json, deep_specs_json, is_featured,
+          created_at, updated_at
+        ) VALUES (
+          ?, ?, ?, ?, ?, ?, ?,
+          ?, ?, ?, ?, ?, ?, ?,
+          ?, ?, ?, ?, ?,
+          ?, ?, ?, ?,
+          ?, ?, ?,
+          ?, ?
+        )
+      `);
+
+      const nowIso = new Date().toISOString();
+      for (const p of prodData) {
+        if (!existingIds.has(p.id)) {
+          const images = Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : []);
+          const mainImage = p.image || (images[0] || 'assets/images/placeholder.svg');
+          insertProd.run(
+            p.id,
+            p.name,
+            p.shortName || p.name,
+            p.brand || 'Pro Audio',
+            p.category || 'Pro Audio',
+            p.subcategory || '',
+            p.section || 'pro-audio',
+            Number(p.price) || 0,
+            Number(p.originalPrice || p.price) || 0,
+            Number(p.stock ?? 10),
+            p.isPreOrder ? 2 : (p.inStock ? 1 : 0),
+            p.stockStatus || (p.isPreOrder ? 'preorder' : (p.inStock ? 'instock' : 'outofstock')),
+            Number(p.rating || 5.0),
+            Number(p.reviewCount || 0),
+            p.badge || (p.isPreOrder ? 'Pre-Order' : ''),
+            p.sku || `AK-${p.id.toUpperCase()}`,
+            p.description || '',
+            mainImage,
+            JSON.stringify(images),
+            p.videoType || null,
+            p.videoUrl || null,
+            p.youtubeVideoId || null,
+            JSON.stringify(p.youtubeVideos || []),
+            JSON.stringify(p.specs || []),
+            JSON.stringify(p.deepSpecs || []),
+            p.isFeatured ? 1 : 0,
+            p.created_at || nowIso,
+            p.updated_at || nowIso
+          );
+          existingIds.add(p.id);
+          restoredProds++;
+        }
+      }
+      if (restoredProds > 0) {
+        console.log(`[HYDRATION] Successfully restored ${restoredProds} new products from products_master.json into SQLite!`);
+      }
+    }
+
+    // 8. Hydrate Active Sessions from sessions_master.json
+    const sessData = safeReadJson(SESSIONS_MASTER_PATH, null);
+    if (sessData && Array.isArray(sessData.sessions) && sessData.sessions.length > 0) {
+      const now = Date.now();
+      let restoredSess = 0;
+      for (const s of sessData.sessions) {
+        if (s.expires_at && s.expires_at > now) {
+          const res = dynamicInsertOrIgnore(db, 'sessions', s);
+          if (res && res.changes > 0) restoredSess++;
+        }
+      }
+      if (restoredSess > 0) {
+        console.log(`[HYDRATION] Successfully restored ${restoredSess} active sessions from sessions_master.json!`);
+      }
     }
   } catch (err) {
     console.error('[HYDRATION ERROR] Failed to hydrate database:', err);
@@ -460,6 +618,8 @@ module.exports = {
   syncPopularCategoriesMaster,
   syncPoliciesMaster,
   syncStoreTop6Master,
+  syncSessionsMaster,
+  syncProductsMaster,
   exportAllMasterData,
   hydrateDatabaseFromMaster
 };

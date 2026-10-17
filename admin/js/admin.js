@@ -109,6 +109,8 @@ async function adminFetch(url, options = {}) {
     } catch (e) {}
   }
   const headers = { ...(options.headers || {}) };
+  headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+  headers['Pragma'] = 'no-cache';
   if (token) {
     if (!headers['Authorization']) {
       headers['Authorization'] = `Bearer ${String(token).trim()}`;
@@ -116,21 +118,23 @@ async function adminFetch(url, options = {}) {
     if (!headers['x-admin-token']) {
       headers['x-admin-token'] = String(token).trim();
     }
+    if (!headers['x-session-token']) {
+      headers['x-session-token'] = String(token).trim();
+    }
   }
   
-  let res = await fetch(fullUrl, { ...options, credentials: 'include', headers });
+  let res = await fetch(fullUrl, { ...options, credentials: 'include', cache: 'no-store', headers });
   
-  // If unauthorized (401) or forbidden (403), purge any invalid tokens
+  // Only purge admin token if explicitly rejected by admin profile verification
   if ((res.status === 401 || res.status === 403) && !url.includes('/api/admin/auth/login')) {
-    localStorage.removeItem('audioking_admin_token');
-    localStorage.removeItem('audioKingSessionToken');
-    localStorage.removeItem('audioking_token');
-    localStorage.removeItem('audioKingToken');
-    
-    // Redirect to login if on admin page and not already on login.html
-    if (window.location.pathname.includes('/admin') && !window.location.pathname.includes('login.html')) {
-      const currentUrl = encodeURIComponent(window.location.href);
-      window.location.href = `login.html?returnUrl=${currentUrl}`;
+    if (url.includes('/api/admin/auth/me')) {
+      localStorage.removeItem('audioking_admin_token');
+      
+      // Redirect to login if on admin page and not already on login.html
+      if (window.location.pathname.includes('/admin') && !window.location.pathname.includes('login.html')) {
+        const currentUrl = encodeURIComponent(window.location.href);
+        window.location.href = `login.html?returnUrl=${currentUrl}`;
+      }
     }
   }
   return res;
@@ -546,6 +550,7 @@ async function loadProducts() {
   if (category !== 'All') params.set('category', category);
   if (brand !== 'All') params.set('brand', brand);
   if (stockStatus !== 'all') params.set('stockStatus', stockStatus);
+  params.set('_t', Date.now());
 
   const tbody = document.getElementById('productsTableBody');
   tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 32px; color: var(--ak-text-muted);">Loading products...</td></tr>`;
@@ -553,7 +558,7 @@ async function loadProducts() {
   try {
     const res = await adminFetch(`/api/admin/products?${params.toString()}`);
     const data = res.ok ? await res.json().catch(() => ({})) : {};
-    if (res.ok && Array.isArray(data.products) && data.products.length > 0) {
+    if (res.ok && Array.isArray(data.products)) {
       state.products = data.products;
     } else {
       // Fallback to public products endpoint

@@ -19663,6 +19663,66 @@ Country of Origin: China`,
       "deepSpecs": []
     },
     {
+      "id": "super-special-test-monitor-2026-mvcekur2",
+      "name": "Super Special Test Monitor 2026",
+      "shortName": "Super Special Test Monitor 2026",
+      "brand": "ADAM Audio",
+      "category": "Studio Monitors",
+      "section": "pro-audio",
+      "subcategory": "",
+      "price": 45e3,
+      "originalPrice": 5e4,
+      "stock": 10,
+      "inStock": true,
+      "isPreOrder": false,
+      "stockStatus": "instock",
+      "rating": 5,
+      "reviewCount": 0,
+      "badge": "",
+      "sku": "AK-SUPER-SPECIAL-TEST-MONITOR-2026-MVCEKUR2",
+      "description": "Testing persistence across hard refresh",
+      "image": "assets/images/placeholder.svg",
+      "images": [
+        "assets/images/placeholder.svg"
+      ],
+      "videoType": null,
+      "videoUrl": null,
+      "youtubeVideoId": null,
+      "youtubeVideos": [],
+      "specs": [],
+      "deepSpecs": []
+    },
+    {
+      "id": "super-special-test-monitor-2026-mvcf8e6v",
+      "name": "Super Special Test Monitor 2026",
+      "shortName": "Super Special Test Monitor 2026",
+      "brand": "ADAM Audio",
+      "category": "Studio Monitors",
+      "section": "pro-audio",
+      "subcategory": "",
+      "price": 45e3,
+      "originalPrice": 5e4,
+      "stock": 10,
+      "inStock": true,
+      "isPreOrder": false,
+      "stockStatus": "instock",
+      "rating": 5,
+      "reviewCount": 0,
+      "badge": "",
+      "sku": "AK-SUPER-SPECIAL-TEST-MONITOR-2026-MVCF8E6V",
+      "description": "Testing persistence across hard refresh",
+      "image": "assets/images/placeholder.svg",
+      "images": [
+        "assets/images/placeholder.svg"
+      ],
+      "videoType": null,
+      "videoUrl": null,
+      "youtubeVideoId": null,
+      "youtubeVideos": [],
+      "specs": [],
+      "deepSpecs": []
+    },
+    {
       "id": "synergy-bman-preamp",
       "name": "Synergy B-MAN",
       "shortName": "Synergy B-MAN Preamp Module",
@@ -26119,7 +26179,7 @@ Weight: 1.24 lbs (0.567 kg`,
       "id": "brand-adam-audio",
       "name": "ADAM Audio",
       "slug": "adam-audio",
-      "productCount": 8
+      "productCount": 10
     },
     {
       "id": "brand-artesia",
@@ -26733,7 +26793,7 @@ Weight: 1.24 lbs (0.567 kg`,
       const token = this.getToken();
       const cachedUser = getStorage2(this.localUserKey, null) || getStorage2("audioKingUser", null);
       this.currentUser = token && cachedUser ? cachedUser : null;
-      this.status = token ? "loading" : "unauthenticated";
+      this.status = token && cachedUser ? "authenticated" : token ? "loading" : "unauthenticated";
       this._lastPrewarm = 0;
       this._effectiveBaseUrl = null;
       if (typeof window !== "undefined") {
@@ -26776,9 +26836,9 @@ Weight: 1.24 lbs (0.567 kg`,
       });
     }
     getToken() {
-      let token = getStorage2("audioKingSessionToken", null) || getStorage2("audioking_token", null) || getStorage2("audioKingToken", null);
+      let token = getStorage2("audioKingSessionToken", null) || getStorage2("audioking_token", null) || getStorage2("audioKingToken", null) || getStorage2("audioking_admin_token", null);
       if (!token && typeof localStorage !== "undefined") {
-        token = localStorage.getItem("audioKingSessionToken") || localStorage.getItem("audioking_token") || localStorage.getItem("audioKingToken");
+        token = localStorage.getItem("audioKingSessionToken") || localStorage.getItem("audioking_token") || localStorage.getItem("audioKingToken") || localStorage.getItem("audioking_admin_token");
       }
       if (token && typeof token === "string") {
         token = token.trim();
@@ -26836,14 +26896,21 @@ Weight: 1.24 lbs (0.567 kg`,
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
         const token = this.getToken();
-        const authHeaders = token ? { "Authorization": `Bearer ${token}` } : {};
+        const authHeaders = token ? {
+          "Authorization": `Bearer ${token}`,
+          "x-session-token": token,
+          "x-admin-token": token
+        } : {};
         try {
           const res = await fetch(url, {
             ...options,
             signal: controller.signal,
             credentials: "include",
+            cache: options.cache || "no-store",
             headers: {
               "Accept": "application/json",
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              "Pragma": "no-cache",
               ...authHeaders,
               ...options.headers || {}
             }
@@ -26965,12 +27032,12 @@ Weight: 1.24 lbs (0.567 kg`,
         this._recheckSession();
         return this.currentUser;
       }
-      let res = await this.safeFetch("/api/auth/me", { method: "GET" });
-      if (res.networkError) {
+      let res = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
+      if (res.networkError || res.status >= 500) {
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        res = await this.safeFetch("/api/auth/me", { method: "GET" });
+        res = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
       }
-      if (this.isLoggingIn || this.status === "authenticated" && this.currentUser) {
+      if (this.isLoggingIn) {
         return this.currentUser;
       }
       if (res.ok && res.data?.user) {
@@ -26991,14 +27058,41 @@ Weight: 1.24 lbs (0.567 kg`,
           this.currentUser = null;
           this.status = "unauthenticated";
         }
-      } else {
-        this.currentUser = null;
-        this.status = "unauthenticated";
-        removeStorage(this.localUserKey);
-        removeStorage("audioKingUser");
-        removeStorage("audioKingSessionToken");
-        removeStorage("audioking_token");
-        removeStorage("audioKingToken");
+      } else if (res.status === 401 || res.status === 403) {
+        let verifiedAdmin = false;
+        const cached = getStorage2(this.localUserKey, null) || getStorage2("audioKingUser", null);
+        if (cached?.role === "admin" || getStorage2("audioking_admin_token", null)) {
+          try {
+            const adminRes = await this.safeFetch(`/api/admin/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
+            if (adminRes.ok && adminRes.data?.user) {
+              this.currentUser = adminRes.data.user;
+              this.status = "authenticated";
+              setStorage(this.localUserKey, this.currentUser);
+              setStorage("audioKingUser", this.currentUser);
+              verifiedAdmin = true;
+            }
+          } catch (e) {
+          }
+        }
+        if (!verifiedAdmin) {
+          await new Promise((resolve) => setTimeout(resolve, 800));
+          const retryRes = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
+          if (retryRes.ok && retryRes.data?.user) {
+            this.currentUser = retryRes.data.user;
+            this.status = "authenticated";
+            setStorage(this.localUserKey, this.currentUser);
+            setStorage("audioKingUser", this.currentUser);
+          } else {
+            this.currentUser = null;
+            this.status = "unauthenticated";
+            removeStorage(this.localUserKey);
+            removeStorage("audioKingUser");
+            removeStorage("audioKingSessionToken");
+            removeStorage("audioking_token");
+            removeStorage("audioKingToken");
+            removeStorage("audioking_admin_token");
+          }
+        }
       }
       this.notify();
       return this.currentUser;
@@ -27017,22 +27111,48 @@ Weight: 1.24 lbs (0.567 kg`,
         return;
       }
       try {
-        const res = await this.safeFetch("/api/auth/me", { method: "GET" });
+        const res = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
         if (res.ok && res.data?.user) {
           this.currentUser = res.data.user;
           this.status = "authenticated";
           setStorage(this.localUserKey, this.currentUser);
           setStorage("audioKingUser", this.currentUser);
           this.notify();
-        } else if (res.status === 401) {
-          this.currentUser = null;
-          this.status = "unauthenticated";
-          removeStorage(this.localUserKey);
-          removeStorage("audioKingUser");
-          removeStorage("audioKingSessionToken");
-          removeStorage("audioking_token");
-          removeStorage("audioKingToken");
-          this.notify();
+        } else if (res.status === 401 || res.status === 403) {
+          let verifiedAdmin = false;
+          const cached = getStorage2(this.localUserKey, null) || getStorage2("audioKingUser", null);
+          if (cached?.role === "admin" || getStorage2("audioking_admin_token", null)) {
+            const adminRes = await this.safeFetch(`/api/admin/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
+            if (adminRes.ok && adminRes.data?.user) {
+              this.currentUser = adminRes.data.user;
+              this.status = "authenticated";
+              setStorage(this.localUserKey, this.currentUser);
+              setStorage("audioKingUser", this.currentUser);
+              this.notify();
+              verifiedAdmin = true;
+            }
+          }
+          if (!verifiedAdmin) {
+            await new Promise((resolve) => setTimeout(resolve, 800));
+            const retryRes = await this.safeFetch(`/api/auth/me?_t=${Date.now()}`, { method: "GET", cache: "no-store" });
+            if (retryRes.ok && retryRes.data?.user) {
+              this.currentUser = retryRes.data.user;
+              this.status = "authenticated";
+              setStorage(this.localUserKey, this.currentUser);
+              setStorage("audioKingUser", this.currentUser);
+              this.notify();
+            } else {
+              this.currentUser = null;
+              this.status = "unauthenticated";
+              removeStorage(this.localUserKey);
+              removeStorage("audioKingUser");
+              removeStorage("audioKingSessionToken");
+              removeStorage("audioking_token");
+              removeStorage("audioKingToken");
+              removeStorage("audioking_admin_token");
+              this.notify();
+            }
+          }
         }
       } catch (e) {
       }

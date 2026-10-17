@@ -259,6 +259,10 @@ function attachVariantsToProducts(products) {
  */
 router.get('/', (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
     const { category, brand, search, stockStatus, availability } = req.query || {};
     let query = 'SELECT * FROM products WHERE 1=1';
     const params = [];

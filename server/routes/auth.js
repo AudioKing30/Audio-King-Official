@@ -24,7 +24,7 @@ const {
 } = require('../email');
 const { requireAuth } = require('../middleware/authMiddleware');
 const { contentSecurityGuard } = require('../middleware/contentFilter');
-const { syncCustomersMaster } = require('../dataSync');
+const { syncCustomersMaster, syncSessionsMaster } = require('../dataSync');
 
 const router = express.Router();
 
@@ -91,6 +91,11 @@ function createSessionForUser(res, userId, req) {
     INSERT INTO sessions (id, user_id, token_hash, expires_at, created_at, last_active_at, user_agent, ip_address)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(sessionId, userId, tokenHash, expiresAt, now, now, userAgent, ipAddress);
+
+  // Auto-mirror sessions to sessions_master.json for permanent server persistence
+  try {
+    syncSessionsMaster(db);
+  } catch (e) {}
 
   // Set secure HttpOnly cookie
   res.cookie('audioking_session', token, {
@@ -1359,9 +1364,13 @@ router.patch('/profile', requireAuth, contentSecurityGuard(), (req, res) => {
 });
 
 // =========================================================================
+// =========================================================================
 // 11. GET CURRENT AUTHENTICATED USER (/api/auth/me)
 // =========================================================================
 router.get('/me', requireAuth, (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   return res.json({
     success: true,
     user: req.user
@@ -1379,6 +1388,7 @@ router.post('/logout', (req, res) => {
     const tokenHash = hashToken(token);
     try {
       db.prepare('DELETE FROM sessions WHERE token_hash = ?').run(tokenHash);
+      syncSessionsMaster(db);
     } catch (e) {}
   }
 

@@ -2580,12 +2580,7 @@
     "videoType": "youtube",
     "videoUrl": "https://www.youtube.com/watch?v=j7dC9aAx_TY",
     "youtubeVideoId": "j7dC9aAx_TY",
-    "youtubeVideos": [
-      {
-        "id": "j7dC9aAx_TY",
-        "url": "https://www.youtube.com/watch?v=j7dC9aAx_TY"
-      }
-    ],
+    "youtubeVideos": [],
     "specs": [],
     "deepSpecs": []
   },
@@ -2618,12 +2613,7 @@
     "videoType": "youtube",
     "videoUrl": "https://www.youtube.com/watch?v=JWg9Tlyxn68",
     "youtubeVideoId": "JWg9Tlyxn68",
-    "youtubeVideos": [
-      {
-        "id": "JWg9Tlyxn68",
-        "url": "https://www.youtube.com/watch?v=JWg9Tlyxn68"
-      }
-    ],
+    "youtubeVideos": [],
     "specs": [],
     "deepSpecs": []
   },
@@ -3022,12 +3012,7 @@
     "videoType": "youtube",
     "videoUrl": "https://www.youtube.com/watch?v=e6G7G7-4vps",
     "youtubeVideoId": "e6G7G7-4vps",
-    "youtubeVideos": [
-      {
-        "id": "e6G7G7-4vps",
-        "url": "https://www.youtube.com/watch?v=e6G7G7-4vps"
-      }
-    ],
+    "youtubeVideos": [],
     "specs": [],
     "deepSpecs": []
   },
@@ -3061,12 +3046,7 @@
     "videoType": "youtube",
     "videoUrl": "https://www.youtube.com/watch?v=ZTgpPEuwjbs",
     "youtubeVideoId": "ZTgpPEuwjbs",
-    "youtubeVideos": [
-      {
-        "id": "ZTgpPEuwjbs",
-        "url": "https://www.youtube.com/watch?v=ZTgpPEuwjbs"
-      }
-    ],
+    "youtubeVideos": [],
     "specs": [],
     "deepSpecs": []
   },
@@ -10604,12 +10584,7 @@
     "videoType": "youtube",
     "videoUrl": "https://www.youtube.com/watch?v=mlIpHAT5H5c",
     "youtubeVideoId": "mlIpHAT5H5c",
-    "youtubeVideos": [
-      {
-        "id": "mlIpHAT5H5c",
-        "url": "https://www.youtube.com/watch?v=mlIpHAT5H5c"
-      }
-    ],
+    "youtubeVideos": [],
     "specs": [],
     "deepSpecs": []
   },
@@ -18591,6 +18566,66 @@
       "uploads/products/1790349183901_d0edf351e177.jpg",
       "uploads/products/1790349183904_901c20f48f74.jpg",
       "uploads/products/1790349183907_8de43201c940.jpg"
+    ],
+    "videoType": null,
+    "videoUrl": null,
+    "youtubeVideoId": null,
+    "youtubeVideos": [],
+    "specs": [],
+    "deepSpecs": []
+  },
+  {
+    "id": "super-special-test-monitor-2026-mvcekur2",
+    "name": "Super Special Test Monitor 2026",
+    "shortName": "Super Special Test Monitor 2026",
+    "brand": "ADAM Audio",
+    "category": "Studio Monitors",
+    "section": "pro-audio",
+    "subcategory": "",
+    "price": 45000,
+    "originalPrice": 50000,
+    "stock": 10,
+    "inStock": true,
+    "isPreOrder": false,
+    "stockStatus": "instock",
+    "rating": 5,
+    "reviewCount": 0,
+    "badge": "",
+    "sku": "AK-SUPER-SPECIAL-TEST-MONITOR-2026-MVCEKUR2",
+    "description": "Testing persistence across hard refresh",
+    "image": "assets/images/placeholder.svg",
+    "images": [
+      "assets/images/placeholder.svg"
+    ],
+    "videoType": null,
+    "videoUrl": null,
+    "youtubeVideoId": null,
+    "youtubeVideos": [],
+    "specs": [],
+    "deepSpecs": []
+  },
+  {
+    "id": "super-special-test-monitor-2026-mvcf8e6v",
+    "name": "Super Special Test Monitor 2026",
+    "shortName": "Super Special Test Monitor 2026",
+    "brand": "ADAM Audio",
+    "category": "Studio Monitors",
+    "section": "pro-audio",
+    "subcategory": "",
+    "price": 45000,
+    "originalPrice": 50000,
+    "stock": 10,
+    "inStock": true,
+    "isPreOrder": false,
+    "stockStatus": "instock",
+    "rating": 5,
+    "reviewCount": 0,
+    "badge": "",
+    "sku": "AK-SUPER-SPECIAL-TEST-MONITOR-2026-MVCF8E6V",
+    "description": "Testing persistence across hard refresh",
+    "image": "assets/images/placeholder.svg",
+    "images": [
+      "assets/images/placeholder.svg"
     ],
     "videoType": null,
     "videoUrl": null,

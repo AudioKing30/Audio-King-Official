@@ -764,6 +764,10 @@ router.delete('/brands/:id', (req, res) => {
 // -------------------------------------------------------------
 router.get('/products', (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
     const { search, category, brand, stockStatus } = req.query || {};
     let query = 'SELECT * FROM products WHERE 1=1';
     const params = [];

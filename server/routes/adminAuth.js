@@ -11,6 +11,7 @@ const { db } = require('../db');
 const { hashToken, generateSessionToken } = require('../security');
 const { adminLoginRateLimiter, recordFailedLogin, resetLoginRateLimit } = require('../middleware/rateLimiter');
 const { requireAdminApi } = require('../middleware/adminMiddleware');
+const { syncSessionsMaster } = require('../dataSync');
 
 const router = express.Router();
 const SESSION_TTL_MS = 10 * 365 * 24 * 60 * 60 * 1000; // 10 years permanent admin session (No arbitrary TTL)
@@ -91,6 +92,11 @@ router.post('/login', adminLoginRateLimiter, async (req, res) => {
     // Update last_login_at
     db.prepare('UPDATE users SET last_login_at = ? WHERE id = ?').run(nowIso, user.id);
 
+    // Auto-mirror sessions to sessions_master.json for permanent server persistence
+    try {
+      syncSessionsMaster(db);
+    } catch (e) {}
+
     // Set HttpOnly cookies for both admin and storefront auth
     res.cookie('audioking_admin_session', rawToken, {
       httpOnly: true,
@@ -138,6 +144,9 @@ router.post('/logout', (req, res) => {
     if (token) {
       const tokenHash = hashToken(token);
       db.prepare('DELETE FROM sessions WHERE token_hash = ?').run(tokenHash);
+      try {
+        syncSessionsMaster(db);
+      } catch (e) {}
     }
 
     res.clearCookie('audioking_admin_session', { httpOnly: true, sameSite: 'lax', path: '/' });
@@ -155,6 +164,9 @@ router.post('/logout', (req, res) => {
  * GET /api/admin/auth/me
  */
 router.get('/me', requireAdminApi, (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   return res.json({
     success: true,
     user: req.admin
