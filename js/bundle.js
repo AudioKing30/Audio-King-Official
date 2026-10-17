@@ -34412,6 +34412,15 @@ Message: ${message}`);
           const path = (window.location.pathname || "").toLowerCase();
           if (path.includes("/store") || path.includes("/catalog")) {
             currentHash = "#store";
+          } else if (path.includes("/contact")) {
+            currentHash = "#contact";
+          } else if (path.includes("/brands")) {
+            currentHash = "#brands";
+          } else if (path.includes("/product/")) {
+            const rawId = window.location.pathname.split(/\/product\//i)[1]?.replace(/\/+$/, "");
+            if (rawId) {
+              currentHash = `#product?id=${decodeURIComponent(rawId)}`;
+            }
           } else {
             currentHash = currentHash || "#home";
           }
@@ -34525,7 +34534,9 @@ Message: ${message}`);
       };
       window.handleHashRoute = handleHashRoute;
       window.addEventListener("hashchange", handleHashRoute);
-      if (window.location.hash && window.location.hash !== "#") {
+      const initialPath = (window.location.pathname || "").toLowerCase();
+      const hasPathRoute = initialPath !== "/" && (initialPath.includes("/store") || initialPath.includes("/catalog") || initialPath.includes("/contact") || initialPath.includes("/brands") || initialPath.includes("/product/"));
+      if (window.location.hash && window.location.hash !== "#" || hasPathRoute) {
         handleHashRoute();
       } else {
         showHome(false);
