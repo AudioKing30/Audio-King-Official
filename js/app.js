@@ -795,12 +795,59 @@ if (typeof document !== 'undefined') {
     }, { passive: true });
 
     console.log(`AudioKing initialized successfully with ${AUDIOKING_PRODUCTS.length} validated products.`);
+
+    // Check for Cashfree Return Redirect (?order_id=...)
+    handleCashfreeReturnRedirect();
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startAudioKingApp);
   } else {
     startAudioKingApp();
+  }
+}
+
+/**
+ * Handles Cashfree Return Redirect on return_url (?order_id=...)
+ */
+async function handleCashfreeReturnRedirect() {
+  if (typeof window === 'undefined') return;
+  const sp = new URLSearchParams(window.location.search);
+  const orderId = sp.get('order_id') || sp.get('cf_order_id');
+  if (!orderId) return;
+
+  // Clean URL query parameters immediately to avoid re-triggering on page refresh
+  const cleanUrl = window.location.pathname + (window.location.hash || '');
+  window.history.replaceState({}, document.title, cleanUrl);
+
+  showToast('Verifying your Cashfree payment status...', 'info');
+
+  try {
+    const baseUrl = apiUrl('');
+    const res = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, isMock: false })
+    });
+    const data = await res.json();
+
+    if (data.success && data.verified) {
+      clearCart();
+      showToast('✓ Payment completed successfully! Your order is confirmed.', 'success');
+      try {
+        const orderRes = await fetch(`${baseUrl}/api/user/orders/${encodeURIComponent(orderId)}`);
+        const orderData = await orderRes.json();
+        if (orderData.success && orderData.order) {
+          triggerOrderAnimation(orderData.order);
+          return;
+        }
+      } catch (_) {}
+      window.location.hash = '#account/orders';
+    } else {
+      showToast(data.error || 'Payment was not verified or was cancelled.', 'error');
+    }
+  } catch (err) {
+    console.error('[Cashfree Return Exception]', err);
   }
 }
 

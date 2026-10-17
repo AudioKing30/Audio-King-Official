@@ -11,15 +11,21 @@
 
 import { getApiBaseUrl } from '../services/apiConfig.js';
 
+import { authService } from '../services/authService.js';
+
 let cashfreeSdkLoaded = false;
 let cashfreeSdkLoading = false;
 
 function loadCashfreeSdk() {
-  if (cashfreeSdkLoaded || typeof window === 'undefined') return Promise.resolve(true);
+  if (cashfreeSdkLoaded || (typeof window !== 'undefined' && window.Cashfree)) {
+    cashfreeSdkLoaded = true;
+    return Promise.resolve(true);
+  }
   if (cashfreeSdkLoading) {
     return new Promise(resolve => {
       const interval = setInterval(() => {
-        if (cashfreeSdkLoaded) {
+        if (cashfreeSdkLoaded || window.Cashfree) {
+          cashfreeSdkLoaded = true;
           clearInterval(interval);
           resolve(true);
         }
@@ -29,7 +35,6 @@ function loadCashfreeSdk() {
 
   cashfreeSdkLoading = true;
   return new Promise((resolve) => {
-    // Check if already injected
     if (window.Cashfree) {
       cashfreeSdkLoaded = true;
       cashfreeSdkLoading = false;
@@ -64,11 +69,18 @@ export class CashfreePaymentAdapter {
 
   async processPayment(orderData) {
     const baseUrl = this.getBaseUrl();
-    const token = typeof localStorage !== 'undefined' ? 
-      (localStorage.getItem('audioKingSessionToken') || localStorage.getItem('audioking_token')) : null;
-    const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
+    const token = authService.getToken() || (typeof localStorage !== 'undefined' ? 
+      (localStorage.getItem('audioKingSessionToken') || localStorage.getItem('audioking_token')) : null);
+    const currentUser = authService.getUser();
 
-    const totalAmount = (orderData.items || []).reduce(
+    const authHeaders = {
+      ...(token ? { 'Authorization': `Bearer ${token}`, 'X-Session-Token': token } : {}),
+      ...(currentUser?.email ? { 'X-User-Email': currentUser.email } : {}),
+      ...(currentUser?.id ? { 'X-User-Id': currentUser.id } : {})
+    };
+
+    // Calculate final payable amount factoring in coupons and discounts
+    const totalAmount = Number(orderData.total) > 0 ? Number(orderData.total) : (orderData.items || []).reduce(
       (sum, it) => sum + (Number(it.price || it.unitPrice) || 0) * (Number(it.qty || it.quantity) || 1),
       0
     );
@@ -76,6 +88,7 @@ export class CashfreePaymentAdapter {
     // 1. Create Cashfree payment session on backend
     let createRes = null;
     try {
+      const cleanPhone = (orderData.customer?.phone || currentUser?.phone_number || '').replace(/[^0-9]/g, '');
       const resp = await fetch(`${baseUrl}/api/payment/cashfree/create-order`, {
         method: 'POST',
         credentials: 'include',
@@ -89,9 +102,10 @@ export class CashfreePaymentAdapter {
           currency: 'INR',
           orderId: orderData.orderId || `ak_order_${Date.now()}`,
           customer: {
-            name: orderData.customer?.name || orderData.customer?.recipientName || 'Audio Creator',
-            email: orderData.customer?.email || 'customer@audioking.co.in',
-            phone: orderData.customer?.phone || '9876543210'
+            name: orderData.customer?.name || orderData.customer?.fullName || currentUser?.full_name || 'Valued Customer',
+            email: orderData.customer?.email || currentUser?.email || 'customer@audioking.co.in',
+            phone: cleanPhone.length >= 10 ? cleanPhone.slice(-10) : '9876543210',
+            userId: orderData.customer?.userId || currentUser?.id || undefined
           }
         })
       });
@@ -124,6 +138,11 @@ export class CashfreePaymentAdapter {
               return reject(new Error(result.error.message || 'Payment cancelled or failed.'));
             }
 
+            if (result.redirect) {
+              console.log('[CashfreeAdapter] Payment will complete via redirect.');
+              return;
+            }
+
             // Verify order on backend
             try {
               const verifyRes = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
@@ -144,9 +163,9 @@ export class CashfreePaymentAdapter {
               if (vData.success && vData.verified) {
                 resolve({
                   success: true,
-                  transactionId: vData.paymentId || `CF_${createRes.orderId}`,
+                  transactionId: vData.paymentId || `cf_pay_${createRes.orderId}`,
                   gatewayOrderId: createRes.orderId,
-                  paymentMethod: 'Cashfree PG',
+                  paymentMethod: orderData.paymentMethod || 'Cashfree PG',
                   timestamp: new Date().toISOString(),
                   message: 'Cashfree payment completed successfully.'
                 });

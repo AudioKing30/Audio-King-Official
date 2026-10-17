@@ -26724,839 +26724,6 @@ Weight: 1.24 lbs (0.567 kg`,
     }, 2500);
   }
 
-  // js/components/cashfreeAdapter.js
-  var cashfreeSdkLoaded = false;
-  var cashfreeSdkLoading = false;
-  function loadCashfreeSdk() {
-    if (cashfreeSdkLoaded || typeof window === "undefined")
-      return Promise.resolve(true);
-    if (cashfreeSdkLoading) {
-      return new Promise((resolve) => {
-        const interval = setInterval(() => {
-          if (cashfreeSdkLoaded) {
-            clearInterval(interval);
-            resolve(true);
-          }
-        }, 100);
-      });
-    }
-    cashfreeSdkLoading = true;
-    return new Promise((resolve) => {
-      if (window.Cashfree) {
-        cashfreeSdkLoaded = true;
-        cashfreeSdkLoading = false;
-        return resolve(true);
-      }
-      const script = document.createElement("script");
-      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
-      script.async = true;
-      script.onload = () => {
-        cashfreeSdkLoaded = true;
-        cashfreeSdkLoading = false;
-        resolve(true);
-      };
-      script.onerror = () => {
-        console.warn("[CashfreeAdapter] Cashfree JS SDK could not be loaded from CDN. Fallback simulation active.");
-        cashfreeSdkLoading = false;
-        resolve(false);
-      };
-      document.head.appendChild(script);
-    });
-  }
-  var CashfreePaymentAdapter = class {
-    constructor() {
-      this.name = "CashfreePaymentAdapter";
-    }
-    getBaseUrl() {
-      return getApiBaseUrl();
-    }
-    async processPayment(orderData) {
-      const baseUrl = this.getBaseUrl();
-      const token = typeof localStorage !== "undefined" ? localStorage.getItem("audioKingSessionToken") || localStorage.getItem("audioking_token") : null;
-      const authHeaders = token ? { "Authorization": `Bearer ${token}` } : {};
-      const totalAmount = (orderData.items || []).reduce(
-        (sum, it) => sum + (Number(it.price || it.unitPrice) || 0) * (Number(it.qty || it.quantity) || 1),
-        0
-      );
-      let createRes = null;
-      try {
-        const resp = await fetch(`${baseUrl}/api/payment/cashfree/create-order`, {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            ...authHeaders
-          },
-          body: JSON.stringify({
-            amount: totalAmount,
-            currency: "INR",
-            orderId: orderData.orderId || `ak_order_${Date.now()}`,
-            customer: {
-              name: orderData.customer?.name || orderData.customer?.recipientName || "Audio Creator",
-              email: orderData.customer?.email || "customer@audioking.co.in",
-              phone: orderData.customer?.phone || "9876543210"
-            }
-          })
-        });
-        createRes = await resp.json();
-        if (!resp.ok || !createRes.success) {
-          throw new Error(createRes.error || "Failed to initialize Cashfree payment session.");
-        }
-      } catch (err) {
-        console.error("[CashfreeAdapter] Order initialization exception:", err);
-        throw err;
-      }
-      if (!createRes.isMock && createRes.paymentSessionId) {
-        const sdkReady = await loadCashfreeSdk();
-        if (sdkReady && typeof window.Cashfree === "function") {
-          const cashfree = window.Cashfree({
-            mode: createRes.mode === "production" ? "production" : "sandbox"
-          });
-          return new Promise((resolve, reject) => {
-            cashfree.checkout({
-              paymentSessionId: createRes.paymentSessionId,
-              redirectTarget: "_modal"
-            }).then(async (result) => {
-              if (result.error) {
-                return reject(new Error(result.error.message || "Payment cancelled or failed."));
-              }
-              try {
-                const verifyRes = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
-                  method: "POST",
-                  credentials: "include",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    ...authHeaders
-                  },
-                  body: JSON.stringify({
-                    orderId: createRes.orderId,
-                    isMock: false
-                  })
-                });
-                const vData = await verifyRes.json();
-                if (vData.success && vData.verified) {
-                  resolve({
-                    success: true,
-                    transactionId: vData.paymentId || `CF_${createRes.orderId}`,
-                    gatewayOrderId: createRes.orderId,
-                    paymentMethod: "Cashfree PG",
-                    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-                    message: "Cashfree payment completed successfully."
-                  });
-                } else {
-                  reject(new Error(vData.error || "Cashfree payment verification unsuccessful."));
-                }
-              } catch (vErr) {
-                reject(vErr);
-              }
-            }).catch(reject);
-          });
-        }
-      }
-      return new Promise((resolve, reject) => {
-        setTimeout(async () => {
-          try {
-            const verifyRes = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
-              method: "POST",
-              credentials: "include",
-              headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                ...authHeaders
-              },
-              body: JSON.stringify({
-                orderId: createRes.orderId,
-                isMock: true
-              })
-            });
-            const vData = await verifyRes.json();
-            resolve({
-              success: true,
-              transactionId: vData.paymentId || `CF_SIM_${Date.now()}`,
-              gatewayOrderId: createRes.orderId,
-              paymentMethod: orderData.paymentMethod || "Cashfree PG (Sandbox)",
-              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
-              message: "Cashfree test payment verified successfully."
-            });
-          } catch (err) {
-            reject(err);
-          }
-        }, 500);
-      });
-    }
-  };
-
-  // js/components/paymentAdapter.js
-  var activePaymentAdapter = new CashfreePaymentAdapter();
-
-  // js/components/taxInvoice.js
-  function numberToIndianWords(num) {
-    const n = Math.round(Number(num) || 0);
-    if (n === 0)
-      return "Zero Rupees Only";
-    const singleDigits = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-    const teenDigits = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-    const tensDigits = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-    function convertTwoDigits(v) {
-      if (v === 0)
-        return "";
-      if (v < 10)
-        return singleDigits[v];
-      if (v < 20)
-        return teenDigits[v - 10];
-      const t = Math.floor(v / 10);
-      const r = v % 10;
-      return `${tensDigits[t]}${r > 0 ? " " + singleDigits[r] : ""}`;
-    }
-    function convertThreeDigits(v) {
-      const h = Math.floor(v / 100);
-      const rem = v % 100;
-      let res = "";
-      if (h > 0)
-        res += `${singleDigits[h]} Hundred`;
-      if (rem > 0)
-        res += `${res ? " and " : ""}${convertTwoDigits(rem)}`;
-      return res;
-    }
-    let crore = Math.floor(n / 1e7);
-    let remCrore = n % 1e7;
-    let lakh = Math.floor(remCrore / 1e5);
-    let remLakh = remCrore % 1e5;
-    let thousand = Math.floor(remLakh / 1e3);
-    let remThousand = remLakh % 1e3;
-    const parts = [];
-    if (crore > 0)
-      parts.push(`${convertTwoDigits(crore)} Crore`);
-    if (lakh > 0)
-      parts.push(`${convertTwoDigits(lakh)} Lakh`);
-    if (thousand > 0)
-      parts.push(`${convertTwoDigits(thousand)} Thousand`);
-    if (remThousand > 0)
-      parts.push(convertThreeDigits(remThousand));
-    return `Indian Rupees ${parts.join(" ")} Only`;
-  }
-  function generateTaxInvoiceHtml(orderData) {
-    const order = orderData || {};
-    const orderNum = order.order_number || order.orderNumber || `AK-${Date.now().toString().slice(-6)}`;
-    const orderId = order.id || orderNum;
-    const rawDate = order.created_at || order.createdAt || (/* @__PURE__ */ new Date()).toISOString();
-    const d = new Date(rawDate);
-    const dayStr = String(d.getDate()).padStart(2, "0");
-    const monthStr = String(d.getMonth() + 1).padStart(2, "0");
-    const yearStr = d.getFullYear();
-    const formattedDate = `${dayStr} / ${monthStr} / ${yearStr}`;
-    let shipping = {};
-    if (typeof order.shipping_address === "string") {
-      try {
-        shipping = JSON.parse(order.shipping_address);
-      } catch (_) {
-        shipping = { address: order.shipping_address };
-      }
-    } else if (order.shipping_address && typeof order.shipping_address === "object") {
-      shipping = order.shipping_address;
-    } else if (order.shipping && typeof order.shipping === "object") {
-      shipping = order.shipping;
-    }
-    const customerName = order.customer_name || order.customerName || shipping.name || shipping.recipient_name || "Valued Customer";
-    const customerEmail = order.customer_email || order.customerEmail || shipping.email || order.user_email || "";
-    const customerPhone = order.customer_phone || order.customerPhone || shipping.phone || "";
-    const customerGst = (order.gst_number || order.gstNumber || shipping.gst_number || shipping.gstNumber || "").trim().toUpperCase();
-    const street = shipping.line1 || shipping.street || shipping.address || "";
-    const city = shipping.city || "";
-    const state = shipping.state || "Maharashtra";
-    const pin = shipping.pin || shipping.pincode || "";
-    const fullAddress = [street, city, state, pin].filter(Boolean).join(", ") || "Mumbai, Maharashtra";
-    const isMaharashtra = state.toLowerCase().includes("maharashtra") || state.toLowerCase().includes("mh") || !state;
-    const placeOfSupply = isMaharashtra ? "Maharashtra (27)" : `${state}`;
-    const stateCode = isMaharashtra ? "27" : "Inter-State";
-    const items = Array.isArray(order.items) && order.items.length > 0 ? order.items : [
-      {
-        name: order.product_name || order.productName || "Pro Audio Hardware",
-        quantity: 1,
-        price: order.total_amount || order.totalAmount || 0,
-        gst_percent: 18
-      }
-    ];
-    let totalTaxable = 0;
-    let totalCgst = 0;
-    let totalSgst = 0;
-    let totalIgst = 0;
-    let totalGrand = 0;
-    const renderedRows = items.map((it, idx) => {
-      const qty = Number(it.quantity || it.qty || 1);
-      const unitSellingPrice = Number(it.unit_price ?? it.price ?? 0);
-      const lineTotal = unitSellingPrice * qty;
-      const gstRate = Number(it.gst_percent ?? it.gstPercent ?? 18);
-      const lineTaxable = Math.round(lineTotal / (1 + gstRate / 100) * 100) / 100;
-      const lineGst = Math.round((lineTotal - lineTaxable) * 100) / 100;
-      let cgst = 0;
-      let sgst = 0;
-      let igst = 0;
-      if (isMaharashtra) {
-        cgst = Math.round(lineGst / 2 * 100) / 100;
-        sgst = Math.round((lineGst - cgst) * 100) / 100;
-      } else {
-        igst = lineGst;
-      }
-      totalTaxable += lineTaxable;
-      totalCgst += cgst;
-      totalSgst += sgst;
-      totalIgst += igst;
-      totalGrand += lineTotal;
-      const hsnCode = it.hsn || it.hsn_code || "8518";
-      return `
-      <tr>
-        <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
-        <td style="font-weight: 600;">${it.name || it.product_name || "Pro Audio Equipment"}</td>
-        <td style="text-align: center;">${hsnCode}</td>
-        <td style="text-align: center; font-weight: 700;">${qty}</td>
-        <td style="text-align: right;">\u20B9${unitSellingPrice.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-        <td style="text-align: right;">\u20B9${lineTaxable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-        <td style="text-align: center;">${gstRate}%</td>
-        <td style="text-align: right;">${cgst > 0 ? "\u20B9" + cgst.toFixed(2) : "\u2014"}</td>
-        <td style="text-align: right;">${sgst > 0 ? "\u20B9" + sgst.toFixed(2) : "\u2014"}</td>
-        <td style="text-align: right;">${igst > 0 ? "\u20B9" + igst.toFixed(2) : "\u2014"}</td>
-        <td style="text-align: right; font-weight: 800;">\u20B9${lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-      </tr>
-    `;
-    }).join("");
-    const discountAmount = Number(order.discount_amount || order.discountAmount || 0);
-    const finalPayable = Math.max(0, totalGrand - discountAmount);
-    const amountWords = numberToIndianWords(finalPayable);
-    const invoiceNo = `AK-INV-${yearStr}-${orderNum.replace(/^AK-/, "")}`;
-    const paymentMethod = order.payment_method || order.paymentMethod || "Prepaid / Online";
-    return `
-    <div class="ak-invoice-wrapper">
-      <div class="ak-invoice-controls-bar no-print">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-weight: 700; color: #0F172A; font-size: 15px;">Official Tax Invoice: ${invoiceNo}</span>
-          <span style="font-size: 11.5px; background: #DCFCE7; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700;">GST Registered</span>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button type="button" class="btn-primary" onclick="window.print()" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; background: #E4572E; color: #FFF; font-weight: 700; border: none; border-radius: 6px; cursor: pointer;">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-            Print / Save PDF
-          </button>
-          <button type="button" class="btn-secondary" onclick="closeTaxInvoiceModal()" style="padding: 7px 14px; background: #F1F5F9; color: #334155; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px; cursor: pointer;">
-            Close \u2715
-          </button>
-        </div>
-      </div>
-
-      <div class="ak-invoice-sheet" id="akInvoicePrintSheet">
-        <!-- TOP HEADER: LOGO & TAX INVOICE BADGE -->
-        <div class="ak-inv-header">
-          <div class="ak-inv-supplier">
-            <div class="ak-inv-brand-row">
-              <img src="assets/images/logo.png" alt="Audio King Logo" class="ak-inv-logo" onerror="this.style.display='none'">
-            </div>
-            <div class="ak-inv-legal-name">VASP ADVISORS PRIVATE LIMITED</div>
-            <div class="ak-inv-address">F 505, RNA Regency Park, MG Road Off Link Road, Dhanukar Wadi, Kandivali West, Mumbai Suburban, Maharashtra \u2013 400067</div>
-            <div class="ak-inv-gstin"><strong>GSTIN:</strong> 27AAHCV5628B1ZC &nbsp;|&nbsp; <strong>Trade Name / Brand:</strong> AUDIO KING</div>
-            <div class="ak-inv-pan"><strong>Company PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || "AAHCV5628B"}</span></div>
-            <div class="ak-inv-tan"><strong>Company TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || "MUMV28396E"}</span></div>
-          </div>
-
-          <div class="ak-inv-title-box">
-            <h1 class="ak-inv-heading">TAX INVOICE</h1>
-            <div class="ak-inv-subbrand">(Original for Recipient)</div>
-          </div>
-        </div>
-
-        <!-- METADATA 2-COLUMN TABLE -->
-        <table class="ak-inv-meta-table">
-          <tbody>
-            <tr>
-              <td style="width: 50%;"><strong>Invoice No.:</strong> ${invoiceNo}</td>
-              <td style="width: 50%;"><strong>Place of Supply:</strong> ${placeOfSupply}</td>
-            </tr>
-            <tr>
-              <td><strong>Invoice Date:</strong> ${formattedDate}</td>
-              <td><strong>Due Date:</strong> Immediate (Paid)</td>
-            </tr>
-            <tr>
-              <td><strong>Payment Terms:</strong> ${paymentMethod}</td>
-              <td><strong>PO / Reference No.:</strong> ${orderNum}</td>
-            </tr>
-            <tr>
-              <td><strong>Reverse Charge:</strong> No</td>
-              <td><strong>State Code:</strong> ${stateCode}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- ORANGE SECTION BARS: BILL TO & SHIP TO -->
-        <div class="ak-inv-recipients-grid">
-          <div class="ak-inv-recipient-col">
-            <div class="ak-inv-orange-bar">BILL TO (RECIPIENT)</div>
-            <div class="ak-inv-box-body">
-              <div><strong>Customer / Company Name:</strong> ${customerName}</div>
-              <div><strong>Billing Address:</strong> ${fullAddress}</div>
-              <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                <span><strong>GSTIN / UIN:</strong> ${customerGst || "N/A (Consumer)"}</span>
-                <span><strong>State:</strong> ${state}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="ak-inv-recipient-col">
-            <div class="ak-inv-orange-bar">SHIP TO (IF DIFFERENT)</div>
-            <div class="ak-inv-box-body">
-              <div><strong>Recipient / Company Name:</strong> ${customerName}</div>
-              <div><strong>Shipping Address:</strong> ${fullAddress}</div>
-              <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                <span><strong>GSTIN / UIN:</strong> ${customerGst || "N/A (Consumer)"}</span>
-                <span><strong>State:</strong> ${state}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- FULL-WIDTH CONTACT ROW -->
-        <div class="ak-inv-contact-bar">
-          <strong>Contact / Email:</strong> ${customerPhone ? customerPhone + " | " : ""}${customerEmail || "info@audioking.co.in"}
-        </div>
-
-        <!-- ITEMS BREAKDOWN TABLE (DARK CHARCOAL HEADER) -->
-        <table class="ak-inv-items-table">
-          <thead>
-            <tr>
-              <th style="width: 32px; text-align: center;">#</th>
-              <th>Item / Description</th>
-              <th style="width: 60px; text-align: center;">HSN/SAC</th>
-              <th style="width: 40px; text-align: center;">Qty</th>
-              <th style="width: 75px; text-align: right;">Rate (INR)</th>
-              <th style="width: 80px; text-align: right;">Taxable (INR)</th>
-              <th style="width: 50px; text-align: center;">GST %</th>
-              <th style="width: 65px; text-align: right;">CGST (INR)</th>
-              <th style="width: 65px; text-align: right;">SGST (INR)</th>
-              <th style="width: 65px; text-align: right;">IGST (INR)</th>
-              <th style="width: 85px; text-align: right;">Line Total (INR)</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${renderedRows}
-          </tbody>
-        </table>
-
-        <!-- BOTTOM SECTION: BANK/TERMS ON LEFT, FINANCIAL SUMMARY ON RIGHT -->
-        <div class="ak-inv-bottom-grid">
-          <!-- LEFT: AMOUNT IN WORDS, NOTES, BANK DETAILS -->
-          <div class="ak-inv-bottom-left">
-            <div class="ak-inv-info-block">
-              <div class="ak-inv-block-title">Amount in Words:</div>
-              <div class="ak-inv-block-text" style="font-weight: 700; color: #1E293B;">${amountWords}</div>
-            </div>
-
-            <div class="ak-inv-info-block">
-              <div class="ak-inv-block-title">Notes / Terms:</div>
-              <div class="ak-inv-block-text">
-                1. Goods once sold are covered under official manufacturer warranty.<br>
-                2. All prices are inclusive of GST as mandated under Indian GST laws.<br>
-                3. Disputes are subject to Mumbai, Maharashtra jurisdiction.
-              </div>
-            </div>
-
-            <div class="ak-inv-info-block">
-              <div class="ak-inv-block-title">Bank / Payment Details:</div>
-              <div class="ak-inv-block-text">
-                Bank: HDFC Bank Ltd &nbsp;|&nbsp; Beneficiary: VASP ADVISORS PRIVATE LIMITED
-              </div>
-            </div>
-
-            <div class="ak-inv-info-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
-              <div class="ak-inv-block-title">Account / UPI / IFSC:</div>
-              <div class="ak-inv-block-text">
-                A/C No: 50200088991234 &nbsp;|&nbsp; IFSC: HDFC0000123 &nbsp;|&nbsp; UPI: audioking@hdfcbank
-              </div>
-            </div>
-          </div>
-
-          <!-- RIGHT: FINANCIAL TOTALS -->
-          <div class="ak-inv-bottom-right">
-            <table class="ak-inv-totals-table">
-              <tbody>
-                <tr>
-                  <td>Subtotal (Taxable)</td>
-                  <td style="text-align: right;">INR ${totalTaxable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                </tr>
-                <tr>
-                  <td>Discount</td>
-                  <td style="text-align: right;">INR ${discountAmount > 0 ? "-" + discountAmount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</td>
-                </tr>
-                <tr>
-                  <td>CGST</td>
-                  <td style="text-align: right;">INR ${totalCgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                </tr>
-                <tr>
-                  <td>SGST</td>
-                  <td style="text-align: right;">INR ${totalSgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                </tr>
-                <tr>
-                  <td>IGST</td>
-                  <td style="text-align: right;">INR ${totalIgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                </tr>
-                <tr>
-                  <td>Shipping / Transit Insurance</td>
-                  <td style="text-align: right; color: #166534; font-weight: 700;">INR 0.00 (Free)</td>
-                </tr>
-                <tr class="ak-inv-grand-row">
-                  <td style="font-weight: 900; font-size: 14px;">GRAND TOTAL</td>
-                  <td style="text-align: right; font-weight: 900; font-size: 14px;">INR ${finalPayable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- SIGNATURE FOOTER -->
-        <div class="ak-inv-footer">
-          <div class="ak-inv-signatory">
-            <div style="font-size: 12px; font-weight: 700; color: #1E293B;">For VASP ADVISORS PRIVATE LIMITED (Audio King)</div>
-            <div class="ak-inv-signature-line" style="height: 48px; border-bottom: 1px dashed #CBD5E1; margin: 8px 0;"></div>
-            <div style="font-size: 11px; font-weight: 700; color: #64748B;">Authorized Signatory</div>
-          </div>
-          <div class="ak-inv-thanks">
-            Thank you for your business.
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  }
-  function openTaxInvoiceModal(orderData) {
-    let modal = document.getElementById("akTaxInvoiceModal");
-    if (!modal) {
-      modal = document.createElement("div");
-      modal.id = "akTaxInvoiceModal";
-      modal.className = "ak-tax-invoice-modal-overlay";
-      document.body.appendChild(modal);
-    }
-    modal.innerHTML = `
-    <div class="ak-tax-invoice-modal-content">
-      ${generateTaxInvoiceHtml(orderData)}
-    </div>
-  `;
-    modal.style.display = "flex";
-    document.body.classList.add("ak-tax-invoice-open");
-    document.body.style.overflow = "hidden";
-  }
-  function closeTaxInvoiceModal() {
-    const modal = document.getElementById("akTaxInvoiceModal");
-    if (modal) {
-      modal.style.display = "none";
-      document.body.classList.remove("ak-tax-invoice-open");
-      document.body.style.overflow = "";
-    }
-  }
-  if (typeof window !== "undefined") {
-    window.openTaxInvoiceModal = openTaxInvoiceModal;
-    window.closeTaxInvoiceModal = closeTaxInvoiceModal;
-  }
-
-  // js/components/orderSuccess.js
-  function triggerOrderAnimation(orderData) {
-    const overlay = document.getElementById("akOrderAnimOverlay");
-    const items = orderData && orderData.items && orderData.items.length ? orderData.items : [];
-    const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
-    if (overlay) {
-      overlay.style.display = "flex";
-      overlay.classList.remove("fade-out");
-      const animTitle = overlay.querySelector(".ak-anim-title");
-      const animSub = overlay.querySelector(".ak-anim-sub");
-      if (animTitle) {
-        animTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Order Confirmed!";
-      }
-      if (animSub) {
-        animSub.textContent = isPreOrderOrder ? "Your pre-order has been registered with AudioKing..." : "Generating your official receipt...";
-      }
-      const checkmark = overlay.querySelector(".checkmark");
-      const circle = overlay.querySelector(".checkmark-circle");
-      const check = overlay.querySelector(".checkmark-check");
-      if (checkmark) {
-        checkmark.style.animation = "none";
-        checkmark.offsetHeight;
-        checkmark.style.animation = "";
-      }
-      if (circle) {
-        circle.style.animation = "none";
-        circle.offsetHeight;
-        circle.style.animation = "";
-      }
-      if (check) {
-        check.style.animation = "none";
-        check.offsetHeight;
-        check.style.animation = "";
-      }
-      setTimeout(() => {
-        overlay.classList.add("fade-out");
-        showOrderConfirmation(orderData);
-        setTimeout(() => {
-          overlay.style.display = "none";
-        }, 450);
-      }, 1300);
-    } else {
-      showOrderConfirmation(orderData);
-    }
-  }
-  var lastOrderData = null;
-  function showOrderConfirmation(orderData) {
-    lastOrderData = orderData;
-    const viewsToHide = [
-      "akMainContent",
-      "catalogPage",
-      "productPage",
-      "akCheckoutPage",
-      "akContactPage",
-      "akAccountSettingsPage",
-      "adminPage"
-    ];
-    viewsToHide.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.style.display = "none";
-        el.classList.remove("active");
-      }
-    });
-    const checkoutModal = document.getElementById("akCheckoutModal");
-    if (checkoutModal)
-      checkoutModal.classList.remove("open");
-    document.body.style.overflow = "";
-    const orderView = document.getElementById("akOrderConfirmationView");
-    if (orderView) {
-      orderView.style.display = "block";
-      orderView.classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      if (typeof window !== "undefined" && window.history && window.history.replaceState) {
-        try {
-          window.history.replaceState(null, "", window.location.pathname + "#order-confirmed");
-        } catch (_) {
-        }
-      }
-      const items = orderData && orderData.items && orderData.items.length ? orderData.items : [{
-        brand: "SHURE",
-        name: "SM7B Dynamic Vocal Microphone",
-        category: "DYNAMIC MICROPHONES",
-        price: 34900,
-        qty: 1
-      }];
-      const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
-      const rawStatus = String(orderData?.status || "").trim();
-      const isCancelled = /cancel/i.test(rawStatus);
-      const isDispatched = /dispatch|shipped/i.test(rawStatus);
-      const isDelivered = /deliver/i.test(rawStatus);
-      const iconWrap = orderView.querySelector(".ak-bill-check-circle, .ak-bill-icon-wrap");
-      if (iconWrap) {
-        if (isCancelled) {
-          iconWrap.classList.add("is-cancelled");
-          iconWrap.style.backgroundColor = "#FEF2F2";
-          iconWrap.style.background = "#FEF2F2";
-          iconWrap.style.borderColor = "rgba(220, 38, 38, 0.3)";
-          iconWrap.style.border = "1.5px solid rgba(220, 38, 38, 0.3)";
-          iconWrap.style.color = "#DC2626";
-          iconWrap.innerHTML = `
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        `;
-        } else {
-          iconWrap.classList.remove("is-cancelled");
-          iconWrap.style.backgroundColor = "#E6F7ED";
-          iconWrap.style.background = "#E6F7ED";
-          iconWrap.style.borderColor = "";
-          iconWrap.style.border = "none";
-          iconWrap.style.color = "#10B981";
-          iconWrap.innerHTML = `
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        `;
-        }
-      }
-      const billTitle = orderView.querySelector(".ak-bill-title");
-      const billSubtitle = orderView.querySelector(".ak-bill-subtitle");
-      const orderBadge = orderView.querySelector(".ak-order-confirmed-badge");
-      if (billTitle) {
-        if (isCancelled) {
-          billTitle.textContent = "Order Canceled";
-        } else if (isDelivered) {
-          billTitle.textContent = "Order Delivered!";
-        } else if (isDispatched) {
-          billTitle.textContent = "Order Dispatched!";
-        } else {
-          billTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Order Confirmed!";
-        }
-      }
-      if (billSubtitle) {
-        if (isCancelled) {
-          billSubtitle.textContent = "This order has been canceled. Please reach out to AudioKing support if you need any assistance.";
-        } else if (isDelivered) {
-          billSubtitle.textContent = "This order has been successfully delivered to your shipping address.";
-        } else if (isDispatched) {
-          billSubtitle.textContent = "Your order is currently in transit with full pan-India transit insurance.";
-        } else if (isPreOrderOrder) {
-          billSubtitle.textContent = "Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days.";
-        } else {
-          billSubtitle.textContent = "Your official Audio King order receipt and invoice details.";
-        }
-      }
-      if (orderBadge) {
-        if (isCancelled) {
-          orderBadge.textContent = "Order Canceled";
-          orderBadge.style.background = "#FEF2F2";
-          orderBadge.style.color = "#DC2626";
-          orderBadge.style.borderColor = "rgba(220, 38, 38, 0.3)";
-        } else if (isDelivered) {
-          orderBadge.textContent = "Delivered";
-          orderBadge.style.background = "#ECFDF5";
-          orderBadge.style.color = "#047857";
-          orderBadge.style.borderColor = "rgba(5, 150, 105, 0.3)";
-        } else if (isDispatched) {
-          orderBadge.textContent = "Dispatched";
-          orderBadge.style.background = "#EFF6FF";
-          orderBadge.style.color = "#1D4ED8";
-          orderBadge.style.borderColor = "rgba(59, 130, 246, 0.3)";
-        } else {
-          orderBadge.textContent = isPreOrderOrder ? "Pre-Order Confirmed" : "Order Confirmed";
-          orderBadge.style.background = "";
-          orderBadge.style.color = "";
-          orderBadge.style.borderColor = "";
-        }
-      }
-      const orderId = orderData.orderId || orderData.orderNumber || generateOrderId();
-      const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price != null ? item.price : item.unitPrice) || 0) * (Number(item.qty || item.quantity) || 1), 0);
-      const discount = Number(orderData.discountAmount) || 0;
-      const totalAmount = orderData.total != null ? Number(orderData.total) : orderData.totalAmount != null ? Number(orderData.totalAmount) : Math.max(0, itemsSubtotal - discount);
-      const orderIdEl = document.getElementById("akOrderIdVal");
-      if (orderIdEl)
-        orderIdEl.textContent = orderId;
-      const itemsContainer = document.getElementById("akOrderItemsContainer");
-      if (itemsContainer) {
-        itemsContainer.innerHTML = items.map((item) => {
-          const qty = item.qty || item.quantity || 1;
-          const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
-          const linePrice = unitP * qty;
-          return `
-          <div class="ak-order-item-row">
-            <div class="ak-order-item-thumb">
-              ${item.image ? `<img src="${resolveProductImage(item.image)}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ""}
-              <div class="ak-order-thumb-placeholder" style="${item.image ? "display:none;" : "display:block;"}">AK</div>
-            </div>
-            <div class="ak-order-item-info">
-              <span class="ak-order-item-brand">${item.brand || "Pro Audio"}</span>
-              <h3 class="ak-order-item-name">${item.name}</h3>
-              <div class="ak-order-item-meta">${item.category || "Gear"} \xB7 Qty ${qty}</div>
-              <div class="ak-order-item-price">${formatINR(linePrice)}</div>
-            </div>
-          </div>
-        `;
-        }).join("");
-      }
-      const dateEl = document.getElementById("akOrderDateVal");
-      if (dateEl) {
-        dateEl.textContent = orderData.date || (orderData.createdAt ? new Date(orderData.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : formatDate());
-      }
-      const paymentEl = document.getElementById("akOrderPaymentVal");
-      if (paymentEl)
-        paymentEl.textContent = orderData.paymentMethod || "Online / Prepaid (UPI)";
-      const cust = orderData.customer || (typeof orderData.shippingAddress === "object" && orderData.shippingAddress !== null ? orderData.shippingAddress : null) || {
-        name: "Valued Customer",
-        city: "Mumbai",
-        state: "Maharashtra",
-        line1: "123 Audio King Demo Address",
-        pin: "400001"
-      };
-      const custEl = document.getElementById("akOrderCustomerVal");
-      if (custEl)
-        custEl.textContent = cust.name || cust.fullName || "Valued Customer";
-      const cityEl = document.getElementById("akOrderCityVal");
-      if (cityEl)
-        cityEl.textContent = cust.city ? `${cust.city}${cust.state ? ", " + cust.state : ""}` : "";
-      const addrEl = document.getElementById("akOrderAddressVal");
-      if (addrEl) {
-        const parts = [
-          cust.line1 || cust.address || "",
-          cust.line2 || "",
-          cust.pin || cust.pincode ? String(cust.pin || cust.pincode) : ""
-        ].filter(Boolean);
-        addrEl.textContent = parts.length ? parts.join(", ") : cust.city || "Address provided at checkout";
-      }
-      const disclaimerBox = orderView.querySelector(".ak-order-disclaimer-box");
-      if (disclaimerBox) {
-        disclaimerBox.style.display = "none";
-      }
-      const sumItemsContainer = document.getElementById("akSumItemsContainer");
-      if (sumItemsContainer) {
-        let linesHtml = items.map((item) => {
-          const qty = item.qty || item.quantity || 1;
-          const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
-          const linePrice = unitP * qty;
-          return `
-          <div class="ak-sum-line">
-            <span>${item.name} \xD7 ${qty}</span>
-            <strong>${formatINR(linePrice)}</strong>
-          </div>
-        `;
-        }).join("");
-        if (discount > 0) {
-          linesHtml += `
-          <div class="ak-sum-line" style="color: #10B981; font-weight: 600;">
-            <span>Coupon Discount (${orderData.couponCode || "APPLIED"})</span>
-            <strong>-${formatINR(discount)}</strong>
-          </div>
-        `;
-        }
-        sumItemsContainer.innerHTML = linesHtml;
-      }
-      const totalEl = document.getElementById("akSumTotalVal");
-      if (totalEl)
-        totalEl.textContent = formatINR(totalAmount);
-    }
-  }
-  if (typeof window !== "undefined") {
-    window.showOrderConfirmation = showOrderConfirmation;
-  }
-  function initOrderSuccess() {
-    const continueBtn = document.getElementById("akOrderContinueBtn");
-    const printBtn = document.getElementById("akOrderPrintBtn");
-    const invoiceBtn = document.getElementById("akOrderInvoiceBtn");
-    if (invoiceBtn) {
-      invoiceBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (lastOrderData) {
-          openTaxInvoiceModal(lastOrderData);
-        }
-      });
-    }
-    if (continueBtn) {
-      continueBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.dispatchEvent(new CustomEvent("ak:nav-store"));
-        if (typeof window.showCatalog === "function") {
-          window.showCatalog("All", "all");
-        } else {
-          window.location.hash = "#store";
-        }
-      });
-    }
-    if (printBtn) {
-      printBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (lastOrderData) {
-          openTaxInvoiceModal(lastOrderData);
-          setTimeout(() => {
-            window.print();
-          }, 120);
-        } else {
-          window.print();
-        }
-      });
-    }
-  }
-
   // js/services/authService.js
   var AuthService = class {
     constructor() {
@@ -28324,6 +27491,853 @@ Weight: 1.24 lbs (0.567 kg`,
     }
   };
   var authService = new AuthService();
+
+  // js/components/cashfreeAdapter.js
+  var cashfreeSdkLoaded = false;
+  var cashfreeSdkLoading = false;
+  function loadCashfreeSdk() {
+    if (cashfreeSdkLoaded || typeof window !== "undefined" && window.Cashfree) {
+      cashfreeSdkLoaded = true;
+      return Promise.resolve(true);
+    }
+    if (cashfreeSdkLoading) {
+      return new Promise((resolve) => {
+        const interval = setInterval(() => {
+          if (cashfreeSdkLoaded || window.Cashfree) {
+            cashfreeSdkLoaded = true;
+            clearInterval(interval);
+            resolve(true);
+          }
+        }, 100);
+      });
+    }
+    cashfreeSdkLoading = true;
+    return new Promise((resolve) => {
+      if (window.Cashfree) {
+        cashfreeSdkLoaded = true;
+        cashfreeSdkLoading = false;
+        return resolve(true);
+      }
+      const script = document.createElement("script");
+      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+      script.async = true;
+      script.onload = () => {
+        cashfreeSdkLoaded = true;
+        cashfreeSdkLoading = false;
+        resolve(true);
+      };
+      script.onerror = () => {
+        console.warn("[CashfreeAdapter] Cashfree JS SDK could not be loaded from CDN. Fallback simulation active.");
+        cashfreeSdkLoading = false;
+        resolve(false);
+      };
+      document.head.appendChild(script);
+    });
+  }
+  var CashfreePaymentAdapter = class {
+    constructor() {
+      this.name = "CashfreePaymentAdapter";
+    }
+    getBaseUrl() {
+      return getApiBaseUrl();
+    }
+    async processPayment(orderData) {
+      const baseUrl = this.getBaseUrl();
+      const token = authService.getToken() || (typeof localStorage !== "undefined" ? localStorage.getItem("audioKingSessionToken") || localStorage.getItem("audioking_token") : null);
+      const currentUser = authService.getUser();
+      const authHeaders = {
+        ...token ? { "Authorization": `Bearer ${token}`, "X-Session-Token": token } : {},
+        ...currentUser?.email ? { "X-User-Email": currentUser.email } : {},
+        ...currentUser?.id ? { "X-User-Id": currentUser.id } : {}
+      };
+      const totalAmount = Number(orderData.total) > 0 ? Number(orderData.total) : (orderData.items || []).reduce(
+        (sum, it) => sum + (Number(it.price || it.unitPrice) || 0) * (Number(it.qty || it.quantity) || 1),
+        0
+      );
+      let createRes = null;
+      try {
+        const cleanPhone = (orderData.customer?.phone || currentUser?.phone_number || "").replace(/[^0-9]/g, "");
+        const resp = await fetch(`${baseUrl}/api/payment/cashfree/create-order`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            ...authHeaders
+          },
+          body: JSON.stringify({
+            amount: totalAmount,
+            currency: "INR",
+            orderId: orderData.orderId || `ak_order_${Date.now()}`,
+            customer: {
+              name: orderData.customer?.name || orderData.customer?.fullName || currentUser?.full_name || "Valued Customer",
+              email: orderData.customer?.email || currentUser?.email || "customer@audioking.co.in",
+              phone: cleanPhone.length >= 10 ? cleanPhone.slice(-10) : "9876543210",
+              userId: orderData.customer?.userId || currentUser?.id || void 0
+            }
+          })
+        });
+        createRes = await resp.json();
+        if (!resp.ok || !createRes.success) {
+          throw new Error(createRes.error || "Failed to initialize Cashfree payment session.");
+        }
+      } catch (err) {
+        console.error("[CashfreeAdapter] Order initialization exception:", err);
+        throw err;
+      }
+      if (!createRes.isMock && createRes.paymentSessionId) {
+        const sdkReady = await loadCashfreeSdk();
+        if (sdkReady && typeof window.Cashfree === "function") {
+          const cashfree = window.Cashfree({
+            mode: createRes.mode === "production" ? "production" : "sandbox"
+          });
+          return new Promise((resolve, reject) => {
+            cashfree.checkout({
+              paymentSessionId: createRes.paymentSessionId,
+              redirectTarget: "_modal"
+            }).then(async (result) => {
+              if (result.error) {
+                return reject(new Error(result.error.message || "Payment cancelled or failed."));
+              }
+              if (result.redirect) {
+                console.log("[CashfreeAdapter] Payment will complete via redirect.");
+                return;
+              }
+              try {
+                const verifyRes = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    ...authHeaders
+                  },
+                  body: JSON.stringify({
+                    orderId: createRes.orderId,
+                    isMock: false
+                  })
+                });
+                const vData = await verifyRes.json();
+                if (vData.success && vData.verified) {
+                  resolve({
+                    success: true,
+                    transactionId: vData.paymentId || `cf_pay_${createRes.orderId}`,
+                    gatewayOrderId: createRes.orderId,
+                    paymentMethod: orderData.paymentMethod || "Cashfree PG",
+                    timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+                    message: "Cashfree payment completed successfully."
+                  });
+                } else {
+                  reject(new Error(vData.error || "Cashfree payment verification unsuccessful."));
+                }
+              } catch (vErr) {
+                reject(vErr);
+              }
+            }).catch(reject);
+          });
+        }
+      }
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            const verifyRes = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                ...authHeaders
+              },
+              body: JSON.stringify({
+                orderId: createRes.orderId,
+                isMock: true
+              })
+            });
+            const vData = await verifyRes.json();
+            resolve({
+              success: true,
+              transactionId: vData.paymentId || `CF_SIM_${Date.now()}`,
+              gatewayOrderId: createRes.orderId,
+              paymentMethod: orderData.paymentMethod || "Cashfree PG (Sandbox)",
+              timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+              message: "Cashfree test payment verified successfully."
+            });
+          } catch (err) {
+            reject(err);
+          }
+        }, 500);
+      });
+    }
+  };
+
+  // js/components/paymentAdapter.js
+  var activePaymentAdapter = new CashfreePaymentAdapter();
+
+  // js/components/taxInvoice.js
+  function numberToIndianWords(num) {
+    const n = Math.round(Number(num) || 0);
+    if (n === 0)
+      return "Zero Rupees Only";
+    const singleDigits = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+    const teenDigits = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    const tensDigits = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+    function convertTwoDigits(v) {
+      if (v === 0)
+        return "";
+      if (v < 10)
+        return singleDigits[v];
+      if (v < 20)
+        return teenDigits[v - 10];
+      const t = Math.floor(v / 10);
+      const r = v % 10;
+      return `${tensDigits[t]}${r > 0 ? " " + singleDigits[r] : ""}`;
+    }
+    function convertThreeDigits(v) {
+      const h = Math.floor(v / 100);
+      const rem = v % 100;
+      let res = "";
+      if (h > 0)
+        res += `${singleDigits[h]} Hundred`;
+      if (rem > 0)
+        res += `${res ? " and " : ""}${convertTwoDigits(rem)}`;
+      return res;
+    }
+    let crore = Math.floor(n / 1e7);
+    let remCrore = n % 1e7;
+    let lakh = Math.floor(remCrore / 1e5);
+    let remLakh = remCrore % 1e5;
+    let thousand = Math.floor(remLakh / 1e3);
+    let remThousand = remLakh % 1e3;
+    const parts = [];
+    if (crore > 0)
+      parts.push(`${convertTwoDigits(crore)} Crore`);
+    if (lakh > 0)
+      parts.push(`${convertTwoDigits(lakh)} Lakh`);
+    if (thousand > 0)
+      parts.push(`${convertTwoDigits(thousand)} Thousand`);
+    if (remThousand > 0)
+      parts.push(convertThreeDigits(remThousand));
+    return `Indian Rupees ${parts.join(" ")} Only`;
+  }
+  function generateTaxInvoiceHtml(orderData) {
+    const order = orderData || {};
+    const orderNum = order.order_number || order.orderNumber || `AK-${Date.now().toString().slice(-6)}`;
+    const orderId = order.id || orderNum;
+    const rawDate = order.created_at || order.createdAt || (/* @__PURE__ */ new Date()).toISOString();
+    const d = new Date(rawDate);
+    const dayStr = String(d.getDate()).padStart(2, "0");
+    const monthStr = String(d.getMonth() + 1).padStart(2, "0");
+    const yearStr = d.getFullYear();
+    const formattedDate = `${dayStr} / ${monthStr} / ${yearStr}`;
+    let shipping = {};
+    if (typeof order.shipping_address === "string") {
+      try {
+        shipping = JSON.parse(order.shipping_address);
+      } catch (_) {
+        shipping = { address: order.shipping_address };
+      }
+    } else if (order.shipping_address && typeof order.shipping_address === "object") {
+      shipping = order.shipping_address;
+    } else if (order.shipping && typeof order.shipping === "object") {
+      shipping = order.shipping;
+    }
+    const customerName = order.customer_name || order.customerName || shipping.name || shipping.recipient_name || "Valued Customer";
+    const customerEmail = order.customer_email || order.customerEmail || shipping.email || order.user_email || "";
+    const customerPhone = order.customer_phone || order.customerPhone || shipping.phone || "";
+    const customerGst = (order.gst_number || order.gstNumber || shipping.gst_number || shipping.gstNumber || "").trim().toUpperCase();
+    const street = shipping.line1 || shipping.street || shipping.address || "";
+    const city = shipping.city || "";
+    const state = shipping.state || "Maharashtra";
+    const pin = shipping.pin || shipping.pincode || "";
+    const fullAddress = [street, city, state, pin].filter(Boolean).join(", ") || "Mumbai, Maharashtra";
+    const isMaharashtra = state.toLowerCase().includes("maharashtra") || state.toLowerCase().includes("mh") || !state;
+    const placeOfSupply = isMaharashtra ? "Maharashtra (27)" : `${state}`;
+    const stateCode = isMaharashtra ? "27" : "Inter-State";
+    const items = Array.isArray(order.items) && order.items.length > 0 ? order.items : [
+      {
+        name: order.product_name || order.productName || "Pro Audio Hardware",
+        quantity: 1,
+        price: order.total_amount || order.totalAmount || 0,
+        gst_percent: 18
+      }
+    ];
+    let totalTaxable = 0;
+    let totalCgst = 0;
+    let totalSgst = 0;
+    let totalIgst = 0;
+    let totalGrand = 0;
+    const renderedRows = items.map((it, idx) => {
+      const qty = Number(it.quantity || it.qty || 1);
+      const unitSellingPrice = Number(it.unit_price ?? it.price ?? 0);
+      const lineTotal = unitSellingPrice * qty;
+      const gstRate = Number(it.gst_percent ?? it.gstPercent ?? 18);
+      const lineTaxable = Math.round(lineTotal / (1 + gstRate / 100) * 100) / 100;
+      const lineGst = Math.round((lineTotal - lineTaxable) * 100) / 100;
+      let cgst = 0;
+      let sgst = 0;
+      let igst = 0;
+      if (isMaharashtra) {
+        cgst = Math.round(lineGst / 2 * 100) / 100;
+        sgst = Math.round((lineGst - cgst) * 100) / 100;
+      } else {
+        igst = lineGst;
+      }
+      totalTaxable += lineTaxable;
+      totalCgst += cgst;
+      totalSgst += sgst;
+      totalIgst += igst;
+      totalGrand += lineTotal;
+      const hsnCode = it.hsn || it.hsn_code || "8518";
+      return `
+      <tr>
+        <td style="text-align: center; font-weight: 700;">${idx + 1}</td>
+        <td style="font-weight: 600;">${it.name || it.product_name || "Pro Audio Equipment"}</td>
+        <td style="text-align: center;">${hsnCode}</td>
+        <td style="text-align: center; font-weight: 700;">${qty}</td>
+        <td style="text-align: right;">\u20B9${unitSellingPrice.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align: right;">\u20B9${lineTaxable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td style="text-align: center;">${gstRate}%</td>
+        <td style="text-align: right;">${cgst > 0 ? "\u20B9" + cgst.toFixed(2) : "\u2014"}</td>
+        <td style="text-align: right;">${sgst > 0 ? "\u20B9" + sgst.toFixed(2) : "\u2014"}</td>
+        <td style="text-align: right;">${igst > 0 ? "\u20B9" + igst.toFixed(2) : "\u2014"}</td>
+        <td style="text-align: right; font-weight: 800;">\u20B9${lineTotal.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+      </tr>
+    `;
+    }).join("");
+    const discountAmount = Number(order.discount_amount || order.discountAmount || 0);
+    const finalPayable = Math.max(0, totalGrand - discountAmount);
+    const amountWords = numberToIndianWords(finalPayable);
+    const invoiceNo = `AK-INV-${yearStr}-${orderNum.replace(/^AK-/, "")}`;
+    const paymentMethod = order.payment_method || order.paymentMethod || "Prepaid / Online";
+    return `
+    <div class="ak-invoice-wrapper">
+      <div class="ak-invoice-controls-bar no-print">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 700; color: #0F172A; font-size: 15px;">Official Tax Invoice: ${invoiceNo}</span>
+          <span style="font-size: 11.5px; background: #DCFCE7; color: #166534; padding: 2px 8px; border-radius: 4px; font-weight: 700;">GST Registered</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-primary" onclick="window.print()" style="display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; background: #E4572E; color: #FFF; font-weight: 700; border: none; border-radius: 6px; cursor: pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print / Save PDF
+          </button>
+          <button type="button" class="btn-secondary" onclick="closeTaxInvoiceModal()" style="padding: 7px 14px; background: #F1F5F9; color: #334155; font-weight: 700; border: 1px solid #CBD5E1; border-radius: 6px; cursor: pointer;">
+            Close \u2715
+          </button>
+        </div>
+      </div>
+
+      <div class="ak-invoice-sheet" id="akInvoicePrintSheet">
+        <!-- TOP HEADER: LOGO & TAX INVOICE BADGE -->
+        <div class="ak-inv-header">
+          <div class="ak-inv-supplier">
+            <div class="ak-inv-brand-row">
+              <img src="assets/images/logo.png" alt="Audio King Logo" class="ak-inv-logo" onerror="this.style.display='none'">
+            </div>
+            <div class="ak-inv-legal-name">VASP ADVISORS PRIVATE LIMITED</div>
+            <div class="ak-inv-address">F 505, RNA Regency Park, MG Road Off Link Road, Dhanukar Wadi, Kandivali West, Mumbai Suburban, Maharashtra \u2013 400067</div>
+            <div class="ak-inv-gstin"><strong>GSTIN:</strong> 27AAHCV5628B1ZC &nbsp;|&nbsp; <strong>Trade Name / Brand:</strong> AUDIO KING</div>
+            <div class="ak-inv-pan"><strong>Company PAN:</strong> <span class="ak-inv-pan-val">${order.brand_pan || "AAHCV5628B"}</span></div>
+            <div class="ak-inv-tan"><strong>Company TAN:</strong> <span class="ak-inv-tan-val">${order.brand_tan || "MUMV28396E"}</span></div>
+          </div>
+
+          <div class="ak-inv-title-box">
+            <h1 class="ak-inv-heading">TAX INVOICE</h1>
+            <div class="ak-inv-subbrand">(Original for Recipient)</div>
+          </div>
+        </div>
+
+        <!-- METADATA 2-COLUMN TABLE -->
+        <table class="ak-inv-meta-table">
+          <tbody>
+            <tr>
+              <td style="width: 50%;"><strong>Invoice No.:</strong> ${invoiceNo}</td>
+              <td style="width: 50%;"><strong>Place of Supply:</strong> ${placeOfSupply}</td>
+            </tr>
+            <tr>
+              <td><strong>Invoice Date:</strong> ${formattedDate}</td>
+              <td><strong>Due Date:</strong> Immediate (Paid)</td>
+            </tr>
+            <tr>
+              <td><strong>Payment Terms:</strong> ${paymentMethod}</td>
+              <td><strong>PO / Reference No.:</strong> ${orderNum}</td>
+            </tr>
+            <tr>
+              <td><strong>Reverse Charge:</strong> No</td>
+              <td><strong>State Code:</strong> ${stateCode}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ORANGE SECTION BARS: BILL TO & SHIP TO -->
+        <div class="ak-inv-recipients-grid">
+          <div class="ak-inv-recipient-col">
+            <div class="ak-inv-orange-bar">BILL TO (RECIPIENT)</div>
+            <div class="ak-inv-box-body">
+              <div><strong>Customer / Company Name:</strong> ${customerName}</div>
+              <div><strong>Billing Address:</strong> ${fullAddress}</div>
+              <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                <span><strong>GSTIN / UIN:</strong> ${customerGst || "N/A (Consumer)"}</span>
+                <span><strong>State:</strong> ${state}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ak-inv-recipient-col">
+            <div class="ak-inv-orange-bar">SHIP TO (IF DIFFERENT)</div>
+            <div class="ak-inv-box-body">
+              <div><strong>Recipient / Company Name:</strong> ${customerName}</div>
+              <div><strong>Shipping Address:</strong> ${fullAddress}</div>
+              <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                <span><strong>GSTIN / UIN:</strong> ${customerGst || "N/A (Consumer)"}</span>
+                <span><strong>State:</strong> ${state}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FULL-WIDTH CONTACT ROW -->
+        <div class="ak-inv-contact-bar">
+          <strong>Contact / Email:</strong> ${customerPhone ? customerPhone + " | " : ""}${customerEmail || "info@audioking.co.in"}
+        </div>
+
+        <!-- ITEMS BREAKDOWN TABLE (DARK CHARCOAL HEADER) -->
+        <table class="ak-inv-items-table">
+          <thead>
+            <tr>
+              <th style="width: 32px; text-align: center;">#</th>
+              <th>Item / Description</th>
+              <th style="width: 60px; text-align: center;">HSN/SAC</th>
+              <th style="width: 40px; text-align: center;">Qty</th>
+              <th style="width: 75px; text-align: right;">Rate (INR)</th>
+              <th style="width: 80px; text-align: right;">Taxable (INR)</th>
+              <th style="width: 50px; text-align: center;">GST %</th>
+              <th style="width: 65px; text-align: right;">CGST (INR)</th>
+              <th style="width: 65px; text-align: right;">SGST (INR)</th>
+              <th style="width: 65px; text-align: right;">IGST (INR)</th>
+              <th style="width: 85px; text-align: right;">Line Total (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${renderedRows}
+          </tbody>
+        </table>
+
+        <!-- BOTTOM SECTION: BANK/TERMS ON LEFT, FINANCIAL SUMMARY ON RIGHT -->
+        <div class="ak-inv-bottom-grid">
+          <!-- LEFT: AMOUNT IN WORDS, NOTES, BANK DETAILS -->
+          <div class="ak-inv-bottom-left">
+            <div class="ak-inv-info-block">
+              <div class="ak-inv-block-title">Amount in Words:</div>
+              <div class="ak-inv-block-text" style="font-weight: 700; color: #1E293B;">${amountWords}</div>
+            </div>
+
+            <div class="ak-inv-info-block">
+              <div class="ak-inv-block-title">Notes / Terms:</div>
+              <div class="ak-inv-block-text">
+                1. Goods once sold are covered under official manufacturer warranty.<br>
+                2. All prices are inclusive of GST as mandated under Indian GST laws.<br>
+                3. Disputes are subject to Mumbai, Maharashtra jurisdiction.
+              </div>
+            </div>
+
+            <div class="ak-inv-info-block">
+              <div class="ak-inv-block-title">Bank / Payment Details:</div>
+              <div class="ak-inv-block-text">
+                Bank: HDFC Bank Ltd &nbsp;|&nbsp; Beneficiary: VASP ADVISORS PRIVATE LIMITED
+              </div>
+            </div>
+
+            <div class="ak-inv-info-block" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+              <div class="ak-inv-block-title">Account / UPI / IFSC:</div>
+              <div class="ak-inv-block-text">
+                A/C No: 50200088991234 &nbsp;|&nbsp; IFSC: HDFC0000123 &nbsp;|&nbsp; UPI: audioking@hdfcbank
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: FINANCIAL TOTALS -->
+          <div class="ak-inv-bottom-right">
+            <table class="ak-inv-totals-table">
+              <tbody>
+                <tr>
+                  <td>Subtotal (Taxable)</td>
+                  <td style="text-align: right;">INR ${totalTaxable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>Discount</td>
+                  <td style="text-align: right;">INR ${discountAmount > 0 ? "-" + discountAmount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "0.00"}</td>
+                </tr>
+                <tr>
+                  <td>CGST</td>
+                  <td style="text-align: right;">INR ${totalCgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>SGST</td>
+                  <td style="text-align: right;">INR ${totalSgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>IGST</td>
+                  <td style="text-align: right;">INR ${totalIgst.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td>Shipping / Transit Insurance</td>
+                  <td style="text-align: right; color: #166534; font-weight: 700;">INR 0.00 (Free)</td>
+                </tr>
+                <tr class="ak-inv-grand-row">
+                  <td style="font-weight: 900; font-size: 14px;">GRAND TOTAL</td>
+                  <td style="text-align: right; font-weight: 900; font-size: 14px;">INR ${finalPayable.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SIGNATURE FOOTER -->
+        <div class="ak-inv-footer">
+          <div class="ak-inv-signatory">
+            <div style="font-size: 12px; font-weight: 700; color: #1E293B;">For VASP ADVISORS PRIVATE LIMITED (Audio King)</div>
+            <div class="ak-inv-signature-line" style="height: 48px; border-bottom: 1px dashed #CBD5E1; margin: 8px 0;"></div>
+            <div style="font-size: 11px; font-weight: 700; color: #64748B;">Authorized Signatory</div>
+          </div>
+          <div class="ak-inv-thanks">
+            Thank you for your business.
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  }
+  function openTaxInvoiceModal(orderData) {
+    let modal = document.getElementById("akTaxInvoiceModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "akTaxInvoiceModal";
+      modal.className = "ak-tax-invoice-modal-overlay";
+      document.body.appendChild(modal);
+    }
+    modal.innerHTML = `
+    <div class="ak-tax-invoice-modal-content">
+      ${generateTaxInvoiceHtml(orderData)}
+    </div>
+  `;
+    modal.style.display = "flex";
+    document.body.classList.add("ak-tax-invoice-open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeTaxInvoiceModal() {
+    const modal = document.getElementById("akTaxInvoiceModal");
+    if (modal) {
+      modal.style.display = "none";
+      document.body.classList.remove("ak-tax-invoice-open");
+      document.body.style.overflow = "";
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.openTaxInvoiceModal = openTaxInvoiceModal;
+    window.closeTaxInvoiceModal = closeTaxInvoiceModal;
+  }
+
+  // js/components/orderSuccess.js
+  function triggerOrderAnimation(orderData) {
+    const overlay = document.getElementById("akOrderAnimOverlay");
+    const items = orderData && orderData.items && orderData.items.length ? orderData.items : [];
+    const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
+    if (overlay) {
+      overlay.style.display = "flex";
+      overlay.classList.remove("fade-out");
+      const animTitle = overlay.querySelector(".ak-anim-title");
+      const animSub = overlay.querySelector(".ak-anim-sub");
+      if (animTitle) {
+        animTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Order Confirmed!";
+      }
+      if (animSub) {
+        animSub.textContent = isPreOrderOrder ? "Your pre-order has been registered with AudioKing..." : "Generating your official receipt...";
+      }
+      const checkmark = overlay.querySelector(".checkmark");
+      const circle = overlay.querySelector(".checkmark-circle");
+      const check = overlay.querySelector(".checkmark-check");
+      if (checkmark) {
+        checkmark.style.animation = "none";
+        checkmark.offsetHeight;
+        checkmark.style.animation = "";
+      }
+      if (circle) {
+        circle.style.animation = "none";
+        circle.offsetHeight;
+        circle.style.animation = "";
+      }
+      if (check) {
+        check.style.animation = "none";
+        check.offsetHeight;
+        check.style.animation = "";
+      }
+      setTimeout(() => {
+        overlay.classList.add("fade-out");
+        showOrderConfirmation(orderData);
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 450);
+      }, 1300);
+    } else {
+      showOrderConfirmation(orderData);
+    }
+  }
+  var lastOrderData = null;
+  function showOrderConfirmation(orderData) {
+    lastOrderData = orderData;
+    const viewsToHide = [
+      "akMainContent",
+      "catalogPage",
+      "productPage",
+      "akCheckoutPage",
+      "akContactPage",
+      "akAccountSettingsPage",
+      "adminPage"
+    ];
+    viewsToHide.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.display = "none";
+        el.classList.remove("active");
+      }
+    });
+    const checkoutModal = document.getElementById("akCheckoutModal");
+    if (checkoutModal)
+      checkoutModal.classList.remove("open");
+    document.body.style.overflow = "";
+    const orderView = document.getElementById("akOrderConfirmationView");
+    if (orderView) {
+      orderView.style.display = "block";
+      orderView.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof window !== "undefined" && window.history && window.history.replaceState) {
+        try {
+          window.history.replaceState(null, "", window.location.pathname + "#order-confirmed");
+        } catch (_) {
+        }
+      }
+      const items = orderData && orderData.items && orderData.items.length ? orderData.items : [{
+        brand: "SHURE",
+        name: "SM7B Dynamic Vocal Microphone",
+        category: "DYNAMIC MICROPHONES",
+        price: 34900,
+        qty: 1
+      }];
+      const isPreOrderOrder = Boolean(orderData?.isPreOrder || items.some((it) => it.isPreOrder || it.badge && it.badge.toLowerCase().includes("pre-order") || it.stockStatus === "preorder"));
+      const rawStatus = String(orderData?.status || "").trim();
+      const isCancelled = /cancel/i.test(rawStatus);
+      const isDispatched = /dispatch|shipped/i.test(rawStatus);
+      const isDelivered = /deliver/i.test(rawStatus);
+      const iconWrap = orderView.querySelector(".ak-bill-check-circle, .ak-bill-icon-wrap");
+      if (iconWrap) {
+        if (isCancelled) {
+          iconWrap.classList.add("is-cancelled");
+          iconWrap.style.backgroundColor = "#FEF2F2";
+          iconWrap.style.background = "#FEF2F2";
+          iconWrap.style.borderColor = "rgba(220, 38, 38, 0.3)";
+          iconWrap.style.border = "1.5px solid rgba(220, 38, 38, 0.3)";
+          iconWrap.style.color = "#DC2626";
+          iconWrap.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        `;
+        } else {
+          iconWrap.classList.remove("is-cancelled");
+          iconWrap.style.backgroundColor = "#E6F7ED";
+          iconWrap.style.background = "#E6F7ED";
+          iconWrap.style.borderColor = "";
+          iconWrap.style.border = "none";
+          iconWrap.style.color = "#10B981";
+          iconWrap.innerHTML = `
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
+        }
+      }
+      const billTitle = orderView.querySelector(".ak-bill-title");
+      const billSubtitle = orderView.querySelector(".ak-bill-subtitle");
+      const orderBadge = orderView.querySelector(".ak-order-confirmed-badge");
+      if (billTitle) {
+        if (isCancelled) {
+          billTitle.textContent = "Order Canceled";
+        } else if (isDelivered) {
+          billTitle.textContent = "Order Delivered!";
+        } else if (isDispatched) {
+          billTitle.textContent = "Order Dispatched!";
+        } else {
+          billTitle.textContent = isPreOrderOrder ? "Pre order has been placed!" : "Order Confirmed!";
+        }
+      }
+      if (billSubtitle) {
+        if (isCancelled) {
+          billSubtitle.textContent = "This order has been canceled. Please reach out to AudioKing support if you need any assistance.";
+        } else if (isDelivered) {
+          billSubtitle.textContent = "This order has been successfully delivered to your shipping address.";
+        } else if (isDispatched) {
+          billSubtitle.textContent = "Your order is currently in transit with full pan-India transit insurance.";
+        } else if (isPreOrderOrder) {
+          billSubtitle.textContent = "Your Audio King pre-order has been placed successfully. Estimated delivery in 25-30 days.";
+        } else {
+          billSubtitle.textContent = "Your official Audio King order receipt and invoice details.";
+        }
+      }
+      if (orderBadge) {
+        if (isCancelled) {
+          orderBadge.textContent = "Order Canceled";
+          orderBadge.style.background = "#FEF2F2";
+          orderBadge.style.color = "#DC2626";
+          orderBadge.style.borderColor = "rgba(220, 38, 38, 0.3)";
+        } else if (isDelivered) {
+          orderBadge.textContent = "Delivered";
+          orderBadge.style.background = "#ECFDF5";
+          orderBadge.style.color = "#047857";
+          orderBadge.style.borderColor = "rgba(5, 150, 105, 0.3)";
+        } else if (isDispatched) {
+          orderBadge.textContent = "Dispatched";
+          orderBadge.style.background = "#EFF6FF";
+          orderBadge.style.color = "#1D4ED8";
+          orderBadge.style.borderColor = "rgba(59, 130, 246, 0.3)";
+        } else {
+          orderBadge.textContent = isPreOrderOrder ? "Pre-Order Confirmed" : "Order Confirmed";
+          orderBadge.style.background = "";
+          orderBadge.style.color = "";
+          orderBadge.style.borderColor = "";
+        }
+      }
+      const orderId = orderData.orderId || orderData.orderNumber || generateOrderId();
+      const itemsSubtotal = items.reduce((sum, item) => sum + (Number(item.price != null ? item.price : item.unitPrice) || 0) * (Number(item.qty || item.quantity) || 1), 0);
+      const discount = Number(orderData.discountAmount) || 0;
+      const totalAmount = orderData.total != null ? Number(orderData.total) : orderData.totalAmount != null ? Number(orderData.totalAmount) : Math.max(0, itemsSubtotal - discount);
+      const orderIdEl = document.getElementById("akOrderIdVal");
+      if (orderIdEl)
+        orderIdEl.textContent = orderId;
+      const itemsContainer = document.getElementById("akOrderItemsContainer");
+      if (itemsContainer) {
+        itemsContainer.innerHTML = items.map((item) => {
+          const qty = item.qty || item.quantity || 1;
+          const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
+          const linePrice = unitP * qty;
+          return `
+          <div class="ak-order-item-row">
+            <div class="ak-order-item-thumb">
+              ${item.image ? `<img src="${resolveProductImage(item.image)}" alt="${item.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">` : ""}
+              <div class="ak-order-thumb-placeholder" style="${item.image ? "display:none;" : "display:block;"}">AK</div>
+            </div>
+            <div class="ak-order-item-info">
+              <span class="ak-order-item-brand">${item.brand || "Pro Audio"}</span>
+              <h3 class="ak-order-item-name">${item.name}</h3>
+              <div class="ak-order-item-meta">${item.category || "Gear"} \xB7 Qty ${qty}</div>
+              <div class="ak-order-item-price">${formatINR(linePrice)}</div>
+            </div>
+          </div>
+        `;
+        }).join("");
+      }
+      const dateEl = document.getElementById("akOrderDateVal");
+      if (dateEl) {
+        dateEl.textContent = orderData.date || (orderData.createdAt ? new Date(orderData.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : formatDate());
+      }
+      const paymentEl = document.getElementById("akOrderPaymentVal");
+      if (paymentEl)
+        paymentEl.textContent = orderData.paymentMethod || "Online / Prepaid (UPI)";
+      const cust = orderData.customer || (typeof orderData.shippingAddress === "object" && orderData.shippingAddress !== null ? orderData.shippingAddress : null) || {
+        name: "Valued Customer",
+        city: "Mumbai",
+        state: "Maharashtra",
+        line1: "123 Audio King Demo Address",
+        pin: "400001"
+      };
+      const custEl = document.getElementById("akOrderCustomerVal");
+      if (custEl)
+        custEl.textContent = cust.name || cust.fullName || "Valued Customer";
+      const cityEl = document.getElementById("akOrderCityVal");
+      if (cityEl)
+        cityEl.textContent = cust.city ? `${cust.city}${cust.state ? ", " + cust.state : ""}` : "";
+      const addrEl = document.getElementById("akOrderAddressVal");
+      if (addrEl) {
+        const parts = [
+          cust.line1 || cust.address || "",
+          cust.line2 || "",
+          cust.pin || cust.pincode ? String(cust.pin || cust.pincode) : ""
+        ].filter(Boolean);
+        addrEl.textContent = parts.length ? parts.join(", ") : cust.city || "Address provided at checkout";
+      }
+      const disclaimerBox = orderView.querySelector(".ak-order-disclaimer-box");
+      if (disclaimerBox) {
+        disclaimerBox.style.display = "none";
+      }
+      const sumItemsContainer = document.getElementById("akSumItemsContainer");
+      if (sumItemsContainer) {
+        let linesHtml = items.map((item) => {
+          const qty = item.qty || item.quantity || 1;
+          const unitP = Number(item.price != null ? item.price : item.unitPrice) || 0;
+          const linePrice = unitP * qty;
+          return `
+          <div class="ak-sum-line">
+            <span>${item.name} \xD7 ${qty}</span>
+            <strong>${formatINR(linePrice)}</strong>
+          </div>
+        `;
+        }).join("");
+        if (discount > 0) {
+          linesHtml += `
+          <div class="ak-sum-line" style="color: #10B981; font-weight: 600;">
+            <span>Coupon Discount (${orderData.couponCode || "APPLIED"})</span>
+            <strong>-${formatINR(discount)}</strong>
+          </div>
+        `;
+        }
+        sumItemsContainer.innerHTML = linesHtml;
+      }
+      const totalEl = document.getElementById("akSumTotalVal");
+      if (totalEl)
+        totalEl.textContent = formatINR(totalAmount);
+    }
+  }
+  if (typeof window !== "undefined") {
+    window.showOrderConfirmation = showOrderConfirmation;
+  }
+  function initOrderSuccess() {
+    const continueBtn = document.getElementById("akOrderContinueBtn");
+    const printBtn = document.getElementById("akOrderPrintBtn");
+    const invoiceBtn = document.getElementById("akOrderInvoiceBtn");
+    if (invoiceBtn) {
+      invoiceBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (lastOrderData) {
+          openTaxInvoiceModal(lastOrderData);
+        }
+      });
+    }
+    if (continueBtn) {
+      continueBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("ak:nav-store"));
+        if (typeof window.showCatalog === "function") {
+          window.showCatalog("All", "all");
+        } else {
+          window.location.hash = "#store";
+        }
+      });
+    }
+    if (printBtn) {
+      printBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (lastOrderData) {
+          openTaxInvoiceModal(lastOrderData);
+          setTimeout(() => {
+            window.print();
+          }, 120);
+        } else {
+          window.print();
+        }
+      });
+    }
+  }
 
   // js/components/auth.js
   var pendingSignupEmail = "";
@@ -29361,9 +29375,9 @@ Weight: 1.24 lbs (0.567 kg`,
       }
       if (!serverSavedOrder) {
         const itemsList = payload.items || [];
-        const subtotal = itemsList.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0);
+        const subtotal2 = itemsList.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0);
         const discount = Number(orderData.discountAmount) || 0;
-        const finalTotal = orderData.total !== void 0 ? Number(orderData.total) : Math.max(0, subtotal - discount);
+        const finalTotal = orderData.total !== void 0 ? Number(orderData.total) : Math.max(0, subtotal2 - discount);
         serverSavedOrder = {
           id: finalOrderNumber,
           orderId: finalOrderNumber,
@@ -29373,7 +29387,7 @@ Weight: 1.24 lbs (0.567 kg`,
           customerEmail: userEmail || "customer@audioking.co.in",
           customerPhone: customerObj.phone || customerObj.phoneNumber || "",
           items: itemsList,
-          itemsSubtotal: subtotal,
+          itemsSubtotal: subtotal2,
           discountAmount: discount,
           couponCode: payload.couponCode,
           taxAmount: Math.round(finalTotal * 0.18 / 1.18),
@@ -30393,12 +30407,12 @@ Weight: 1.24 lbs (0.567 kg`,
       couponBtn.disabled = true;
       couponBtn.textContent = "Checking...";
     }
-    const subtotal = checkoutItems && checkoutItems.length > 0 ? checkoutItems.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0) : getCartSubtotal();
+    const subtotal2 = checkoutItems && checkoutItems.length > 0 ? checkoutItems.reduce((sum, it) => sum + (Number(it.price) || 0) * (it.quantity || it.qty || 1), 0) : getCartSubtotal();
     try {
       const res = await fetch(apiUrl("/api/coupons/validate"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, cartTotal: subtotal, items: checkoutItems })
+        body: JSON.stringify({ code, cartTotal: subtotal2, items: checkoutItems })
       });
       const data = await res.json();
       if (res.ok && data.valid) {
@@ -30430,7 +30444,7 @@ Weight: 1.24 lbs (0.567 kg`,
       }
     }
   }
-  async function loadAndRenderVisibleCoupons(subtotal, items) {
+  async function loadAndRenderVisibleCoupons(subtotal2, items) {
     const container = document.getElementById("akVisibleCouponsContainer");
     if (!container)
       return;
@@ -30438,7 +30452,7 @@ Weight: 1.24 lbs (0.567 kg`,
       const res = await fetch(apiUrl("/api/coupons/available"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cartTotal: subtotal, items })
+        body: JSON.stringify({ cartTotal: subtotal2, items })
       });
       const data = await res.json();
       const coupons = data.coupons || [];
@@ -30589,21 +30603,13 @@ Weight: 1.24 lbs (0.567 kg`,
         titleEl.textContent = "Step 2: Payment Method";
       if (backBtn)
         backBtn.style.display = "block";
-      if (submitBtn) {
-        submitBtn.textContent = "Place Order";
-        submitBtn.disabled = false;
-      }
-      const subtotal = getCartSubtotal();
-      let weightedGstRateSum = 0;
-      checkoutItems.forEach((it) => {
-        const line = (Number(it.price) || 0) * (it.quantity || it.qty || 1);
-        const rate = Number(it.gstPercent ?? it.gst_percent ?? 18);
-        weightedGstRateSum += rate * line;
-      });
-      const avgGstRate = subtotal > 0 ? Math.round(weightedGstRateSum / subtotal * 10) / 10 : 18;
       const finalAmount = appliedCoupon ? Math.max(0, subtotal - appliedCoupon.discountAmount) : subtotal;
       const taxableBase = finalAmount / (1 + avgGstRate / 100);
       const inclusiveGstAmt = finalAmount - taxableBase;
+      if (submitBtn) {
+        submitBtn.textContent = `Pay ${formatINR(finalAmount)} with Cashfree`;
+        submitBtn.disabled = false;
+      }
       bodyEl.innerHTML = `
       <!-- Cashfree integration badge -->
       <div class="ak-payment-badge-strip">
@@ -30770,6 +30776,23 @@ Weight: 1.24 lbs (0.567 kg`,
           }
         });
       }
+      const updatePayButtonText = () => {
+        if (!submitBtn)
+          return;
+        const paymentRadio = bodyEl.querySelector('input[name="akPayment"]:checked');
+        const method = paymentRadio ? paymentRadio.value : "UPI";
+        if (method === "UPI") {
+          const selectedChip = bodyEl.querySelector(".ak-upi-chip.selected")?.dataset.upi || "UPI";
+          submitBtn.textContent = `Pay ${formatINR(finalAmount)} via ${selectedChip} (Cashfree)`;
+        } else if (method === "Card") {
+          submitBtn.textContent = `Pay ${formatINR(finalAmount)} via Card (Cashfree)`;
+        } else if (method === "Net Banking") {
+          submitBtn.textContent = `Pay ${formatINR(finalAmount)} via Net Banking (Cashfree)`;
+        } else {
+          submitBtn.textContent = `Pay ${formatINR(finalAmount)} with Cashfree`;
+        }
+      };
+      updatePayButtonText();
       bodyEl.querySelectorAll(".ak-payment-option").forEach((opt) => {
         opt.addEventListener("click", () => {
           bodyEl.querySelectorAll(".ak-payment-option").forEach((o) => o.classList.remove("selected"));
@@ -30787,6 +30810,7 @@ Weight: 1.24 lbs (0.567 kg`,
             upiDetails.style.display = method === "UPI" ? "block" : "none";
           if (nbDetails)
             nbDetails.style.display = method === "Net Banking" ? "block" : "none";
+          updatePayButtonText();
         });
       });
       bodyEl.querySelectorAll(".ak-upi-chip").forEach((chip) => {
@@ -30802,6 +30826,7 @@ Weight: 1.24 lbs (0.567 kg`,
           chip.style.borderColor = "var(--ak-orange)";
           chip.style.background = "#FFF7ED";
           chip.style.color = "var(--ak-orange)";
+          updatePayButtonText();
         });
       });
     }
@@ -30917,13 +30942,13 @@ Weight: 1.24 lbs (0.567 kg`,
             const cardNum = document.getElementById("akCardNumber")?.value.trim() || "4242 4242 4242 4242";
             const cardName = document.getElementById("akCardName")?.value.trim();
             const last4 = cardNum.replace(/\s/g, "").slice(-4) || "4242";
-            paymentMethodLabel = `Demo Payment - Card ending ${last4}`;
+            paymentMethodLabel = `Card ending ${last4}`;
           } else if (methodVal === "UPI") {
             const selectedChip = document.querySelector(".ak-upi-chip.selected")?.dataset.upi || "Google Pay";
-            paymentMethodLabel = `UPI - ${selectedChip}`;
+            paymentMethodLabel = `UPI (${selectedChip})`;
           } else if (methodVal === "Net Banking") {
             const selectedBank = document.getElementById("akBankSelect")?.value || "HDFC Bank";
-            paymentMethodLabel = `Net Banking - ${selectedBank}`;
+            paymentMethodLabel = `Net Banking (${selectedBank})`;
           } else {
             paymentMethodLabel = "Prepaid UPI / Online";
           }
@@ -30948,6 +30973,7 @@ Weight: 1.24 lbs (0.567 kg`,
             const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
             return `AK-${dateStr}-${rand}`;
           }();
+          const finalPayableTotal = appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal;
           const orderData = {
             id: finalOrderNumber,
             orderId: finalOrderNumber,
@@ -30955,15 +30981,36 @@ Weight: 1.24 lbs (0.567 kg`,
             items: [...checkoutItems],
             customer: customerInfo,
             shippingAddress: customerInfo,
-            paymentMethod: paymentMethodLabel,
+            paymentMethod: `Cashfree PG - ${paymentMethodLabel}`,
             couponCode: appliedCoupon ? appliedCoupon.code : null,
             discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0,
-            total: appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal,
+            total: finalPayableTotal,
             date: formatDate()
           };
           if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.textContent = "Securing Order...";
+            submitBtn.textContent = "Opening Cashfree Gateway...";
+          }
+          let paymentResult = null;
+          try {
+            paymentResult = await activePaymentAdapter.processPayment(orderData);
+            if (!paymentResult || !paymentResult.success) {
+              throw new Error(paymentResult?.message || "Payment could not be completed.");
+            }
+          } catch (payErr) {
+            console.warn("[Checkout] Payment incomplete or rejected:", payErr);
+            showToast(payErr.message || "Payment was not completed. Please try again.", "error");
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = `Pay ${formatINR(finalPayableTotal)} with Cashfree`;
+            }
+            return;
+          }
+          orderData.paymentId = paymentResult.transactionId || `cf_pay_${finalOrderNumber}`;
+          orderData.paymentStatus = "PAID";
+          orderData.paymentMethod = `${paymentMethodLabel} \xB7 Cashfree (${paymentResult.transactionId || "PAID"})`;
+          if (submitBtn) {
+            submitBtn.textContent = "Confirming Order...";
           }
           try {
             const saved = await ordersService.createOrder(orderData);
@@ -30979,7 +31026,7 @@ Weight: 1.24 lbs (0.567 kg`,
           } finally {
             if (submitBtn) {
               submitBtn.disabled = false;
-              submitBtn.textContent = "Place Order";
+              submitBtn.textContent = `Pay ${formatINR(finalPayableTotal)} with Cashfree`;
             }
           }
           closeCheckoutModal();
@@ -31354,11 +31401,11 @@ Weight: 1.24 lbs (0.567 kg`,
       </div>
     </div>
   `).join("");
-    const subtotal = getCartSubtotal();
+    const subtotal2 = getCartSubtotal();
     if (subtotalEl)
-      subtotalEl.textContent = formatINR(subtotal);
+      subtotalEl.textContent = formatINR(subtotal2);
     if (totalEl)
-      totalEl.textContent = formatINR(subtotal);
+      totalEl.textContent = formatINR(subtotal2);
     container.querySelectorAll(".ak-cart-minus").forEach((btn) => {
       btn.onclick = () => updateCartItemQty(btn.dataset.id, -1);
     });
@@ -34395,11 +34442,50 @@ Message: ${message}`);
         }, 150);
       }, { passive: true });
       console.log(`AudioKing initialized successfully with ${AUDIOKING_PRODUCTS.length} validated products.`);
+      handleCashfreeReturnRedirect();
     };
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", startAudioKingApp);
     } else {
       startAudioKingApp();
+    }
+  }
+  async function handleCashfreeReturnRedirect() {
+    if (typeof window === "undefined")
+      return;
+    const sp = new URLSearchParams(window.location.search);
+    const orderId = sp.get("order_id") || sp.get("cf_order_id");
+    if (!orderId)
+      return;
+    const cleanUrl = window.location.pathname + (window.location.hash || "");
+    window.history.replaceState({}, document.title, cleanUrl);
+    showToast("Verifying your Cashfree payment status...", "info");
+    try {
+      const baseUrl = apiUrl("");
+      const res = await fetch(`${baseUrl}/api/payment/cashfree/verify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId, isMock: false })
+      });
+      const data = await res.json();
+      if (data.success && data.verified) {
+        clearCart();
+        showToast("\u2713 Payment completed successfully! Your order is confirmed.", "success");
+        try {
+          const orderRes = await fetch(`${baseUrl}/api/user/orders/${encodeURIComponent(orderId)}`);
+          const orderData = await orderRes.json();
+          if (orderData.success && orderData.order) {
+            triggerOrderAnimation(orderData.order);
+            return;
+          }
+        } catch (_) {
+        }
+        window.location.hash = "#account/orders";
+      } else {
+        showToast(data.error || "Payment was not verified or was cancelled.", "error");
+      }
+    } catch (err) {
+      console.error("[Cashfree Return Exception]", err);
     }
   }
   function parseHashRoute(hashStr) {
@@ -36375,10 +36461,10 @@ Message: ${message}`);
     const totalEl = document.getElementById("akCoGrandTotal");
     if (!list)
       return;
-    let subtotal = 0;
+    let subtotal2 = 0;
     list.innerHTML = currentCheckoutItems.map((item) => {
       const itemTotal = item.price * (item.quantity || item.qty || 1);
-      subtotal += itemTotal;
+      subtotal2 += itemTotal;
       return `
       <div class="ak-summary-item-row">
         <div class="ak-summary-item-left">
@@ -36392,9 +36478,9 @@ Message: ${message}`);
     let discountAmount = 0;
     if (appliedDedicatedCoupon) {
       if (appliedDedicatedCoupon.discountType === "percentage") {
-        discountAmount = Math.round(subtotal * Number(appliedDedicatedCoupon.discountValue) / 100);
+        discountAmount = Math.round(subtotal2 * Number(appliedDedicatedCoupon.discountValue) / 100);
       } else {
-        discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal);
+        discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal2);
       }
     }
     let totalLineTaxable = 0;
@@ -36410,25 +36496,25 @@ Message: ${message}`);
       totalLineGst += gst;
       weightedGstRateSum += rate * lineTotal;
     });
-    const avgGstRate = subtotal > 0 ? Math.round(weightedGstRateSum / subtotal * 10) / 10 : 18;
-    const grandTotal = Math.max(0, subtotal - discountAmount);
-    const effectiveTaxable = grandTotal / (1 + avgGstRate / 100);
+    const avgGstRate2 = subtotal2 > 0 ? Math.round(weightedGstRateSum / subtotal2 * 10) / 10 : 18;
+    const grandTotal = Math.max(0, subtotal2 - discountAmount);
+    const effectiveTaxable = grandTotal / (1 + avgGstRate2 / 100);
     const effectiveGst = grandTotal - effectiveTaxable;
     const taxableValEl = document.getElementById("akCoTaxableValue");
     if (taxableValEl)
       taxableValEl.textContent = formatINR(Math.round(effectiveTaxable));
     const gstLabelEl = document.getElementById("akCoGstLabel");
     if (gstLabelEl)
-      gstLabelEl.textContent = `GST (${avgGstRate}% Included)`;
+      gstLabelEl.textContent = `GST (${avgGstRate2}% Included)`;
     if (subtotalEl)
-      subtotalEl.textContent = formatINR(subtotal);
+      subtotalEl.textContent = formatINR(subtotal2);
     if (gstEl)
       gstEl.textContent = formatINR(Math.round(effectiveGst));
     if (totalEl)
       totalEl.textContent = formatINR(grandTotal);
     const gstNoteEl = document.getElementById("akCoInclusiveGstNote");
     if (gstNoteEl) {
-      gstNoteEl.textContent = `Inclusive of \u20B9${Math.round(effectiveGst).toLocaleString("en-IN")} GST (${avgGstRate}%)`;
+      gstNoteEl.textContent = `Inclusive of \u20B9${Math.round(effectiveGst).toLocaleString("en-IN")} GST (${avgGstRate2}%)`;
     }
     const discountRow = document.getElementById("akCoDiscountRow");
     const discountCodeEl = document.getElementById("akCoDiscountCode");
@@ -36465,7 +36551,7 @@ Message: ${message}`);
           removeBtn.style.display = "none";
       }
     }
-    renderDedicatedVisibleCoupons(subtotal, currentCheckoutItems);
+    renderDedicatedVisibleCoupons(subtotal2, currentCheckoutItems);
   }
   async function applyDedicatedCoupon(codeVal) {
     const code = (codeVal || "").trim().toUpperCase();
@@ -36484,12 +36570,12 @@ Message: ${message}`);
       btn.disabled = true;
       btn.textContent = "Checking...";
     }
-    const subtotal = currentCheckoutItems.reduce((sum, it) => sum + it.price * (it.quantity || it.qty || 1), 0);
+    const subtotal2 = currentCheckoutItems.reduce((sum, it) => sum + it.price * (it.quantity || it.qty || 1), 0);
     try {
       const res = await fetch(apiUrl("/api/coupons/validate"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, cartTotal: subtotal, items: currentCheckoutItems })
+        body: JSON.stringify({ code, cartTotal: subtotal2, items: currentCheckoutItems })
       });
       const data = await res.json();
       if (res.ok && data.valid) {
@@ -36559,7 +36645,7 @@ Message: ${message}`);
     showToast("Coupon removed.", "info");
     renderCheckoutSummary();
   }
-  async function renderDedicatedVisibleCoupons(subtotal, items) {
+  async function renderDedicatedVisibleCoupons(subtotal2, items) {
     const container = document.getElementById("akCoVisibleCouponsContainer");
     if (!container)
       return;
@@ -36567,7 +36653,7 @@ Message: ${message}`);
       const res = await fetch(apiUrl("/api/coupons/available"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cartTotal: subtotal, items })
+        body: JSON.stringify({ cartTotal: subtotal2, items })
       });
       const data = await res.json();
       const coupons = data.coupons || [];
@@ -36796,15 +36882,15 @@ Message: ${message}`);
           return;
         }
         let discountAmount = 0;
-        const subtotal = currentCheckoutItems.reduce((sum, it) => sum + it.price * (it.quantity || it.qty || 1), 0);
+        const subtotal2 = currentCheckoutItems.reduce((sum, it) => sum + it.price * (it.quantity || it.qty || 1), 0);
         if (appliedDedicatedCoupon) {
           if (appliedDedicatedCoupon.discountType === "percentage") {
-            discountAmount = Math.round(subtotal * Number(appliedDedicatedCoupon.discountValue) / 100);
+            discountAmount = Math.round(subtotal2 * Number(appliedDedicatedCoupon.discountValue) / 100);
           } else {
-            discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal);
+            discountAmount = Math.min(Number(appliedDedicatedCoupon.discountValue), subtotal2);
           }
         }
-        const finalTotal = Math.max(0, subtotal - discountAmount);
+        const finalTotal = Math.max(0, subtotal2 - discountAmount);
         const u = getCurrentUser() || authService.getUser() || getStorage("audioking_user", null) || getStorage("audioKingUser", null);
         const emailVal = (document.getElementById("akCoEmail")?.value || "").trim().toLowerCase() || (u && u.email ? u.email : "");
         const finalOrderNumber = function() {

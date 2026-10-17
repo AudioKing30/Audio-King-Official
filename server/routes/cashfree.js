@@ -11,10 +11,36 @@
 
 const express = require('express');
 const crypto = require('crypto');
-const { requireAuth } = require('../middleware/authMiddleware');
+const { db } = require('../db');
+const { hashToken } = require('../security');
 
 const router = express.Router();
 const SITE_URL = (process.env.SITE_URL || 'https://audioking.co.in').trim().replace(/\/+$/, '');
+
+function getAuthUserFromRequest(req) {
+  let token = req.cookies?.audioking_session || 
+              req.cookies?.audioking_admin_session || 
+              req.cookies?.audioKingToken || 
+              req.cookies?.audioKingSessionToken || 
+              req.headers['authorization']?.replace(/^Bearer\s+/i, '') ||
+              req.headers['x-session-token'];
+  if (token) {
+    token = String(token).trim();
+    if ((token.startsWith('"') && token.endsWith('"')) || (token.startsWith("'") && token.endsWith("'"))) {
+      token = token.slice(1, -1).trim();
+    }
+    const tokenHash = hashToken(token);
+    try {
+      const session = db.prepare(`
+        SELECT u.id, u.full_name, u.email, u.phone_number, u.role
+        FROM sessions s JOIN users u ON s.user_id = u.id
+        WHERE s.token_hash = ? AND s.expires_at > ?
+      `).get(tokenHash, Date.now());
+      if (session) return session;
+    } catch (e) {}
+  }
+  return null;
+}
 
 function getCashfreeCredentials() {
   const appId = (process.env.CASHFREE_APP_ID || process.env.CASHFREE_CLIENT_ID || process.env.CF_APP_ID || process.env.CF_CLIENT_ID || '').trim();
@@ -66,8 +92,9 @@ router.get('/config', (req, res) => {
  * 2. POST /api/payment/cashfree/create-order
  * Generates an official Cashfree payment_session_id.
  */
-router.post('/create-order', requireAuth, async (req, res) => {
+router.post('/create-order', async (req, res) => {
   try {
+    const authUser = getAuthUserFromRequest(req);
     const { amount, currency = 'INR', orderId: clientOrderId, customer } = req.body || {};
 
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
@@ -78,11 +105,11 @@ router.post('/create-order', requireAuth, async (req, res) => {
 
     const rawOrderId = clientOrderId || ('ak_order_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
     const orderId = String(rawOrderId).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 45);
-    const customerId = (req.user?.id ? String(req.user.id) : ('cust_' + Date.now())).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 45);
-    const rawPhone = (customer?.phone || req.user?.phone_number || '').replace(/[^0-9]/g, '');
+    const customerId = (authUser?.id || customer?.userId || ('cust_' + Date.now())).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 45);
+    const rawPhone = (customer?.phone || authUser?.phone_number || '').replace(/[^0-9]/g, '');
     const customerPhone = rawPhone.length >= 10 ? rawPhone.slice(-10) : '9876543210';
-    const customerEmail = customer?.email || req.user?.email || 'customer@audioking.co.in';
-    const customerName = customer?.name || req.user?.fullName || req.user?.display_name || 'Audio Creator';
+    const customerEmail = customer?.email || authUser?.email || 'customer@audioking.co.in';
+    const customerName = customer?.name || customer?.fullName || authUser?.full_name || 'Audio Creator';
 
     // If real credentials are provided, call Cashfree PG API
     if (appId && secretKey && !appId.includes('placeholder')) {
@@ -168,7 +195,7 @@ router.post('/create-order', requireAuth, async (req, res) => {
  * 3. POST /api/payment/cashfree/verify
  * Verifies transaction status with Cashfree.
  */
-router.post('/verify', requireAuth, async (req, res) => {
+router.post('/verify', async (req, res) => {
   try {
     const { orderId, isMock } = req.body || {};
 
@@ -181,26 +208,42 @@ router.post('/verify', requireAuth, async (req, res) => {
     if (appId && secretKey && !appId.includes('placeholder') && !isMock) {
       const endpoint = getCashfreeEndpoint(`/orders/${encodeURIComponent(orderId)}`);
 
-      const cfRes = await fetch(endpoint, {
-        method: 'GET',
-        headers: {
-          'x-client-id': appId,
-          'x-client-secret': secretKey,
-          'x-api-version': apiVersion,
-          'Content-Type': 'application/json'
-        }
-      });
+      let cfData = null;
+      // Poll up to 3 times (1.2s delay) if order status is still processing or active
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const cfRes = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'x-client-id': appId,
+            'x-client-secret': secretKey,
+            'x-api-version': apiVersion,
+            'Content-Type': 'application/json'
+          }
+        });
 
-      const cfData = await cfRes.json();
+        cfData = await cfRes.json();
+        if (cfData && cfData.order_status === 'PAID') break;
+        if (attempt < 2) await new Promise(r => setTimeout(r, 1200));
+      }
 
-      if (!cfRes.ok) {
-        return res.status(cfRes.status).json({
+      if (!cfData || (cfData.message && !cfData.order_status)) {
+        return res.status(400).json({
           success: false,
-          error: cfData.message || 'Could not verify Cashfree order status.'
+          error: cfData?.message || 'Could not verify Cashfree order status.'
         });
       }
 
       const isPaid = cfData.order_status === 'PAID';
+
+      if (isPaid) {
+        try {
+          db.prepare(`
+            UPDATE orders 
+            SET status = 'Confirmed', updated_at = ? 
+            WHERE (order_number = ? OR id = ?) AND status != 'Cancelled'
+          `).run(new Date().toISOString(), cfData.order_id, cfData.order_id);
+        } catch (_) {}
+      }
 
       return res.json({
         success: isPaid,

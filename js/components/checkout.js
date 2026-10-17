@@ -314,23 +314,14 @@ function renderCheckoutStep() {
     if (pill2) pill2.classList.add('active');
     if (titleEl) titleEl.textContent = 'Step 2: Payment Method';
     if (backBtn) backBtn.style.display = 'block';
-    if (submitBtn) {
-      submitBtn.textContent = 'Place Order';
-      submitBtn.disabled = false;
-    }
-
-    const subtotal = getCartSubtotal();
-    let weightedGstRateSum = 0;
-    checkoutItems.forEach(it => {
-      const line = (Number(it.price) || 0) * (it.quantity || it.qty || 1);
-      const rate = Number(it.gstPercent ?? it.gst_percent ?? 18.0);
-      weightedGstRateSum += rate * line;
-    });
-    const avgGstRate = subtotal > 0 ? Math.round((weightedGstRateSum / subtotal) * 10) / 10 : 18;
     const finalAmount = appliedCoupon ? Math.max(0, subtotal - appliedCoupon.discountAmount) : subtotal;
     const taxableBase = finalAmount / (1 + avgGstRate / 100);
     const inclusiveGstAmt = finalAmount - taxableBase;
 
+    if (submitBtn) {
+      submitBtn.textContent = `Pay ${formatINR(finalAmount)} with Cashfree`;
+      submitBtn.disabled = false;
+    }
 
     bodyEl.innerHTML = `
       <!-- Cashfree integration badge -->
@@ -507,6 +498,23 @@ function renderCheckoutStep() {
       });
     }
 
+    const updatePayButtonText = () => {
+      if (!submitBtn) return;
+      const paymentRadio = bodyEl.querySelector('input[name="akPayment"]:checked');
+      const method = paymentRadio ? paymentRadio.value : 'UPI';
+      if (method === 'UPI') {
+        const selectedChip = bodyEl.querySelector('.ak-upi-chip.selected')?.dataset.upi || 'UPI';
+        submitBtn.textContent = `Pay ${formatINR(finalAmount)} via ${selectedChip} (Cashfree)`;
+      } else if (method === 'Card') {
+        submitBtn.textContent = `Pay ${formatINR(finalAmount)} via Card (Cashfree)`;
+      } else if (method === 'Net Banking') {
+        submitBtn.textContent = `Pay ${formatINR(finalAmount)} via Net Banking (Cashfree)`;
+      } else {
+        submitBtn.textContent = `Pay ${formatINR(finalAmount)} with Cashfree`;
+      }
+    };
+    updatePayButtonText();
+
     // Radio click & dynamic details toggle
     bodyEl.querySelectorAll('.ak-payment-option').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -524,6 +532,8 @@ function renderCheckoutStep() {
         if (cardDetails) cardDetails.style.display = method === 'Card' ? 'block' : 'none';
         if (upiDetails) upiDetails.style.display = method === 'UPI' ? 'block' : 'none';
         if (nbDetails) nbDetails.style.display = method === 'Net Banking' ? 'block' : 'none';
+
+        updatePayButtonText();
       });
     });
 
@@ -541,6 +551,8 @@ function renderCheckoutStep() {
         chip.style.borderColor = 'var(--ak-orange)';
         chip.style.background = '#FFF7ED';
         chip.style.color = 'var(--ak-orange)';
+
+        updatePayButtonText();
       });
     });
   }
@@ -663,13 +675,13 @@ export function initCheckout() {
           const cardNum = document.getElementById('akCardNumber')?.value.trim() || '4242 4242 4242 4242';
           const cardName = document.getElementById('akCardName')?.value.trim();
           const last4 = cardNum.replace(/\s/g, '').slice(-4) || '4242';
-          paymentMethodLabel = `Demo Payment - Card ending ${last4}`;
+          paymentMethodLabel = `Card ending ${last4}`;
         } else if (methodVal === 'UPI') {
           const selectedChip = document.querySelector('.ak-upi-chip.selected')?.dataset.upi || 'Google Pay';
-          paymentMethodLabel = `UPI - ${selectedChip}`;
+          paymentMethodLabel = `UPI (${selectedChip})`;
         } else if (methodVal === 'Net Banking') {
           const selectedBank = document.getElementById('akBankSelect')?.value || 'HDFC Bank';
-          paymentMethodLabel = `Net Banking - ${selectedBank}`;
+          paymentMethodLabel = `Net Banking (${selectedBank})`;
         } else {
           paymentMethodLabel = 'Prepaid UPI / Online';
         }
@@ -701,6 +713,8 @@ export function initCheckout() {
           return `AK-${dateStr}-${rand}`;
         })();
 
+        const finalPayableTotal = appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal;
+
         const orderData = {
           id: finalOrderNumber,
           orderId: finalOrderNumber,
@@ -708,16 +722,42 @@ export function initCheckout() {
           items: [...checkoutItems],
           customer: customerInfo,
           shippingAddress: customerInfo,
-          paymentMethod: paymentMethodLabel,
+          paymentMethod: `Cashfree PG - ${paymentMethodLabel}`,
           couponCode: appliedCoupon ? appliedCoupon.code : null,
           discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0,
-          total: appliedCoupon ? Math.max(0, itemsTotal - appliedCoupon.discountAmount) : itemsTotal,
+          total: finalPayableTotal,
           date: formatDate()
         };
 
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.textContent = 'Securing Order...';
+          submitBtn.textContent = 'Opening Cashfree Gateway...';
+        }
+
+        // 1. Process payment through Cashfree PG (UPI / Cards / Net Banking)
+        let paymentResult = null;
+        try {
+          paymentResult = await activePaymentAdapter.processPayment(orderData);
+          if (!paymentResult || !paymentResult.success) {
+            throw new Error(paymentResult?.message || 'Payment could not be completed.');
+          }
+        } catch (payErr) {
+          console.warn('[Checkout] Payment incomplete or rejected:', payErr);
+          showToast(payErr.message || 'Payment was not completed. Please try again.', 'error');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = `Pay ${formatINR(finalPayableTotal)} with Cashfree`;
+          }
+          return; // STOP: Do not record order or clear cart if payment was not completed!
+        }
+
+        // 2. Attach verified Cashfree payment details
+        orderData.paymentId = paymentResult.transactionId || `cf_pay_${finalOrderNumber}`;
+        orderData.paymentStatus = 'PAID';
+        orderData.paymentMethod = `${paymentMethodLabel} · Cashfree (${paymentResult.transactionId || 'PAID'})`;
+
+        if (submitBtn) {
+          submitBtn.textContent = 'Confirming Order...';
         }
 
         try {
@@ -729,12 +769,11 @@ export function initCheckout() {
           }
         } catch (err) {
           console.warn('[Checkout] Order persistence notice:', err);
-          // Defensive fallback: ensure order proceeds with assigned order number
           orderData.orderNumber = orderData.orderNumber || orderData.orderId || finalOrderNumber;
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Place Order';
+            submitBtn.textContent = `Pay ${formatINR(finalPayableTotal)} with Cashfree`;
           }
         }
 
