@@ -136,8 +136,8 @@ async function seedAdminAndCatalog() {
   }
 
   const prodCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
-  if (prodCount < products.length) {
-    console.log(`[SEED] Products count in DB (${prodCount}) is less than master catalog (${products.length}). Upserting all products...`);
+  if (prodCount === 0 && products.length > 0) {
+    console.log(`[SEED] Initializing empty products catalog with ${products.length} products...`);
     try {
       const insertProd = db.prepare(`
         INSERT OR IGNORE INTO products (

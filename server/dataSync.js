@@ -416,29 +416,30 @@ function hydrateDatabaseFromMaster(db) {
     // 7. Hydrate Catalog Products from products_master.json
     const prodData = safeReadJson(PRODUCTS_MASTER_PATH, null);
     if (prodData && Array.isArray(prodData) && prodData.length > 0) {
-      const existingIds = new Set(db.prepare('SELECT id FROM products').all().map(r => r.id));
-      let restoredProds = 0;
-      const insertProd = db.prepare(`
-        INSERT OR IGNORE INTO products (
-          id, name, short_name, brand, category, subcategory, section,
-          price, original_price, stock, in_stock, stock_status, rating, review_count,
-          badge, sku, description, image, images_json,
-          video_type, video_url, youtube_video_id, youtube_videos_json,
-          specs_json, deep_specs_json, is_featured,
-          created_at, updated_at
-        ) VALUES (
-          ?, ?, ?, ?, ?, ?, ?,
-          ?, ?, ?, ?, ?, ?, ?,
-          ?, ?, ?, ?, ?,
-          ?, ?, ?, ?,
-          ?, ?, ?,
-          ?, ?
-        )
-      `);
+      const existingCount = db.prepare('SELECT COUNT(*) as count FROM products').get().count;
+      // ONLY hydrate if products table is 100% empty (initial setup). Never resurrect deleted products!
+      if (existingCount === 0) {
+        let restoredProds = 0;
+        const insertProd = db.prepare(`
+          INSERT OR IGNORE INTO products (
+            id, name, short_name, brand, category, subcategory, section,
+            price, original_price, stock, in_stock, stock_status, rating, review_count,
+            badge, sku, description, image, images_json,
+            video_type, video_url, youtube_video_id, youtube_videos_json,
+            specs_json, deep_specs_json, is_featured,
+            created_at, updated_at
+          ) VALUES (
+            ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?,
+            ?, ?, ?, ?,
+            ?, ?, ?,
+            ?, ?
+          )
+        `);
 
-      const nowIso = new Date().toISOString();
-      for (const p of prodData) {
-        if (!existingIds.has(p.id)) {
+        const nowIso = new Date().toISOString();
+        for (const p of prodData) {
           const images = Array.isArray(p.images) && p.images.length > 0 ? p.images : (p.image ? [p.image] : []);
           const mainImage = p.image || (images[0] || 'assets/images/placeholder.svg');
           insertProd.run(
@@ -471,12 +472,11 @@ function hydrateDatabaseFromMaster(db) {
             p.created_at || nowIso,
             p.updated_at || nowIso
           );
-          existingIds.add(p.id);
           restoredProds++;
         }
-      }
-      if (restoredProds > 0) {
-        console.log(`[HYDRATION] Successfully restored ${restoredProds} new products from products_master.json into SQLite!`);
+        if (restoredProds > 0) {
+          console.log(`[HYDRATION] Successfully initialized ${restoredProds} products from products_master.json into SQLite!`);
+        }
       }
     }
 
