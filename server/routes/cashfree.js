@@ -76,8 +76,9 @@ router.post('/create-order', requireAuth, async (req, res) => {
 
     const { appId, secretKey, mode, apiVersion } = getCashfreeCredentials();
 
-    const orderId = clientOrderId || ('ak_order_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
-    const customerId = req.user?.id ? req.user.id.replace(/[^a-zA-Z0-9_-]/g, '_') : ('cust_' + Date.now());
+    const rawOrderId = clientOrderId || ('ak_order_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
+    const orderId = String(rawOrderId).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 45);
+    const customerId = (req.user?.id ? String(req.user.id) : ('cust_' + Date.now())).replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 45);
     const rawPhone = (customer?.phone || req.user?.phone_number || '').replace(/[^0-9]/g, '');
     const customerPhone = rawPhone.length >= 10 ? rawPhone.slice(-10) : '9876543210';
     const customerEmail = customer?.email || req.user?.email || 'customer@audioking.co.in';
@@ -86,6 +87,13 @@ router.post('/create-order', requireAuth, async (req, res) => {
     // If real credentials are provided, call Cashfree PG API
     if (appId && secretKey && !appId.includes('placeholder')) {
       const endpoint = getCashfreeEndpoint('/orders');
+      const orderMeta = {
+        return_url: `${SITE_URL}/?order_id={order_id}`
+      };
+      if (process.env.CASHFREE_WEBHOOK_URL) {
+        orderMeta.notify_url = process.env.CASHFREE_WEBHOOK_URL;
+      }
+
       const payload = {
         order_id: orderId,
         order_amount: Math.round(Number(amount) * 100) / 100,
@@ -96,10 +104,7 @@ router.post('/create-order', requireAuth, async (req, res) => {
           customer_email: customerEmail,
           customer_phone: customerPhone
         },
-        order_meta: {
-          return_url: `${SITE_URL}/?order_id={order_id}&order_token={order_token}`,
-          notify_url: process.env.CASHFREE_WEBHOOK_URL || undefined
-        },
+        order_meta: orderMeta,
         order_note: `AudioKing Pro Audio Order ${orderId}`
       };
 
