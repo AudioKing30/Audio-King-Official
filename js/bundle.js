@@ -36662,6 +36662,10 @@ Message: ${message}`);
       gstEl.textContent = formatINR(Math.round(effectiveGst));
     if (totalEl)
       totalEl.textContent = formatINR(grandTotal);
+    const checkoutSubmitBtn = document.getElementById("akCheckoutSubmitBtn");
+    if (checkoutSubmitBtn) {
+      checkoutSubmitBtn.textContent = `Pay ${formatINR(grandTotal)} via Cashfree \u2192`;
+    }
     const gstNoteEl = document.getElementById("akCoInclusiveGstNote");
     if (gstNoteEl) {
       gstNoteEl.textContent = `Inclusive of \u20B9${Math.round(effectiveGst).toLocaleString("en-IN")} GST (${avgGstRate2}%)`;
@@ -37085,9 +37089,30 @@ Message: ${message}`);
         };
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.textContent = "Securing Order...";
+          submitBtn.textContent = "Opening Cashfree Gateway...";
         }
         (async () => {
+          let paymentResult = null;
+          try {
+            paymentResult = await activePaymentAdapter.processPayment(orderData);
+            if (!paymentResult || !paymentResult.success) {
+              throw new Error(paymentResult?.message || "Payment could not be completed.");
+            }
+          } catch (payErr) {
+            console.warn("[Dedicated Checkout] Payment cancelled or rejected:", payErr);
+            showToast(payErr.message || "Payment was not completed. Please try again.", "error");
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = `Pay ${formatINR(finalTotal)} via Cashfree \u2192`;
+            }
+            return;
+          }
+          orderData.paymentId = paymentResult.transactionId || `cf_pay_${finalOrderNumber}`;
+          orderData.paymentStatus = "PAID";
+          orderData.paymentMethod = `${selectedPaymentMethod} \xB7 Cashfree (${paymentResult.transactionId || "PAID"})`;
+          if (submitBtn) {
+            submitBtn.textContent = "Confirming Order...";
+          }
           try {
             const savedOrder = await ordersService.createOrder(orderData);
             if (savedOrder && savedOrder.orderNumber) {
@@ -37099,16 +37124,16 @@ Message: ${message}`);
           } catch (err) {
             console.warn("[Checkout] Order persistence notice:", err.message);
             orderData.orderNumber = orderData.orderNumber || orderData.orderId || finalOrderNumber;
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = `Pay ${formatINR(finalTotal)} via Cashfree \u2192`;
+            }
           }
           appliedDedicatedCoupon = null;
           clearCart();
           triggerOrderAnimation(orderData);
-        })().finally(() => {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Confirm & Place Order \u2192";
-          }
-        });
+        })();
       });
     }
   }
